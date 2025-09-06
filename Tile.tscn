@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bgn763vrxmmcu"]
+
+[ext_resource type="Script" uid="uid://c4d03d2w5vn64" path="res://tile.gd" id="1_j13wd"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_iixfe"]
+size = Vector3(0.95, 0.1, 0.95)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
+size = Vector3(1, 0.15, 1)
+
+[node name="Tile" type="Node3D"]
+
+[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+script = ExtResource("1_j13wd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AnimatableBody3D"]
+mesh = SubResource("BoxMesh_iixfe")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+shape = SubResource("BoxShape3D_iixfe")
+
+[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_event"]
