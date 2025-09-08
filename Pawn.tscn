@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=3 uid="uid://c54qlxs7mr3qm"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://pawn.gd" id="1_soa38"]
+[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://piece_selection.gd" id="1_soa38"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/pawn_mesh.obj" id="2_iexdo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
 margin = 0.0
-size = Vector3(2.19, 4.73156, 1.985)
+size = Vector3(2, 4.5, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_soa38"]
 cull_mode = 1
@@ -20,7 +20,7 @@ grow_amount = 0.1
 script = ExtResource("1_soa38")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0.70865, 0)
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0.676774, 0)
 shape = SubResource("BoxShape3D_ny8vt")
 
 [node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
