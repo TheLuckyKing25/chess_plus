@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4axunshn8kgc"]
+
+[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://assets/bishop_mesh.obj" id="1_wqw4l"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wqw4l"]
+margin = 0.0
+size = Vector3(2.35426, 7.00203, 2.42313)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pt3tq"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
+grow = true
+grow_amount = 0.1
+
+[node name="Node3D" type="Node3D"]
+
+[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.00333474, 1.04922, 0.00370387)
+visible = false
+shape = SubResource("BoxShape3D_wqw4l")
+
+[node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
+mesh = ExtResource("1_wqw4l")
+skeleton = NodePath("../../..")
+
+[node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_pt3tq")
+extra_cull_margin = 36.03
+mesh = ExtResource("1_wqw4l")
+skeleton = NodePath("../..")
