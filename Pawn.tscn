@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://c54qlxs7mr3qm"]
+[gd_scene load_steps=6 format=3 uid="uid://c54qlxs7mr3qm"]
 
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://piece_selection.gd" id="1_soa38"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/pawn_mesh.obj" id="2_iexdo"]
@@ -7,7 +7,11 @@
 margin = 0.0
 size = Vector3(2, 4.5, 2)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iexdo"]
+resource_local_to_scene = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_soa38"]
+resource_local_to_scene = true
 cull_mode = 1
 shading_mode = 0
 albedo_color = Color(0, 1, 0, 1)
@@ -28,6 +32,7 @@ transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 extra_cull_margin = 36.03
 mesh = ExtResource("2_iexdo")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_iexdo")
 
 [node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)

@@ -11,6 +11,5 @@ func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, n
 		var space_state = get_world_3d().direct_space_state
 		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from,to))
 		if result:
-			var clicked_object = result.collider
+			var clicked_object = result.collider.get_parent()
 			Global.tile_selected = clicked_object
-			print(clicked_object)
