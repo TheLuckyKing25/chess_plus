@@ -1,13 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://vqvs470xc1lw"]
+[gd_scene load_steps=8 format=3 uid="uid://vqvs470xc1lw"]
 
-[ext_resource type="PackedScene" uid="uid://bgn763vrxmmcu" path="res://Tile.tscn" id="1_nd4as"]
-[ext_resource type="PackedScene" uid="uid://b2wm4ux7jjth6" path="res://Rook.tscn" id="2_3ng4l"]
-[ext_resource type="PackedScene" uid="uid://c54qlxs7mr3qm" path="res://Pawn.tscn" id="3_otxgx"]
-[ext_resource type="PackedScene" uid="uid://b4axunshn8kgc" path="res://Bishop.tscn" id="4_hq5ls"]
-[ext_resource type="Script" uid="uid://0ynjjsglobp5" path="res://color_setting.gd" id="5_k0g80"]
+[ext_resource type="PackedScene" uid="uid://bgn763vrxmmcu" path="res://scenes/Tile.tscn" id="1_nd4as"]
+[ext_resource type="PackedScene" uid="uid://b2wm4ux7jjth6" path="res://scenes/Rook.tscn" id="2_3ng4l"]
+[ext_resource type="PackedScene" uid="uid://c54qlxs7mr3qm" path="res://scenes/Pawn.tscn" id="3_otxgx"]
+[ext_resource type="PackedScene" uid="uid://b4axunshn8kgc" path="res://scenes/Bishop.tscn" id="4_hq5ls"]
+[ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/Knight.tscn" id="5_vewne"]
+[ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/Queen.tscn" id="6_6pldg"]
+[ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/King.tscn" id="6_grdf5"]
 
 [node name="Board" type="Node3D"]
-script = ExtResource("5_k0g80")
 
 [node name="Tile_R1C1" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000168562)
@@ -44,6 +45,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 [node name="Tile_R1C2" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 
+[node name="Knight_P2" parent="Tile_R1C2" instance=ExtResource("5_vewne")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
 [node name="Tile_R2C2" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
 
@@ -68,6 +72,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 6)
 
 [node name="Tile_R8C2" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+
+[node name="Knight_P1" parent="Tile_R8C2" instance=ExtResource("5_vewne")]
 
 [node name="Tile_R1C3" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
@@ -100,9 +106,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 7)
 
 [node name="Bishop_P1" parent="Tile_R8C3" instance=ExtResource("4_hq5ls")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Tile_R1C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+
+[node name="Queen_P2" parent="Tile_R1C4" instance=ExtResource("6_6pldg")]
 
 [node name="Tile_R2C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
@@ -129,8 +138,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
 [node name="Tile_R8C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
 
+[node name="Queen_P1" parent="Tile_R8C4" instance=ExtResource("6_6pldg")]
+
 [node name="Tile_R1C5" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="King_P2" parent="Tile_R1C5" instance=ExtResource("6_grdf5")]
 
 [node name="Tile_R2C5" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 1)
@@ -156,6 +169,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 6)
 
 [node name="Tile_R8C5" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 7)
+
+[node name="King_P1" parent="Tile_R8C5" instance=ExtResource("6_grdf5")]
 
 [node name="Tile_R1C6" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
@@ -188,9 +203,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
 
 [node name="Bishop_P1" parent="Tile_R8C6" instance=ExtResource("4_hq5ls")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Tile_R1C7" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="Knight_P2" parent="Tile_R1C7" instance=ExtResource("5_vewne")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Tile_R2C7" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 1)
@@ -216,6 +235,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 6)
 
 [node name="Tile_R8C7" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 7)
+
+[node name="Knight_P1" parent="Tile_R8C7" instance=ExtResource("5_vewne")]
 
 [node name="Tile_R1C8" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
@@ -248,5 +269,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
 
 [node name="Rook_P1" parent="Tile_R8C8" instance=ExtResource("2_3ng4l")]
-
-[connection signal="ready" from="." to="." method="_on_ready"]

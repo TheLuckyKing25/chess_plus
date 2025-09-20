@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://c54qlxs7mr3qm"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://piece_selection.gd" id="1_soa38"]
-[ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/pawn_mesh.obj" id="2_iexdo"]
+[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_ht344"]
+[ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/pawn_mesh.obj" id="2_247x2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
 margin = 0.0
@@ -10,18 +10,18 @@ size = Vector3(2, 4.5, 2)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iexdo"]
 resource_local_to_scene = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_soa38"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4exq"]
 resource_local_to_scene = true
 cull_mode = 1
 shading_mode = 0
-albedo_color = Color(0, 1, 0, 1)
+albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
 [node name="Pawn" type="Node3D"]
 
 [node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
-script = ExtResource("1_soa38")
+script = ExtResource("1_ht344")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0.676774, 0)
@@ -30,14 +30,14 @@ shape = SubResource("BoxShape3D_ny8vt")
 [node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 extra_cull_margin = 36.03
-mesh = ExtResource("2_iexdo")
+mesh = ExtResource("2_247x2")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_iexdo")
 
 [node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_soa38")
+material_override = SubResource("StandardMaterial3D_q4exq")
 extra_cull_margin = 36.03
-mesh = ExtResource("2_iexdo")
+mesh = ExtResource("2_247x2")
 
-[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_event"]
+[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_piece_event"]

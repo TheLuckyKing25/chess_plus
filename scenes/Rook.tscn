@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=4 uid="uid://b2wm4ux7jjth6"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://piece_selection.gd" id="1_tl03q"]
+[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_cyoeg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
 margin = 0.0
@@ -46,7 +46,7 @@ resource_name = "piece_color"
 resource_local_to_scene = true
 cull_mode = 1
 shading_mode = 0
-albedo_color = Color(0.24, 0.1672, 0.072, 1)
+albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
@@ -70,7 +70,7 @@ shadow_mesh = SubResource("ArrayMesh_fq2n3")
 [node name="Rook" type="Node3D"]
 
 [node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
-script = ExtResource("1_tl03q")
+script = ExtResource("1_cyoeg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
@@ -89,4 +89,4 @@ extra_cull_margin = 36.03
 mesh = SubResource("ArrayMesh_h5cut")
 skeleton = NodePath("../..")
 
-[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_event"]
+[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_piece_event"]
