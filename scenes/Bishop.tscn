@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_pt3tq"]
 [ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://assets/bishop_mesh.obj" id="1_wqw4l"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
+margin = 0.0
+size = Vector3(2, 4.5, 2)
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_wqw4l"]
 _surfaces = [{
 "aabb": AABB(-1, 0, -1, 2, 6.6557, 2),
@@ -38,10 +42,6 @@ shadow_mesh = SubResource("ArrayMesh_wqw4l")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqw4l"]
 resource_local_to_scene = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
-margin = 0.0
-size = Vector3(2, 4.5, 2)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pt3tq"]
 resource_local_to_scene = true
 cull_mode = 1
@@ -55,15 +55,15 @@ grow_amount = 0.1
 [node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_pt3tq")
 
+[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
+transform = Transform3D(0.3, 0, 8.88178e-16, 0, 0.3, 0, -8.88178e-16, 0, 0.3, 0.003, 0.677, 0.004)
+shape = SubResource("BoxShape3D_ny8vt")
+
 [node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_pt3tq")
 skeleton = NodePath("../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_wqw4l")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
-shape = SubResource("BoxShape3D_ny8vt")
 
 [node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)

@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_ayiy4"]
 [ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://assets/king_mesh.obj" id="2_xbcl4"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7gvqi"]
-resource_local_to_scene = true
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_wvtwp"]
 margin = 0.0
 size = Vector3(2, 4.5, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7gvqi"]
+resource_local_to_scene = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rmyy5"]
 resource_local_to_scene = true
@@ -24,15 +24,15 @@ grow_amount = 0.1
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("1_ayiy4")
 
+[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
+shape = SubResource("BoxShape3D_wvtwp")
+
 [node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
 mesh = ExtResource("2_xbcl4")
 skeleton = NodePath("../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_7gvqi")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
-shape = SubResource("BoxShape3D_wvtwp")
 
 [node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)

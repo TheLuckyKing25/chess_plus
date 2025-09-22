@@ -23,7 +23,7 @@ grow_amount = 0.1
 [node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_ht344")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0.676774, 0)
 shape = SubResource("BoxShape3D_ny8vt")
 

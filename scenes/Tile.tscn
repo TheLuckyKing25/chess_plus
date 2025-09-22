@@ -9,7 +9,8 @@ size = Vector3(0.95, 0.1, 0.95)
 resource_local_to_scene = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
-size = Vector3(1, 0.15, 1)
+margin = 0.06
+size = Vector3(1, 0.163, 1)
 
 [node name="Tile" type="Node3D"]
 

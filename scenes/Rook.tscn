@@ -72,7 +72,7 @@ shadow_mesh = SubResource("ArrayMesh_fq2n3")
 [node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_cyoeg")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
 shape = SubResource("BoxShape3D_ny8vt")
 

@@ -1,18 +1,17 @@
 class_name Board
 extends Node
 
-var restrict_movement: bool = false
+var setting_restrict_movement: bool = true
+var setting_show_threatened: bool = true
 
 var object: Node3D
 
-var tile_base_color_light: Color = Color(1.0, 0.77, 0.58)
-var tile_base_color_dark: Color = Color(1.0, 0.77, 0.58).darkened(0.5)
-var tile_highlight_color: Color = Color(0.25, 0.75, 0.25)
-var tile_threatened_color: Color = Color(0.75, 0.25, 0.25)
-var tile_special_color: Color = Color(1, 1, 1) #Castling, promotion, en pesant
+var tile_basecolor_light: Color = Color(1.0, 0.77, 0.58)
+var tile_basecolor_dark: Color = Color(1.0, 0.77, 0.58).darkened(0.5)
 
-var piece_outline_threatened_color: Color = Color(0.9, 0, 0)
-var piece_outline_selected_color: Color = Color(0, 0.9, 0.9)
+var tile_move_color: Color = Color(0.25, 0.75, 0.25)
+var threatened_color: Color = Color(0.9, 0, 0)
+var select_color: Color = Color(0, 0.9, 0.9)
 
 var board_size: Vector2 = Vector2(8,8)
 var tiles: Array[Tile] = []
@@ -30,16 +29,14 @@ var selected_tile: Tile = null
 var selected_piece: Piece = null
 var selected_piece_movement: Array[Tile] = []
 
+
 func _init(board_object: Node3D):
 	set_object(board_object)
 	for tile_object in object.find_children("Tile_*","",false):
 		var tile_position = Vector2(tile_object.name.substr(6,1).to_int(),tile_object.name.substr(8,1).to_int())
-		
-		# Sums the row and column numbers then sets their color based on if the sum is even or odd
-		# 0 = light color, 1 = dark color
 		match (tile_object.name.substr(6,1).to_int() + tile_object.name.substr(8,1).to_int()) % 2:
-			0: tiles.append(Tile.new(tile_base_color_light,tile_position,tile_object))
-			1: tiles.append(Tile.new(tile_base_color_dark,tile_position,tile_object))
+			0: tiles.append(Tile.new(tile_basecolor_light,tile_position,tile_object))
+			1: tiles.append(Tile.new(tile_basecolor_dark,tile_position,tile_object))
 
 	players.append(Player.new(1,player_colors[0]))
 	players.append(Player.new(2,player_colors[1]))
@@ -47,11 +44,18 @@ func _init(board_object: Node3D):
 		if tile.is_occupied(): 
 			match tile.get_occupant().get_object().name.get_slice("_", 1):
 				"P1": players[0].add_piece(tile.get_occupant())
-				"P2": players[1].add_piece(tile.get_occupant())
+				"P2": 
+					tile.get_occupant().object.find_child("Collision*").disabled = true
+					players[1].add_piece(tile.get_occupant())
 	for player in players:
 		pieces += player.get_pieces()
 		player.apply_color_to_pieces()
+	
 
+func get_tiles() -> Array[Tile]: return tiles
+func get_object() -> Node3D: return object
+
+func set_object(board_object: Node3D): object = board_object
 
 func find_tile_class_from_object(tile_object: Node3D):
 	for tile in tiles: if tile.get_object() == tile_object:
@@ -71,17 +75,53 @@ func find_piece_class_from_object(piece_object: Node3D):
 	return null
 
 
+func highlight_tiles(tiles: Array[Tile], color: Color):
+	for tile in tiles: highlight_tile(tile, color)
+func highlight_tile(tile: Tile, color: Color):
+	tile.set_color(tile.color * color)
+
+func color_tile(tile_object: Tile, tile_color: Color):
+	tile_object.set_color(tile_color)
+func color_tiles(tile_objects: Array[Tile], tile_color: Color):
+	for tile_object in tile_objects: color_tile(tile_object, tile_color)
+
+func reset_all_tile_colors():
+	for tile in tiles: 
+		match (int(tile.get_position()[0]) + int(tile.get_position()[1])) % 2:
+			0: tile.set_color(tile_basecolor_light)
+			1: tile.set_color(tile_basecolor_dark)
+
+
+func is_same_team(piece1: Piece, piece2: Piece): 
+	return piece1.object.name.get_slice("_", 1) == piece2.object.name.get_slice("_", 1)
+func is_movement_restricted(): return setting_restrict_movement
+func is_valid_move(): return selected_tile in selected_piece_movement
+
+
+func new_turn():
+	for piece in players[player_turn].get_pieces():
+		piece.object.find_child("Collision").disabled = true
+	player_turn = (player_turn + 1) % 2
+	for piece in players[player_turn].get_pieces():
+		piece.object.find_child("Collision").disabled = false
+	object.get_parent().get_surface_override_material(0).albedo_color = player_colors[player_turn]	
+
+
 func select_piece(piece: Piece):
 	if selected_piece != null:
-		reset_tile_colors(selected_piece_movement)
+		reset_all_tile_colors()
+		for tile in selected_piece_movement:
+			if tile.is_occupied() and not is_same_team(selected_piece, tile.occupant):
+				tile.occupant.unthreaten()
 		selected_piece.unselect()
-	piece.set_outline_color(piece_outline_selected_color)
+	piece.set_outline_color(select_color)
+	highlight_tile(piece.tile,select_color)
 	piece.select()
 	selected_piece = piece
-	highlight_possible_valid_moves(selected_piece)
+	calculate_valid_moves(selected_piece)
 
 
-func highlight_possible_valid_moves(piece: Piece): 
+func calculate_valid_moves(piece:Piece):
 	var move_directions = piece.get_movement_directions()
 	var move_distance = piece.get_movement_distance() + 1
 	var parent_tile = piece.get_tile()
@@ -89,6 +129,7 @@ func highlight_possible_valid_moves(piece: Piece):
 	var flip = 1
 	
 	var complete_moveset: Array[Tile] = []
+	var threatened_tiles: Array[Tile] = []
 	
 	if piece is Pawn and piece.get_base_color() == player_colors[0]:
 		flip = -1
@@ -97,44 +138,40 @@ func highlight_possible_valid_moves(piece: Piece):
 		for n in range(1,move_distance):
 			var new_position = position + (direction * n * flip)
 			var new_tile = find_tile_class_from_position(new_position)
-			if new_tile != null and (not new_tile.is_occupied() or not is_same_team(piece,new_tile.occupant)):
-				complete_moveset.append(find_tile_class_from_position(new_position))
-			else:
-				print("Break")
+			if new_tile == null: 
 				break
-			print("next")
-		
+			if not new_tile.is_occupied():
+				if piece is Pawn and direction != move_directions[0]: 
+					break	
+				complete_moveset.append(find_tile_class_from_position(new_position))
+			elif new_tile.is_occupied():
+				if is_same_team(piece, new_tile.occupant) \
+				or (piece is Pawn and direction == move_directions[0]): 
+					break					
+				threatened_tiles.append(find_tile_class_from_position(new_position))
+				break
+			
 	if len(complete_moveset) != 0:
 		selected_piece_movement = complete_moveset
-		highlight_tiles(complete_moveset)
-
-
-
-func highlight_tiles(tiles: Array[Tile]):
-	for tile in tiles: highlight_tile(tile)
-func highlight_tile(tile: Tile):
-	tile.set_color(tile.color * tile_highlight_color)
-
-
-func color_tile(tile_object: Tile, tile_color: Color):
-	tile_object.set_color(tile_color)
-func color_tiles(tile_objects: Array[Tile], tile_color: Color):
-	for tile_object in tile_objects: color_tile(tile_object, tile_color)
-
-func reset_tile_colors(tiles: Array[Tile]):
-	for tile in tiles: reset_tile_color(tile)
-func reset_tile_color(tile: Tile):
-	match (int(tile.get_position()[0]) + int(tile.get_position()[1])) % 2:
-		0: tile.set_color(tile_base_color_light)
-		1: tile.set_color(tile_base_color_dark)
-
-func is_same_team(piece1: Piece, piece2: Piece): 
-	return piece1.object.name.get_slice("_", 1) == piece2.object.name.get_slice("_", 1)
-func is_movement_restricted(): return restrict_movement
-func is_valid_move(): return selected_tile in selected_piece_movement
+		highlight_tiles(complete_moveset, tile_move_color)
+	if len(threatened_tiles) != 0:
+		selected_piece_movement += threatened_tiles
+		highlight_tiles(threatened_tiles, threatened_color)
+		for tile in threatened_tiles:
+			tile.occupant.set_outline_color(threatened_color)
+			tile.occupant.threaten()
 
 func move_piece(piece: Piece, tile_destination: Tile):
 	if is_valid_move():
+		reset_all_tile_colors()
+		for tile in selected_piece_movement:
+			if tile.is_occupied() and not is_same_team(selected_piece, tile.occupant):
+				tile.occupant.unthreaten()
+		
+		if tile_destination.is_occupied():
+			# PLACEHOLDER: CAPTURE MECHANIC
+			tile_destination.get_occupant().object.visible = false
+			
 		piece.object.reparent(tile_destination.object)
 		piece.object.set_owner(tile_destination.object)
 		piece.object.global_position = tile_destination.object.global_position * Vector3(1,0,1) + piece.object.global_position * Vector3(0,1,0)
@@ -148,12 +185,8 @@ func move_piece(piece: Piece, tile_destination: Tile):
 			piece.set_movement_distance(1)
 			piece.moved = true
 		
+		selected_piece.object.find_child("Outline").visible = false
 		selected_piece = null
 		selected_tile = null
-		reset_tile_colors(selected_piece_movement)
 		selected_piece_movement = []
-
-func get_tiles() -> Array[Tile]: return tiles
-func get_object() -> Node3D: return object
-
-func set_object(board_object: Node3D): object = board_object
+		new_turn()
