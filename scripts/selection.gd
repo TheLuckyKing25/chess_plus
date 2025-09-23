@@ -14,7 +14,7 @@ func _on_input_piece_event(camera: Node, event: InputEvent, event_position: Vect
 		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from,to))
 		if result:
 			var clicked_object = result.collider.get_parent()
-			Global.board.select_piece(Global.board.find_piece_class_from_object(clicked_object))
+			Global.board.select_piece(Global.board.find_piece_from_object(clicked_object))
 
 # checks if a piece has been selected and the tile has been clicked on.
 func _on_input_tile_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int) -> void:
@@ -30,4 +30,4 @@ func _on_input_tile_event(camera: Node, event: InputEvent, event_position: Vecto
 		var result = space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from,to))
 		if result:
 			var clicked_object = result.collider.get_parent()
-			Global.board.selected_tile = Global.board.find_tile_class_from_object(clicked_object)
+			Global.board.selected_tile = Global.board.find_tile_from_object(clicked_object)
