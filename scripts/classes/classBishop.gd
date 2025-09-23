@@ -8,6 +8,6 @@ func _init(parent_tile: Tile, piece_object: Node3D) -> void:
 		Vector2i(1,1), 
 		Vector2i(-1,1), 
 		Vector2i(1,-1), 
-		Vector2i(-1,-1)
+		Vector2i(-1,-1),
 		]
 	movement_distance = 8

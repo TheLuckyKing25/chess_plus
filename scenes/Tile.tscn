@@ -22,7 +22,7 @@ mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_j13wd")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
 shape = SubResource("BoxShape3D_iixfe")
 
 [connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_tile_event"]
