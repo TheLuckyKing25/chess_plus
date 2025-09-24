@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=6 format=3 uid="uid://h7v0gyqyq0h7"]
 
-[ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://Board.tscn" id="2_noarx"]
+[ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_noarx"]
+albedo_color = Color(0.528481, 0.921637, 1, 1)
 disable_receive_shadows = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
@@ -14,10 +15,15 @@ height = 50.0
 radial_segments = 16
 rings = 8
 
+[sub_resource type="BoxMesh" id="BoxMesh_wsj4q"]
+size = Vector3(8.5, 0.1, 8.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wsj4q"]
+
 [node name="Node3D" type="Node3D"]
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(0.70716, -0.00881363, -0.706999, 0.707054, 0.00863876, 0.707107, -0.000124583, -0.999924, 0.0123407, -6.44446, 6.2614, -0.020977)
+transform = Transform3D(0.70716, -0.00881363, -0.706999, 0.707054, 0.00863876, 0.707107, -0.000124588, -0.999924, 0.0123407, -8, 6, 0)
 light_energy = 9.63
 light_indirect_energy = 7.186
 light_volumetric_fog_energy = 9.343
@@ -31,22 +37,18 @@ spot_angle = 47.8125
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="Pitch Pivot" type="Node3D" parent="Twist Pivot"]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.573577, 0.819152, 0, -0.819152, 0.573577, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Twist Pivot/Pitch Pivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
 
-[node name="Board" parent="." instance=ExtResource("2_noarx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, -0.06, -3.5)
-
 [node name="Sky" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.101152, 0.162909, -0.163746)
 cast_shadow = 0
 gi_mode = 0
 mesh = SubResource("SphereMesh_noarx")
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="."]
-transform = Transform3D(0.70721, -0.00860124, 0.706952, -0.706999, -0.0123407, 0.707107, 0.00264228, -0.999887, -0.0148085, 8.34661, 6.2614, -0.020977)
+transform = Transform3D(0.70721, -0.00860123, 0.706952, -0.706999, -0.0123407, 0.707107, 0.00264227, -0.999887, -0.0148085, 8, 6, 0)
 light_energy = 9.63
 light_indirect_energy = 7.186
 light_volumetric_fog_energy = 9.343
@@ -55,3 +57,12 @@ light_specular = 0.839
 light_bake_mode = 1
 spot_range = 35.0553
 spot_angle = 47.8125
+
+[node name="BoardBottom" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.158751, 0)
+mesh = SubResource("BoxMesh_wsj4q")
+skeleton = NodePath("Board")
+surface_material_override/0 = SubResource("StandardMaterial3D_wsj4q")
+
+[node name="Board" parent="BoardBottom" instance=ExtResource("1_wsj4q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.0987513, -3.5)
