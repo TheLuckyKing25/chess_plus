@@ -37,7 +37,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_iexdo")
 [node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_q4exq")
-extra_cull_margin = 36.03
+cast_shadow = 0
+extra_cull_margin = 2.0
 mesh = ExtResource("2_247x2")
 
 [connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_piece_event"]

@@ -1,8 +1,6 @@
 class_name Rook 
 extends Piece
 
-var moved: bool = false
-
 func _init(parent_tile: Tile, piece_object: Node3D) -> void:
 	tile_parent = parent_tile
 	object_piece = piece_object
