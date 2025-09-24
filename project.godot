@@ -10,14 +10,21 @@ config_version=5
 
 [application]
 
-config/name="New Game Project"
-run/main_scene="uid://camv04tw28yjr"
+config/name="Chess_Plus"
+run/main_scene="uid://h7v0gyqyq0h7"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://global.gd"
+Global="*res://scripts/global.gd"
+
+[file_customization]
+
+folder_colors={
+"res://scripts/": "yellow",
+"res://scripts/classes/": "gray"
+}
 
 [input]
 
