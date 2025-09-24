@@ -2,12 +2,11 @@ extends Node
 
 var board_object = null
 var board = null
-
-func _ready() -> void:
-	board_object = $"/root/Node3D/BoardBottom/Board"
-	board = Board.new(board_object)
 	
 func _process(delta: float) -> void:
+	if board == null:
+		return  # Do nothing if not in-game
+
 	if board.selected_piece != null \
 	and board.selected_tile != null and board.is_valid_move():
 		print(

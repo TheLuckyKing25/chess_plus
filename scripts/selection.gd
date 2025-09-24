@@ -29,7 +29,8 @@ func _on_input_tile_event(camera: Node, event: InputEvent,
 		event_position: Vector3, normal: Vector3, shape_idx: int
 ) -> void:
 	if (
-			Global.board.selected_piece != null
+			Global.board != null
+			and Global.board.selected_piece != null
 			and event is InputEventMouseButton
 			and event.is_pressed()
 			and event.button_index == MOUSE_BUTTON_LEFT

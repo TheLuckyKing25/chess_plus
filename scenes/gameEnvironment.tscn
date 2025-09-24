@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=7 format=3 uid="uid://h7v0gyqyq0h7"]
 
+[ext_resource type="Script" uid="uid://bafu7f1jjujaj" path="res://scenes/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_noarx"]
@@ -21,6 +22,7 @@ size = Vector3(8.5, 0.1, 8.5)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wsj4q"]
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_hlv2s")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(0.70716, -0.00881363, -0.706999, 0.707054, 0.00863876, 0.707107, -0.000124588, -0.999924, 0.0123407, -8, 6, 0)
