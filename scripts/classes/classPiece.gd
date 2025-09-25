@@ -28,8 +28,8 @@ var selected: bool = false:
 		outline.visible = state
 		tile_parent.highlighted = state
 		if state:
-			outline_color = Global.color_select
-			tile_parent.highlight_color = Global.color_select
+			outline_color = Global.COLOR_SELECT
+			tile_parent.highlight_color = Global.COLOR_SELECT
 
 var captured: bool = false:
 	set(state):
@@ -43,8 +43,8 @@ var threatened: bool = false:
 		outline.visible = state
 		tile_parent.highlighted = state
 		if state:
-			outline_color = Global.color_threatened
-			tile_parent.highlight_color = Global.color_threatened
+			outline_color = Global.COLOR_THREATENED
+			tile_parent.highlight_color = Global.COLOR_THREATENED
 
 ## Color of the mesh object
 var mesh_color: Color:

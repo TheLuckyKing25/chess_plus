@@ -2,10 +2,10 @@ extends Node3D
 
 
 func _ready() -> void:
-	Global.players.append(Player.new(1,Global.player_color[0]))
-	Global.players.append(Player.new(2,Global.player_color[1]))
-	var board_path = $"/root/Node3D/Board"
-	var board_base_path = $"/root/Node3D/Board/BoardBase"
+	Global.players.append(Player.new(1,Global.PLAYER_COLOR[0]))
+	Global.players.append(Player.new(2,Global.PLAYER_COLOR[1]))
+	var board_path = $"/root/gameEnvironment/Board"
+	var board_base_path = $"/root/gameEnvironment/Board/BoardBase"
 	Global.board = Board.new(board_path,board_base_path)
 	
 	for tile_node in board_path.find_children("Tile_*","",false):

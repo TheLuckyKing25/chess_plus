@@ -42,5 +42,7 @@ func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
 	relative_position = tile_position
 	object_tile = tile_object
 	match (tile_position[0] + tile_position[1]) % 2:
-		0: color = Global.color_tile_light 
-		1: color = Global.color_tile_dark
+		0: 
+			color = Global.color_tile_light 
+		1: 
+			color = Global.color_tile_dark
