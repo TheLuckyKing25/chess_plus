@@ -1,6 +1,5 @@
 extends Node
 
-var board_object = null
 var board = null
 	
 func _process(delta: float) -> void:

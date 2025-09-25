@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://camv04tw28yjr"]
 
-[ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://main_menu.gd" id="1_eiy7p"]
-[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://GlitchGoblin.ttf" id="1_i26rj"]
+[ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://scripts/classes/main_menu.gd" id="1_0ykhv"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://GlitchGoblin.ttf" id="2_2wh52"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eiy7p"]
 bg_color = Color(0.338519, 0.658383, 0.689193, 1)
@@ -42,7 +42,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_eiy7p")
+script = ExtResource("1_0ykhv")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -129,7 +129,7 @@ grow_horizontal = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = -10
 theme_override_constants/shadow_offset_y = 5
-theme_override_fonts/font = ExtResource("1_i26rj")
+theme_override_fonts/font = ExtResource("2_2wh52")
 theme_override_font_sizes/font_size = 86
 text = "Chess+"
 horizontal_alignment = 1
