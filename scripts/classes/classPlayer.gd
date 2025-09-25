@@ -17,7 +17,7 @@ func _init(player_number: int, piece_color: Color) -> void:
 func color_pieces() -> void:	
 	if len(pieces) != 0: 
 		for piece in pieces:
-			piece.base_color = color
+			piece.mesh_color = color
 
 
 func add_piece(piece: Piece) -> void: 
