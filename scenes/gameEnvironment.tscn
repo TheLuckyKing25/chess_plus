@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=18 format=3 uid="uid://h7v0gyqyq0h7"]
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
+[ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/PauseMenu.tscn" id="3_q1h0t"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true
@@ -120,5 +121,9 @@ light_color = Color(0.989176, 0.880823, 0.806088, 1)
 light_energy = 8.0
 light_indirect_energy = 2.0
 omni_range = 16.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_q1h0t")]
 
 [connection signal="ready" from="." to="." method="_on_ready"]
