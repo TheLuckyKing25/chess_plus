@@ -18,35 +18,39 @@ func _ready() -> void:
 	for tile in Global.tiles: 
 		var child = tile.object_tile.find_child("*_P*",false)
 		if child:
+			var player
+			match child.name.get_slice("_", 1):
+				"P1": 
+					player = Global.players[0]
+				"P2": 
+					player = Global.players[1]
+					
 			match child.name.get_slice("_", 0):
 				"Pawn": 
-					tile.occupant = Pawn.new(tile, child)
+					tile.occupant = Pawn.new(player, tile, child)
 				"Rook": 
-					tile.occupant = Rook.new(tile, child)
+					tile.occupant = Rook.new(player, tile, child)
 				"Bishop": 
-					tile.occupant = Bishop.new(tile, child)
+					tile.occupant = Bishop.new(player, tile, child)
 				"Knight": 
-					tile.occupant = Knight.new(tile, child)
+					tile.occupant = Knight.new(player, tile, child)
 				"Queen": 
-					tile.occupant = Queen.new(tile, child)
+					tile.occupant = Queen.new(player, tile, child)
 				"King": 
-					tile.occupant = King.new(tile, child)
+					tile.occupant = King.new(player, tile, child)
 			tile.occupant.outline.visible = false
 			tile.occupant.outline.material_override.grow_amount = (
 					Global.setting_piece_outline_thickness
 			)
-			var occupant_piece = tile.occupant.object_piece
-			match occupant_piece.name.get_slice("_", 1):
-				"P1": 
-					Global.players[0].add_piece(tile.occupant)
-				"P2": 
-					occupant_piece.find_child("Collision*").disabled = true
-					Global.players[1].add_piece(tile.occupant)
+			player.add_piece(tile.occupant)
 					
 	for player in Global.players:
 		Global.pieces += player.pieces
 		player.color_pieces()
 
+	for piece in Global.pieces:
+		piece.calculate_movements()
+		
 func _process(delta: float) -> void:
 	if (
 			Global.selected_piece 

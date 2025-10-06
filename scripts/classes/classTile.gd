@@ -37,12 +37,31 @@ var collision: CollisionShape3D
 ## Piece on the tile, if any
 var occupant: Piece = null
 
+var is_selected: bool = false:
+	set(state):
+		if not is_threatened:
+			highlighted = state
+			if state:
+				highlight_color = Global.COLOR_SELECT
+
+var is_valid_tile: bool = false:
+	set(state):
+		if not is_threatened:
+			highlighted = state
+			if state:
+				highlight_color = Global.COLOR_TILE_VALID_MOVE
+
+var is_threatened: bool = false:
+	set(state):
+		highlighted = state
+		if state:
+			highlight_color = Global.COLOR_THREATENED
 
 func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
 	relative_position = tile_position
 	object_tile = tile_object
 	match (tile_position[0] + tile_position[1]) % 2:
 		0: 
-			color = Global.color_tile_light 
+			color = Global.COLOR_TILE_LIGHT 
 		1: 
-			color = Global.color_tile_dark
+			color = Global.COLOR_TILE_DARK

@@ -8,6 +8,16 @@ var color: Color:
 		color = new_color
 		color_pieces()
 		
+var check: bool = false:
+	set(state):
+		check = state
+		for piece in pieces:
+			if piece is King:
+				if state:
+					piece.is_threatened = true
+				else:
+					piece.is_threatened = false
+		
 
 func _init(player_number: int, piece_color: Color) -> void:
 	number = player_number
