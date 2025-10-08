@@ -38,6 +38,8 @@ func _ready() -> void:
 					tile.occupant = Queen.new(player, tile, child)
 				"King": 
 					tile.occupant = King.new(player, tile, child)
+					player.king = tile.occupant
+					print(player.king)
 			tile.occupant.outline.visible = false
 			tile.occupant.outline.material_override.grow_amount = (
 					Global.setting_piece_outline_thickness

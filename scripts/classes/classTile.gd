@@ -8,18 +8,6 @@ var color: Color:
 		color = new_color
 		mesh.get_surface_override_material(0).albedo_color = new_color
 
-var highlighted: bool = true:
-	set(state): 
-		if !state:
-			mesh.get_surface_override_material(0).albedo_color = color
-## Mixes the current color of the tiles with the specified color.
-var highlight_color: Color: 
-	set(new_color):
-		highlighted = true
-		highlight_color = new_color
-		mesh.get_surface_override_material(0).albedo_color *= new_color
-
-
 ## Position of the tile on the board
 var relative_position: Vector2i
 
@@ -37,25 +25,51 @@ var collision: CollisionShape3D
 ## Piece on the tile, if any
 var occupant: Piece = null
 
-var is_selected: bool = false:
-	set(state):
-		if not is_threatened:
-			highlighted = state
-			if state:
-				highlight_color = Global.COLOR_SELECT
+enum State {
+		NONE = 0,
+		SELECTED = 1,
+		VALID = 2,
+		THREATENED = 3,
+		CHECKED = 4,
+		CHECKER = 5,
+	}
 
-var is_valid_tile: bool = false:
-	set(state):
-		if not is_threatened:
-			highlighted = state
-			if state:
-				highlight_color = Global.COLOR_TILE_VALID_MOVE
+var state_order: Array[State] = [State.NONE]
 
-var is_threatened: bool = false:
-	set(state):
-		highlighted = state
-		if state:
-			highlight_color = Global.COLOR_THREATENED
+func previous_state():
+	if len(state_order) > 0:
+		state = state_order.pop_back()
+	else:
+		state = State.NONE
+
+var state: State:
+	set(new_state):
+		match new_state:
+			State.NONE: 
+				mesh.get_surface_override_material(0).albedo_color = color
+				state_order.clear()
+			State.SELECTED: 
+				if state != State.NONE:
+					state_order.append(state)
+				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_SELECT_TILE
+			State.VALID:
+				if state != State.NONE:
+					state_order.append(state)
+				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_MOVEMENT_TILE
+			State.THREATENED:
+				if state != State.NONE:
+					state_order.append(state)
+				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_THREATENED_TILE
+			State.CHECKED: 
+				if state != State.NONE:
+					state_order.append(state)
+				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_CHECKED_TILE
+			State.CHECKER: 
+				if state != State.NONE:
+					state_order.append(state)
+				if Global.setting_show_checker_piece_path:
+					mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_CHECKER_TILE
+		state = new_state
 
 func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
 	relative_position = tile_position
@@ -65,3 +79,4 @@ func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
 			color = Global.COLOR_TILE_LIGHT 
 		1: 
 			color = Global.COLOR_TILE_DARK
+	
