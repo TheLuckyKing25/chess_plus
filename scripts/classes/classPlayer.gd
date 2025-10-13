@@ -4,10 +4,7 @@ extends Node
 var number: int
 var pieces: Array[Piece] = []
 var king: King
-var check: bool = false:
-	set(state):
-		if state:
-			king.state = king.State.CHECKED
+
 var color: Color:
 	set(new_color):
 		color = new_color

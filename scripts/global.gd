@@ -23,10 +23,11 @@ extends Node
 #region Setting Variables
 var setting_debug_restrict_movement: bool = false
 
-var setting_show_threatened: bool = true #Not implimented
-
 # Show the path that a piece uses to check a king
 var setting_show_checker_piece_path: bool = true
+# Show the piece that checks a king
+var setting_show_checker_piece: bool = true
+
 var setting_piece_outline_thickness: float = 0.1
 
 # You must move the first piece you select
@@ -142,6 +143,7 @@ var selected_piece: Piece = null
 
 var threaten_king_tiles: Array[Tile] = []
 var threaten_king_pieces: Array[Piece] = []
+var threaten_king_movement: Array[Tile] = []
 #endregion
 
 func opponent(player: Player) -> Player:
@@ -187,52 +189,49 @@ func find_piece_from_object(piece_object: Node3D) -> Piece:
 			return piece
 	return null
 
-
-## Compare two pieces
-## Returns true if they are on the same team
-func is_same_team(piece1: Piece, piece2: Piece) -> bool: 
-	return (piece1.player_parent == piece2.player_parent)
-
-
 ## Checks if a selected tile is within the valid movement of the piece
 func is_valid_move() -> bool: 
 	return (
+		selected_tile in selected_piece.full_valid_movements 
+		or (
 			not setting_debug_restrict_movement 
-			or selected_tile in (
-					selected_piece.valid_movements 
-					+ selected_piece.valid_threatening_movements)
-			)
+			and not selected_tile.occupant in players[player_turn].pieces
+		)
+	)
 
 
 func clear_movement():
-	for tile in (selected_piece.valid_movements + selected_piece.valid_threatening_movements):
+	for tile in selected_piece.full_valid_movements:
 		tile.state = tile.State.NONE
 		if (
 				tile.occupant 
-				and not is_same_team(selected_piece, tile.occupant)
+				and tile.occupant in opponent(players[player_turn]).pieces
 		):
 			tile.occupant.state = tile.occupant.State.NONE
 	selected_piece.state = selected_piece.State.NONE
 
 func unselect_piece(unselected_piece: Piece):
-	for tile in (unselected_piece.valid_movements + unselected_piece.valid_threatening_movements):
+	for tile in unselected_piece.full_valid_movements:
 		tile.previous_state()
 		if (
 				tile.occupant 
-				and not is_same_team(unselected_piece, tile.occupant)
+				and tile.occupant in opponent(players[player_turn]).pieces
 		):
 			tile.occupant.previous_state()
 	unselected_piece.previous_state()
 
 ## Selects the given piece while unselecting the previously selected piece
 func select_piece(new_selected_piece: Piece) -> void:
+	# unselect piece by clicking on it again
 	if selected_piece == new_selected_piece:
 		unselect_piece(selected_piece)
 		selected_piece = null
 		return
-	elif selected_piece and new_selected_piece not in players[player_turn].pieces: 
+	# select tile by clicking an opponent piece
+	elif selected_piece and new_selected_piece in opponent(players[player_turn]).pieces: 
 		selected_tile = new_selected_piece.tile_parent
 		return
+	# select a piece
 	elif new_selected_piece in players[player_turn].pieces: 
 		if selected_piece:
 			unselect_piece(selected_piece)
@@ -242,66 +241,84 @@ func select_piece(new_selected_piece: Piece) -> void:
 	
 ## Sets up the next turn
 func new_turn() -> void:
-
+	
+	selected_piece = null
+	selected_tile = null
+	
+	# switched the board color and increments the turn number
 	player_turn = (player_turn + 1) % 2
 	board.color = PLAYER_COLOR[player_turn]
 	
+	# Clear the states of all the tiles
 	for tile in tiles:
 		tile.state = tile.State.NONE
 	
+	# Clear the states of all the pieces and players
 	for player in players:
-		player.check = false
 		for piece in player.pieces:
 			piece.state = piece.State.NONE
 
+  	# Recalculate piece movements and if check has occured
+	for player in players:
+		player.king.calculate_all_movements()
+		player.king.validate_movements()
+	
+	threaten_king_movement = []
+			
 	for player in players:
 		threaten_king_tiles = []
 		threaten_king_pieces = []
 		for piece in player.pieces:
-			piece.calculate_movements()
-		check(player)
+			if piece is not King:
+				piece.calculate_all_movements()
+				piece.validate_movements()
+			
+		if threaten_king_tiles and threaten_king_pieces:
+			for tile in threaten_king_tiles:
+				tile.state = tile.State.CHECKER
+			for piece in threaten_king_pieces:
+				piece.state = piece.State.CHECKER
+			opponent(player).king.state = opponent(player).king.State.CHECKED
 
 ## Moves the given piece to the given tile, 
 ## and captures opponent pieces if tile is occupied.
-func move_piece(piece: Piece, piece_destination_tile: Tile) -> void:
+func move_piece(piece: Piece, destination_tile: Tile) -> void:
 	if is_valid_move():
 		clear_movement()
 		
-		if piece_destination_tile.occupant:
-			piece_destination_tile.occupant.state = piece_destination_tile.occupant.State.CAPTURED
+		if destination_tile.occupant:
+			destination_tile.occupant.state = destination_tile.occupant.State.CAPTURED
 		
-		piece.object_piece.reparent(piece_destination_tile.object_tile)
-		piece.object_piece.set_owner(piece_destination_tile.object_tile)
+		# Parents the piece to the new tile in the node tree.
+		piece.object_piece.reparent(destination_tile.object_tile)
+		piece.object_piece.set_owner(destination_tile.object_tile)
 		piece.object_piece.global_position = (
-				piece_destination_tile.object_tile.global_position 
+				destination_tile.object_tile.global_position 
 				* Vector3(1,0,1)
 				+ piece.object_piece.global_position 
 				* Vector3(0,1,0)
 		)
 		
+		# Adjusts tile and piece class values
 		var old_tile = piece.tile_parent
-		piece.tile_parent = piece_destination_tile
+		piece.tile_parent = destination_tile
 		piece.tile_parent.occupant = piece
 		old_tile.occupant = null
 		
-		if (
-				piece is Pawn
-				and !piece.has_moved
-		):
+		if piece is Pawn and !piece.has_moved:
 			piece.movement_distance = MovementDistance.PAWN
-		
 		piece.has_moved = true
-		
-		selected_piece.state = selected_piece.State.NONE
-		selected_piece = null
-		selected_tile = null
+
 		new_turn()
+
+
+			
 	
-func check(player: Player):
-	for tile in threaten_king_tiles:
-		tile.state = tile.State.CHECKER
-	for piece in threaten_king_pieces:
-		piece.state = piece.State.CHECKER
 	
-	if threaten_king_tiles and threaten_king_pieces:
-		opponent(player).check = true
+	
+	
+	
+	
+	
+	
+	

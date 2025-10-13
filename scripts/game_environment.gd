@@ -39,7 +39,6 @@ func _ready() -> void:
 				"King": 
 					tile.occupant = King.new(player, tile, child)
 					player.king = tile.occupant
-					print(player.king)
 			tile.occupant.outline.visible = false
 			tile.occupant.outline.material_override.grow_amount = (
 					Global.setting_piece_outline_thickness
@@ -49,9 +48,14 @@ func _ready() -> void:
 	for player in Global.players:
 		Global.pieces += player.pieces
 		player.color_pieces()
+		player.king.calculate_all_movements()
+		player.king.validate_movements()
 
 	for piece in Global.pieces:
-		piece.calculate_movements()
+		if piece is King:
+			continue
+		piece.calculate_all_movements()
+		piece.validate_movements()
 		
 func _process(delta: float) -> void:
 	if (
