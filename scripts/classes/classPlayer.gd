@@ -4,11 +4,18 @@ extends Node
 var number: int
 var pieces: Array[Piece] = []
 var king: King
+var queens: Array[Queen]
+var rooks: Array[Rook]
+var bishops: Array[Bishop]
+var knights: Array[Knight]
+var pawns: Array[Pawn]
+
 
 var color: Color:
 	set(new_color):
 		color = new_color
 		color_pieces()
+
 
 func _init(player_number: int, piece_color: Color) -> void:
 	number = player_number

@@ -8,9 +8,13 @@ var color: Color:
 		color = new_color
 		mesh.get_surface_override_material(0).albedo_color = new_color
 
-## Position of the tile on the board
-var relative_position: Vector2i
+var state_color: Color: 
+	set(new_color):
+		state_color = new_color
+		mesh.get_surface_override_material(0).albedo_color = new_color
 
+## Position of the tile on the board
+var board_position: Vector2i
 
 ## Node containing the Mesh and CollisionBox
 var object_tile: Node3D:
@@ -21,69 +25,62 @@ var object_tile: Node3D:
 var mesh: MeshInstance3D
 var collision: CollisionShape3D
 
-
 ## Piece on the tile, if any
 var occupant: Piece = null
 
-enum State {
-		NONE = 0,
-		SELECTED = 1,
-		VALID = 2,
-		THREATENED = 3,
-		CHECKED = 4,
-		CHECKER = 5,
-		MOVE_CHECKER = 6,
+enum {
+		T_STATE_NONE,
+		T_STATE_SELECTED,
+		T_STATE_VALID,
+		T_STATE_THREATENED,
+		T_STATE_CHECKED,
+		T_STATE_CHECKING,
+		T_STATE_MOVE_CHECKING,
 	}
 
-var state_order: Array[State] = [State.NONE]
+var state_order: Array = []
 
 func previous_state():
-	if len(state_order) > 0:
-		state = state_order.pop_back()
+	if len(state_order) > 1:
+		set_state(state_order.pop_back())
 	else:
-		state = State.NONE
+		set_state(T_STATE_NONE)
 
-var state: State:
-	set(new_state):
-		match new_state:
-			State.NONE: 
-				mesh.get_surface_override_material(0).albedo_color = color
-				state_order.clear()
-			State.SELECTED: 
-				if state != State.NONE:
-					state_order.append(state)
-				if state != State.CHECKED:
-					mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_SELECT_TILE
-			State.VALID:
-				if state != State.NONE:
-					state_order.append(state)
-				if state != State.CHECKER and state != State.MOVE_CHECKER:
-					mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_MOVEMENT_TILE
-			State.THREATENED:
-				if state != State.NONE:
-					state_order.append(state)
-				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_THREATENED_TILE
-			State.CHECKED: 
-				if state != State.NONE:
-					state_order.append(state)
-				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_CHECKED_TILE
-			State.CHECKER: 
-				if state != State.NONE:
-					state_order.append(state)
-				if Global.setting_show_checker_piece_path:
-					mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_CHECKER_TILE
-			State.MOVE_CHECKER: 
-				if state != State.NONE:
-					state_order.append(state)
-				mesh.get_surface_override_material(0).albedo_color = color * Global.COLOR_CHECKER_TILE
-		state = new_state
+var state
 
 func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
-	relative_position = tile_position
+	board_position = tile_position
 	object_tile = tile_object
 	match (tile_position[0] + tile_position[1]) % 2:
 		0: 
-			color = Global.COLOR_TILE_LIGHT 
+			color = Global.game_color[Global.TILE_LIGHT]
 		1: 
-			color = Global.COLOR_TILE_DARK
+			color = Global.game_color[Global.TILE_DARK]
 	
+func is_occupied_by_opponent_piece(player: Player):
+	return occupant and occupant in Global.opponent(player).pieces
+
+func set_state(new_state):
+	var previous_state = state
+	if previous_state != T_STATE_NONE and new_state != T_STATE_NONE:
+		state_order.append(previous_state)
+	match new_state:
+		T_STATE_NONE: 
+			state_color = color
+			state_order.clear()
+		T_STATE_SELECTED: 
+			if previous_state != T_STATE_CHECKED:
+				state_color = color * Global.game_color[Global.SELECT_TILE]
+		T_STATE_VALID:
+			if previous_state != T_STATE_MOVE_CHECKING:
+				state_color = color * Global.game_color[Global.VALID_TILE]
+		T_STATE_THREATENED:
+			state_color = Global.game_color[Global.THREATENED_TILE]
+		T_STATE_CHECKED: 
+			state_color = color * Global.game_color[Global.CHECKED_TILE]
+		T_STATE_CHECKING: 
+			if Global.setting[Global.SHOW_CHECKING_PIECE_PATH]:
+				state_color = color * Global.game_color[Global.CHECKING_TILE]
+		T_STATE_MOVE_CHECKING: 
+			state_color = color * Global.game_color[Global.CHECKING_TILE]
+	state = new_state

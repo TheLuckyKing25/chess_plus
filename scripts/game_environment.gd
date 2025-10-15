@@ -2,8 +2,8 @@ extends Node3D
 
 
 func _ready() -> void:
-	Global.players.append(Player.new(1,Global.PLAYER_COLOR[0]))
-	Global.players.append(Player.new(2,Global.PLAYER_COLOR[1]))
+	Global.players.append(Player.new(1,Global.game_color[Global.PLAYER][0]))
+	Global.players.append(Player.new(2,Global.game_color[Global.PLAYER][1]))
 	var board_path = $"/root/gameEnvironment/Board"
 	var board_base_path = $"/root/gameEnvironment/Board/BoardBase"
 	Global.board = Board.new(board_path,board_base_path)
@@ -28,20 +28,25 @@ func _ready() -> void:
 			match child.name.get_slice("_", 0):
 				"Pawn": 
 					tile.occupant = Pawn.new(player, tile, child)
+					player.pawns.append(tile.occupant)
 				"Rook": 
 					tile.occupant = Rook.new(player, tile, child)
+					player.rooks.append(tile.occupant)
 				"Bishop": 
 					tile.occupant = Bishop.new(player, tile, child)
+					player.bishops.append(tile.occupant)
 				"Knight": 
 					tile.occupant = Knight.new(player, tile, child)
+					player.knights.append(tile.occupant)
 				"Queen": 
 					tile.occupant = Queen.new(player, tile, child)
+					player.queens.append(tile.occupant)
 				"King": 
 					tile.occupant = King.new(player, tile, child)
 					player.king = tile.occupant
 			tile.occupant.outline.visible = false
 			tile.occupant.outline.material_override.grow_amount = (
-					Global.setting_piece_outline_thickness
+					Global.setting[Global.PIECE_OUTLINE_THICKNESS]
 			)
 			player.add_piece(tile.occupant)
 					
@@ -56,6 +61,8 @@ func _ready() -> void:
 			continue
 		piece.calculate_all_movements()
 		piece.validate_movements()
+	
+	Global.current_player = Global.players[Global.player_turn]
 		
 func _process(delta: float) -> void:
 	if (
