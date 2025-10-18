@@ -1,69 +1,70 @@
 class_name Pawn 
 extends Piece
 
-var pawn_threatening_movement: Array[Tile] = []
+var pawn_threatening_moveset: Array[Tile] = []
 var capture_direction
 
 func _init(player: Player, parent_tile: Tile, piece_object: Node3D):
 	movement_direction = Global.PAWN_MOVEMENT_DIRECTIONS
 	capture_direction = Global.PAWN_CAPTURE_DIRECTIONS
 	movement_distance = Global.MovementDistance.PAWN_INITIAL
-	object_piece = piece_object
+	object = piece_object
 	player_parent = player
 	tile_parent = parent_tile
+	mesh_color = player.color
 
-func calculate_all_movements():
-	pawn_threatening_movement = []
-	all_movements = []
-	var path: Array[Tile] = []
+func calculate_complete_moveset():
+	pawn_threatening_moveset.clear()
+	complete_moveset.clear()
+	var max_outward_path: Array[Tile] = []
 
 	for distance in range(1,movement_distance+1):
 		var position_transform = (movement_direction[0] * distance * parity)
 		var new_position = tile_parent.board_position + position_transform
-		var new_tile = Global.find_tile_from_position(new_position)
+		var new_tile = Global.tile_from_position(new_position)
 		
 		if not new_tile: 
 			break
 	
-		path.append(new_tile)
-	all_movements.append(path)
+		max_outward_path.append(new_tile)
+	complete_moveset.append(max_outward_path)
 	
 	for direction in capture_direction:
 		var position_transform = (direction * parity)
 		var new_position = tile_parent.board_position + position_transform
-		var new_tile = Global.find_tile_from_position(new_position)
+		var new_tile = Global.tile_from_position(new_position)
 		
 		if not new_tile: 
 			break
-		pawn_threatening_movement.append(new_tile)
+		pawn_threatening_moveset.append(new_tile)
 
-func validate_movements():
-	valid_movements = []
-	valid_threatening_movements = []
+func generate_valid_moveset():
+	valid_moveset.clear()
+	threatening_moveset.clear()
 	
-	for tile in all_movements[0]:
+	for tile in complete_moveset[0]:
 		if tile.occupant:
 			break
 		else:
-			valid_movements.append(tile)
+			valid_moveset.append(tile)
 			
-	for tile in pawn_threatening_movement:
-		var occupant = 	tile.occupant
+	for tile in pawn_threatening_moveset:
+		var occupant = tile.occupant
 		if not occupant:
 			
-			if tile in Global.opponent(player_parent).king.full_valid_movements:
-				Global.threaten_king_movement.append(tile)
+			if tile in Global.opponent(player_parent).king.possible_moveset:
+				Global.checked_king_moveset.append(tile)
 			continue
 		
 			
-		if occupant in player_parent.pieces:
+		if tile.is_occupied_by_friendly_piece_of(player_parent):
 			break
 			
-		elif occupant.is_opponent_king(player_parent):
-			Global.threaten_king_tiles.append(tile)
-			Global.threaten_king_pieces.append(self)
+		elif occupant.is_opponent_king_of(player_parent):
+			Global.checking_tiles.append(tile)
+			Global.checking_pieces.append(self)
 			break
-		valid_threatening_movements.append(tile)
+		threatening_moveset.append(tile)
 		break
 
 			

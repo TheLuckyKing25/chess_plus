@@ -2,8 +2,8 @@ extends Node3D
 
 
 func _ready() -> void:
-	Global.players.append(Player.new(1,Global.game_color[Global.PLAYER][0]))
-	Global.players.append(Player.new(2,Global.game_color[Global.PLAYER][1]))
+	Global.create_players()
+	
 	var board_path = $"/root/gameEnvironment/Board"
 	var board_base_path = $"/root/gameEnvironment/Board/BoardBase"
 	Global.board = Board.new(board_path,board_base_path)
@@ -44,23 +44,24 @@ func _ready() -> void:
 				"King": 
 					tile.occupant = King.new(player, tile, child)
 					player.king = tile.occupant
-			tile.occupant.outline.visible = false
-			tile.occupant.outline.material_override.grow_amount = (
+			tile.occupant.outline_object.visible = false
+			tile.occupant.outline_object.material_override.grow_amount = (
 					Global.setting[Global.PIECE_OUTLINE_THICKNESS]
 			)
-			player.add_piece(tile.occupant)
 					
 	for player in Global.players:
-		Global.pieces += player.pieces
-		player.color_pieces()
-		player.king.calculate_all_movements()
-		player.king.validate_movements()
+		Global.pieces.append_array(player.pieces)
+		player.king.calculate_complete_moveset()
+		player.king.generate_valid_moveset()
 
 	for piece in Global.pieces:
 		if piece is King:
 			continue
-		piece.calculate_all_movements()
-		piece.validate_movements()
+		piece.calculate_complete_moveset()
+		piece.generate_valid_moveset()
+	
+	for player in Global.players:
+		player.compile_threatened_tiles()
 	
 	Global.current_player = Global.players[Global.player_turn]
 		
@@ -68,13 +69,8 @@ func _process(delta: float) -> void:
 	if (
 			Global.selected_piece 
 			and Global.selected_tile 
-			and Global.is_valid_move()
+			and Global.selected_tile.is_valid_move(Global.selected_piece, Global.current_player)
 	):
-		print(
-			"%10s" % Global.selected_piece.object_piece.name 
-			+ " moves from " 
-			+ Global.selected_piece.tile_parent.object_tile.name 
-			+ " to " 
-			+ Global.selected_tile.object_tile.name
-		)
+		Global.print_move()
+		
 		Global.move_piece(Global.selected_piece, Global.selected_tile)

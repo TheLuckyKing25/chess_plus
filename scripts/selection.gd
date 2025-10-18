@@ -21,7 +21,7 @@ func _on_input_piece_event(camera: Node, event: InputEvent,
 		if result:
 			var clicked_object = result.collider.get_parent()
 			Global.select_piece(
-					Global.find_piece_from_object(clicked_object)
+					Global.piece_from_object(clicked_object)
 			)
 
 # checks if a piece has been selected and the tile has been clicked on.
@@ -44,5 +44,5 @@ func _on_input_tile_event(camera: Node, event: InputEvent,
 		if result:
 			var clicked_object = result.collider.get_parent()
 			Global.selected_tile = (
-					Global.find_tile_from_object(clicked_object)
+					Global.tile_from_object(clicked_object)
 			)
