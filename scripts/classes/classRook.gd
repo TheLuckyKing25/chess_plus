@@ -2,15 +2,12 @@ class_name Rook
 extends Piece
 
 func _init(player: Player, parent_tile: Tile, piece_object: Node3D) -> void:
-	movement_direction = Global.ROOK_MOVEMENT_DIRECTIONS
-	movement_distance = Global.MovementDistance.ROOK
+	movement_direction = Global.direction[Global.ROOK]
+	movement_distance = Global.distance[Global.ROOK]
 	object = piece_object
 	player_parent = player
 	tile_parent = parent_tile
 	mesh_color = player.color
-
-func is_castling_valid():
-	return not has_moved
 
 func calculate_complete_moveset():
 	complete_moveset.clear()
@@ -18,9 +15,13 @@ func calculate_complete_moveset():
 		var max_outward_path: Array[Tile] = []
 
 		for distance in range(1,movement_distance+1):
-			var position_transform = (direction * distance * parity)
-			var new_position = tile_parent.board_position + position_transform
-			var new_tile = Global.tile_from_position(new_position)
+			var position_transform: Vector2i 
+			var new_position: Vector2i
+			var new_tile: Tile 
+			
+			position_transform = (direction * distance * parity)
+			new_position = tile_parent.board_position + position_transform
+			new_tile = Global.tile_from_position(new_position)
 			
 			if not new_tile: 
 				break
@@ -34,9 +35,9 @@ func generate_valid_moveset():
 	
 	for max_outward_path in complete_moveset:
 		var valid_path: Array[Tile] = []
-		var king_check = false
+		var king_check: bool = false
 		for tile in max_outward_path:
-			var occupant = tile.occupant
+			var occupant: Piece = tile.occupant
 			if occupant:
 				if tile.is_occupied_by_friendly_piece_of(player_parent):
 					break
@@ -61,3 +62,6 @@ func generate_valid_moveset():
 				valid_path.append(tile)
 				continue
 		valid_moveset.append_array(valid_path)
+
+func is_castling_valid() -> bool:
+	return not has_moved

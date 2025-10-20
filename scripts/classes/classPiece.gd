@@ -36,10 +36,10 @@ var player_parent: Player:
 var parity: int ## determines which direction is the front
 
 
-var movement_direction: Array[Vector2i] ## Directions the piece can move in.
+var movement_direction: Array ## Directions the piece can move in.
 var movement_distance: int ## The distance covered by the movement directions.
 
-var complete_moveset = []
+var complete_moveset:Array[Array] = []
 
 var valid_moveset: Array[Tile] = []
 var threatening_moveset: Array[Tile] = []
@@ -63,12 +63,6 @@ enum {
 
 var state_order: Array = []
 
-func previous_state():
-	if not state_order.is_empty():
-		set_state(state_order.pop_back())
-	else:
-		set_state(P_STATE_NONE)
-
 var current_state = P_STATE_NONE
 	
 func _init(player: Player, tile: Tile, piece_object: Node3D) -> void:
@@ -77,33 +71,38 @@ func _init(player: Player, tile: Tile, piece_object: Node3D) -> void:
 	tile_parent = tile
 	mesh_color = player.color
 
-func calculate_complete_moveset():
-	pass
-
-func generate_valid_moveset():
-	pass
-
-func is_same_piece(piece: Piece):
-	return self == piece
-
-func is_opponent_piece_of(player:Player):
-	return self in Global.opponent(player).pieces
-
-func is_friendly_piece_of(player:Player):
-	return self in player.pieces
-
-func is_opponent_king_of(player:Player):
-	return self is King and self.is_opponent_piece_of(player)
-
-
-func _set_outline_to(new_color:= Color(0,0,0)):
+func _set_outline_to(new_color:= Color(0,0,0)) -> void:
 	if new_color == Color(0,0,0):
 		outline_object.visible = false
 		return
 	outline_object.visible = true
 	outline_color = new_color
-	
-func set_state(new_state):
+
+func calculate_complete_moveset() -> void:
+	pass
+
+func generate_valid_moveset() -> void:
+	pass
+
+func is_friendly_piece_of(player:Player) -> bool:
+	return self in player.pieces
+
+func is_opponent_king_of(player:Player) -> bool:
+	return self is King and self.is_opponent_piece_of(player)
+
+func is_opponent_piece_of(player:Player) -> bool:
+	return self in Global.opponent(player).pieces
+
+func is_same_piece(piece: Piece) -> bool:
+	return self == piece
+
+func previous_state() -> void:
+	if not state_order.is_empty():
+		set_state(state_order.pop_back())
+	else:
+		set_state(P_STATE_NONE)
+
+func set_state(new_state) -> void:
 	match new_state:
 		P_STATE_NONE: 
 			_set_outline_to()

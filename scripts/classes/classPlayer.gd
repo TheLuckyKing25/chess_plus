@@ -20,7 +20,12 @@ var color: Color:
 	set(new_color):
 		color = new_color
 
-func compile_threatened_tiles():
+func _init(player_number: int, piece_color: Color) -> void:
+	player_num = player_number
+	color = piece_color
+
+func compile_threatened_tiles() -> void:
+	all_threatened_tiles.clear()
 	for piece in pieces:
 		if piece is Pawn:
 			for tile in piece.pawn_threatening_moveset:
@@ -32,7 +37,3 @@ func compile_threatened_tiles():
 				if tile not in all_threatened_tiles:
 					all_threatened_tiles.append(tile)
 				continue
-
-func _init(player_number: int, piece_color: Color) -> void:
-	player_num = player_number
-	color = piece_color

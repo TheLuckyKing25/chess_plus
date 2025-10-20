@@ -16,7 +16,7 @@ func _ready() -> void:
 						tile_node))
 						
 	for tile in Global.tiles: 
-		var child = tile.object_tile.find_child("*_P*",false)
+		var child: Node3D = tile.object_tile.find_child("*_P*",false)
 		if child:
 			var player
 			match child.name.get_slice("_", 1):
