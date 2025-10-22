@@ -1,5 +1,121 @@
 class_name Piece
-extends Node
+
+## Game Pieces
+enum Type{
+	PAWN,
+	BISHOP,
+	KNIGHT,
+	ROOK,
+	QUEEN,
+	KING,
+}
+
+## Move distance for 
+const DISTANCE: Dictionary = {
+	Type.PAWN: [2,1],
+	Type.BISHOP: 8,
+	Type.KNIGHT: 1,
+	Type.ROOK: 8,
+	Type.QUEEN: 8,
+	Type.KING: 1,
+}
+
+
+const DIRECTION:Dictionary = {
+	Type.PAWN: [
+		[Vector2i(1,0)],
+		[Vector2i(1,1),Vector2i(1,-1)]
+		],
+	Type.BISHOP: [
+		Vector2i(1,1), 
+		Vector2i(1,-1),
+		Vector2i(-1,-1),
+		Vector2i(-1,1),
+		],
+	Type.KNIGHT: [
+		Vector2i(1,2),  
+		Vector2i(2,1),
+		Vector2i(2,-1), 
+		Vector2i(1,-2), 
+		Vector2i(-1,2), 
+		Vector2i(-2,-1),
+		Vector2i(-2,1), 
+		Vector2i(-1,-2),
+		],
+	Type.ROOK: [
+		Vector2i(1,0), 
+		Vector2i(0,1), 
+		Vector2i(-1,0), 
+		Vector2i(0,-1),
+		],
+	Type.QUEEN: [
+		Vector2i(1,0), 
+		Vector2i(1,1), 
+		Vector2i(0,1), 
+		Vector2i(1,-1), 
+		Vector2i(0,-1), 
+		Vector2i(-1,-1), 
+		Vector2i(-1,0), 
+		Vector2i(-1,1),
+		],
+	Type.KING: [
+		Vector2i(1,0), 
+		Vector2i(1,1), 
+		Vector2i(0,1), 
+		Vector2i(1,-1), 
+		Vector2i(0,-1), 
+		Vector2i(-1,-1), 
+		Vector2i(-1,0), 
+		Vector2i(-1,1),
+		],
+}
+
+enum State{
+		NONE,
+		SELECTED,
+		THREATENED,
+		CAPTURED,
+		CHECKED,
+		CHECKING,
+		SPECIAL,
+	}
+
+
+static var selected: Piece = null
+
+
+var castling_moveset: Array[Tile] = []
+
+
+var collision_object: CollisionShape3D
+
+
+var complete_moveset:Array[Array] = []
+
+
+var current_state: State = State.NONE
+
+
+var has_moved: bool = false
+
+
+## Color of the mesh object
+var mesh_color: Color:
+	set(color):
+		mesh_color = color
+		mesh_object.get_surface_override_material(0).albedo_color = color
+
+
+var mesh_object: MeshInstance3D
+
+
+## Directions the piece can move in.
+var movement_direction: Array 
+
+
+## The distance covered by the movement directions.
+var movement_distance: int 
+
 
 ## Node containing the Mesh, Outline, and CollisionBox
 var object: Node3D:
@@ -9,67 +125,72 @@ var object: Node3D:
 		outline_object = node.find_child("Outline")
 		collision_object = node.find_child("Collision")
 
-var mesh_object: MeshInstance3D
-var outline_object: MeshInstance3D
-var collision_object: CollisionShape3D
 
-## Color of the mesh object
-var mesh_color: Color:
-	set(color):
-		mesh_color = color
-		mesh_object.get_surface_override_material(0).albedo_color = color
-		
 ## Color of the mesh object
 var outline_color: Color:
 	set(color):
 		outline_color = color
 		outline_object.material_override.albedo_color = color
 
-## Tile that the piece is on/parented
-var tile_parent: Tile
-				
+
+var outline_object: MeshInstance3D
+
+
+## determines which direction is the front
+var parity: int 
+
+
 var player_parent: Player:
 	set(player):
 		player_parent = player
-		parity = 1 if player.color != Global.game_color[Global.PLAYER][0] else -1
+		parity = 1 if player.color != Game.Colour.PALETTE[Game.Colour.PLAYER][0] else -1
 
-var parity: int ## determines which direction is the front
-
-
-var movement_direction: Array ## Directions the piece can move in.
-var movement_distance: int ## The distance covered by the movement directions.
-
-var complete_moveset:Array[Array] = []
-
-var valid_moveset: Array[Tile] = []
-var threatening_moveset: Array[Tile] = []
-var castling_moveset: Array[Tile] = []
 
 var possible_moveset: Array[Tile]:
 	get: 
 		return valid_moveset + threatening_moveset + castling_moveset
 
-var has_moved: bool = false
 
-enum {
-		P_STATE_NONE,
-		P_STATE_SELECTED,
-		P_STATE_THREATENED,
-		P_STATE_CAPTURED,
-		P_STATE_CHECKED,
-		P_STATE_CHECKING,
-		P_STATE_SPECIAL,
-	}
+var state_order: Array[State] = []
 
-var state_order: Array = []
 
-var current_state = P_STATE_NONE
+var threatening_moveset: Array[Tile] = []
+
+
+## Tile that the piece is on/parented
+var on_tile: Tile
+
+
+var valid_moveset: Array[Tile] = []
+
+
+## Returns the piece class of the given piece object.
+## Returns null if no piece class can be found.
+static func find_from_object(piece_object: Node3D) -> Piece:
+	for piece in Board.all_pieces: 
+		if piece.object == piece_object:
+			return piece
+	return null
+
 	
 func _init(player: Player, tile: Tile, piece_object: Node3D) -> void:
 	object = piece_object
 	player_parent = player
-	tile_parent = tile
+	on_tile = tile
 	mesh_color = player.color
+
+
+## Node tree function that reparents the piece object to the tile object
+func _reparent_piece_to_new_tile(tile:Node3D) -> void:
+		object.reparent(tile)
+		object.set_owner(tile)
+		object.global_position = (
+				tile.global_position 
+				* Vector3(1,0,1)
+				+ object.global_position 
+				* Vector3(0,1,0)
+		)
+
 
 func _set_outline_to(new_color:= Color(0,0,0)) -> void:
 	if new_color == Color(0,0,0):
@@ -78,71 +199,180 @@ func _set_outline_to(new_color:= Color(0,0,0)) -> void:
 	outline_object.visible = true
 	outline_color = new_color
 
-func calculate_complete_moveset() -> void:
-	pass
 
-func generate_valid_moveset() -> void:
-	pass
+func is_king_of(player:Player) -> bool:
+	return self is King and self.is_piece_of(player)
 
-func is_friendly_piece_of(player:Player) -> bool:
+
+func is_piece_of(player:Player) -> bool:
 	return self in player.pieces
 
-func is_opponent_king_of(player:Player) -> bool:
-	return self is King and self.is_opponent_piece_of(player)
-
-func is_opponent_piece_of(player:Player) -> bool:
-	return self in Global.opponent(player).pieces
 
 func is_same_piece(piece: Piece) -> bool:
 	return self == piece
+
+
+## Moves the given piece to the given tile, 
+## and captures opponent pieces if tile is occupied.
+func move_to(new_tile: Tile) -> void:
+	if new_tile.is_valid_move(self, Player.current):
+		
+		if new_tile.occupant:
+			new_tile.occupant.set_state(Piece.State.CAPTURED)
+		
+		# Parents the piece to the new tile in the node tree.
+		_reparent_piece_to_new_tile(new_tile.object_tile)
+		
+		# Adjusts tile and piece class values
+		var starting_tile: Tile 
+		
+		starting_tile = on_tile
+		on_tile = new_tile
+		on_tile.occupant = self
+		starting_tile.occupant = null
+		
+		if self is Pawn and not has_moved:
+			movement_distance = Piece.DISTANCE[Piece.Type.PAWN][1]
+		has_moved = true
+		
+		if self is King and new_tile in castling_moveset:
+			for relation in Global.king_rook_relation:
+				if relation["King_Destination_Tile"] == new_tile:
+					var rook: Piece 
+					var rook_position: Vector2i 
+					var distance_to_new_tile: Vector2i 
+					var new_position: Vector2i
+					var rook_new_tile: Tile
+					
+					rook = relation["Rook"]
+					rook_position = rook.on_tile.board_position
+					distance_to_new_tile = abs(rook_position - new_tile.board_position)
+					
+					if distance_to_new_tile.y == 2:
+						new_position = rook_position + Vector2i(0,3)
+					elif distance_to_new_tile.y == 1:
+						new_position = rook_position + Vector2i(0,-2)
+					rook_new_tile = Tile.find_from_position(new_position)
+					rook.move_to(rook_new_tile)
+		else:
+			Global.new_turn()
+
 
 func previous_state() -> void:
 	if not state_order.is_empty():
 		set_state(state_order.pop_back())
 	else:
-		set_state(P_STATE_NONE)
+		set_state(State.NONE)
 
-func set_state(new_state) -> void:
+
+## Selects the given piece
+func select() -> void:
+	if selected:
+		# unselect piece by clicking on it again
+		if selected.is_same_piece(self):
+			selected.unselect()
+			selected = null
+
+		# select tile by clicking an opponent piece
+		elif is_piece_of(Player.current.opponent()): 
+			Tile.selected = on_tile
+
+		# unselect the current piece and select the new piece
+		elif is_piece_of(Player.current): 
+			selected.unselect()
+
+			selected = self
+			selected.set_state(State.SELECTED)
+			
+	# select the newly selected piece
+	elif not selected and is_piece_of(Player.current): 
+		selected = self
+		selected.set_state(State.SELECTED)
+	
+	# Highlight tiles if castling applies to selected piece
+	if selected and selected is King:
+		for rook in Player.current.rooks:
+			if not Global.is_castling_legal(selected,rook):
+				continue
+			rook.set_state(Piece.State.SPECIAL)
+			var king_position: Vector2i = selected.on_tile.board_position
+			var rook_position: Vector2i = rook.on_tile.board_position
+			var new_position: Vector2i
+			
+			if king_position > rook_position:
+				new_position = king_position + Vector2i(0,-2)
+			elif king_position < rook_position:
+				new_position = king_position + Vector2i(0,2)
+				
+			var king_new_tile: Tile = Tile.find_from_position(new_position)
+			king_new_tile.set_state(Tile.State.SPECIAL)
+			selected.castling_moveset.append(king_new_tile)
+			Global.king_rook_relation.append({
+				"Rook": rook, 
+				"King_Destination_Tile": king_new_tile
+				})
+
+
+func set_state(new_state: State) -> void:
 	match new_state:
-		P_STATE_NONE: 
+		
+		State.NONE: 
 			_set_outline_to()
-			tile_parent.set_state(tile_parent.T_STATE_NONE)
+			on_tile.set_state(Tile.State.NONE)
 			state_order.clear()
-		P_STATE_SELECTED:
-			if current_state != P_STATE_NONE:
+		
+		State.SELECTED:
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_outline_to(Global.game_color[Global.SELECT_PIECE])
-			tile_parent.set_state(tile_parent.T_STATE_SELECTED)
+			_set_outline_to(Game.Colour.PALETTE[Game.Colour.SELECT_PIECE])
+			on_tile.set_state(Tile.State.SELECTED)
 
 			for tile in valid_moveset:
 				if self is King and tile in Global.checked_king_moveset:
-					tile.set_state(tile.T_STATE_MOVE_CHECKING)
+					tile.set_state(Tile.State.MOVE_CHECKING)
 				else:
-					tile.set_state(tile.T_STATE_VALID)
+					tile.set_state(Tile.State.VALID)
 			for tile in threatening_moveset:
-				tile.set_state(tile.T_STATE_THREATENED)
-				tile.occupant.set_state(tile.occupant.P_STATE_THREATENED)
-		P_STATE_THREATENED:
-			if current_state != P_STATE_NONE:
+				tile.set_state(Tile.State.THREATENED)
+				tile.occupant.set_state(State.THREATENED)
+		
+		State.THREATENED:
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_outline_to(Global.game_color[Global.THREATENED_PIECE])
-			tile_parent.set_state(tile_parent.T_STATE_THREATENED)
-		P_STATE_CAPTURED:
+			_set_outline_to(Game.Colour.PALETTE[Game.Colour.THREATENED_PIECE])
+			on_tile.set_state(Tile.State.THREATENED)
+		
+		State.CAPTURED:
 			object.visible = false
 			collision_object.disabled = true
 			object.translate(Vector3(0,-5,0)) 
-		P_STATE_CHECKED: 
-			if current_state != P_STATE_NONE:
+		
+		State.CHECKED: 
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_outline_to(Global.game_color[Global.CHECKED_PIECE])
-			tile_parent.set_state(tile_parent.T_STATE_CHECKED)
-		P_STATE_CHECKING: 
-			if current_state != P_STATE_NONE:
+			_set_outline_to(Game.Colour.PALETTE[Game.Colour.CHECKED_PIECE])
+			on_tile.set_state(Tile.State.CHECKED)
+		
+		State.CHECKING: 
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_outline_to(Global.game_color[Global.CHECKING_PIECE])
-			tile_parent.set_state(tile_parent.T_STATE_CHECKING)
-		P_STATE_SPECIAL:
-			if current_state != P_STATE_NONE:
+			_set_outline_to(Game.Colour.PALETTE[Game.Colour.CHECKING_PIECE])
+			on_tile.set_state(Tile.State.CHECKING)
+		
+		State.SPECIAL:
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_outline_to(Global.game_color[Global.SPECIAL_PIECE])
+			_set_outline_to(Game.Colour.PALETTE[Game.Colour.SPECIAL_PIECE])
+	
 	current_state = new_state
+
+
+func unselect() -> void:
+	for tile in possible_moveset:
+		tile.previous_state()
+		if tile.is_occupied_by_piece_of(Player.current.opponent()):
+			tile.occupant.previous_state()
+	for relation in Global.king_rook_relation:
+		relation["Rook"].previous_state()
+	Global.king_rook_relation.clear()
+	previous_state()

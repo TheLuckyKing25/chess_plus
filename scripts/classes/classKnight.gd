@@ -1,13 +1,15 @@
 class_name Knight 
 extends Piece
 
+
 func _init(player: Player, parent_tile: Tile, piece_object: Node3D):
-	movement_direction = Global.direction[Global.KNIGHT]
-	movement_distance = Global.distance[Global.KNIGHT]
+	movement_direction = DIRECTION[Type.KNIGHT]
+	movement_distance = DISTANCE[Type.KNIGHT]
 	object = piece_object
 	player_parent = player
-	tile_parent = parent_tile
+	on_tile = parent_tile
 	mesh_color = player.color
+
 
 func calculate_complete_moveset() -> void:
 	complete_moveset.clear()
@@ -20,14 +22,15 @@ func calculate_complete_moveset() -> void:
 			var new_tile: Tile 
 			
 			position_transform = (direction * distance * parity)
-			new_position = tile_parent.board_position + position_transform
-			new_tile = Global.tile_from_position(new_position)
+			new_position = on_tile.board_position + position_transform
+			new_tile = Tile.find_from_position(new_position)
 			
 			if not new_tile: 
 				break
 			
 			max_outward_path.append(new_tile)
 		complete_moveset.append(max_outward_path)
+
 
 func generate_valid_moveset() -> void:
 	valid_moveset.clear()
@@ -37,15 +40,15 @@ func generate_valid_moveset() -> void:
 		for tile in max_outward_path:
 			var occupant: Piece = tile.occupant
 			if occupant:
-				if tile.is_occupied_by_friendly_piece_of(player_parent):
+				if tile.is_occupied_by_piece_of(player_parent):
 					break
 	
-				if occupant.is_opponent_king_of(player_parent):
+				if occupant.is_king_of(player_parent.opponent()):
 					Global.checking_tiles.append(tile)
 					Global.checking_pieces.append(self)
 					continue
 				threatening_moveset.append(tile)
 			elif not occupant:
-				if tile in Global.opponent(player_parent).king.possible_moveset:
+				if tile in player_parent.opponent().king.possible_moveset:
 					Global.checked_king_moveset.append(tile)
 			valid_moveset.append(tile)

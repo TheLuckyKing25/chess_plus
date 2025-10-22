@@ -1,17 +1,22 @@
 class_name Pawn 
 extends Piece
 
+
 var pawn_threatening_moveset: Array[Tile] = []
-var capture_direction
+
+
+var capture_direction: Array[Vector2i]
+
 
 func _init(player: Player, parent_tile: Tile, piece_object: Node3D):
-	movement_direction = Global.direction[Global.PAWN][0]
-	capture_direction = Global.direction[Global.PAWN][1]
-	movement_distance = Global.distance[Global.PAWN][0]
+	movement_direction = DIRECTION[Type.PAWN][0]
+	capture_direction = DIRECTION[Type.PAWN][1]
+	movement_distance = DISTANCE[Type.PAWN][0]
 	object = piece_object
 	player_parent = player
-	tile_parent = parent_tile
+	on_tile = parent_tile
 	mesh_color = player.color
+
 
 func calculate_complete_moveset() -> void:
 	pawn_threatening_moveset.clear()
@@ -24,8 +29,8 @@ func calculate_complete_moveset() -> void:
 		var new_tile: Tile 
 		
 		position_transform = (movement_direction[0] * distance * parity)
-		new_position = tile_parent.board_position + position_transform
-		new_tile = Global.tile_from_position(new_position)
+		new_position = on_tile.board_position + position_transform
+		new_tile = Tile.find_from_position(new_position)
 		
 		if not new_tile: 
 			break
@@ -39,12 +44,13 @@ func calculate_complete_moveset() -> void:
 		var new_tile: Tile 
 		
 		position_transform = (direction * parity)
-		new_position = tile_parent.board_position + position_transform
-		new_tile = Global.tile_from_position(new_position)
+		new_position = on_tile.board_position + position_transform
+		new_tile = Tile.find_from_position(new_position)
 		
 		if not new_tile: 
 			break
 		pawn_threatening_moveset.append(new_tile)
+
 
 func generate_valid_moveset() -> void:
 	valid_moveset.clear()
@@ -60,20 +66,17 @@ func generate_valid_moveset() -> void:
 		var occupant: Piece = tile.occupant
 		if not occupant:
 			
-			if tile in Global.opponent(player_parent).king.possible_moveset:
+			if tile in player_parent.opponent().king.possible_moveset:
 				Global.checked_king_moveset.append(tile)
 			continue
 		
 			
-		if tile.is_occupied_by_friendly_piece_of(player_parent):
+		if tile.is_occupied_by_piece_of(player_parent):
 			break
 			
-		elif occupant.is_opponent_king_of(player_parent):
+		elif occupant.is_king_of(player_parent.opponent()):
 			Global.checking_tiles.append(tile)
 			Global.checking_pieces.append(self)
 			break
 		threatening_moveset.append(tile)
 		break
-
-			
-				

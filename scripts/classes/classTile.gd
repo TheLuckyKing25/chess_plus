@@ -1,6 +1,25 @@
-
 class_name Tile
-extends Node
+
+enum State{
+		NONE,
+		SELECTED,
+		VALID,
+		THREATENED,
+		CHECKED,
+		CHECKING,
+		MOVE_CHECKING,
+		SPECIAL,
+	}
+
+static var selected: Tile = null
+
+
+## Position of the tile on the board
+var board_position: Vector2i
+
+
+var collision: CollisionShape3D
+
 
 ## Color of the mesh object
 var color: Color: 
@@ -8,13 +27,12 @@ var color: Color:
 		color = new_color
 		mesh.get_surface_override_material(0).albedo_color = new_color
 
-var state_color: Color: 
-	set(new_color):
-		state_color = new_color
-		mesh.get_surface_override_material(0).albedo_color = new_color
 
-## Position of the tile on the board
-var board_position: Vector2i
+var current_state: State = State.NONE
+
+
+var mesh: MeshInstance3D
+
 
 ## Node containing the Mesh and CollisionBox
 var object_tile: Node3D:
@@ -22,112 +40,134 @@ var object_tile: Node3D:
 		object_tile = node
 		mesh = node.find_child("Mesh")
 		collision = node.find_child("Collision")
-var mesh: MeshInstance3D
-var collision: CollisionShape3D
+
 
 ## Piece on the tile, if any
 var occupant: Piece = null
 
-enum {
-		T_STATE_NONE,
-		T_STATE_SELECTED,
-		T_STATE_VALID,
-		T_STATE_THREATENED,
-		T_STATE_CHECKED,
-		T_STATE_CHECKING,
-		T_STATE_MOVE_CHECKING,
-		T_STATE_SPECIAL,
-	}
 
-var state_order: Array = []
+var state_color: Color: 
+	set(new_color):
+		state_color = new_color
+		mesh.get_surface_override_material(0).albedo_color = new_color
 
-var current_state = T_STATE_NONE
+
+var state_order: Array[State] = []
+
+
+## Returns the tile class with an object that has the given name.
+## Returns null if no tile class can be found.
+static func find_from_name(tile_name: String) -> Tile:
+	for tile in Board.all_tiles: 
+		if tile.object_tile.name == tile_name:
+			return tile
+	return null
+
+
+## Returns the tile class of the given tile object.
+## Returns null if no tile class can be found.
+static func find_from_object(tile_object: Node3D) -> Tile:
+	for tile in Board.all_tiles: 
+		if tile.object_tile == tile_object:
+			return tile
+	return null
+
+
+## Returns the tile class at the given position.
+## Returns null if no tile class can be found.
+static func find_from_position(tile_position: Vector2i) -> Tile:
+	for tile in Board.all_tiles: 
+		if tile.board_position == tile_position:
+			return tile
+	return null
+
 
 func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
 	board_position = tile_position
 	object_tile = tile_object
 	match (tile_position[0] + tile_position[1]) % 2:
 		0: 
-			color = Global.game_color[Global.TILE_LIGHT]
+			color = Game.Colour.PALETTE[Game.Colour.TILE_LIGHT]
 		1: 
-			color = Global.game_color[Global.TILE_DARK]
+			color = Game.Colour.PALETTE[Game.Colour.TILE_DARK]
+	
 	
 func _set_color_to(color_value:= Color(1,1,1)) -> void:
 	state_color = color * color_value
 
-func is_occupied_by_opponent_piece_of(player: Player) -> bool:
-	return occupant and occupant in Global.opponent(player).pieces
 	
-func is_occupied_by_friendly_piece_of(player: Player) -> bool:
+func is_occupied_by_piece_of(player: Player) -> bool:
 	return occupant and occupant in player.pieces
+
 
 ## Checks if a selected tile is within the valid movement of the piece
 func is_valid_move(piece: Piece, player: Player) -> bool: 
 	return (
 		self in piece.possible_moveset 
 		or (
-			not Global.setting[Global.DEBUG_RESTRICT_MOVEMENT] 
-			and not is_occupied_by_friendly_piece_of(player)
+			not Game.Settings.options[Game.Settings.DEBUG_RESTRICT_MOVEMENT] 
+			and not is_occupied_by_piece_of(player)
 		)
-	)
-	
+	)	
+
 
 func is_threatened_by(opposing_player:Player) -> bool:
 	return self in opposing_player.all_threatened_tiles
 	
+
 func previous_state() -> void:
 	if not state_order.is_empty():
 		set_state(state_order.pop_back())
 	else:
-		set_state(T_STATE_NONE)
+		set_state(State.NONE)
 		
 
-func set_state(new_state) -> void:
-	if new_state != T_STATE_SPECIAL:
+func set_state(new_state: State) -> void:
+	if new_state != State.SPECIAL:
 		mesh.get_surface_override_material(0).emission_enabled = false
 	match new_state:
 		
-		T_STATE_NONE: 
+		State.NONE: 
 			_set_color_to()
 			state_order.clear()
 			
-		T_STATE_SELECTED: 
-			if current_state != T_STATE_NONE:
+		State.SELECTED: 
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			if current_state != T_STATE_CHECKED:
-				_set_color_to(Global.game_color[Global.SELECT_TILE])
+			if current_state != State.CHECKED:
+				_set_color_to(Game.Colour.PALETTE[Game.Colour.SELECT_TILE])
 				
-		T_STATE_VALID:
-			if current_state != T_STATE_NONE:
+		State.VALID:
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			if current_state != T_STATE_MOVE_CHECKING:
-				_set_color_to(Global.game_color[Global.VALID_TILE])
+			if current_state != State.MOVE_CHECKING:
+				_set_color_to(Game.Colour.PALETTE[Game.Colour.VALID_TILE])
 				
-		T_STATE_THREATENED:
-			if current_state != T_STATE_NONE:
+		State.THREATENED:
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_color_to(Global.game_color[Global.THREATENED_TILE])
+			_set_color_to(Game.Colour.PALETTE[Game.Colour.THREATENED_TILE])
 			
-		T_STATE_CHECKED: 
-			if current_state != T_STATE_NONE:
+		State.CHECKED: 
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_color_to(Global.game_color[Global.CHECKED_TILE])
+			_set_color_to(Game.Colour.PALETTE[Game.Colour.CHECKED_TILE])
 			
-		T_STATE_CHECKING: 
-			if current_state != T_STATE_NONE:
+		State.CHECKING: 
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			if Global.setting[Global.SHOW_CHECKING_PIECE_PATH]:
-				_set_color_to(Global.game_color[Global.CHECKING_TILE])
+			if Game.Settings.options[Game.Settings.SHOW_CHECKING_PIECE_PATH]:
+				_set_color_to(Game.Colour.PALETTE[Game.Colour.CHECKING_TILE])
 				
-		T_STATE_MOVE_CHECKING: 
-			if current_state != T_STATE_NONE:
+		State.MOVE_CHECKING: 
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			_set_color_to(Global.game_color[Global.MOVE_CHECKING_TILE])
+			_set_color_to(Game.Colour.PALETTE[Game.Colour.MOVE_CHECKING_TILE])
 			
-		T_STATE_SPECIAL:
-			if current_state != T_STATE_NONE:
+		State.SPECIAL:
+			if current_state != State.NONE:
 				state_order.append(current_state)
-			state_color = Global.game_color[Global.SPECIAL_TILE]
+			state_color = Game.Colour.PALETTE[Game.Colour.SPECIAL_TILE]
 			mesh.get_surface_override_material(0).emission_enabled = true
 	
 	current_state = new_state
