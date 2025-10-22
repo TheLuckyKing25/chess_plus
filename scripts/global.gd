@@ -1,3 +1,5 @@
+extends Node
+
 #region SpecialMovement and Check
 # The conditions for a pawn to capture an enemy pawn en passant are as follows:
 # * the enemy pawn advanced two squares on the previous turn;

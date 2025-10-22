@@ -3,10 +3,9 @@ extends Node3D
 
 func _ready() -> void:
 	
-	Global.create_players()
 	Board.board = $"/root/gameEnvironment/Board"
 	Board.base = $"/root/gameEnvironment/Board/BoardBase"
-	
+	Global.create_players()
 	
 	for tile_node in Board.board.find_children("Tile_*","",false):
 		var tile_row = tile_node.name.substr(6,1).to_int()

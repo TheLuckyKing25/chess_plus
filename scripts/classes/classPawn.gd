@@ -5,7 +5,7 @@ extends Piece
 var pawn_threatening_moveset: Array[Tile] = []
 
 
-var capture_direction: Array[Vector2i]
+var capture_direction: Array
 
 
 func _init(player: Player, parent_tile: Tile, piece_object: Node3D):
