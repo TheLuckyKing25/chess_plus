@@ -41,6 +41,9 @@ shadow_mesh = SubResource("ArrayMesh_wqw4l")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqw4l"]
 resource_local_to_scene = true
+roughness_texture_channel = 4
+clearcoat_enabled = true
+clearcoat_roughness = 0.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pt3tq"]
 resource_local_to_scene = true
