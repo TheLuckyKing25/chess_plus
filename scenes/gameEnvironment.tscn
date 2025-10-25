@@ -18,12 +18,15 @@ colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.2378
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_q1h0t"]
 gradient = SubResource("Gradient_hlv2s")
-fill_from = Vector2(0.0042735, 0.337607)
-fill_to = Vector2(0, 0.696296)
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_noarx"]
+shading_mode = 0
+albedo_color = Color(0.74978, 0.74978, 0.74978, 1)
 albedo_texture = SubResource("GradientTexture2D_q1h0t")
 disable_receive_shadows = true
+billboard_mode = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_wsj4q"]
 size = Vector3(8.5, 0.1, 8.5)
@@ -81,15 +84,22 @@ script = ExtResource("1_hlv2s")
 [node name="Twist Pivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Pitch Pivot" type="Node3D" parent="Twist Pivot"]
+[node name="Pitch Pivot P1" type="Node3D" parent="Twist Pivot"]
 transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766045, 0, -0.766045, 0.642788, 0, 0, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Twist Pivot/Pitch Pivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
+[node name="P1_Camera" type="Camera3D" parent="Twist Pivot/Pitch Pivot P1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+current = true
+fov = 70.0
+
+[node name="Pitch Pivot P2" type="Node3D" parent="Twist Pivot"]
+transform = Transform3D(-1, -6.69698e-08, 5.61943e-08, 0, 0.642788, 0.766045, -8.74228e-08, 0.766045, -0.642788, 0, 0, 0)
+
+[node name="P2_Camera" type="Camera3D" parent="Twist Pivot/Pitch Pivot P2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 fov = 70.0
 
 [node name="Sky" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.199966, -0.747813, -0.348352)
 cast_shadow = 0
 gi_mode = 0
 mesh = SubResource("SphereMesh_noarx")
@@ -108,18 +118,33 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.
 mesh = SubResource("CylinderMesh_hlv2s")
 surface_material_override/0 = SubResource("StandardMaterial3D_hlv2s")
 
-[node name="OmniLight3D2" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 8, 0)
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.00268785, 0.999996, 0, -0.999996, -0.00268785, 0, 16.2394, 0)
 light_color = Color(0.988235, 0.882353, 0.807843, 1)
-light_energy = 8.0
+light_energy = 25.0
 light_indirect_energy = 2.0
+shadow_enabled = true
+shadow_opacity = 0.7
+spot_range = 26.3594
+spot_angle = 28.2661
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+visible = false
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+light_color = Color(0.989176, 0.880823, 0.806088, 1)
+light_energy = 10.0
+shadow_enabled = true
 omni_range = 16.0
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 8, 0)
-light_color = Color(0.989176, 0.880823, 0.806088, 1)
-light_energy = 8.0
+[node name="OmniLight3D2" type="OmniLight3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+light_color = Color(0.988235, 0.882353, 0.807843, 1)
+light_energy = 10.0
 light_indirect_energy = 2.0
+shadow_enabled = true
 omni_range = 16.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
