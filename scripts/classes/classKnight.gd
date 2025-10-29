@@ -3,8 +3,8 @@ extends Piece
 
 
 func _init(player: Player, parent_tile: Tile, piece_object: Node3D):
-	movement_direction = DIRECTION[Type.KNIGHT]
-	movement_distance = DISTANCE[Type.KNIGHT]
+	movement_direction = TYPE.KNIGHT.DIRECTION
+	movement_distance = TYPE.KNIGHT.DISTANCE
 	object = piece_object
 	player_parent = player
 	on_tile = parent_tile

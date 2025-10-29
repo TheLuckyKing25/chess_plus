@@ -1,73 +1,80 @@
 class_name Piece
 
 ## Game Pieces
-enum Type{
-	PAWN,
-	BISHOP,
-	KNIGHT,
-	ROOK,
-	QUEEN,
-	KING,
-}
-
-## Move distance for 
-const DISTANCE: Dictionary = {
-	Type.PAWN: [2,1],
-	Type.BISHOP: 8,
-	Type.KNIGHT: 1,
-	Type.ROOK: 8,
-	Type.QUEEN: 8,
-	Type.KING: 1,
-}
-
-
-const DIRECTION:Dictionary = {
-	Type.PAWN: [
-		[Vector2i(1,0)],
-		[Vector2i(1,1),Vector2i(1,-1)]
+const TYPE: Dictionary = {
+	"PAWN": {
+		"MESH": "res://assets/pawn_mesh.obj",
+		"DISTANCE_INITIAL": 2,
+		"DISTANCE": 1,
+		"DIRECTION": [
+			Vector2i(1,0)
 		],
-	Type.BISHOP: [
-		Vector2i(1,1), 
-		Vector2i(1,-1),
-		Vector2i(-1,-1),
-		Vector2i(-1,1),
+		"DIRECTION_CAPTURE": [
+			Vector2i(1,1),Vector2i(1,-1)
+		]
+	},
+	"BISHOP": {
+		"MESH": "res://assets/bishop_mesh.obj",
+		"DISTANCE": 8,
+		"DIRECTION": [
+			Vector2i(1,1), 
+			Vector2i(1,-1),
+			Vector2i(-1,-1),
+			Vector2i(-1,1),
 		],
-	Type.KNIGHT: [
-		Vector2i(1,2),  
-		Vector2i(2,1),
-		Vector2i(2,-1), 
-		Vector2i(1,-2), 
-		Vector2i(-1,2), 
-		Vector2i(-2,-1),
-		Vector2i(-2,1), 
-		Vector2i(-1,-2),
+	},
+	"KNIGHT": {
+		"MESH": "res://assets/knight_mesh.obj",
+		"DISTANCE": 1,
+		"DIRECTION": [
+			Vector2i(1,2),  
+			Vector2i(2,1),
+			Vector2i(2,-1), 
+			Vector2i(1,-2), 
+			Vector2i(-1,2), 
+			Vector2i(-2,-1),
+			Vector2i(-2,1), 
+			Vector2i(-1,-2),
 		],
-	Type.ROOK: [
-		Vector2i(1,0), 
-		Vector2i(0,1), 
-		Vector2i(-1,0), 
-		Vector2i(0,-1),
+	},
+	"ROOK": {
+		"MESH": "res://assets/rook_mesh.obj",
+		"DISTANCE": 8,
+		"DIRECTION": [
+			Vector2i(1,0), 
+			Vector2i(0,1), 
+			Vector2i(-1,0), 
+			Vector2i(0,-1),
 		],
-	Type.QUEEN: [
-		Vector2i(1,0), 
-		Vector2i(1,1), 
-		Vector2i(0,1), 
-		Vector2i(1,-1), 
-		Vector2i(0,-1), 
-		Vector2i(-1,-1), 
-		Vector2i(-1,0), 
-		Vector2i(-1,1),
+	},
+	"QUEEN": {
+		"MESH": "res://assets/queen_mesh.obj",
+		"DISTANCE": 8,
+		"DIRECTION": [
+			Vector2i(1,0), 
+			Vector2i(1,1), 
+			Vector2i(0,1), 
+			Vector2i(1,-1), 
+			Vector2i(0,-1), 
+			Vector2i(-1,-1), 
+			Vector2i(-1,0), 
+			Vector2i(-1,1),
 		],
-	Type.KING: [
-		Vector2i(1,0), 
-		Vector2i(1,1), 
-		Vector2i(0,1), 
-		Vector2i(1,-1), 
-		Vector2i(0,-1), 
-		Vector2i(-1,-1), 
-		Vector2i(-1,0), 
-		Vector2i(-1,1),
+	},
+	"KING": {
+		"MESH": "res://assets/king_mesh.obj",
+		"DISTANCE": 1,
+		"DIRECTION": [
+			Vector2i(1,0), 
+			Vector2i(1,1), 
+			Vector2i(0,1), 
+			Vector2i(1,-1), 
+			Vector2i(0,-1), 
+			Vector2i(-1,-1), 
+			Vector2i(-1,0), 
+			Vector2i(-1,1),
 		],
+	},
 }
 
 enum State{
@@ -171,7 +178,6 @@ static func find_from_object(piece_object: Node3D) -> Piece:
 		if piece.object == piece_object:
 			return piece
 	return null
-
 	
 func _init(player: Player, tile: Tile, piece_object: Node3D) -> void:
 	object = piece_object
@@ -193,11 +199,11 @@ func _reparent_piece_to_new_tile(tile:Node3D) -> void:
 
 
 func _set_outline_to(new_color:= Color(0,0,0)) -> void:
-	if new_color == Color(0,0,0):
+	if (new_color == Color(0,0,0)):
 		outline_object.visible = false
 		return
-	outline_object.visible = true
 	outline_color = new_color
+	outline_object.visible = true
 
 
 func is_king_of(player:Player) -> bool:
@@ -211,6 +217,8 @@ func is_piece_of(player:Player) -> bool:
 func is_same_piece(piece: Piece) -> bool:
 	return self == piece
 
+func promote_to(placeholder_variable_piecetype: String):
+	pass
 
 ## Moves the given piece to the given tile, 
 ## and captures opponent pieces if tile is occupied.
@@ -219,6 +227,8 @@ func move_to(new_tile: Tile) -> void:
 		
 		if new_tile.occupant:
 			new_tile.occupant.set_state(Piece.State.CAPTURED)
+		if self is Pawn and new_tile.en_passant_occupant:
+			new_tile.en_passant_occupant.set_state(Piece.State.CAPTURED)
 		
 		# Parents the piece to the new tile in the node tree.
 		_reparent_piece_to_new_tile(new_tile.object_tile)
@@ -229,11 +239,22 @@ func move_to(new_tile: Tile) -> void:
 		starting_tile = on_tile
 		on_tile = new_tile
 		on_tile.occupant = self
-		starting_tile.occupant = null
+		starting_tile.occupant = null	
 		
 		if self is Pawn and not has_moved:
-			movement_distance = Piece.DISTANCE[Piece.Type.PAWN][1]
+			movement_distance = Piece.TYPE.PAWN.DISTANCE
+			if abs(starting_tile.board_position.x - on_tile.board_position.x) == 2:
+				self.en_passant_tile = Tile.find_from_position(on_tile.board_position + Vector2i(parity * -1,0))
+				self.threatened_by_en_passant = true
+				self.en_passant_tile.en_passant_occupant = self
 		has_moved = true
+		
+		if self is Pawn:
+			if (
+					(on_tile.board_position.x == 1 and player_parent == Board.players[0])
+					or (on_tile.board_position.x == 8 and player_parent == Board.players[1])
+			):
+				promote_to("knight")
 		
 		if self is King and new_tile in castling_moveset:
 			for relation in Global.king_rook_relation:
@@ -333,8 +354,11 @@ func set_state(new_state: State) -> void:
 				else:
 					tile.set_state(Tile.State.VALID)
 			for tile in threatening_moveset:
-				tile.set_state(Tile.State.THREATENED)
-				tile.occupant.set_state(State.THREATENED)
+				if self is Pawn and not tile.occupant:
+					tile.set_state(Tile.State.THREATENED)
+					tile.en_passant_occupant.set_state(State.THREATENED)
+				else:
+					tile.occupant.set_state(State.THREATENED)
 		
 		State.THREATENED:
 			if current_state != State.NONE:
