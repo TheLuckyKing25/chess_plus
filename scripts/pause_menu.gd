@@ -30,4 +30,6 @@ func _on_options_pressed():
 	$Pause.hide()
 
 func _on_exit_pressed():
-	get_tree().quit()
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
+	#get_tree().quit()

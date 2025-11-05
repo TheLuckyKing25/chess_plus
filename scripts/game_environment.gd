@@ -3,6 +3,11 @@ extends Node3D
 
 func _ready() -> void:
 	
+	Board.all_tiles.clear()
+	Board.all_pieces.clear()
+	Player.turn_num = 0
+	Board.players.clear()
+	
 	Board.board = $"/root/gameEnvironment/Board"
 	Board.base = $"/root/gameEnvironment/Board/BoardBase"
 	Global.create_players()
