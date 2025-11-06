@@ -79,7 +79,7 @@ class Settings:
 	}
 
 	static var options: Dictionary = {
-		DEBUG_RESTRICT_MOVEMENT: false,
+		DEBUG_RESTRICT_MOVEMENT: true,
 		
 		SHOW_CHECKING_PIECE_PATH: true,
 		SHOW_CHECKING_PIECE: true,
