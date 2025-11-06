@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://c54qlxs7mr3qm"]
+[gd_scene load_steps=7 format=3 uid="uid://c54qlxs7mr3qm"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_ht344"]
+[ext_resource type="Script" uid="uid://d7h5wqb0lxnm" path="res://scripts/piece_object.gd" id="1_247x2"]
+[ext_resource type="Script" uid="uid://dvppjkfmxeqhp" path="res://scripts/pawn.gd" id="2_7j1fu"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/pawn_mesh.obj" id="2_247x2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
@@ -23,27 +24,31 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[node name="Pawn" type="Node3D"]
+[node name="Pawn" type="Node3D" groups=["Pawn", "Piece"]]
+script = ExtResource("2_7j1fu")
 
-[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
-script = ExtResource("1_ht344")
+[node name="Piece" type="AnimatableBody3D" parent="."]
+script = ExtResource("1_247x2")
 
-[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="Piece"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0.676774, 0)
 shape = SubResource("BoxShape3D_ny8vt")
 
-[node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
+[node name="Mesh" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 extra_cull_margin = 36.03
 mesh = ExtResource("2_247x2")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_iexdo")
 
-[node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
+[node name="Outline" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_q4exq")
 cast_shadow = 0
 extra_cull_margin = 2.0
 mesh = ExtResource("2_247x2")
 
-[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_piece_event"]
+[connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="input_event" from="Piece" to="." method="_on_input_event"]
+[connection signal="ready" from="Piece" to="Piece" method="_on_ready"]

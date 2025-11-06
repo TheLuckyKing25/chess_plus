@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bpx8asa0jn4b1"]
+[gd_scene load_steps=7 format=3 uid="uid://bpx8asa0jn4b1"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_gof1y"]
+[ext_resource type="Script" uid="uid://dl4gxliogfkgr" path="res://scripts/queen.gd" id="1_dpvll"]
 [ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/queen_mesh.obj" id="2_dpvll"]
+[ext_resource type="Script" uid="uid://d7h5wqb0lxnm" path="res://scripts/piece_object.gd" id="2_uof4u"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c5jg2"]
 margin = 0.0
@@ -21,27 +22,31 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[node name="Node3D" type="Node3D"]
+[node name="Queen" type="Node3D" groups=["Piece", "Queen"]]
+script = ExtResource("1_dpvll")
 
-[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+[node name="Piece" type="AnimatableBody3D" parent="." groups=["Piece", "Queen"]]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
-script = ExtResource("1_gof1y")
+script = ExtResource("2_uof4u")
 
-[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="Piece"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
 shape = SubResource("BoxShape3D_c5jg2")
 
-[node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
+[node name="Mesh" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
 mesh = ExtResource("2_dpvll")
 skeleton = NodePath("../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_267tg")
 
-[node name="Outline" type="MeshInstance3D" parent="AnimatableBody3D"]
+[node name="Outline" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_6r3y7")
 extra_cull_margin = 36.03
 mesh = ExtResource("2_dpvll")
 skeleton = NodePath("../..")
 
-[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_piece_event"]
+[connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="input_event" from="Piece" to="." method="_on_input_event"]
+[connection signal="ready" from="Piece" to="Piece" method="_on_ready"]

@@ -1,6 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgn763vrxmmcu"]
+[gd_scene load_steps=6 format=3 uid="uid://bgn763vrxmmcu"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/selection.gd" id="1_2sjy5"]
+[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile_object.gd" id="1_2sjy5"]
+[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile.gd" id="1_vhibn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
+margin = 0.06
+size = Vector3(1, 0.163, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_iixfe"]
 size = Vector3(0.95, 0.1, 0.95)
@@ -9,21 +14,19 @@ size = Vector3(0.95, 0.1, 0.95)
 resource_local_to_scene = true
 emission = Color(1, 1, 1, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
-margin = 0.06
-size = Vector3(1, 0.163, 1)
+[node name="Tile" type="Node3D" groups=["Tile"]]
+script = ExtResource("1_vhibn")
 
-[node name="Tile" type="Node3D"]
-
-[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+[node name="Tile_Object" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_2sjy5")
 
-[node name="Mesh" type="MeshInstance3D" parent="AnimatableBody3D"]
+[node name="Collision" type="CollisionShape3D" parent="Tile_Object"]
+shape = SubResource("BoxShape3D_iixfe")
+
+[node name="Mesh" type="MeshInstance3D" parent="Tile_Object"]
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_j13wd")
 
-[node name="Collision" type="CollisionShape3D" parent="AnimatableBody3D"]
-shape = SubResource("BoxShape3D_iixfe")
-
-[connection signal="input_event" from="AnimatableBody3D" to="AnimatableBody3D" method="_on_input_tile_event"]
+[connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="input_event" from="Tile_Object" to="Tile_Object" method="_on_input_tile_event"]
