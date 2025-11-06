@@ -98,6 +98,11 @@ func new_turn() -> void:
 	Player.turn_num = (Player.turn_num + 1) % 2
 	Player.current = Board.players[Player.turn_num]
 	
+	for pawn in Player.current.pawns:
+		if pawn.threatened_by_en_passant == true:
+			print("TRUE")
+			pawn.threatened_by_en_passant = false
+	
 	Board.color = Game.Colour.PALETTE[Game.Colour.PLAYER][Player.turn_num]
 
 	_clear_all_tile_states()

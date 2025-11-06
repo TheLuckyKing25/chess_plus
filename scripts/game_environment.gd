@@ -20,38 +20,17 @@ func _ready() -> void:
 	
 	
 	for tile in Board.all_tiles: 
-		var child: Node3D = tile.object_tile.find_child("*_P*",false)
-		if child:
+		var piece: Node3D = tile.object_tile.find_child("*_P*",false)
+		if piece:
 			var player: Player
-			match child.name.get_slice("_", 1):
+			match piece.name.get_slice("_", 1):
 				"P1": 
 					player = Board.players[0]
 				"P2": 
 					player = Board.players[1]
 					
-			match child.name.get_slice("_", 0):
-				"Pawn": 
-					tile.occupant = Pawn.new(player, tile, child)
-					player.pawns.append(tile.occupant)
-				"Rook": 
-					tile.occupant = Rook.new(player, tile, child)
-					player.rooks.append(tile.occupant)
-				"Bishop": 
-					tile.occupant = Bishop.new(player, tile, child)
-					player.bishops.append(tile.occupant)
-				"Knight": 
-					tile.occupant = Knight.new(player, tile, child)
-					player.knights.append(tile.occupant)
-				"Queen": 
-					tile.occupant = Queen.new(player, tile, child)
-					player.queens.append(tile.occupant)
-				"King": 
-					tile.occupant = King.new(player, tile, child)
-					player.king = tile.occupant
-			tile.occupant.outline_object.visible = false
-			tile.occupant.outline_object.material_override.grow_amount = (
-					Game.Settings.options[Game.Settings.PIECE_OUTLINE_THICKNESS]
-			)
+			Board.create_new_piece(player, tile, piece)
+
 
 	for player in Board.players:
 		Board.all_pieces.append_array(player.pieces)

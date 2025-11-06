@@ -44,7 +44,7 @@ var object_tile: Node3D:
 
 ## Piece on the tile, if any
 var occupant: Piece = null
-
+var en_passant_occupant: Piece = null
 
 var state_color: Color: 
 	set(new_color):
@@ -80,7 +80,7 @@ static func find_from_position(tile_position: Vector2i) -> Tile:
 		if tile.board_position == tile_position:
 			return tile
 	return null
-
+	
 
 func _init(tile_position: Vector2i, tile_object: Node3D) -> void:
 	board_position = tile_position

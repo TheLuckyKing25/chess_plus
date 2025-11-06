@@ -1,7 +1,6 @@
 extends AnimatableBody3D
 
 @export var camera: Camera3D
-	
 ## Checks if the piece has been clicked on
 func _on_input_piece_event(
 		camera: Node, 
@@ -51,4 +50,24 @@ func _on_input_tile_event(
 			var clicked_object = result.collider.get_parent()
 			Tile.selected = (
 					Tile.find_from_object(clicked_object)
-			)
+			)		
+			
+var blink 
+var entered: bool = false
+var time = 0
+var outline_color:Color = Color(0,0,0)
+var blink_color:Color
+
+func _process(delta: float) -> void:
+	time += delta
+	blink = (sin(5*time) + 1)/2
+	blink_color = Color(0,0,0).lerp(Color(1,1,1), blink)
+
+		
+func _on_mouse_entered_piece() -> void:
+	entered = true
+	find_child("Outline").visible = true
+		
+func _on_mouse_exited_piece() -> void:
+	find_child("Outline").material_override.albedo_color = outline_color
+	entered = false
