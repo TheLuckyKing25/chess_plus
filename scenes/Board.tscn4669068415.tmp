@@ -1,0 +1,367 @@
+[gd_scene load_steps=9 format=3 uid="uid://vqvs470xc1lw"]
+
+[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/board.gd" id="1_hljw5"]
+[ext_resource type="PackedScene" uid="uid://bgn763vrxmmcu" path="res://scenes/Tile.tscn" id="1_nd4as"]
+[ext_resource type="PackedScene" uid="uid://b2wm4ux7jjth6" path="res://scenes/Rook.tscn" id="2_3ng4l"]
+[ext_resource type="PackedScene" uid="uid://c54qlxs7mr3qm" path="res://scenes/Pawn.tscn" id="3_otxgx"]
+[ext_resource type="PackedScene" uid="uid://b4axunshn8kgc" path="res://scenes/Bishop.tscn" id="4_hq5ls"]
+[ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/Knight.tscn" id="5_vewne"]
+[ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/Queen.tscn" id="6_6pldg"]
+[ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/King.tscn" id="6_grdf5"]
+
+[node name="Board" type="Node3D"]
+script = ExtResource("1_hljw5")
+
+[node name="Tile_R1C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000168562)
+board_position = Vector2i(1, 1)
+
+[node name="Rook_P2" parent="Tile_R1C1" groups=["Player_Two"] instance=ExtResource("2_3ng4l")]
+player = 1
+
+[node name="Tile_R2C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+board_position = Vector2i(2, 1)
+
+[node name="Pawn_P2" parent="Tile_R2C1" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+board_position = Vector2i(3, 1)
+
+[node name="Tile_R4C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+board_position = Vector2i(4, 1)
+
+[node name="Tile_R5C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+board_position = Vector2i(5, 1)
+
+[node name="Tile_R6C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+board_position = Vector2i(6, 1)
+
+[node name="Tile_R7C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
+board_position = Vector2i(7, 1)
+
+[node name="Pawn_P1" parent="Tile_R7C1" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C1" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
+board_position = Vector2i(8, 1)
+
+[node name="Rook_P1" parent="Tile_R8C1" groups=["Player_One"] instance=ExtResource("2_3ng4l")]
+player = 0
+
+[node name="Tile_R1C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+board_position = Vector2i(1, 2)
+
+[node name="Knight_P2" parent="Tile_R1C2" instance=ExtResource("5_vewne")]
+player = 1
+
+[node name="Tile_R2C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+board_position = Vector2i(2, 2)
+
+[node name="Pawn_P2" parent="Tile_R2C2" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 2)
+board_position = Vector2i(3, 2)
+
+[node name="Tile_R4C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 3)
+board_position = Vector2i(4, 2)
+
+[node name="Tile_R5C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 4)
+board_position = Vector2i(5, 2)
+
+[node name="Tile_R6C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 5)
+board_position = Vector2i(6, 2)
+
+[node name="Tile_R7C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 6)
+board_position = Vector2i(7, 2)
+
+[node name="Pawn_P1" parent="Tile_R7C2" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C2" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+board_position = Vector2i(8, 2)
+
+[node name="Knight_P1" parent="Tile_R8C2" groups=["Player_One"] instance=ExtResource("5_vewne")]
+player = 0
+
+[node name="Tile_R1C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+board_position = Vector2i(1, 3)
+
+[node name="Bishop_P2" parent="Tile_R1C3" groups=["Player_Two"] instance=ExtResource("4_hq5ls")]
+player = 1
+
+[node name="Tile_R2C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 1)
+board_position = Vector2i(2, 3)
+
+[node name="Pawn_P2" parent="Tile_R2C3" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
+board_position = Vector2i(3, 3)
+
+[node name="Tile_R4C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 3)
+board_position = Vector2i(4, 3)
+
+[node name="Tile_R5C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 4)
+board_position = Vector2i(5, 3)
+
+[node name="Tile_R6C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 5)
+board_position = Vector2i(6, 3)
+
+[node name="Tile_R7C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
+board_position = Vector2i(7, 3)
+
+[node name="Pawn_P1" parent="Tile_R7C3" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C3" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 7)
+board_position = Vector2i(8, 3)
+
+[node name="Bishop_P1" parent="Tile_R8C3" groups=["Player_One"] instance=ExtResource("4_hq5ls")]
+player = 0
+
+[node name="Tile_R1C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+board_position = Vector2i(1, 4)
+
+[node name="Queen_P2" parent="Tile_R1C4" groups=["Player_Two"] instance=ExtResource("6_6pldg")]
+player = 1
+
+[node name="Tile_R2C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
+board_position = Vector2i(2, 4)
+
+[node name="Pawn_P2" parent="Tile_R2C4" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 2)
+board_position = Vector2i(3, 4)
+
+[node name="Tile_R4C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+board_position = Vector2i(4, 4)
+
+[node name="Tile_R5C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 4)
+board_position = Vector2i(5, 4)
+
+[node name="Tile_R6C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
+board_position = Vector2i(6, 4)
+
+[node name="Tile_R7C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
+board_position = Vector2i(7, 4)
+
+[node name="Pawn_P1" parent="Tile_R7C4" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C4" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
+board_position = Vector2i(8, 4)
+
+[node name="Queen_P1" parent="Tile_R8C4" groups=["Player_One"] instance=ExtResource("6_6pldg")]
+player = 0
+
+[node name="Tile_R1C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+board_position = Vector2i(1, 5)
+
+[node name="King_P2" parent="Tile_R1C5" groups=["Player_Two"] instance=ExtResource("6_grdf5")]
+player = 1
+
+[node name="Tile_R2C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 1)
+board_position = Vector2i(2, 5)
+
+[node name="Pawn_P2" parent="Tile_R2C5" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 2)
+board_position = Vector2i(3, 5)
+
+[node name="Tile_R4C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 3)
+board_position = Vector2i(4, 5)
+
+[node name="Tile_R5C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
+board_position = Vector2i(5, 5)
+
+[node name="Tile_R6C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+board_position = Vector2i(6, 5)
+
+[node name="Tile_R7C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 6)
+board_position = Vector2i(7, 5)
+
+[node name="Pawn_P1" parent="Tile_R7C5" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C5" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 7)
+board_position = Vector2i(8, 5)
+
+[node name="King_P1" parent="Tile_R8C5" groups=["Player_One"] instance=ExtResource("6_grdf5")]
+player = 0
+
+[node name="Tile_R1C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+board_position = Vector2i(1, 6)
+
+[node name="Bishop_P2" parent="Tile_R1C6" groups=["Player_Two"] instance=ExtResource("4_hq5ls")]
+player = 1
+
+[node name="Tile_R2C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
+board_position = Vector2i(2, 6)
+
+[node name="Pawn_P2" parent="Tile_R2C6" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 2)
+board_position = Vector2i(3, 6)
+
+[node name="Tile_R4C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 3)
+board_position = Vector2i(4, 6)
+
+[node name="Tile_R5C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 4)
+board_position = Vector2i(5, 6)
+
+[node name="Tile_R6C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
+board_position = Vector2i(6, 6)
+
+[node name="Tile_R7C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 6)
+board_position = Vector2i(7, 6)
+
+[node name="Pawn_P1" parent="Tile_R7C6" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C6" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
+board_position = Vector2i(8, 6)
+
+[node name="Bishop_P1" parent="Tile_R8C6" groups=["Player_One"] instance=ExtResource("4_hq5ls")]
+player = 0
+
+[node name="Tile_R1C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+board_position = Vector2i(1, 7)
+
+[node name="Knight_P2" parent="Tile_R1C7" instance=ExtResource("5_vewne")]
+player = 1
+
+[node name="Tile_R2C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 1)
+board_position = Vector2i(2, 7)
+
+[node name="Pawn_P2" parent="Tile_R2C7" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 2)
+board_position = Vector2i(3, 7)
+
+[node name="Tile_R4C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 3)
+board_position = Vector2i(4, 7)
+
+[node name="Tile_R5C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 4)
+board_position = Vector2i(5, 7)
+
+[node name="Tile_R6C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 5)
+board_position = Vector2i(6, 7)
+
+[node name="Tile_R7C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 6)
+board_position = Vector2i(7, 7)
+
+[node name="Pawn_P1" parent="Tile_R7C7" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C7" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 7)
+board_position = Vector2i(8, 7)
+
+[node name="Knight_P1" parent="Tile_R8C7" groups=["Player_One"] instance=ExtResource("5_vewne")]
+player = 0
+
+[node name="Tile_R1C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+board_position = Vector2i(1, 8)
+
+[node name="Rook_P2" parent="Tile_R1C8" groups=["Player_Two"] instance=ExtResource("2_3ng4l")]
+player = 1
+
+[node name="Tile_R2C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 1)
+board_position = Vector2i(2, 8)
+
+[node name="Pawn_P2" parent="Tile_R2C8" groups=["Player_Two"] instance=ExtResource("3_otxgx")]
+player = 1
+
+[node name="Tile_R3C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 2)
+board_position = Vector2i(3, 8)
+
+[node name="Tile_R4C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 3)
+board_position = Vector2i(4, 8)
+
+[node name="Tile_R5C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 4)
+board_position = Vector2i(5, 8)
+
+[node name="Tile_R6C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 5)
+board_position = Vector2i(6, 8)
+
+[node name="Tile_R7C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 6)
+board_position = Vector2i(7, 8)
+
+[node name="Pawn_P1" parent="Tile_R7C8" groups=["Player_One"] instance=ExtResource("3_otxgx")]
+player = 0
+
+[node name="Tile_R8C8" parent="." instance=ExtResource("1_nd4as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+board_position = Vector2i(8, 8)
+
+[node name="Rook_P1" parent="Tile_R8C8" groups=["Player_One"] instance=ExtResource("2_3ng4l")]
+player = 0
+
+[connection signal="ready" from="." to="." method="_on_ready"]

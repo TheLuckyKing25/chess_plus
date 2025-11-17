@@ -1,7 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://bgn763vrxmmcu"]
+[gd_scene load_steps=8 format=3 uid="uid://bgn763vrxmmcu"]
 
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile_object.gd" id="1_2sjy5"]
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile.gd" id="1_vhibn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhibn"]
+resource_local_to_scene = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvdvl"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+render_priority = 1
+emission = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3gf4"]
+resource_local_to_scene = true
+emission = Color(1, 1, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
 margin = 0.06
@@ -10,23 +24,24 @@ size = Vector3(1, 0.163, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_iixfe"]
 size = Vector3(0.95, 0.1, 0.95)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j13wd"]
-resource_local_to_scene = true
-emission = Color(1, 1, 1, 1)
-
 [node name="Tile" type="Node3D" groups=["Tile"]]
 script = ExtResource("1_vhibn")
 
 [node name="Tile_Object" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_2sjy5")
+tile_material = SubResource("StandardMaterial3D_vhibn")
+state_material = SubResource("StandardMaterial3D_rvdvl")
+mouseover_material = SubResource("StandardMaterial3D_r3gf4")
 
 [node name="Collision" type="CollisionShape3D" parent="Tile_Object"]
 shape = SubResource("BoxShape3D_iixfe")
 
-[node name="Mesh" type="MeshInstance3D" parent="Tile_Object"]
+[node name="Tile_Mesh" type="MeshInstance3D" parent="Tile_Object"]
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_j13wd")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
-[connection signal="input_event" from="Tile_Object" to="Tile_Object" method="_on_input_tile_event"]
+[connection signal="input_event" from="Tile_Object" to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="Tile_Object" to="Tile_Object" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Tile_Object" to="Tile_Object" method="_on_mouse_exited"]
+[connection signal="ready" from="Tile_Object" to="Tile_Object" method="_on_ready"]

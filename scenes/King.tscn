@@ -1,18 +1,36 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2jy7efa8dtxo"]
+[gd_scene load_steps=9 format=3 uid="uid://d2jy7efa8dtxo"]
 
 [ext_resource type="Script" uid="uid://cl5x46e8rhwti" path="res://scripts/king.gd" id="1_xbcl4"]
 [ext_resource type="Script" uid="uid://d7h5wqb0lxnm" path="res://scripts/piece_object.gd" id="2_bxu1w"]
 [ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://assets/king_mesh.obj" id="2_xbcl4"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_wvtwp"]
-margin = 0.0
-size = Vector3(2, 4.5, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7gvqi"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xbcl4"]
 resource_local_to_scene = true
+resource_name = "piece_color"
 roughness_texture_channel = 4
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4exq"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cf0mv"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+roughness_texture_channel = 4
+emission = Color(0.2, 0.2, 0.2, 1)
+clearcoat_enabled = true
+clearcoat_roughness = 0.25
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wvtwp"]
+margin = 0.0
+size = Vector3(2, 4.5, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rmyy5"]
 resource_local_to_scene = true
@@ -28,16 +46,18 @@ script = ExtResource("1_xbcl4")
 [node name="Piece" type="AnimatableBody3D" parent="." groups=["King", "Piece"]]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("2_bxu1w")
+piece_material = SubResource("StandardMaterial3D_xbcl4")
+outline_material = SubResource("StandardMaterial3D_q4exq")
+mouseover_material = SubResource("StandardMaterial3D_cf0mv")
 
 [node name="Collision" type="CollisionShape3D" parent="Piece"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
 shape = SubResource("BoxShape3D_wvtwp")
 
-[node name="Mesh" type="MeshInstance3D" parent="Piece"]
+[node name="Piece_Mesh" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
 mesh = ExtResource("2_xbcl4")
 skeleton = NodePath("../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_7gvqi")
 
 [node name="Outline" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
@@ -49,4 +69,6 @@ skeleton = NodePath("../..")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="input_event" from="Piece" to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="Piece" to="Piece" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Piece" to="Piece" method="_on_mouse_exited"]
 [connection signal="ready" from="Piece" to="Piece" method="_on_ready"]

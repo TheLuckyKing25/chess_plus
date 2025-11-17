@@ -1,98 +1,86 @@
 extends AnimatableBody3D
 
-enum State{
-		NONE,
-		PREVIOUS,
-		SELECTED,
-		VALID,
-		THREATENED,
-		CHECKED,
-		CHECKING,
-		MOVE_CHECKING,
-		SPECIAL,
-	}
-	
-#@export_flags(
-	#"has occupant:1",
-	#"occupant selected:3",
-	#"piece movement:4",
-	#"tile threatened",
-	#"checking movement",
-	#"checked occupant",
-	#"special",
-	#) var state_flags
 
-func set_state_previous() -> void:
-	if not state_order.is_empty():
-		set_state(state_order.pop_back())
-	else:
-		set_state(State.NONE)
+@export_color_no_alpha var tile_color: Color:
+	set(base_color):
+		tile_material.albedo_color = base_color
+		mouseover_material.albedo_color = base_color + Color(0.2,0.2,0.2)
+		tile_color = base_color
+
+@export_color_no_alpha var state_color: Color:
+	set(base_color):
+		state_material.albedo_color = base_color
+		mouseover_material.albedo_color = base_color + Color(0.2,0.2,0.2)
+		state_color = base_color
+
+@export_custom(PROPERTY_HINT_RESOURCE_TYPE,"") var tile_material: StandardMaterial3D:
+	get:
+		mouseover_material.albedo_color = tile_material.albedo_color + Color(0.2,0.2,0.2)
+		return tile_material
+	
+@export_custom(PROPERTY_HINT_RESOURCE_TYPE,"") var state_material: StandardMaterial3D:
+	get:
+		mouseover_material.albedo_color = state_material.albedo_color + Color(0.2,0.2,0.2)
+		return state_material
+	
+@export_custom(PROPERTY_HINT_RESOURCE_TYPE,"") var mouseover_material: StandardMaterial3D
+
+
+var state = Game.TileStateFlag.TILE_STATE_FLAG_NONE:
+	set(flag):
+		state = flag
+		apply_state()
+
+
+func _on_ready() -> void:
+	$Tile_Mesh.set_surface_override_material(0, tile_material)
 		
-var state_order: Array[State] = []
+		
+func _on_mouse_entered() -> void:
+	$Tile_Mesh.get_surface_override_material(0).next_pass = mouseover_material
+
+
+func _on_mouse_exited() -> void:
+	$Tile_Mesh.get_surface_override_material(0).next_pass = null
+
+
+func tile_checked_movement():
+	state_color = tile_color * Game.COLOR_PALETTE.MOVE_CHECKING_TILE_COLOR
+	$Tile_Mesh.set_surface_override_material(0,state_material)
+	$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
+
+
+func apply_state():
+	tile_material.albedo_color = tile_color
+	$Tile_Mesh.set_surface_override_material(0,tile_material)
+	$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
 	
-	
-var state_color: Color: 
-	set(new_color):
-		state_color = new_color
-		$Mesh.get_surface_override_material(0).albedo_color = new_color
-
-## Color of the mesh object
-var color: Color: 
-	set(new_color):
-		color = new_color
-		$Mesh.get_surface_override_material(0).albedo_color = new_color
-
-func _set_color_to(color_value:= Color(1,1,1)) -> void:
-	state_color = color * color_value
-				
-func set_state(new_state: State) -> void:
-	if new_state != State.SPECIAL:
-		$Mesh.get_surface_override_material(0).emission_enabled = false
-			
-	match new_state:
-		State.NONE: 
-			_set_color_to()
-			state_order.clear()
-			
-		State.SELECTED: 
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			if current_state != State.CHECKED:
-				_set_color_to(Game.PALETTE.SELECT_TILE)
-				
-		State.VALID:
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			if current_state != State.MOVE_CHECKING:
-				_set_color_to(Game.PALETTE.VALID_TILE)
-				
-		State.THREATENED:
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			_set_color_to(Game.PALETTE.THREATENED_TILE)
-			
-		State.CHECKED: 
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			_set_color_to(Game.PALETTE.CHECKED_TILE)
-			
-		State.CHECKING: 
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			if Game.Settings.options[Game.Settings.SHOW_CHECKING_PIECE_PATH]:
-				_set_color_to(Game.PALETTE.CHECKING_TILE)
-				
-		State.MOVE_CHECKING: 
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			_set_color_to(Game.PALETTE.MOVE_CHECKING_TILE)
-			
-		State.SPECIAL:
-			if current_state != State.NONE:
-				state_order.append(current_state)
-			state_color = Game.PALETTE.SPECIAL_TILE
-			find_child("Mesh").get_surface_override_material(0).emission_enabled = true
-
-	current_state = new_state
-
-var current_state: State = State.NONE
+	if state & 1 << Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT:
+		state_color = tile_color * Game.COLOR_PALETTE.VALID_TILE_COLOR
+		$Tile_Mesh.set_surface_override_material(0,state_material)
+		$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
+		
+	if state & 1 << Game.TileStateFlag.TILE_STATE_FLAG_SELECTED:
+		state_color = tile_color * Game.COLOR_PALETTE.SELECT_TILE_COLOR
+		$Tile_Mesh.set_surface_override_material(0,state_material)
+		$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
+		
+	if state & 1 << Game.TileStateFlag.TILE_STATE_FLAG_THREATENED:
+		state_color = tile_color * Game.COLOR_PALETTE.THREATENED_TILE_COLOR
+		$Tile_Mesh.set_surface_override_material(0,state_material)
+		$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
+		
+	if state & 1 << Game.TileStateFlag.TILE_STATE_FLAG_CHECKED:
+		state_color = tile_color * Game.COLOR_PALETTE.CHECKED_TILE_COLOR
+		$Tile_Mesh.set_surface_override_material(0,state_material)
+		$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
+		
+	if state & 1 << Game.TileStateFlag.TILE_STATE_FLAG_CHECKING:
+		state_color = tile_color * Game.COLOR_PALETTE.CHECKING_TILE_COLOR
+		$Tile_Mesh.set_surface_override_material(0,state_material)
+		$Tile_Mesh.get_surface_override_material(0).emission_enabled = false
+		
+	if state & 1 << Game.TileStateFlag.TILE_STATE_FLAG_SPECIAL_MOVEMENT:
+		state_color = Game.COLOR_PALETTE.SPECIAL_TILE_COLOR
+		$Tile_Mesh.set_surface_override_material(0,state_material)
+		$Tile_Mesh.get_surface_override_material(0).emission_enabled = true
