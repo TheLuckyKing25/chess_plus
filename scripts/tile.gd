@@ -156,13 +156,13 @@ func _on_moves_recieved(piece:Node3D, moves, castling_rook: Node3D = null):
 			_toggle_rook_castling_tile_connection(assigned_move)
 			
 	elif assigned_move.move_flag_is_enabled(MoveRule.MoveType.CASTLING):
-		if (	occupant 
-				and occupant.is_in_group("Rook") 
-				and not occupant.is_in_group("has_moved")
-				and occupant.player == piece.player
-				):
-			_send_to_king(piece, occupant, assigned_move.direction)
-		return
+		if occupant:
+			if (	occupant.is_in_group("Rook") 
+					and not occupant.is_in_group("has_moved")
+					and occupant.player == piece.player
+					):
+				_send_to_king(piece, occupant, assigned_move.direction)
+			return
 	else:
 		if (	occupant 
 				and assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN) 

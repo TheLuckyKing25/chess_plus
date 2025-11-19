@@ -1,7 +1,5 @@
 extends Piece
 
-signal king_selected(king: Node3D)
-
 const KING_MOVE_DISTANCE: int = 1
 const ROOK_DETECTION_DISTANCE: int = 8
 const CASTLING_MOVE_DISTANCE: int = 2
@@ -11,10 +9,6 @@ var castling_move_rules: Array[MoveRule]
 
 func _on_ready() -> void:
 	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))
-	for rook in get_tree().get_nodes_in_group("Rook"):
-		if rook.player == player:
-			king_selected.connect(Callable(rook.get_parent(),"_king_selected"))
-			
 	connect_to_tile()
 	direction_parity = -2 * (parity - 1)
 	move_rules = [
