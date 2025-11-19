@@ -80,21 +80,30 @@ normal_texture = SubResource("NoiseTexture2D_5gvbh")
 [node name="gameEnvironment" type="Node3D"]
 script = ExtResource("1_hlv2s")
 
-[node name="Twist Pivot" type="Node3D" parent="."]
+[node name="Twist Pivot P1" type="Node3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Pitch Pivot P1" type="Node3D" parent="Twist Pivot"]
+[node name="Pitch Pivot P1" type="Node3D" parent="Twist Pivot P1"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766045, 0, -0.766045, 0.642788, 0, 0, 0)
 
-[node name="P1_Camera" type="Camera3D" parent="Twist Pivot/Pitch Pivot P1"]
+[node name="P1_Camera" type="Camera3D" parent="Twist Pivot P1/Pitch Pivot P1"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 current = true
 fov = 70.0
 
-[node name="Pitch Pivot P2" type="Node3D" parent="Twist Pivot"]
+[node name="Twist Pivot P2" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Pitch Pivot P2" type="Node3D" parent="Twist Pivot P2"]
+unique_name_in_owner = true
 transform = Transform3D(-1, -6.69698e-08, 5.61943e-08, 0, 0.642788, 0.766045, -8.74228e-08, 0.766045, -0.642788, 0, 0, 0)
 
-[node name="P2_Camera" type="Camera3D" parent="Twist Pivot/Pitch Pivot P2"]
+[node name="P2_Camera" type="Camera3D" parent="Twist Pivot P2/Pitch Pivot P2"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 fov = 70.0
 

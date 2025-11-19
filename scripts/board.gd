@@ -1,5 +1,6 @@
 extends Node3D
 
+const CAMERA_ROTATION_SPEED = 5
 
 enum {PLAYER_ONE, PLAYER_TWO}
 
@@ -7,9 +8,15 @@ enum {PLAYER_ONE, PLAYER_TWO}
 @export var selected_piece: Node3D
 
 
+
 var player_groups:Dictionary = {
 	PLAYER_ONE: "Player_One",
 	PLAYER_TWO: "Player_Two",
+}
+
+var player_camera:Dictionary = {
+	PLAYER_ONE: %P1_Camera,
+	PLAYER_TWO: %P2_Camera,
 }
 
 var piece_script: Dictionary[int, Resource] = {
@@ -157,9 +164,38 @@ func next_turn() -> void:
 	
 	# increments the turn number and switches the board color
 	turn_num += 1
+	prev_player = current_player
+	
 	current_player = (current_player + 1) % 2
 	
 	get_tree().call_group("Tile","clear_castling_occupant")
 	get_tree().call_group("Tile","clear_en_passant",current_player)
 	
 	%BoardBase.get_surface_override_material(0).albedo_color = Game.COLOR_PALETTE.PLAYER_COLOR[current_player]
+
+var prev_player = PLAYER_ONE
+	
+var camera_rotation: float = 0
+
+func _process(delta: float) -> void:
+	if prev_player != current_player:
+		match current_player:
+			0: 
+				camera_rotation += delta * CAMERA_ROTATION_SPEED
+				%"Twist Pivot P2".rotation = Vector3(0,camera_rotation,0)
+				print(camera_rotation)
+				if camera_rotation > PI:
+					%"Twist Pivot P2".rotation = Vector3(0,PI,0)
+					%P1_Camera.make_current()				
+					%"Twist Pivot P2".rotation = Vector3(0,0,0)
+					prev_player = current_player
+					camera_rotation = 0
+			1: 
+				camera_rotation += delta * CAMERA_ROTATION_SPEED
+				%"Twist Pivot P1".rotation = Vector3(0,camera_rotation,0)
+				if camera_rotation > PI:
+					%"Twist Pivot P1".rotation = Vector3(0,PI,0)
+					%P2_Camera.make_current()				
+					%"Twist Pivot P1".rotation = Vector3(0,0,0)
+					prev_player = current_player
+					camera_rotation = 0
