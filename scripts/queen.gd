@@ -1,53 +1,22 @@
-extends Node3D
-
-
-signal piece_clicked(piece: Node3D)
-signal piece_selected
-signal piece_unselected
-
+extends Piece
 
 const QUEEN_MOVE_DISTANCE: int = 8
-
-
-@export_enum("One", "Two") var player:
-	set(owner_player):
-		$Piece.piece_color = Game.COLOR_PALETTE.PLAYER_COLOR[owner_player]
-		player = owner_player
-		match owner_player:
-			0: 
-				add_to_group("Player_One")
-				remove_from_group("Player_Two")
-				rotation = Vector3(0,PI,0)
-				parity = -1 
-			1: 
-				add_to_group("Player_Two")
-				remove_from_group("Player_One")
-				rotation = Vector3(0,0,0)
-				parity = 1 
-
-
-var parity: int ## determines which direction is the front
-
-
-@onready var direction_parity: int = -2 * (parity - 1)
-
-@onready var move_rules: Array[Dictionary] = [
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.NORTH + direction_parity) % 8 },
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.NORTHEAST + direction_parity) % 8},
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.EAST + direction_parity) % 8 },
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.SOUTHEAST + direction_parity) % 8 },
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.SOUTH + direction_parity) % 8 },
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.SOUTHWEST + direction_parity) % 8 },
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.WEST + direction_parity) % 8 },
-	{"move_flags": Game.MoveType.Movement|Game.MoveType.Threaten, "distance": QUEEN_MOVE_DISTANCE, "direction": (Game.Direction.NORTHWEST + direction_parity) % 8 },
-]
-
 
 func _on_ready() -> void:
 	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))
 	connect_to_tile()
-
-
+	direction_parity = -2 * (parity - 1)
+	move_rules = [
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.NORTH + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.NORTHEAST + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.EAST + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.SOUTHEAST + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.SOUTH + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.SOUTHWEST + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.WEST + direction_parity)),
+		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.NORTHWEST + direction_parity)),
+	]
+	
 func _on_input_event(
 		camera: Node, 
 		event: InputEvent, 
@@ -71,34 +40,3 @@ func _on_input_event(
 			var clicked_object = result.collider.get_parent()
 			piece_clicked.emit(self)
 			
-
-func moved():
-	pass
-
-func set_piece_state_flag(flag: Game.PieceStateFlag):
-	$Piece.state |= 1 << flag
-	$Piece.apply_state()
-
-
-func toggle_piece_state_flag(flag: Game.PieceStateFlag):
-	$Piece.state ^= 1 << flag
-	$Piece.apply_state()
-
-	
-func piece_state_flag_is_enabled(flag: Game.PieceStateFlag):
-	return $Piece.state & (1 << flag)
-
-
-func unset_piece_state_flag(flag: Game.PieceStateFlag):
-	$Piece.state &= ~(1 << flag)
-	$Piece.apply_state()
-
-
-func connect_to_tile():
-	piece_selected.connect(Callable(get_parent(),"_on_occupant_selected"))
-	piece_unselected.connect(Callable(get_parent(),"_on_occupant_unselected"))
-
-
-func disconnect_from_tile():
-	piece_selected.disconnect(Callable(get_parent(),"_on_occupant_selected"))
-	piece_unselected.disconnect(Callable(get_parent(),"_on_occupant_unselected"))

@@ -6,43 +6,29 @@ func print_array(array, indent:int = 0):
 			print("\t".repeat(indent),"[")
 			print_array(item, indent+1)
 			print("\t".repeat(indent), "],")
-		elif typeof(item) == TYPE_DICTIONARY:
+		elif item is MoveRule:
 			print("\t".repeat(indent), "{")
-			print_dict(item, indent+1)
+			print_rule(item, indent+1)
 			print("\t".repeat(indent), "},")
 		else:
 			print("\t".repeat(indent), item ,", ")
 	
-func print_dict(dict, indent:int = 0):
-	for item in dict:
-		if typeof(dict[item]) == TYPE_ARRAY:
-			print("\t".repeat(indent), item ,": [")
-			print_array(dict[item], indent+1)
-			print("\t".repeat(indent), "]")
-		elif typeof(dict[item]) == TYPE_DICTIONARY:
-			print("\t".repeat(indent), item ,": {")
-			print_dict(dict[item], indent+1)
-			print("\t".repeat(indent), "}")
-		else:
-			print("\t".repeat(indent), item ,": ", dict[item])
+func print_rule(rule, indent:int = 0):
+	print("\t".repeat(indent),"{")
+	print_better(rule.move_flags, indent+1)
+	print_better(rule.distance, indent+1)
+	print_better(rule.direction, indent+1)
+	print_better(rule.branches, indent+1)
+	print("\t".repeat(indent), "}")
 
-func print_better(tree):
-	if typeof(tree) == TYPE_DICTIONARY:
-		print("{")
-		print_dict(tree,1)
-		print("}")
+func print_better(tree,indent:int = 0):
+	if tree is MoveRule:
+		print("\t".repeat(indent),"{")
+		print_rule(tree,indent+1)
+		print("\t".repeat(indent),"}")
 	elif typeof(tree) == TYPE_ARRAY:
-		print("[")
-		print_array(tree,1)
-		print("]")
+		print("\t".repeat(indent),"[")
+		print_array(tree,indent+1)
+		print("\t".repeat(indent),"]")
 	else:
-		print(tree)
-
-#func print_move() -> void:
-		#print(
-			#"%10s" % Piece.selected.object.name 
-			#+ " moves from " 
-			#+ Piece.selected.on_tile.object_tile.name 
-			#+ " to " 
-			#+ Tile.selected.object_tile.name
-		#)
+		print("\t".repeat(indent), tree)

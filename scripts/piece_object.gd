@@ -41,6 +41,7 @@ func apply_state():
 		get_parent().translate(Vector3(0,-5,0)) 
 		get_parent().visible = false
 		$Collision.disabled = true
+		get_parent().reparent(%Captured)
 		return
 	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED:
 		$Outline.visible = true

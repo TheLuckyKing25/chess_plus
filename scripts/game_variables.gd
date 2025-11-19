@@ -37,15 +37,6 @@ enum TileStateFlag{
 	TILE_STATE_FLAG_CHECKED,
 	}
 
-
-enum MoveType{ 
-	Jump = 1, 
-	Movement = 2, 
-	Threaten = 4, 
-	Branch = 8,
-	}
-
-
 enum Direction{ 
 	NORTH, 
 	NORTHEAST, 
@@ -56,7 +47,6 @@ enum Direction{
 	WEST, 
 	NORTHWEST,
 	}
-
 
 ## Color of a base tile which is lightened or darkened to make the board.
 const TILE_COLOR: Color = Color(0.75, 0.5775, 0.435) 
@@ -116,3 +106,4 @@ static var options: Dictionary = {
 	
 	PIECE_OUTLINE_THICKNESS: 0.1,
 }
+		

@@ -1,20 +1,30 @@
 extends Node3D
 
-
 signal tile_selected(tile:Node3D)
 
-signal move_processed(piece: Node3D, move: Dictionary)
+signal move_processed(piece: Node3D, move: Dictionary, castling_rook: Node3D)
 
-signal checks_processed(piece: Node3D, move: Dictionary, from:Game.Direction) 
+signal rook_discovered(piece: Node3D, direction: Game.Direction)
+
+signal castle()
 
 @export var board_position: Vector2i
 
-@export var occupant: Node3D = null
+@export var occupant: Node3D = null:
+	set(piece):
+		if en_passant_occupant:
+			en_passant_occupant = null
+		if castling_occupant:
+			castling_occupant = null
+		occupant = piece
 
+var en_passant_occupant: Node3D = null
+
+var castling_occupant: Node3D = null
 
 var checked_by: Array = []
 
-var moveset: Dictionary = {"move_flags": Game.MoveType.Branch, "branches": []}
+var moveset: MoveRule
 
 var neighboring_tiles: Dictionary[int, Node3D] = {
 	Game.Direction.NORTH: null,
@@ -27,8 +37,9 @@ var neighboring_tiles: Dictionary[int, Node3D] = {
 	Game.Direction.NORTHWEST:null
 }
 
+
 func _on_ready():
-	tile_selected.connect(Callable(owner,"move_to"))
+	tile_selected.connect(Callable(owner,"_on_tile_selected"))
 	board_position = Vector2i(name.substr(6,1).to_int(),name.substr(8,1).to_int())
 	match (board_position.x + board_position.y) % 2:
 		0: $Tile_Object.tile_color = Game.COLOR_PALETTE.TILE_COLOR_LIGHT
@@ -36,16 +47,30 @@ func _on_ready():
 	occupant = find_child("*_P*", false, true)
 
 
+func _on_rook_discovered(rook, direction):
+	moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0)
+	for move_rule in occupant.castling_move_rules:
+		if move_rule.direction == direction:
+			moveset.branches.append(move_rule)
+	_on_moves_recieved(occupant, moveset.decode_into_movement(), rook)
+
+
 func _on_occupant_selected():
 	set_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_SELECTED)
-	moveset.branches.assign(occupant.move_rules)
-	_on_moves_recieved(occupant, moveset)
+	moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.move_rules)
+	_on_moves_recieved(occupant, moveset.decode_into_movement())
+	if occupant.is_in_group("King") and not occupant.is_in_group("has_moved"):
+		moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.rook_finding_move_rules)
+		_on_moves_recieved(occupant, moveset.decode_into_movement())
 
 
 func _on_occupant_unselected():
 	unset_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_SELECTED)
-	moveset.branches.assign(occupant.move_rules)
-	_on_moves_recieved(occupant, moveset)
+	moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.move_rules)
+	_on_moves_recieved(occupant, moveset.decode_into_movement())
+	if occupant.is_in_group("King") and not occupant.is_in_group("has_moved"):
+		moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.rook_finding_move_rules)
+		_on_moves_recieved(occupant, moveset.decode_into_movement())
 
 
 func _on_input_event(
@@ -55,97 +80,149 @@ func _on_input_event(
 		normal: Vector3, 
 		shape_idx: int
 ) -> void:
-	if (
-			owner.selected_piece
+	if (	owner.selected_piece
 			and event is InputEventMouseButton
 			and event.is_pressed()
 			and event.button_index == MOUSE_BUTTON_LEFT
-		):
+			):
 		var mouse_pos = event.position
 		var from = camera.project_ray_origin(mouse_pos)
 		var to = from + camera.project_ray_normal(mouse_pos)*1000
 		var space_state = get_world_3d().direct_space_state
 		var result = space_state.intersect_ray(
 				PhysicsRayQueryParameters3D.create(from,to)
-		)
-		if result:
-			var clicked_object = result.collider.get_parent()
-			if tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT):
-				tile_selected.emit(self)
-			
-func _on_moves_recieved(piece:Node3D, moves):
-	var assigned_move: Dictionary
+				)
+		if result and _is_valid_move():
+			var clicked_object = result.collider.get_parent()	
+			tile_selected.emit(self)
+
+
+func _is_valid_move():
+	return (	
+			tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_SPECIAL_MOVEMENT) 
+			or tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT) 
+			or (	tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED) 
+					and en_passant_occupant
+					)
+			)
+
+func _on_castle():
+	castling_occupant.piece_clicked.emit(castling_occupant)
+	tile_selected.emit(self)
+
+func _toggle_rook_castling_tile_connection(assigned_move):
+	if neighboring_tiles[assigned_move.direction].is_connected("castle", Callable(self,"_on_castle")):
+		neighboring_tiles[assigned_move.direction].castle.disconnect(Callable(self,"_on_castle"))
+	else:
+		neighboring_tiles[assigned_move.direction].castle.connect(Callable(self,"_on_castle"))
+
+
+func _on_moves_recieved(piece:Node3D, moves, castling_rook: Node3D = null):
+	var assigned_move: MoveRule
 	
 	if typeof(moves) == TYPE_ARRAY:
 		assigned_move = moves.pop_front()
-	elif typeof(moves) == TYPE_DICTIONARY:
+	elif moves is MoveRule:
 		assigned_move = moves
 	
-	if occupant: 
-		if assigned_move.move_flags & Game.MoveType.Threaten and occupant.player != piece.player:
-			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
-			occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_THREATENED)
-		if not assigned_move.move_flags & Game.MoveType.Jump and occupant != piece:
-			return
-	elif not occupant:
-		if assigned_move.move_flags & Game.MoveType.Movement:
-			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT)
+	
+	if assigned_move.move_flag_is_enabled(MoveRule.MoveType.CHECK):
+		
+		if occupant and not occupant.is_in_group("King") and occupant != piece: return
+		if not assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN): return
 			
-	if typeof(moves) == TYPE_DICTIONARY and (assigned_move.move_flags & Game.MoveType.Branch):
-		var new_branches = construct_branches(assigned_move.branches)
-		assigned_move.branches = new_branches
-		for move in assigned_move.branches:
-			send_move(piece, move, move[0].direction)
-	elif typeof(moves) == TYPE_ARRAY:
-		if moves.size() == 1:
-			send_move(piece, moves[0], moves[0].direction)
-		elif moves.size() > 1:
-			send_move(piece, moves, moves[0].direction)
-
-
-func _on_checks_recieved(piece:Node3D, moves, from: Game.Direction):
-	var assigned_move: Dictionary
-	
-	if typeof(moves) == TYPE_ARRAY:
-		assigned_move = moves.pop_front()
-	elif typeof(moves) == TYPE_DICTIONARY:
-		assigned_move = moves
-
-	if assigned_move.move_flags & Game.MoveType.Threaten:
 		checked_by.append(piece)
-	if occupant and occupant.is_in_group("King") and occupant.player != piece.player:
+		
+		if not (occupant and occupant.is_in_group("King") and occupant.player != piece.player): return
 		
 		if occupant.piece_state_flag_is_enabled(Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED):
 			print("END GAME")
 			
 		toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_CHECKED)
 		occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED)
-	elif occupant and (not occupant.is_in_group("King") or occupant.player == piece.player): 
-		if not assigned_move.move_flags & Game.MoveType.Jump and occupant != piece:
-			return	
+	
+	elif (	assigned_move.move_flag_is_enabled(MoveRule.MoveType.CASTLING) 
+			and assigned_move.move_flag_is_enabled(MoveRule.MoveType.JUMP)
+			):
+				
+		if checked_by: return
 			
-	if typeof(moves) == TYPE_DICTIONARY and (assigned_move.move_flags & Game.MoveType.Branch):
-		var new_branches = construct_branches(assigned_move.branches)
-		assigned_move.branches = new_branches
-		for move in assigned_move.branches:
-			send_checks(piece, move, move[0].direction)
+		if assigned_move.move_flag_is_enabled(MoveRule.MoveType.SPECIAL):
+			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_SPECIAL_MOVEMENT)
+			return
+		else:
+			castling_occupant = castling_rook
+			castling_occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_SPECIAL)
+			_toggle_rook_castling_tile_connection(assigned_move)
+			
+	elif assigned_move.move_flag_is_enabled(MoveRule.MoveType.CASTLING):
+		if (	occupant 
+				and occupant.is_in_group("Rook") 
+				and not occupant.is_in_group("has_moved")
+				and occupant.player == piece.player
+				):
+			_send_to_king(piece, occupant, assigned_move.direction)
+		return
+	else:
+		if (	occupant 
+				and assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN) 
+				and occupant.player != piece.player
+				):
+			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
+			occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_THREATENED)
+		
+		if (	occupant
+				and not assigned_move.move_flag_is_enabled(MoveRule.MoveType.JUMP) 
+				and occupant != piece
+				): 
+			return
+			
+		if not occupant and assigned_move.move_flag_is_enabled(MoveRule.MoveType.MOVEMENT):
+			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT)
+			if piece.is_in_group("King") and checked_by.size() != 0:
+				toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
+		
+		
+		if (	piece.is_in_group("Pawn")
+				and not piece.is_in_group("has_moved") 
+				and abs(piece.get_parent().board_position - board_position) == Vector2i(1,0)
+				):
+			en_passant_occupant = piece
+		
+		if (	piece.is_in_group("Pawn") 
+				and en_passant_occupant 
+				and assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN) 
+				and en_passant_occupant.player != piece.player
+				):
+			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
+			en_passant_occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_THREATENED)
+
+
+	if moves is MoveRule and assigned_move.move_flag_is_enabled(MoveRule.MoveType.BRANCH):
+		for move_path in assigned_move.branches:
+			if move_path is MoveRule:
+				move_path = move_path.decode_into_movement()
+			if neighboring_tiles[move_path[0].direction]:
+				_send_to_tile(piece, move_path, move_path[0].direction, castling_rook)
 	elif typeof(moves) == TYPE_ARRAY:
-		if moves.size() == 1:
-			send_checks(piece, moves[0], moves[0].direction)
-		elif moves.size() > 1:
-			send_checks(piece, moves, moves[0].direction)
+		if moves.size() == 1 and neighboring_tiles[moves[0].direction]:
+			_send_to_tile(piece, moves[0], moves[0].direction, castling_rook)
+		elif moves.size() > 1 and neighboring_tiles[moves[0].direction]:
+			_send_to_tile(piece, moves, moves[0].direction, castling_rook)
+		
 
 func clear_checks():
 	checked_by = []
 	unset_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_CHECKED)
-	unset_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_CHECKING)
 	if occupant:
 		occupant.unset_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED)
 
+
 func discover_checks():
 	if occupant:
-		moveset.branches.assign(occupant.move_rules)
-		_on_checks_recieved(occupant, moveset, 9)
+		moveset = MoveRule.new(MoveRule.MoveType.BRANCH|MoveRule.MoveType.CHECK,-1,0,occupant.move_rules)
+		_on_moves_recieved(occupant, moveset.decode_into_movement())
+
 
 func set_tile_state_flag(flag: Game.TileStateFlag):
 	$Tile_Object.state |= 1 << flag
@@ -155,7 +232,7 @@ func set_tile_state_flag(flag: Game.TileStateFlag):
 func toggle_tile_state_flag(flag: Game.TileStateFlag):
 	$Tile_Object.state ^= 1 << flag
 	$Tile_Object.apply_state()
-
+	
 	
 func tile_state_flag_is_enabled(flag: Game.TileStateFlag):
 	return $Tile_Object.state & (1 << flag)
@@ -175,7 +252,17 @@ func is_neighbor(tile: Node3D) -> bool:
 			neighbor_x_diff == 1 and neighbor_y_diff == 0
 			or neighbor_x_diff == 0 and neighbor_y_diff == 1
 			or neighbor_x_diff == 1 and neighbor_y_diff == 1
-		) 
+			) 
+
+
+func clear_en_passant(player:int):
+	if en_passant_occupant and en_passant_occupant.player == player:
+		en_passant_occupant = null
+
+
+func clear_castling_occupant():
+	if castling_occupant and castling_occupant.is_in_group("has_moved"):
+		castling_occupant = null
 
 
 func find_neighbors():
@@ -201,32 +288,13 @@ func find_neighbors():
 				neighboring_tiles[Game.Direction.NORTHWEST] = tile
 
 
-func send_move(piece:Node3D, moves, direction:int):	
+func _send_to_tile(piece:Node3D, moves, direction: Game.Direction, castling_rook:Node3D = null):
 	move_processed.connect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
-	move_processed.emit(piece, moves)
+	move_processed.emit(piece, moves, castling_rook)
 	move_processed.disconnect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
-	
-func send_checks(piece:Node3D, moves, direction:int):	
-	checks_processed.connect(Callable(neighboring_tiles[direction],"_on_checks_recieved"))
-	checks_processed.emit(piece, moves, (direction + 4) % 8)
-	checks_processed.disconnect(Callable(neighboring_tiles[direction],"_on_checks_recieved"))
-		
-func construct_branches(rule_set:Array):
-	var branches: Array = []
-	for rule in rule_set:
-		var branch: Array = []
-		if (rule.move_flags & Game.MoveType.Movement|Game.MoveType.Threaten) and not (rule.move_flags & Game.MoveType.Jump):
-			branch.resize(branch.size() + rule.distance)
-			for move_index in range(0,branch.size()):
-				if branch[move_index] == null:
-					branch[move_index] = {"move_flags": (rule.move_flags & Game.MoveType.Movement)|(rule.move_flags& Game.MoveType.Threaten), "direction": rule.direction}
-		if (rule.move_flags & Game.MoveType.Jump):
-			branch.resize(branch.size() + rule.distance)
-			for move_index in range(0,branch.size()):
-				if branch[move_index] == null:
-					branch[move_index] = {"move_flags": Game.MoveType.Jump, "direction": rule.direction}
-		if (rule.move_flags & Game.MoveType.Branch):
-			branch[-1].move_flags |= Game.MoveType.Branch
-			branch[-1].set("branches", rule.branches)
-		branches.append(branch)
-	return branches
+
+
+func _send_to_king(king:Node3D, rook: Node3D, direction: Game.Direction):	
+	rook_discovered.connect(Callable(king.get_parent(),"_on_rook_discovered"))
+	rook_discovered.emit(rook, direction)
+	rook_discovered.disconnect(Callable(king.get_parent(),"_on_rook_discovered"))
