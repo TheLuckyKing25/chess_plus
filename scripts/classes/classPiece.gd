@@ -1,5 +1,7 @@
 class_name Piece
 
+signal promotion_requested(piece, position)
+
 ## Game Pieces
 const TYPE: Dictionary = {
 	"PAWN": {
@@ -254,7 +256,7 @@ func move_to(new_tile: Tile) -> void:
 					(on_tile.board_position.x == 1 and player_parent == Board.players[0])
 					or (on_tile.board_position.x == 8 and player_parent == Board.players[1])
 			):
-				promote_to("knight")
+				promotion_requested.emit(self)
 		
 		if self is King and new_tile in castling_moveset:
 			for relation in Global.king_rook_relation:

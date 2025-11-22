@@ -1,5 +1,6 @@
 extends Node3D
 
+var piece_to_promote = null
 
 func _ready() -> void:
 	
@@ -7,7 +8,6 @@ func _ready() -> void:
 	Board.all_pieces.clear()
 	Player.turn_num = 0
 	Board.players.clear()
-	
 	Board.board = $"/root/gameEnvironment/Board"
 	Board.base = $"/root/gameEnvironment/Board/BoardBase"
 	Global.create_players()
@@ -17,7 +17,7 @@ func _ready() -> void:
 		var tile_column = tile_node.name.substr(8,1).to_int()
 		var tile_position = Vector2i(tile_row,tile_column)
 		Board.all_tiles.append(Tile.new(tile_position,tile_node))
-	
+
 	
 	for tile in Board.all_tiles: 
 		var piece: Node3D = tile.object_tile.find_child("*_P*",false)
@@ -45,7 +45,9 @@ func _ready() -> void:
 		player.compile_threatened_tiles()
 	
 	Player.current = Board.players[Player.turn_num]
-		
+	
+	for piece in Board.all_pieces:
+		piece.promotion_requested.connect(_on_piece_promotion_requested)
 
 func _process(delta: float) -> void:
 	if (
@@ -56,3 +58,36 @@ func _process(delta: float) -> void:
 		Global.print_move()
 		
 		Piece.selected.move_to(Tile.selected)
+		
+		
+func _on_piece_promotion_requested(piece):
+	get_tree().paused = true
+	piece_to_promote = piece
+	var mouse_pos = get_viewport().get_mouse_position()
+	$CanvasLayer/PromoteMenu.position = mouse_pos
+	$CanvasLayer/PromoteMenu.show()
+	
+
+func _on_queen_pressed():
+	get_tree().paused = false
+	piece_to_promote.promote_to("Queen")
+	piece_to_promote = null
+	$CanvasLayer/PromoteMenu.hide()
+
+func _on_knight_pressed():
+	get_tree().paused = false
+	piece_to_promote.promote_to("Knight")
+	piece_to_promote = null
+	$CanvasLayer/PromoteMenu.hide()
+	
+func _on_rook_pressed():
+	get_tree().paused = false
+	piece_to_promote.promote_to("Rook")
+	piece_to_promote = null
+	$CanvasLayer/PromoteMenu.hide()
+
+func _on_bishop_pressed():
+	get_tree().paused = false
+	piece_to_promote.promote_to("Bishop")
+	piece_to_promote = null
+	$CanvasLayer/PromoteMenu.hide()

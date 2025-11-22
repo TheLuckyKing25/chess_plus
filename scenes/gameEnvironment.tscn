@@ -150,5 +150,58 @@ omni_range = 16.0
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_q1h0t")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="PromoteMenu" type="Panel" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -51.5
+offset_top = -59.5
+offset_right = 51.5
+offset_bottom = 59.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PromoteMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Queen" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Queen"
+
+[node name="Knight" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Knight"
+
+[node name="Rook" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Rook"
+
+[node name="Bishop" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Bishop"
 
 [connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Queen" to="." method="_on_queen_pressed"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Knight" to="." method="_on_knight_pressed"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Rook" to="." method="_on_rook_pressed"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Bishop" to="." method="_on_bishop_pressed"]
