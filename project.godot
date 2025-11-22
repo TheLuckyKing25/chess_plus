@@ -33,6 +33,13 @@ folder_colors={
 "res://scripts/classes/": "gray"
 }
 
+[global_group]
+
+Player_One=""
+Player_Two=""
+Tile=""
+Piece=""
+
 [input]
 
 Select={
