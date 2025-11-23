@@ -9,11 +9,10 @@ func _on_ready() -> void:
 	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))
 	connect_to_tile()
 	direction_parity = -2 * (parity - 1)
-	
 	move_rules = [
-		MoveRule.new(MoveRule.MoveType.MOVEMENT,PAWN_MOVE_DISTANCE_INITIAL,(Game.Direction.NORTH + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.THREATEN,PAWN_THREATEN_DISTANCE,(Game.Direction.NORTHEAST + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.THREATEN,PAWN_THREATEN_DISTANCE,(Game.Direction.NORTHWEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE,PurposeType.UNSET,PAWN_MOVE_DISTANCE_INITIAL,(Direction.NORTH + direction_parity)),
+		MoveRule.new(ActionType.THREATEN,PurposeType.UNSET,PAWN_THREATEN_DISTANCE,(Direction.NORTHEAST + direction_parity)),
+		MoveRule.new(ActionType.THREATEN,PurposeType.UNSET,PAWN_THREATEN_DISTANCE,(Direction.NORTHWEST + direction_parity)),
 		]
 
 func _on_input_event(

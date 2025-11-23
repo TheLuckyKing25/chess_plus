@@ -7,16 +7,15 @@ func _on_ready() -> void:
 	connect_to_tile()
 	direction_parity = -2 * (parity - 1)
 	move_rules = [
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.NORTH + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.NORTHEAST + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.EAST + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.SOUTHEAST + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.SOUTH + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.SOUTHWEST + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.WEST + direction_parity)),
-		MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, QUEEN_MOVE_DISTANCE, (Game.Direction.NORTHWEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.NORTH + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.NORTHEAST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.EAST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.SOUTHEAST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.SOUTH + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.SOUTHWEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.WEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,QUEEN_MOVE_DISTANCE,(Direction.NORTHWEST + direction_parity)),
 	]
-	
 func _on_input_event(
 		camera: Node, 
 		event: InputEvent, 

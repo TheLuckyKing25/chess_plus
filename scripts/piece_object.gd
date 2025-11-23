@@ -1,4 +1,4 @@
-extends Node3D
+extends Game
 
 @export_color_no_alpha var piece_color: Color = Color(0.5,0.5,0.5):
 	set(base_color):
@@ -14,7 +14,7 @@ extends Node3D
 @export_custom(PROPERTY_HINT_RESOURCE_TYPE,"") var mouseover_material: StandardMaterial3D
 
 
-var state = Game.PieceStateFlag.PIECE_STATE_FLAG_NONE:
+var state: PieceStateFlag = PieceStateFlag.PIECE_STATE_NONE:
 	set(flags):
 		state = flags
 		apply_state()
@@ -34,31 +34,31 @@ func _on_mouse_exited() -> void:
 
 
 func apply_state():
-	if state == Game.PieceStateFlag.PIECE_STATE_FLAG_NONE:
+	if state == PieceStateFlag.PIECE_STATE_NONE:
 		$Outline.visible = false
 		return
-	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_CAPTURED:
+	if state & 1 << PieceStateFlag.PIECE_STATE_CAPTURED:
 		get_parent().translate(Vector3(0,-5,0)) 
 		get_parent().visible = false
 		$Collision.disabled = true
 		get_parent().reparent(%Captured)
 		return
-	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED:
+	if state & 1 << PieceStateFlag.PIECE_STATE_CHECKED:
 		$Outline.visible = true
-		$Outline.material_override.albedo_color = Game.COLOR_PALETTE.CHECKED_PIECE_COLOR
+		$Outline.material_override.albedo_color = COLOR_PALETTE.CHECKED_PIECE_COLOR
 		
-	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_SELECTED:
+	if state & 1 << PieceStateFlag.PIECE_STATE_SELECTED:
 		$Outline.visible = true
-		$Outline.material_override.albedo_color = Game.COLOR_PALETTE.SELECT_PIECE_COLOR
+		$Outline.material_override.albedo_color = COLOR_PALETTE.SELECT_PIECE_COLOR
 		
-	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_THREATENED:
+	if state & 1 << PieceStateFlag.PIECE_STATE_THREATENED:
 		$Outline.visible = true
-		$Outline.material_override.albedo_color = Game.COLOR_PALETTE.THREATENED_PIECE_COLOR
+		$Outline.material_override.albedo_color = COLOR_PALETTE.THREATENED_PIECE_COLOR
 		
-	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKING:
+	if state & 1 << PieceStateFlag.PIECE_STATE_CHECKING:
 		$Outline.visible = true
-		$Outline.material_override.albedo_color = Game.COLOR_PALETTE.CHECKING_PIECE_COLOR
+		$Outline.material_override.albedo_color = COLOR_PALETTE.CHECKING_PIECE_COLOR
 		
-	if state & 1 << Game.PieceStateFlag.PIECE_STATE_FLAG_SPECIAL:
+	if state & 1 << PieceStateFlag.PIECE_STATE_SPECIAL:
 		$Outline.visible = true
-		$Outline.material_override.albedo_color = Game.COLOR_PALETTE.SPECIAL_PIECE_COLOR
+		$Outline.material_override.albedo_color = COLOR_PALETTE.SPECIAL_PIECE_COLOR

@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 
 func print_array(array, indent:int = 0):
 	for item in array:

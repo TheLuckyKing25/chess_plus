@@ -8,10 +8,10 @@ func _on_ready() -> void:
 	direction_parity = -2 * (parity - 1)
 
 	move_rules = [
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN,BISHOP_MOVE_DISTANCE,(Game.Direction.SOUTHEAST + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN,BISHOP_MOVE_DISTANCE,(Game.Direction.NORTHEAST + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN,BISHOP_MOVE_DISTANCE,(Game.Direction.SOUTHWEST + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN,BISHOP_MOVE_DISTANCE,(Game.Direction.NORTHWEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,BISHOP_MOVE_DISTANCE,(Direction.NORTHEAST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,BISHOP_MOVE_DISTANCE,(Direction.SOUTHWEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,BISHOP_MOVE_DISTANCE,(Direction.NORTHWEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,BISHOP_MOVE_DISTANCE,(Direction.SOUTHEAST + direction_parity)),
 	]
 	
 func _on_input_event(

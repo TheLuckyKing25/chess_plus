@@ -1,6 +1,6 @@
 extends Piece
 
-signal king_selected(rook: Node3D)
+signal king_selected(rook: Piece)
 
 const ROOK_MOVE_DISTANCE: int = 8
 
@@ -9,10 +9,10 @@ func _on_ready() -> void:
 	connect_to_tile()
 	direction_parity = -2 * (parity - 1)
 	move_rules = [
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, ROOK_MOVE_DISTANCE, (Game.Direction.NORTH + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, ROOK_MOVE_DISTANCE, (Game.Direction.EAST + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, ROOK_MOVE_DISTANCE, (Game.Direction.SOUTH + direction_parity)),
-		MoveRule.new(MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, ROOK_MOVE_DISTANCE, (Game.Direction.WEST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,ROOK_MOVE_DISTANCE,(Direction.NORTH + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,ROOK_MOVE_DISTANCE,(Direction.EAST + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,ROOK_MOVE_DISTANCE,(Direction.SOUTH + direction_parity)),
+		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,ROOK_MOVE_DISTANCE,(Direction.WEST + direction_parity)),
 	]
 
 func _on_input_event(
