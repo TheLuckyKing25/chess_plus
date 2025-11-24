@@ -67,7 +67,10 @@ func _on_game_value_changed(value: float) -> void:
 #Buttons
 #Apply
 func _on_apply_pressed() -> void:
-	pass # Replace with function body.
+	var action_event = InputEventAction.new()
+	action_event.action = "ui_cancel"
+	action_event.pressed = true  
+	Input.parse_input_event(action_event)
 
 #Cancel
 func _on_cancel_pressed() -> void:

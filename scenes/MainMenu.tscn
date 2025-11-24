@@ -204,6 +204,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_iwfq2")
 text = "Join Game"
 
 [node name="Join IP" type="LineEdit" parent="Start/VBoxContainer"]
+visible = false
 layout_mode = 2
 placeholder_text = "Enter Host IP to Join"
 alignment = 1
