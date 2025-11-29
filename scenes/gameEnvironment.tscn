@@ -1,8 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=20 format=3 uid="uid://h7v0gyqyq0h7"]
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
 [ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/PauseMenu.tscn" id="3_q1h0t"]
+[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/Audio/Piece_move.wav" id="4_xtwup"]
+[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/Audio/Piece_capture.wav" id="5_hekqh"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true
@@ -113,6 +115,18 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -0.0987513, 3.5)
 mesh = SubResource("BoxMesh_wsj4q")
 surface_material_override/0 = SubResource("StandardMaterial3D_wsj4q")
+
+[node name="Peice_move" type="AudioStreamPlayer" parent="Board"]
+stream = ExtResource("4_xtwup")
+volume_db = -60.0
+pitch_scale = 0.75
+bus = &"Game"
+
+[node name="Peice_capture" type="AudioStreamPlayer" parent="Board"]
+stream = ExtResource("5_hekqh")
+volume_db = -70.0
+pitch_scale = 0.75
+bus = &"Game"
 
 [node name="Table" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.2754, 0)

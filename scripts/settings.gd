@@ -21,6 +21,12 @@ func _ready():
 	music_slider.value = audio_settings.music_volume
 	ui_slider.value = audio_settings.ui_volume
 	game_slider.value = audio_settings.game_volume
+	
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(audio_settings.master_volume))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(audio_settings.music_volume))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("UI"), linear_to_db(audio_settings.ui_volume))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Game"), linear_to_db(audio_settings.game_volume))
+
 
 func _input(event) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -63,18 +69,17 @@ func _on_game_value_changed(value: float) -> void:
 
 #Controls
 
-
 #Buttons
 #Apply
 func _on_apply_pressed() -> void:
+	pass
+
+#Cancel
+func _on_cancel_pressed() -> void:
 	var action_event = InputEventAction.new()
 	action_event.action = "ui_cancel"
 	action_event.pressed = true  
 	Input.parse_input_event(action_event)
-
-#Cancel
-func _on_cancel_pressed() -> void:
-	pass # Replace with function body.
 
 #Default
 func _on_default_pressed() -> void:

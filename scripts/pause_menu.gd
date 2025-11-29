@@ -24,6 +24,7 @@ func _input(event) -> void:
 
 func _on_resume_pressed():
 	resume()
+	
 
 func _on_options_pressed():
 	$Options/Settings.show()

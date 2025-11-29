@@ -141,13 +141,11 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Label2" type="Label" parent="Panel/Panel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Resolution"
 
 [node name="Resolution" type="OptionButton" parent="Panel/Panel/VBoxContainer/TabContainer/Graphics/VBoxContainer/HBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -304,11 +302,10 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_styles/focus = SubResource("StyleBoxEmpty_rbmmp")
 theme_override_styles/hover = SubResource("StyleBoxFlat_3ba70")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_oej8g")
-text = "Exit
+text = "Apply
 "
 
 [node name="Cancel" type="Button" parent="Panel/Panel/Panel/HBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)

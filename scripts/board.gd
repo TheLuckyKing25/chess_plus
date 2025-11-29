@@ -7,6 +7,8 @@ enum {PLAYER_ONE, PLAYER_TWO}
 
 signal promotion_requested(selected_piece)
 
+@onready var piece_capture_audio = $Peice_capture
+@onready var piece_move_audio = $Peice_move
 
 var player_groups:Dictionary = {
 	PLAYER_ONE: "Player_One",
@@ -76,8 +78,11 @@ func _on_piece_clicked(new_selected_piece: Node3D) -> void:
 
 
 func _on_tile_selected(tile: Node3D) -> void:
+	var is_capture = tile.occupant != null
+
 	if selected_piece.is_in_group("Pawn") and tile.en_passant_occupant and tile.en_passant_occupant != selected_piece:
 		tile.en_passant_occupant.set_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_CAPTURED)
+		is_capture = true
 	
 	if tile.tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_SPECIAL_MOVEMENT):
 		var king = selected_piece
@@ -99,6 +104,7 @@ func _on_tile_selected(tile: Node3D) -> void:
 	)
 	selected_piece.connect_to_tile()
 	
+	
 	if not selected_piece.is_in_group("has_moved"):
 		selected_piece.add_to_group("has_moved")
 		selected_piece.call("moved")
@@ -112,6 +118,11 @@ func _on_tile_selected(tile: Node3D) -> void:
 			selected_piece.remove_from_group("Pawn")
 			promotion_requested.emit(selected_piece)
 	
+	if is_capture:
+		piece_capture_audio.play()
+	else:
+		piece_move_audio.play()
+		
 	selected_piece = null
 	next_turn()
 
