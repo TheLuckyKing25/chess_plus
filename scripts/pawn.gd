@@ -1,7 +1,12 @@
 extends Piece
 
+
 const PAWN_MOVE_DISTANCE_INITIAL: int = 2
+
+
 const PAWN_MOVE_DISTANCE: int = 1
+
+
 const PAWN_THREATEN_DISTANCE: int = 1
 
 
@@ -14,6 +19,7 @@ func _on_ready() -> void:
 		MoveRule.new(ActionType.THREATEN,PurposeType.UNSET,PAWN_THREATEN_DISTANCE,(Direction.NORTHEAST + direction_parity)),
 		MoveRule.new(ActionType.THREATEN,PurposeType.UNSET,PAWN_THREATEN_DISTANCE,(Direction.NORTHWEST + direction_parity)),
 		]
+
 
 func _on_input_event(
 		camera: Node, 

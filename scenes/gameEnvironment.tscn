@@ -91,6 +91,7 @@ transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766045, 0, -0.766045, 0.642788, 
 [node name="P1_Camera" type="Camera3D" parent="Twist Pivot P1/Pitch Pivot P1"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+cull_mask = 1048573
 current = true
 fov = 70.0
 
@@ -105,6 +106,7 @@ transform = Transform3D(-1, -6.69698e-08, 5.61943e-08, 0, 0.642788, 0.766045, -8
 [node name="P2_Camera" type="Camera3D" parent="Twist Pivot P2/Pitch Pivot P2"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+cull_mask = 1048573
 fov = 70.0
 
 [node name="Sky" type="MeshInstance3D" parent="."]

@@ -1,8 +1,11 @@
 extends Piece
 
+
 signal king_selected(rook: Piece)
 
+
 const ROOK_MOVE_DISTANCE: int = 8
+
 
 func _on_ready() -> void:
 	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))
@@ -14,6 +17,7 @@ func _on_ready() -> void:
 		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,ROOK_MOVE_DISTANCE,(Direction.SOUTH + direction_parity)),
 		MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET,ROOK_MOVE_DISTANCE,(Direction.WEST + direction_parity)),
 	]
+
 
 func _on_input_event(
 		camera: Node, 

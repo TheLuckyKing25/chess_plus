@@ -2,8 +2,13 @@ class_name Piece
 extends Game
 
 signal piece_clicked(piece: Node3D)
+
+
 signal piece_selected
+
+
 signal piece_unselected
+
 
 @export_enum("One", "Two") var player:
 	set(owner_player):
@@ -21,14 +26,19 @@ signal piece_unselected
 				rotation = Vector3(0,0,0)
 				parity = 1 
 
+
 var parity: int ## determines which direction is the front
+
 
 var direction_parity: int
 
+
 var move_rules: Array[MoveRule] 
+
 
 func moved():
 	pass
+
 
 func connect_to_tile():
 	piece_selected.connect(Callable(get_parent(),"_on_occupant_selected"))

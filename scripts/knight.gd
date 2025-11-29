@@ -1,7 +1,11 @@
 extends Piece
 
+
 const KNIGHT_OUTWARD_MOVE_DISTANCE: int = 2
+
+
 const KNIGHT_SIDEWAYS_MOVE_DISTANCE: int = 1
+
 
 func _on_ready() -> void:
 	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))

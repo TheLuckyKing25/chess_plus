@@ -1,9 +1,16 @@
 extends Game
 
-@onready var board = $"/root/gameEnvironment/Board"
-@onready var base = $"/root/gameEnvironment/Board/BoardBase"
 
+@onready var board = $"/root/gameEnvironment/Table/Board"
+
+
+@onready var base = $"/root/gameEnvironment/Table/Board/BoardBase"
+
+
+var CAMERA_ROTATION_DELAY_MSEC:int = 500
+var time_turn_ended:int = 0
 var camera_rotation: float = 0
+
 
 ## Sets up the next turn
 func _next_turn() -> void:
@@ -25,27 +32,34 @@ func _next_turn() -> void:
 	
 	get_tree().call_group("Tile","clear_castling_occupant")
 	get_tree().call_group("Tile","clear_en_passant",current_player)
-	
-	%BoardBase.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[current_player]
 
 
 func _process(delta: float) -> void:
 	if prev_player != current_player:
-		camera_rotation += delta * user_setting.CAMERA_ROTATION_SPEED
-		match current_player:
-			Player.PLAYER_ONE:
-				%"Twist Pivot P2".rotation = Vector3(0,camera_rotation,0)
-				if camera_rotation > PI:
-					%"Twist Pivot P2".rotation = Vector3(0,PI,0)
-					%P1_Camera.make_current()				
-					%"Twist Pivot P2".rotation = Vector3(0,0,0)
-					prev_player = current_player
-					camera_rotation = 0
-			Player.PLAYER_TWO:
-				%"Twist Pivot P1".rotation = Vector3(0,camera_rotation,0)
-				if camera_rotation > PI:
-					%"Twist Pivot P1".rotation = Vector3(0,PI,0)
-					%P2_Camera.make_current()		
-					%"Twist Pivot P1".rotation = Vector3(0,0,0)
-					prev_player = current_player
-					camera_rotation = 0
+		if time_turn_ended == 0:
+			time_turn_ended = Time.get_ticks_msec()
+		if (Time.get_ticks_msec() - time_turn_ended) >=CAMERA_ROTATION_DELAY_MSEC:
+			camera_rotation += delta * user_setting.CAMERA_ROTATION_SPEED
+			match current_player:
+				Player.PLAYER_ONE:
+					%"Twist Pivot P2".rotation = Vector3(0,camera_rotation,0)
+					%BoardBase.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[prev_player].lerp(COLOR_PALETTE.PLAYER_COLOR[current_player],camera_rotation/PI)
+					if camera_rotation > PI:
+						%"Twist Pivot P2".rotation = Vector3(0,PI,0)
+						%P1_Camera.make_current()				
+						%"Twist Pivot P2".rotation = Vector3(0,0,0)
+						prev_player = current_player
+						camera_rotation = 0
+						time_turn_ended = 0
+						%BoardBase.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[current_player]
+				Player.PLAYER_TWO:
+					%"Twist Pivot P1".rotation = Vector3(0,camera_rotation,0)
+					%BoardBase.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[prev_player].lerp(COLOR_PALETTE.PLAYER_COLOR[current_player],camera_rotation/PI)
+					if camera_rotation > PI:
+						%"Twist Pivot P1".rotation = Vector3(0,PI,0)
+						%P2_Camera.make_current()		
+						%"Twist Pivot P1".rotation = Vector3(0,0,0)
+						prev_player = current_player
+						camera_rotation = 0
+						time_turn_ended = 0
+						%BoardBase.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[current_player]

@@ -4,103 +4,99 @@ extends Node3D
 
 #region Piece Constants
 enum PieceType{
-	PIECE_TYPE_PAWN,
-	PIECE_TYPE_ROOK,
-	PIECE_TYPE_BISHOP,
-	PIECE_TYPE_KNIGHT,
-	PIECE_TYPE_KING,
-	PIECE_TYPE_QUEEN,
+	PAWN = 0,
+	ROOK = 1,
+	BISHOP = 2,
+	KNIGHT = 3,
+	KING = 4,
+	QUEEN = 5,
 	}
 
 
 enum PawnPromotion{
-	PAWN_PROMOTION_ROOK,
-	PAWN_PROMOTION_BISHOP,
-	PAWN_PROMOTION_KNIGHT,
-	PAWN_PROMOTION_QUEEN,
+	ROOK = 1,
+	BISHOP = 2,
+	KNIGHT = 3,
+	QUEEN = 5,
 	}
 
 
 enum PieceStateFlag{
-	PIECE_STATE_NONE, 
-	PIECE_STATE_SELECTED, 
-	PIECE_STATE_THREATENED, 
-	PIECE_STATE_CAPTURED, 
-	PIECE_STATE_CHECKED, 
-	PIECE_STATE_CHECKING, 
-	PIECE_STATE_SPECIAL,
+	NONE = 0, 
+	SELECTED = 1, 
+	THREATENED = 2, 
+	CAPTURED = 3, 
+	CHECKED = 4, 
+	CHECKING = 5, 
+	SPECIAL = 6,
 	}
 
 
 enum PieceAbilityFlag{
-	PIECE_ABILITY_PLACEHOLDER
+	PIECE_ABILITY_PLACEHOLDER = 0
 	}
 
 
 enum PieceConditionFlag{
-	PIECE_CONDITION_PLACEHOLDER
+	PIECE_CONDITION_PLACEHOLDER = 0
 	}
 
 
 enum PiecePropertyFlag{
-	PIECE_PROPERTY_PLACEHOLDER
+	PIECE_PROPERTY_PLACEHOLDER = 0
 	}
 
 
 const piece_script: Dictionary[int, Resource] = {
-	PieceType.PIECE_TYPE_PAWN: preload("res://scripts/pawn.gd"),
-	PieceType.PIECE_TYPE_ROOK: preload("res://scripts/rook.gd"),
-	PieceType.PIECE_TYPE_BISHOP: preload("res://scripts/bishop.gd"),
-	PieceType.PIECE_TYPE_KNIGHT: preload("res://scripts/knight.gd"),
-	PieceType.PIECE_TYPE_KING: preload("res://scripts/king.gd"),
-	PieceType.PIECE_TYPE_QUEEN: preload("res://scripts/queen.gd"),
+	PieceType.PAWN: preload("res://scripts/pawn.gd"),
+	PieceType.ROOK: preload("res://scripts/rook.gd"),
+	PieceType.BISHOP: preload("res://scripts/bishop.gd"),
+	PieceType.KNIGHT: preload("res://scripts/knight.gd"),
+	PieceType.KING: preload("res://scripts/king.gd"),
+	PieceType.QUEEN: preload("res://scripts/queen.gd"),
 }
 
 
 const piece_mesh: Dictionary = {
-	PieceType.PIECE_TYPE_PAWN: preload("res://assets/pawn_mesh.obj"),
-	PieceType.PIECE_TYPE_ROOK: preload("res://assets/rook_mesh.obj"),
-	PieceType.PIECE_TYPE_BISHOP: preload("res://assets/bishop_mesh.obj"),
-	PieceType.PIECE_TYPE_KNIGHT: preload("res://assets/knight_mesh.obj"),
-	PieceType.PIECE_TYPE_KING: preload("res://assets/king_mesh.obj"),
-	PieceType.PIECE_TYPE_QUEEN: preload("res://assets/queen_mesh.obj"),
+	PieceType.PAWN: preload("res://assets/pawn_mesh.obj"),
+	PieceType.ROOK: preload("res://assets/rook_mesh.obj"),
+	PieceType.BISHOP: preload("res://assets/bishop_mesh.obj"),
+	PieceType.KNIGHT: preload("res://assets/knight_mesh.obj"),
+	PieceType.KING: preload("res://assets/king_mesh.obj"),
+	PieceType.QUEEN: preload("res://assets/queen_mesh.obj"),
 }
 #endregion
 
 
 #region Tile Constants
-enum TilePropertyFlag{
-	TILE_PROPERTY_PLACEHOLDER,
+
+enum TileModifierFlag{
+	PROPERTY_COG = 1,
+	CONDITION_ICEY = 2,
+	CONDITION_STICKY = 3,
 	}
-
-
-enum TileConditionFlag{
-	TILE_CONDITION_ICEY,
-	TILE_CONDITION_STICKY,
-	}
-
 
 enum TileStateFlag{
-	TILE_STATE_NONE,
-	TILE_STATE_SELECTED,
-	TILE_STATE_MOVEMENT,
-	TILE_STATE_CHECKING,
-	TILE_STATE_SPECIAL,
-	TILE_STATE_THREATENED,
-	TILE_STATE_CHECKED,
+	NONE = 0,
+	SELECTED = 1,
+	MOVEMENT = 2,
+	CHECKING = 3,
+	SPECIAL = 4,
+	THREATENED = 5,
+	CHECKED = 6,
 	}
 #endregion
 
 
 enum Direction{ 
-	NORTH, 
-	NORTHEAST, 
-	EAST, 
-	SOUTHEAST, 
-	SOUTH, 
-	SOUTHWEST, 
-	WEST, 
-	NORTHWEST,
+	NORTH = 0, 
+	NORTHEAST = 1, 
+	EAST = 2, 
+	SOUTHEAST = 3, 
+	SOUTH = 4, 
+	SOUTHWEST = 5, 
+	WEST = 6, 
+	NORTHWEST = 7,
 	}
 	
 #region Game Colors Constants
@@ -117,8 +113,8 @@ const COLOR_PALETTE: Dictionary = {
 	"THREATENED_PIECE_COLOR": Color(0.9, 0, 0),
 	"THREATENED_TILE_COLOR": Color(1, 0.2, 0.2),
 	
-	"CHECKING_PIECE_COLOR": Color(0.9, 0.9, 0),
-	"CHECKING_TILE_COLOR": Color(1, 1, 0.25),
+	#"CHECKING_PIECE_COLOR": Color(0.9, 0.9, 0),
+	#"CHECKING_TILE_COLOR": Color(1, 1, 0.25),
 	
 	"SELECT_PIECE_COLOR": Color(0, 0.9, 0.9),
 	"SELECT_TILE_COLOR": Color(0.1, 1, 1),
@@ -126,7 +122,7 @@ const COLOR_PALETTE: Dictionary = {
 	"CHECKED_PIECE_COLOR": Color(0.9, 0, 0),
 	"CHECKED_TILE_COLOR": Color(1, 0.2, 0.2),
 	
-	"MOVE_CHECKING_TILE_COLOR": Color(1, 0.65, 0.25),
+	#"MOVE_CHECKING_TILE_COLOR": Color(1, 0.65, 0.25),
 	
 	"SPECIAL_PIECE_COLOR": Color(1,1,1),
 	"SPECIAL_TILE_COLOR": Color(1,1,1),
@@ -135,12 +131,15 @@ const COLOR_PALETTE: Dictionary = {
 		Color(0.9, 0.9, 0.9), 
 		Color(0.1, 0.1, 0.1),
 	],
+	
+	"TILE_CONDITIONS_BACKGROUND_COLOR": Color(0,0,0),
+	"TILE_PROPERTIES_BACKGROUND_COLOR": Color(0,0,0)
 }
 #endregion
 
 enum Player{
-	PLAYER_ONE, 
-	PLAYER_TWO
+	PLAYER_ONE = 0, 
+	PLAYER_TWO = 1,
 	}
 
 const player_groups:Dictionary = {

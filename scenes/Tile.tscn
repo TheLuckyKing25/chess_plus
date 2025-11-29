@@ -1,8 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bgn763vrxmmcu"]
+[gd_scene load_steps=13 format=3 uid="uid://bgn763vrxmmcu"]
 
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile_object.gd" id="1_2sjy5"]
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile.gd" id="1_vhibn"]
-[ext_resource type="Script" uid="uid://deq2syi6rrdmy" path="res://scenes/tile_modifier_controller.gd" id="3_r3gf4"]
+[ext_resource type="Script" uid="uid://dpjhoykfs62y" path="res://scripts/tile_modifier_controller.gd" id="3_r3gf4"]
+[ext_resource type="Script" uid="uid://deq2syi6rrdmy" path="res://scripts/modifier_grid.gd" id="4_rvdvl"]
+[ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="5_ukgqd"]
+[ext_resource type="StyleBox" uid="uid://6ic7o326yplq" path="res://assets/TileProperties.stylebox" id="6_esqu7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhibn"]
 resource_local_to_scene = true
@@ -25,8 +28,8 @@ size = Vector3(1, 0.163, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_iixfe"]
 size = Vector3(0.95, 0.1, 0.95)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_vhibn"]
-size = Vector2(0.8, 0.8)
+[sub_resource type="ViewportTexture" id="ViewportTexture_rvdvl"]
+viewport_path = NodePath("Tile_Object/Tile_Modifiers/Modifier_Grid")
 
 [node name="Tile" type="Node3D" groups=["Tile"]]
 script = ExtResource("1_vhibn")
@@ -44,19 +47,92 @@ shape = SubResource("BoxShape3D_iixfe")
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
 
-[node name="Tile_Modifiers" type="Node3D" parent="Tile_Object"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
-visible = false
+[node name="Tile_Modifiers" type="Sprite3D" parent="Tile_Object"]
+transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
+axis = 1
+texture = SubResource("ViewportTexture_rvdvl")
+region_enabled = true
+region_rect = Rect2(0, 0, 512, 512)
 script = ExtResource("3_r3gf4")
 
-[node name="Modifier" type="MeshInstance3D" parent="Tile_Object/Tile_Modifiers"]
+[node name="Modifier_Grid" type="SubViewport" parent="Tile_Object/Tile_Modifiers"]
+transparent_bg = true
+handle_input_locally = false
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="GridContainer" type="GridContainer" parent="Tile_Object/Tile_Modifiers/Modifier_Grid"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(512, 512)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 31
+theme_override_constants/v_separation = 31
+columns = 3
+script = ExtResource("4_rvdvl")
+
+[node name="Modifier_1" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
 visible = false
-mesh = SubResource("PlaneMesh_vhibn")
-skeleton = NodePath("../..")
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+tooltip_text = "Test"
+theme_override_styles/panel = ExtResource("5_ukgqd")
+
+[node name="Modifier_2" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_3" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_4" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_5" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_6" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_7" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_8" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
+
+[node name="Modifier_9" type="Panel" parent="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_esqu7")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="input_event" from="Tile_Object" to="." method="_on_input_event"]
 [connection signal="mouse_entered" from="Tile_Object" to="Tile_Object" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Tile_Object" to="Tile_Object" method="_on_mouse_exited"]
 [connection signal="ready" from="Tile_Object" to="Tile_Object" method="_on_ready"]
-[connection signal="ready" from="Tile_Object/Tile_Modifiers" to="Tile_Object/Tile_Modifiers" method="_on_ready"]
+[connection signal="modifierCountChanged" from="Tile_Object/Tile_Modifiers" to="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer" method="_on_tile_modifiers_modifier_count_changed"]
+[connection signal="ready" from="Tile_Object/Tile_Modifiers/Modifier_Grid/GridContainer" to="Tile_Object/Tile_Modifiers" method="_on_grid_container_ready"]
