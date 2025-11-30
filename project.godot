@@ -11,13 +11,19 @@ config_version=5
 [application]
 
 config/name="Chess_Plus"
-run/main_scene="uid://h7v0gyqyq0h7"
+run/main_scene="uid://camv04tw28yjr"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Global="*res://scripts/global.gd"
+ConfigFileHandler="*res://scripts/config_file_handler.gd"
+
+[display]
+
+window/subwindows/embed_subwindows=false
+window/stretch/mode="canvas_items"
 
 [file_customization]
 

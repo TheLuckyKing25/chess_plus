@@ -1,7 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=20 format=3 uid="uid://h7v0gyqyq0h7"]
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
+[ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/PauseMenu.tscn" id="3_q1h0t"]
+[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/Audio/Piece_move.wav" id="4_xtwup"]
+[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/Audio/Piece_capture.wav" id="5_hekqh"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true
@@ -113,6 +116,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -0.0987513, 3.5)
 mesh = SubResource("BoxMesh_wsj4q")
 surface_material_override/0 = SubResource("StandardMaterial3D_wsj4q")
 
+[node name="Peice_move" type="AudioStreamPlayer" parent="Board"]
+stream = ExtResource("4_xtwup")
+volume_db = -60.0
+pitch_scale = 0.75
+bus = &"Game"
+
+[node name="Peice_capture" type="AudioStreamPlayer" parent="Board"]
+stream = ExtResource("5_hekqh")
+volume_db = -70.0
+pitch_scale = 0.75
+bus = &"Game"
+
 [node name="Table" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.2754, 0)
 mesh = SubResource("CylinderMesh_hlv2s")
@@ -147,4 +162,61 @@ light_indirect_energy = 2.0
 shadow_enabled = true
 omni_range = 16.0
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_q1h0t")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="PromoteMenu" type="Panel" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -51.5
+offset_top = -69.0
+offset_right = 51.5
+offset_bottom = 69.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PromoteMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Queen" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Queen"
+
+[node name="Knight" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Knight"
+
+[node name="Rook" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Rook"
+
+[node name="Bishop" type="Button" parent="CanvasLayer/PromoteMenu/VBoxContainer"]
+process_mode = 2
+layout_mode = 2
+text = "Bishop"
+
 [connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Queen" to="." method="_on_queen_pressed"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Knight" to="." method="_on_knight_pressed"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Rook" to="." method="_on_rook_pressed"]
+[connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Bishop" to="." method="_on_bishop_pressed"]
