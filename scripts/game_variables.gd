@@ -163,8 +163,8 @@ static var debug_setting: Dictionary = {
 	"DEBUG_RESTRICT_MOVEMENT": false,
 }
 
-static var options: Dictionary = {
-	DEBUG_RESTRICT_MOVEMENT: true,
+#static var options: Dictionary = {
+	#DEBUG_RESTRICT_MOVEMENT: true,
 
 static var user_setting: Dictionary = {
 	"PIECE_OUTLINE_THICKNESS": 0.1,

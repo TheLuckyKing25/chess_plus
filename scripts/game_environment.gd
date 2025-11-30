@@ -79,24 +79,24 @@ func _on_promotion_requested(piece):
 
 func _on_queen_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, Game.PawnPromotion.PAWN_PROMOTION_QUEEN)
+	board.promote(piece_to_promote, PawnPromotion.QUEEN)
 	piece_to_promote = null
 	$CanvasLayer/PromoteMenu.hide()
 
 func _on_knight_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, Game.PawnPromotion.PAWN_PROMOTION_KNIGHT)
+	board.promote(piece_to_promote, PawnPromotion.KNIGHT)
 	piece_to_promote = null
 	$CanvasLayer/PromoteMenu.hide()
 	
 func _on_rook_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, Game.PawnPromotion.PAWN_PROMOTION_ROOK)
+	board.promote(piece_to_promote, PawnPromotion.ROOK)
 	piece_to_promote = null
 	$CanvasLayer/PromoteMenu.hide()
 
 func _on_bishop_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, Game.PawnPromotion.PAWN_PROMOTION_BISHOP)
+	board.promote(piece_to_promote, PawnPromotion.BISHOP)
 	piece_to_promote = null
 	$CanvasLayer/PromoteMenu.hide()
