@@ -1,16 +1,22 @@
-extends Node3D
+extends Game
+
 
 signal tile_selected(tile:Node3D)
 
-signal move_processed(piece: Node3D, move: Dictionary, castling_rook: Node3D)
 
-signal rook_discovered(piece: Node3D, direction: Game.Direction)
+signal move_processed(piece: Piece, move: Dictionary, castling_rook: Piece)
 
-signal castle()
+
+signal rook_discovered(piece: Piece, direction: Direction)
+
+
+signal castle
+
 
 @export var board_position: Vector2i
 
-@export var occupant: Node3D = null:
+
+@export var occupant: Piece = null:
 	set(piece):
 		if en_passant_occupant:
 			en_passant_occupant = null
@@ -18,59 +24,91 @@ signal castle()
 			castling_occupant = null
 		occupant = piece
 
-var en_passant_occupant: Node3D = null
+var modifier_flags: int = 0:
+	set(new_modifier_flags):
+		var difference: int = new_modifier_flags - modifier_flags
+		if difference > 0:
+			modifier_order.push_front(difference)
+		elif difference < 0:
+			modifier_order.erase(abs(difference))
+		modifier_flags = new_modifier_flags
 
-var castling_occupant: Node3D = null
+@export var modifier_order: Array[TileModifierFlag] = []:
+	set(new_modifier_order):
+		if modifier_order.size() > new_modifier_order.size():
+			tile_modifiers(modifier_order[-1],unset_flag_func)
+		elif modifier_order.size() < new_modifier_order.size():
+			tile_modifiers(new_modifier_order[-1],set_flag_func)
+		elif modifier_order.size() == new_modifier_order.size():
+			for modifier in modifier_order:
+				if modifier != new_modifier_order[modifier_order.find(modifier)-1]:
+					tile_modifiers(modifier,unset_flag_func)
+					tile_modifiers(new_modifier_order[modifier_order.find(modifier)-1],set_flag_func)
+				
+		modifier_order = new_modifier_order
+		$Tile_Object/Tile_Modifiers.modifiers = modifier_order
 
-var checked_by: Array = []
+
+var en_passant_occupant: Piece = null
+
+
+var castling_occupant: Piece = null
+
+
+var checked_by: Array[Piece] = []
+
 
 var moveset: MoveRule
 
-var neighboring_tiles: Dictionary[int, Node3D] = {
-	Game.Direction.NORTH: null,
-	Game.Direction.NORTHEAST:null,
-	Game.Direction.EAST:null,
-	Game.Direction.SOUTHEAST:null,
-	Game.Direction.SOUTH:null,
-	Game.Direction.SOUTHWEST:null,
-	Game.Direction.WEST:null,
-	Game.Direction.NORTHWEST:null
+var set_flag_func = Callable(self,"set_flag")
+var unset_flag_func = Callable(self,"unset_flag")
+var toggle_flag_func = Callable(self,"toggle_flag")
+var flag_is_enabled_func = Callable(self,"flag_is_enabled")
+
+var modifier_function_dict: Dictionary[TileModifierFlag,Callable] = {
+	TileModifierFlag.CONDITION_ICEY: Callable(self,"flag_is_enabled")
 }
 
+var neighboring_tiles: Dictionary[int, Node3D] = {
+	Direction.NORTH: null,
+	Direction.NORTHEAST:null,
+	Direction.EAST:null,
+	Direction.SOUTHEAST:null,
+	Direction.SOUTH:null,
+	Direction.SOUTHWEST:null,
+	Direction.WEST:null,
+	Direction.NORTHWEST:null
+}
 
-func _on_ready():
+func _on_ready() -> void:
 	tile_selected.connect(Callable(owner,"_on_tile_selected"))
 	board_position = Vector2i(name.substr(6,1).to_int(),name.substr(8,1).to_int())
 	match (board_position.x + board_position.y) % 2:
-		0: $Tile_Object.tile_color = Game.COLOR_PALETTE.TILE_COLOR_LIGHT
-		1: $Tile_Object.tile_color = Game.COLOR_PALETTE.TILE_COLOR_DARK
+		0: $Tile_Object.tile_color = COLOR_PALETTE.TILE_COLOR_LIGHT
+		1: $Tile_Object.tile_color = COLOR_PALETTE.TILE_COLOR_DARK
 	occupant = find_child("*_P*", false, true)
+	$Tile_Object/Tile_Modifiers.modifiers = modifier_order
 
 
-func _on_rook_discovered(rook, direction):
-	moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0)
+func _on_rook_discovered(rook, direction) -> void:
+	moveset = MoveRule.new(ActionType.BRANCH, PurposeType.CASTLING,0,0)
 	for move_rule in occupant.castling_move_rules:
 		if move_rule.direction == direction:
-			moveset.branches.append(move_rule)
-	_on_moves_recieved(occupant, moveset.decode_into_movement(), rook)
+			moveset.branches.append(move_rule.new())
+	_on_moves_recieved(occupant, moveset, rook)
 
 
-func _on_occupant_selected():
-	set_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_SELECTED)
-	moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.move_rules)
-	_on_moves_recieved(occupant, moveset.decode_into_movement())
-	if occupant.is_in_group("King") and not occupant.is_in_group("has_moved"):
-		moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.rook_finding_move_rules)
-		_on_moves_recieved(occupant, moveset.decode_into_movement())
-
-
-func _on_occupant_unselected():
-	unset_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_SELECTED)
-	moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.move_rules)
-	_on_moves_recieved(occupant, moveset.decode_into_movement())
-	if occupant.is_in_group("King") and not occupant.is_in_group("has_moved"):
-		moveset = MoveRule.new(MoveRule.MoveType.BRANCH,-1,0,occupant.rook_finding_move_rules)
-		_on_moves_recieved(occupant, moveset.decode_into_movement())
+func _on_occupant_selected() -> void:
+	tile_state(TileStateFlag.SELECTED, set_flag_func)
+	moveset = MoveRule.new(ActionType.BRANCH, PurposeType.STANDARD_MOVEMENT,0,0)
+	for move_rule in occupant.move_rules:
+		moveset.branches.append(move_rule.new())
+	_on_moves_recieved(occupant, moveset)
+	if piece_is_king(occupant) and not piece_has_moved(occupant):
+		moveset = MoveRule.new(ActionType.BRANCH, PurposeType.ROOK_FINDING,0,0)
+		for move_rule in occupant.rook_finding_move_rules:
+			moveset.branches.append(move_rule.new())
+		_on_moves_recieved(occupant, moveset)
 
 
 func _on_input_event(
@@ -79,8 +117,8 @@ func _on_input_event(
 		event_position: Vector3, 
 		normal: Vector3, 
 		shape_idx: int
-) -> void:
-	if (	owner.selected_piece
+		) -> void:
+	if ( 	owner.selected_piece
 			and event is InputEventMouseButton
 			and event.is_pressed()
 			and event.button_index == MOUSE_BUTTON_LEFT
@@ -92,155 +130,156 @@ func _on_input_event(
 		var result = space_state.intersect_ray(
 				PhysicsRayQueryParameters3D.create(from,to)
 				)
-		if result and _is_valid_move():
+		if result and _is_valid_move_state():
 			var clicked_object = result.collider.get_parent()	
 			tile_selected.emit(self)
 
 
-func _is_valid_move():
+func _is_valid_move_state() -> bool:
 	return (	
-			tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_SPECIAL_MOVEMENT) 
-			or tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT) 
-			or (	tile_state_flag_is_enabled(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED) 
+			tile_state(TileStateFlag.SPECIAL, flag_is_enabled_func)
+			or tile_state(TileStateFlag.MOVEMENT, flag_is_enabled_func)
+			or (	
+					tile_state(TileStateFlag.THREATENED, flag_is_enabled_func) 
 					and en_passant_occupant
-					)
 			)
+	)
 
-func _on_castle():
+
+func _on_castle() -> void:
 	castling_occupant.piece_clicked.emit(castling_occupant)
 	tile_selected.emit(self)
 
-func _toggle_rook_castling_tile_connection(assigned_move):
+
+func _toggle_rook_castling_tile_connection(assigned_move) -> void:
 	if neighboring_tiles[assigned_move.direction].is_connected("castle", Callable(self,"_on_castle")):
 		neighboring_tiles[assigned_move.direction].castle.disconnect(Callable(self,"_on_castle"))
 	else:
 		neighboring_tiles[assigned_move.direction].castle.connect(Callable(self,"_on_castle"))
 
 
-func _on_moves_recieved(piece:Node3D, moves, castling_rook: Node3D = null):
-	var assigned_move: MoveRule
+func _on_moves_recieved(source_piece: Piece, moves, castling_rook: Piece = null) -> void:
 	
-	if typeof(moves) == TYPE_ARRAY:
-		assigned_move = moves.pop_front()
-	elif moves is MoveRule:
-		assigned_move = moves
-	
-	
-	if assigned_move.move_flag_is_enabled(MoveRule.MoveType.CHECK):
+	#tile conditions and properties
+	for modifier in modifier_order:
 		
-		if occupant and not occupant.is_in_group("King") and occupant != piece: return
-		if not assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN): return
-			
-		checked_by.append(piece)
-		
-		if not (occupant and occupant.is_in_group("King") and occupant.player != piece.player): return
-		
-		if occupant.piece_state_flag_is_enabled(Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED):
-			print("END GAME")
-			
-		toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_CHECKED)
-		occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED)
-	
-	elif (	assigned_move.move_flag_is_enabled(MoveRule.MoveType.CASTLING) 
-			and assigned_move.move_flag_is_enabled(MoveRule.MoveType.JUMP)
-			):
-				
-		if checked_by: return
-			
-		if assigned_move.move_flag_is_enabled(MoveRule.MoveType.SPECIAL):
-			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_SPECIAL_MOVEMENT)
+		if (	
+				tile_modifiers(TileModifierFlag.PROPERTY_COG,flag_is_enabled_func)
+				and modifier == TileModifierFlag.PROPERTY_COG
+				):
+			moves.rotate_clockwise()
+		if (
+				tile_modifiers(TileModifierFlag.CONDITION_STICKY,flag_is_enabled_func)
+				and modifier == TileModifierFlag.CONDITION_STICKY
+				):
+			moves.distance = 0
+		if (
+				tile_modifiers(TileModifierFlag.CONDITION_ICEY,flag_is_enabled_func) 
+				and modifier == TileModifierFlag.CONDITION_ICEY
+				and not piece_is_knight(source_piece)
+				and neighboring_tiles[moves.direction] 
+				and (
+						not neighboring_tiles[moves.direction].occupant
+						or piece_is_opponent_of(neighboring_tiles[moves.direction].occupant, source_piece)
+						)
+				and not pieces_are_different(source_piece, occupant)
+				):
+			_send_to_tile(source_piece, moves, moves.direction, castling_rook)
 			return
-		else:
-			castling_occupant = castling_rook
-			castling_occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_SPECIAL)
-			_toggle_rook_castling_tile_connection(assigned_move)
+	
+	
+	#DETERMINE TILE STATE FROM MOVES
+	var assigned_move: MoveRule = moves
+	if moves.distance > 0:
+		moves.distance -= 1
+	
+	if assigned_move.is_checking_movement():
+		if assigned_move.is_threatening():
+			checked_by.append(source_piece)
 			
-	elif assigned_move.move_flag_is_enabled(MoveRule.MoveType.CASTLING):
-		if occupant:
-			if (	occupant.is_in_group("Rook") 
-					and not occupant.is_in_group("has_moved")
-					and occupant.player == piece.player
-					):
-				_send_to_king(piece, occupant, assigned_move.direction)
+			if piece_is_opponent_of(source_piece, occupant):	
+				if not piece_is_king(occupant): return
+				if occupant.piece_state(PieceStateFlag.CHECKED,flag_is_enabled_func):
+					print("END GAME")
+				tile_state(TileStateFlag.CHECKED, set_flag_func)
+				occupant.piece_state(PieceStateFlag.CHECKED,set_flag_func)
+				return
+		
+	elif assigned_move.is_castling_movement():
+		if checked_by: return
+		
+		if assigned_move.action_flag_is_enabled(ActionType.SPECIAL) and assigned_move.distance == 0:
+			tile_state(TileStateFlag.SPECIAL, set_flag_func)
+			return
+		
+		castling_occupant = castling_rook
+		castling_occupant.piece_state(PieceStateFlag.SPECIAL,set_flag_func)
+		_toggle_rook_castling_tile_connection(assigned_move)
+			
+	elif assigned_move.is_finding_castling_rook():
+		if occupant and pieces_are_different(source_piece, occupant):
+			if _piece_is_valid_castling_rook(source_piece, occupant):
+				_send_to_king(source_piece, occupant, assigned_move.direction)
 			return
 	else:
-		if (	occupant 
-				and assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN) 
-				and occupant.player != piece.player
-				):
-			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
-			occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_THREATENED)
+		if (	piece_is_opponent_of(source_piece, occupant) 
+				and assigned_move.is_threatening()
+			):
+			tile_state(TileStateFlag.THREATENED, set_flag_func)
+			occupant.piece_state(PieceStateFlag.THREATENED,set_flag_func)
 		
-		if (	occupant
-				and not assigned_move.move_flag_is_enabled(MoveRule.MoveType.JUMP) 
-				and occupant != piece
-				): 
+		if move_is_blocked(assigned_move, source_piece, occupant): 
 			return
 			
-		if not occupant and assigned_move.move_flag_is_enabled(MoveRule.MoveType.MOVEMENT):
-			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_MOVEMENT)
-			if piece.is_in_group("King") and checked_by.size() != 0:
-				toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
+		if (	not occupant 
+				and assigned_move.action_flag_is_enabled(ActionType.MOVE)
+			):
+			tile_state(TileStateFlag.MOVEMENT, set_flag_func)
+			if piece_is_king(source_piece) and checked_by.size() != 0:
+				tile_state(TileStateFlag.THREATENED, set_flag_func)
 		
 		
-		if (	piece.is_in_group("Pawn")
-				and not piece.is_in_group("has_moved") 
-				and abs(piece.get_parent().board_position - board_position) == Vector2i(1,0)
-				):
-			en_passant_occupant = piece
+		if _piece_threatened_by_en_passant(source_piece):
+			en_passant_occupant = source_piece
 		
-		if (	piece.is_in_group("Pawn") 
-				and en_passant_occupant 
-				and assigned_move.move_flag_is_enabled(MoveRule.MoveType.THREATEN) 
-				and en_passant_occupant.player != piece.player
-				):
-			toggle_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_THREATENED)
-			en_passant_occupant.toggle_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_THREATENED)
+		if _piece_is_threat_to_en_passant_piece(source_piece, assigned_move, en_passant_occupant):
+			tile_state(TileStateFlag.THREATENED, set_flag_func)
+			en_passant_occupant.piece_state(PieceStateFlag.THREATENED,set_flag_func)
 
 
-	if moves is MoveRule and assigned_move.move_flag_is_enabled(MoveRule.MoveType.BRANCH):
-		for move_path in assigned_move.branches:
-			if move_path is MoveRule:
-				move_path = move_path.decode_into_movement()
-			if neighboring_tiles[move_path[0].direction]:
-				_send_to_tile(piece, move_path, move_path[0].direction, castling_rook)
-	elif typeof(moves) == TYPE_ARRAY:
-		if moves.size() == 1 and neighboring_tiles[moves[0].direction]:
-			_send_to_tile(piece, moves[0], moves[0].direction, castling_rook)
-		elif moves.size() > 1 and neighboring_tiles[moves[0].direction]:
-			_send_to_tile(piece, moves, moves[0].direction, castling_rook)
+	#SEND MOVES TO NEIGHBORING TILES
+	if moves.distance == 0 and moves.is_branching_movement():
+		for branching_move in moves.branches:
+			branching_move.purpose = moves.purpose
+			if neighboring_tiles[branching_move.direction]:
+				_send_to_tile(source_piece, branching_move, branching_move.direction, castling_rook)
+	elif moves.distance > 0:
+		_send_to_tile(source_piece, moves, moves.direction, castling_rook)
 		
 
-func clear_checks():
+func clear_checks() -> void:
 	checked_by = []
-	unset_tile_state_flag(Game.TileStateFlag.TILE_STATE_FLAG_CHECKED)
+	tile_state(TileStateFlag.CHECKED, unset_flag_func)
 	if occupant:
-		occupant.unset_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_CHECKED)
+		occupant.piece_state(PieceStateFlag.CHECKED,unset_flag_func)
 
 
-func discover_checks():
+func clear_move_states() -> void:
+	tile_state(TileStateFlag.SELECTED, unset_flag_func)
+	tile_state(TileStateFlag.MOVEMENT, unset_flag_func)
+	tile_state(TileStateFlag.THREATENED, unset_flag_func)
+	tile_state(TileStateFlag.SPECIAL, unset_flag_func)
 	if occupant:
-		moveset = MoveRule.new(MoveRule.MoveType.BRANCH|MoveRule.MoveType.CHECK,-1,0,occupant.move_rules)
-		_on_moves_recieved(occupant, moveset.decode_into_movement())
+		occupant.piece_state(PieceStateFlag.THREATENED,unset_flag_func)
+		occupant.piece_state(PieceStateFlag.SPECIAL,unset_flag_func)
 
 
-func set_tile_state_flag(flag: Game.TileStateFlag):
-	$Tile_Object.state |= 1 << flag
-	$Tile_Object.apply_state()
-
-
-func toggle_tile_state_flag(flag: Game.TileStateFlag):
-	$Tile_Object.state ^= 1 << flag
-	$Tile_Object.apply_state()
-	
-	
-func tile_state_flag_is_enabled(flag: Game.TileStateFlag):
-	return $Tile_Object.state & (1 << flag)
-
-
-func unset_tile_state_flag(flag: Game.TileStateFlag):
-	$Tile_Object.state &= ~(1 << flag)
-	$Tile_Object.apply_state()
+func discover_checks() -> void:
+	if occupant:
+		moveset = MoveRule.new(ActionType.BRANCH, PurposeType.CHECK_DETECTING,0,0)
+		for move_rule in occupant.move_rules:
+			moveset.branches.append(move_rule.new())
+		_on_moves_recieved(occupant, moveset.new())
 
 
 func is_neighbor(tile: Node3D) -> bool:
@@ -255,46 +294,85 @@ func is_neighbor(tile: Node3D) -> bool:
 			) 
 
 
-func clear_en_passant(player:int):
+func tile_state(flag: TileStateFlag, function:Callable):
+	var result = function.call($Tile_Object.state, flag) 
+	if typeof(result) == TYPE_BOOL:
+		return result
+	$Tile_Object.state = result
+	$Tile_Object.apply_state()
+	
+
+func tile_modifiers(flag: TileModifierFlag, function:Callable):
+	var result = function.call(modifier_flags, flag) 
+	if typeof(result) == TYPE_BOOL:
+		return result
+	modifier_flags = result
+
+func clear_en_passant(player:int) -> void:
 	if en_passant_occupant and en_passant_occupant.player == player:
 		en_passant_occupant = null
 
 
-func clear_castling_occupant():
-	if castling_occupant and castling_occupant.is_in_group("has_moved"):
+func clear_castling_occupant() -> void:
+	if castling_occupant and piece_has_moved(castling_occupant):
 		castling_occupant = null
 
 
-func find_neighbors():
+func find_neighbors() -> void:
 	var neighbors: Array[Node] = get_tree().get_nodes_in_group("Tile").filter(is_neighbor)
 	for tile in neighbors:
 		var position_difference = board_position - tile.board_position
 		match position_difference:
-			Vector2i(-1,0): 
-				neighboring_tiles[Game.Direction.NORTH] = tile
-			Vector2i(-1,1): 
-				neighboring_tiles[Game.Direction.NORTHEAST] = tile
-			Vector2i(0,1): 
-				neighboring_tiles[Game.Direction.EAST] = tile
-			Vector2i(1,1): 
-				neighboring_tiles[Game.Direction.SOUTHEAST] = tile
-			Vector2i(1,0): 
-				neighboring_tiles[Game.Direction.SOUTH] = tile
-			Vector2i(1,-1): 
-				neighboring_tiles[Game.Direction.SOUTHWEST] = tile
-			Vector2i(0,-1): 
-				neighboring_tiles[Game.Direction.WEST] = tile
-			Vector2i(-1,-1): 
-				neighboring_tiles[Game.Direction.NORTHWEST] = tile
+			Vector2i(-1,0): neighboring_tiles[Direction.NORTH] = tile
+			Vector2i(-1,1): neighboring_tiles[Direction.NORTHEAST] = tile
+			Vector2i(0,1): neighboring_tiles[Direction.EAST] = tile
+			Vector2i(1,1): neighboring_tiles[Direction.SOUTHEAST] = tile
+			Vector2i(1,0): neighboring_tiles[Direction.SOUTH] = tile
+			Vector2i(1,-1): neighboring_tiles[Direction.SOUTHWEST] = tile
+			Vector2i(0,-1): neighboring_tiles[Direction.WEST] = tile
+			Vector2i(-1,-1): neighboring_tiles[Direction.NORTHWEST] = tile
 
 
-func _send_to_tile(piece:Node3D, moves, direction: Game.Direction, castling_rook:Node3D = null):
+func _send_to_tile(piece:Node3D, moves, direction: Direction, castling_rook:Node3D = null) -> void:
 	move_processed.connect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
 	move_processed.emit(piece, moves, castling_rook)
 	move_processed.disconnect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
 
 
-func _send_to_king(king:Node3D, rook: Node3D, direction: Game.Direction):	
+func _send_to_king(king:Node3D, rook: Node3D, direction: Direction) -> void:	
 	rook_discovered.connect(Callable(king.get_parent(),"_on_rook_discovered"))
 	rook_discovered.emit(rook, direction)
 	rook_discovered.disconnect(Callable(king.get_parent(),"_on_rook_discovered"))
+
+
+func _piece_is_valid_castling_rook(piece: Piece, occupying_piece: Piece) -> bool:
+	return (
+			piece and occupying_piece
+			and piece_is_rook(occupying_piece)
+			and not piece_has_moved(occupying_piece)
+			and not piece_is_opponent_of(piece, occupying_piece)
+	)
+
+
+func _piece_threatened_by_en_passant(piece: Piece) -> bool:
+	return (	
+			piece_is_pawn(piece)
+			and not piece_has_moved(piece) 
+			and abs(piece.get_parent().board_position - board_position) == Vector2i(1,0)
+	)
+
+
+func _piece_is_threat_to_en_passant_piece(piece:Piece, assigned_move:MoveRule, en_passant_piece: Piece) -> bool:
+	return (
+			piece_is_pawn(piece)
+			and en_passant_piece 
+			and assigned_move.is_threatening() 
+			and piece_is_opponent_of(piece, en_passant_piece)
+	)
+
+
+func move_is_blocked(move:MoveRule ,source_piece: Piece, occupant_piece: Piece):
+	return (
+			pieces_are_different(source_piece,occupant)
+			and not move.is_jumping()
+	)

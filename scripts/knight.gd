@@ -1,29 +1,33 @@
 extends Piece
 
+
 const KNIGHT_OUTWARD_MOVE_DISTANCE: int = 2
+
+
 const KNIGHT_SIDEWAYS_MOVE_DISTANCE: int = 1
+
 
 func _on_ready() -> void:
 	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))
 	connect_to_tile()
 	direction_parity = -2 * (parity - 1)
-	
+
 	move_rules = [
-		MoveRule.new( MoveRule.MoveType.JUMP|MoveRule.MoveType.BRANCH, KNIGHT_OUTWARD_MOVE_DISTANCE, (Game.Direction.NORTH + direction_parity),[
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.EAST + direction_parity)), 
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.WEST + direction_parity)),
+		MoveRule.new(ActionType.JUMP|ActionType.BRANCH,PurposeType.UNSET, KNIGHT_OUTWARD_MOVE_DISTANCE, (Direction.NORTH + direction_parity),[
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.EAST + direction_parity)), 
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.WEST + direction_parity)),
 		]),
-		MoveRule.new( MoveRule.MoveType.JUMP|MoveRule.MoveType.BRANCH, KNIGHT_OUTWARD_MOVE_DISTANCE, (Game.Direction.EAST + direction_parity),[
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.NORTH + direction_parity)), 
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.SOUTH + direction_parity)),
+		MoveRule.new(ActionType.JUMP|ActionType.BRANCH,PurposeType.UNSET, KNIGHT_OUTWARD_MOVE_DISTANCE, (Direction.EAST + direction_parity),[
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.NORTH + direction_parity)), 
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.SOUTH + direction_parity)),
 		]),
-		MoveRule.new( MoveRule.MoveType.JUMP|MoveRule.MoveType.BRANCH, KNIGHT_OUTWARD_MOVE_DISTANCE, (Game.Direction.SOUTH + direction_parity),[
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.EAST + direction_parity)), 
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.WEST + direction_parity)),
+		MoveRule.new(ActionType.JUMP|ActionType.BRANCH,PurposeType.UNSET, KNIGHT_OUTWARD_MOVE_DISTANCE, (Direction.SOUTH + direction_parity),[
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.EAST + direction_parity)), 
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.WEST + direction_parity)),
 		]),
-		MoveRule.new( MoveRule.MoveType.JUMP|MoveRule.MoveType.BRANCH, KNIGHT_OUTWARD_MOVE_DISTANCE, (Game.Direction.WEST + direction_parity) ,[
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.NORTH + direction_parity)), 
-			MoveRule.new( MoveRule.MoveType.MOVEMENT|MoveRule.MoveType.THREATEN, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Game.Direction.SOUTH + direction_parity)),
+		MoveRule.new(ActionType.JUMP|ActionType.BRANCH,PurposeType.UNSET, KNIGHT_OUTWARD_MOVE_DISTANCE, (Direction.WEST + direction_parity) ,[
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.NORTH + direction_parity)), 
+			MoveRule.new(ActionType.MOVE|ActionType.THREATEN,PurposeType.UNSET, KNIGHT_SIDEWAYS_MOVE_DISTANCE, (Direction.SOUTH + direction_parity)),
 		]),
 	]
 

@@ -1,13 +1,18 @@
 class_name Piece
-extends Node3D
+extends Game
 
 signal piece_clicked(piece: Node3D)
+
+
 signal piece_selected
+
+
 signal piece_unselected
+
 
 @export_enum("One", "Two") var player:
 	set(owner_player):
-		$Piece.piece_color = Game.COLOR_PALETTE.PLAYER_COLOR[owner_player]
+		$Piece.piece_color = COLOR_PALETTE.PLAYER_COLOR[owner_player]
 		player = owner_player
 		match owner_player:
 			0: 
@@ -21,14 +26,19 @@ signal piece_unselected
 				rotation = Vector3(0,0,0)
 				parity = 1 
 
+
 var parity: int ## determines which direction is the front
+
 
 var direction_parity: int
 
+
 var move_rules: Array[MoveRule] 
+
 
 func moved():
 	pass
+
 
 func connect_to_tile():
 	piece_selected.connect(Callable(get_parent(),"_on_occupant_selected"))
@@ -40,20 +50,10 @@ func disconnect_from_tile():
 	piece_unselected.disconnect(Callable(get_parent(),"_on_occupant_unselected"))
 
 
-func set_piece_state_flag(flag: Game.PieceStateFlag):
-	$Piece.state |= 1 << flag
-	$Piece.apply_state()
-
-
-func toggle_piece_state_flag(flag: Game.PieceStateFlag):
-	$Piece.state ^= 1 << flag
-	$Piece.apply_state()
+func piece_state(flag: PieceStateFlag, function:Callable):
+	var result = function.call($Piece.state, flag) 
+	if typeof(result) == TYPE_BOOL:
+		return result
 	
-	
-func piece_state_flag_is_enabled(flag: Game.PieceStateFlag):
-	return $Piece.state & (1 << flag)
-
-
-func unset_piece_state_flag(flag: Game.PieceStateFlag):
-	$Piece.state &= ~(1 << flag)
+	$Piece.state = function.call($Piece.state, flag)
 	$Piece.apply_state()
