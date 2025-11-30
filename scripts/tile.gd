@@ -36,14 +36,14 @@ var modifier_flags: int = 0:
 @export var modifier_order: Array[TileModifierFlag] = []:
 	set(new_modifier_order):
 		if modifier_order.size() > new_modifier_order.size():
-			tile_modifiers(modifier_order[-1],Callable(self,"unset_flag"))
+			tile_modifiers(modifier_order[-1],unset_flag_func)
 		elif modifier_order.size() < new_modifier_order.size():
-			tile_modifiers(new_modifier_order[-1],Callable(self,"set_flag"))
+			tile_modifiers(new_modifier_order[-1],set_flag_func)
 		elif modifier_order.size() == new_modifier_order.size():
 			for modifier in modifier_order:
 				if modifier != new_modifier_order[modifier_order.find(modifier)-1]:
-					tile_modifiers(modifier,Callable(self,"unset_flag"))
-					tile_modifiers(new_modifier_order[modifier_order.find(modifier)-1],Callable(self,"set_flag"))
+					tile_modifiers(modifier,unset_flag_func)
+					tile_modifiers(new_modifier_order[modifier_order.find(modifier)-1],set_flag_func)
 				
 		modifier_order = new_modifier_order
 		$Tile_Object/Tile_Modifiers.modifiers = modifier_order
@@ -60,6 +60,14 @@ var checked_by: Array[Piece] = []
 
 var moveset: MoveRule
 
+var set_flag_func = Callable(self,"set_flag")
+var unset_flag_func = Callable(self,"unset_flag")
+var toggle_flag_func = Callable(self,"toggle_flag")
+var flag_is_enabled_func = Callable(self,"flag_is_enabled")
+
+var modifier_function_dict: Dictionary[TileModifierFlag,Callable] = {
+	TileModifierFlag.CONDITION_ICEY: Callable(self,"flag_is_enabled")
+}
 
 var neighboring_tiles: Dictionary[int, Node3D] = {
 	Direction.NORTH: null,
@@ -71,7 +79,6 @@ var neighboring_tiles: Dictionary[int, Node3D] = {
 	Direction.WEST:null,
 	Direction.NORTHWEST:null
 }
-
 
 func _on_ready() -> void:
 	tile_selected.connect(Callable(owner,"_on_tile_selected"))
@@ -92,7 +99,7 @@ func _on_rook_discovered(rook, direction) -> void:
 
 
 func _on_occupant_selected() -> void:
-	tile_state(TileStateFlag.SELECTED, Callable(self,"set_flag"))
+	tile_state(TileStateFlag.SELECTED, set_flag_func)
 	moveset = MoveRule.new(ActionType.BRANCH, PurposeType.STANDARD_MOVEMENT,0,0)
 	for move_rule in occupant.move_rules:
 		moveset.branches.append(move_rule.new())
@@ -130,10 +137,10 @@ func _on_input_event(
 
 func _is_valid_move_state() -> bool:
 	return (	
-			tile_state(TileStateFlag.SPECIAL, Callable(self,"flag_is_enabled"))
-			or tile_state(TileStateFlag.MOVEMENT, Callable(self,"flag_is_enabled"))
+			tile_state(TileStateFlag.SPECIAL, flag_is_enabled_func)
+			or tile_state(TileStateFlag.MOVEMENT, flag_is_enabled_func)
 			or (	
-					tile_state(TileStateFlag.THREATENED, Callable(self,"flag_is_enabled")) 
+					tile_state(TileStateFlag.THREATENED, flag_is_enabled_func) 
 					and en_passant_occupant
 			)
 	)
@@ -157,17 +164,17 @@ func _on_moves_recieved(source_piece: Piece, moves, castling_rook: Piece = null)
 	for modifier in modifier_order:
 		
 		if (	
-				tile_modifiers(TileModifierFlag.PROPERTY_COG,Callable(self,"flag_is_enabled"))
+				tile_modifiers(TileModifierFlag.PROPERTY_COG,flag_is_enabled_func)
 				and modifier == TileModifierFlag.PROPERTY_COG
 				):
 			moves.rotate_clockwise()
 		if (
-				tile_modifiers(TileModifierFlag.CONDITION_STICKY,Callable(self,"flag_is_enabled"))
+				tile_modifiers(TileModifierFlag.CONDITION_STICKY,flag_is_enabled_func)
 				and modifier == TileModifierFlag.CONDITION_STICKY
 				):
 			moves.distance = 0
 		if (
-				tile_modifiers(TileModifierFlag.CONDITION_ICEY,Callable(self,"flag_is_enabled")) 
+				tile_modifiers(TileModifierFlag.CONDITION_ICEY,flag_is_enabled_func) 
 				and modifier == TileModifierFlag.CONDITION_ICEY
 				and not piece_is_knight(source_piece)
 				and neighboring_tiles[moves.direction] 
@@ -192,21 +199,21 @@ func _on_moves_recieved(source_piece: Piece, moves, castling_rook: Piece = null)
 			
 			if piece_is_opponent_of(source_piece, occupant):	
 				if not piece_is_king(occupant): return
-				if occupant.piece_state(PieceStateFlag.CHECKED,Callable(self,"flag_is_enabled")):
+				if occupant.piece_state(PieceStateFlag.CHECKED,flag_is_enabled_func):
 					print("END GAME")
-				tile_state(TileStateFlag.CHECKED, Callable(self,"set_flag"))
-				occupant.piece_state(PieceStateFlag.CHECKED,Callable(self,"set_flag"))
+				tile_state(TileStateFlag.CHECKED, set_flag_func)
+				occupant.piece_state(PieceStateFlag.CHECKED,set_flag_func)
 				return
 		
 	elif assigned_move.is_castling_movement():
 		if checked_by: return
 		
 		if assigned_move.action_flag_is_enabled(ActionType.SPECIAL) and assigned_move.distance == 0:
-			tile_state(TileStateFlag.SPECIAL, Callable(self,"set_flag"))
+			tile_state(TileStateFlag.SPECIAL, set_flag_func)
 			return
 		
 		castling_occupant = castling_rook
-		castling_occupant.piece_state(PieceStateFlag.SPECIAL,Callable(self,"set_flag"))
+		castling_occupant.piece_state(PieceStateFlag.SPECIAL,set_flag_func)
 		_toggle_rook_castling_tile_connection(assigned_move)
 			
 	elif assigned_move.is_finding_castling_rook():
@@ -218,8 +225,8 @@ func _on_moves_recieved(source_piece: Piece, moves, castling_rook: Piece = null)
 		if (	piece_is_opponent_of(source_piece, occupant) 
 				and assigned_move.is_threatening()
 			):
-			tile_state(TileStateFlag.THREATENED, Callable(self,"set_flag"))
-			occupant.piece_state(PieceStateFlag.THREATENED,Callable(self,"set_flag"))
+			tile_state(TileStateFlag.THREATENED, set_flag_func)
+			occupant.piece_state(PieceStateFlag.THREATENED,set_flag_func)
 		
 		if move_is_blocked(assigned_move, source_piece, occupant): 
 			return
@@ -227,17 +234,17 @@ func _on_moves_recieved(source_piece: Piece, moves, castling_rook: Piece = null)
 		if (	not occupant 
 				and assigned_move.action_flag_is_enabled(ActionType.MOVE)
 			):
-			tile_state(TileStateFlag.MOVEMENT, Callable(self,"set_flag"))
+			tile_state(TileStateFlag.MOVEMENT, set_flag_func)
 			if piece_is_king(source_piece) and checked_by.size() != 0:
-				tile_state(TileStateFlag.THREATENED, Callable(self,"set_flag"))
+				tile_state(TileStateFlag.THREATENED, set_flag_func)
 		
 		
 		if _piece_threatened_by_en_passant(source_piece):
 			en_passant_occupant = source_piece
 		
 		if _piece_is_threat_to_en_passant_piece(source_piece, assigned_move, en_passant_occupant):
-			tile_state(TileStateFlag.THREATENED, Callable(self,"set_flag"))
-			en_passant_occupant.piece_state(PieceStateFlag.THREATENED,Callable(self,"set_flag"))
+			tile_state(TileStateFlag.THREATENED, set_flag_func)
+			en_passant_occupant.piece_state(PieceStateFlag.THREATENED,set_flag_func)
 
 
 	#SEND MOVES TO NEIGHBORING TILES
@@ -252,19 +259,19 @@ func _on_moves_recieved(source_piece: Piece, moves, castling_rook: Piece = null)
 
 func clear_checks() -> void:
 	checked_by = []
-	tile_state(TileStateFlag.CHECKED, Callable(self,"unset_flag"))
+	tile_state(TileStateFlag.CHECKED, unset_flag_func)
 	if occupant:
-		occupant.piece_state(PieceStateFlag.CHECKED,Callable(self,"unset_flag"))
+		occupant.piece_state(PieceStateFlag.CHECKED,unset_flag_func)
 
 
 func clear_move_states() -> void:
-	tile_state(TileStateFlag.SELECTED, Callable(self,"unset_flag"))
-	tile_state(TileStateFlag.MOVEMENT, Callable(self,"unset_flag"))
-	tile_state(TileStateFlag.THREATENED, Callable(self,"unset_flag"))
-	tile_state(TileStateFlag.SPECIAL, Callable(self,"unset_flag"))
+	tile_state(TileStateFlag.SELECTED, unset_flag_func)
+	tile_state(TileStateFlag.MOVEMENT, unset_flag_func)
+	tile_state(TileStateFlag.THREATENED, unset_flag_func)
+	tile_state(TileStateFlag.SPECIAL, unset_flag_func)
 	if occupant:
-		occupant.piece_state(PieceStateFlag.THREATENED,Callable(self,"unset_flag"))
-		occupant.piece_state(PieceStateFlag.SPECIAL,Callable(self,"unset_flag"))
+		occupant.piece_state(PieceStateFlag.THREATENED,unset_flag_func)
+		occupant.piece_state(PieceStateFlag.SPECIAL,unset_flag_func)
 
 
 func discover_checks() -> void:
