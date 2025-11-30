@@ -1,8 +1,11 @@
 extends Game
 
-
 @export var selected_piece: Node3D
 
+signal promotion_requested(selected_piece)
+
+@onready var piece_capture_audio = $Peice_capture
+@onready var piece_move_audio = $Peice_move
 
 signal new_turn
 
@@ -48,6 +51,11 @@ func _on_tile_selected(tile: Node3D) -> void:
 	var proceed = true
 	if selected_piece.is_in_group("Pawn") and tile.en_passant_occupant and tile.en_passant_occupant != selected_piece:
 		tile.en_passant_occupant.piece_state(PieceStateFlag.CAPTURED,Callable(self,"set_flag"))
+	var is_capture = tile.occupant != null
+
+	if selected_piece.is_in_group("Pawn") and tile.en_passant_occupant and tile.en_passant_occupant != selected_piece:
+		tile.en_passant_occupant.set_piece_state_flag(Game.PieceStateFlag.PIECE_STATE_FLAG_CAPTURED)
+		is_capture = true
 	
 	if tile.tile_state(TileStateFlag.SPECIAL,Callable(self,"flag_is_enabled")):
 		var castling_king = selected_piece
@@ -70,6 +78,7 @@ func _on_tile_selected(tile: Node3D) -> void:
 	)
 	selected_piece.connect_to_tile()
 	
+	
 	if not selected_piece.is_in_group("has_moved"):
 		selected_piece.add_to_group("has_moved")
 		selected_piece.call("moved")
@@ -77,11 +86,17 @@ func _on_tile_selected(tile: Node3D) -> void:
 	if selected_piece.is_in_group("Pawn"):
 		if selected_piece.is_in_group("Player_One") and not tile.neighboring_tiles[Direction.SOUTH]:
 			selected_piece.remove_from_group("Pawn")
-			promote(PawnPromotion.QUEEN)
-		if selected_piece.is_in_group("Player_Two") and not tile.neighboring_tiles[Direction.NORTH]:
+			promotion_requested.emit(selected_piece)
+			
+		if selected_piece.is_in_group("Player_Two") and not tile.neighboring_tiles[Game.Direction.NORTH]:
 			selected_piece.remove_from_group("Pawn")
-			promote(PawnPromotion.QUEEN)
+			promotion_requested.emit(selected_piece)
 	
+	if is_capture:
+		piece_capture_audio.play()
+	else:
+		piece_move_audio.play()
+		
 	selected_piece = null
 	if proceed:
 		new_turn.emit()

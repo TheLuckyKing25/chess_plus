@@ -163,6 +163,9 @@ static var debug_setting: Dictionary = {
 	"DEBUG_RESTRICT_MOVEMENT": false,
 }
 
+static var options: Dictionary = {
+	DEBUG_RESTRICT_MOVEMENT: true,
+
 static var user_setting: Dictionary = {
 	"PIECE_OUTLINE_THICKNESS": 0.1,
 	"CAMERA_ROTATION_SPEED": 5
@@ -242,7 +245,6 @@ func set_flag(bitfield: int, flag: int) -> int:
 func toggle_flag(bitfield: int, flag: int) -> int:
 	bitfield ^= 1 << flag
 	return bitfield
-	
 	
 func flag_is_enabled(bitfield: int, flag: int) -> bool:
 	return bitfield & (1 << flag)
