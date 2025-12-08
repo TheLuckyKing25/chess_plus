@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cl7rh34wkwp71"
+path="res://.godot/imported/king_mesh.obj-cd8c1d471ff907d9c6b266f73500757d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/king_mesh.obj-cd8c1d471ff907d9c6b266f73500757d.mesh"]
+
+source_file="res://assets/mesh/king_mesh.obj"
+dest_files=["res://.godot/imported/king_mesh.obj-cd8c1d471ff907d9c6b266f73500757d.mesh", "res://.godot/imported/king_mesh.obj-cd8c1d471ff907d9c6b266f73500757d.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
