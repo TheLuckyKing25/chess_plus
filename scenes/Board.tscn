@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://vqvs470xc1lw"]
 
-[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/board.gd" id="1_hljw5"]
+[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/game_board.gd" id="1_hljw5"]
 [ext_resource type="PackedScene" uid="uid://bgn763vrxmmcu" path="res://scenes/Tile.tscn" id="1_nd4as"]
-[ext_resource type="PackedScene" uid="uid://b2wm4ux7jjth6" path="res://scenes/Rook.tscn" id="2_3ng4l"]
-[ext_resource type="PackedScene" uid="uid://c54qlxs7mr3qm" path="res://scenes/Pawn.tscn" id="3_otxgx"]
-[ext_resource type="PackedScene" uid="uid://b4axunshn8kgc" path="res://scenes/Bishop.tscn" id="4_hq5ls"]
-[ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/Knight.tscn" id="5_vewne"]
-[ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/Queen.tscn" id="6_6pldg"]
-[ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/King.tscn" id="6_grdf5"]
+[ext_resource type="PackedScene" uid="uid://b2wm4ux7jjth6" path="res://scenes/piece/Rook.tscn" id="2_3ng4l"]
+[ext_resource type="PackedScene" uid="uid://c54qlxs7mr3qm" path="res://scenes/piece/Pawn.tscn" id="3_otxgx"]
+[ext_resource type="PackedScene" uid="uid://b4axunshn8kgc" path="res://scenes/piece/Bishop.tscn" id="4_hq5ls"]
+[ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/piece/Knight.tscn" id="5_vewne"]
+[ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/piece/Queen.tscn" id="6_6pldg"]
+[ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/piece/King.tscn" id="6_grdf5"]
 
 [node name="Board" type="Node3D"]
 script = ExtResource("1_hljw5")
@@ -173,7 +173,6 @@ board_position = Vector2i(5, 4)
 [node name="Tile_R6C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
 board_position = Vector2i(6, 4)
-modifier_order = Array[int]([2, 1])
 
 [node name="Tile_R7C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
@@ -216,7 +215,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
 board_position = Vector2i(5, 5)
 
 [node name="Tile_R6C5" parent="." instance=ExtResource("1_nd4as")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -4.76837e-07, 5)
 board_position = Vector2i(6, 5)
 
 [node name="Tile_R7C5" parent="." instance=ExtResource("1_nd4as")]

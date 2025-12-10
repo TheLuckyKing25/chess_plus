@@ -1,0 +1,307 @@
+[gd_scene load_steps=4 format=3 uid="uid://0fccgu7f77gg"]
+
+[ext_resource type="Script" uid="uid://pjpfeiofeqj8" path="res://scripts/menu/menu_settings.gd" id="1_rbmmp"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/Settings.tres" id="1_tyggu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rbmmp"]
+bg_color = Color(0.377919, 0.377919, 0.377919, 1)
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_tyggu")
+script = ExtResource("1_rbmmp")
+metadata/_edit_horizontal_guides_ = [79.0]
+
+[node name="Background_Blur" type="Panel" parent="."]
+self_modulate = Color(1, 1, 1, 0.694118)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_tyggu")
+theme_override_styles/panel = SubResource("StyleBoxFlat_rbmmp")
+
+[node name="SettingMenu" type="Panel" parent="Background_Blur"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.0
+offset_top = -219.0
+offset_right = 209.0
+offset_bottom = 233.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"BackgroundPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background_Blur/SettingMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.895
+offset_top = 1.0
+offset_bottom = 46.46
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="Background_Blur/SettingMenu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_tyggu")
+tab_alignment = 1
+current_tab = 1
+
+[node name="Graphics" type="Control" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="GraphicsPanel" type="Panel" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics"]
+layout_mode = 0
+offset_top = -1.0
+offset_right = 418.0
+offset_bottom = 375.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 27.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme = ExtResource("1_tyggu")
+
+[node name="Label" type="Label" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Fullscreen"
+
+[node name="Fullscreen" type="CheckButton" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "
+"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Resolution"
+
+[node name="Resolution" type="OptionButton" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+alignment = 1
+selected = 0
+item_count = 2
+popup/item_0/text = "1920 x 1080"
+popup/item_0/id = 0
+popup/item_1/text = "1440 x 900"
+popup/item_1/id = 1
+
+[node name="Audio" type="Control" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="AudioPanel" type="Panel" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio"]
+layout_mode = 0
+offset_top = -1.0
+offset_right = 418.0
+offset_bottom = 375.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 20.0
+offset_right = -26.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Master Volume"
+horizontal_alignment = 1
+
+[node name="Master" type="HSlider" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Percent" type="ProgressBar" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer/Master"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Music Volume"
+horizontal_alignment = 1
+
+[node name="Music" type="HSlider" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Percent" type="ProgressBar" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer2/Music"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "UI Volume"
+horizontal_alignment = 1
+
+[node name="UI" type="HSlider" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Percent" type="ProgressBar" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer3/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Game Sounds"
+horizontal_alignment = 1
+
+[node name="Game" type="HSlider" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Percent" type="ProgressBar" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer4/Game"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Controls" type="Control" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ControlsPanel" type="Panel" parent="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Controls"]
+layout_mode = 0
+offset_top = -1.0
+offset_right = 418.0
+offset_bottom = 375.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background_Blur/SettingMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Apply" type="Button" parent="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingButtons"
+disabled = true
+text = "Apply
+"
+
+[node name="Back" type="Button" parent="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingButtons"
+text = "Back
+"
+
+[node name="Default" type="Button" parent="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingButtons"
+text = "Default"
+
+[node name="Back2" type="Button" parent="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingButtons"
+text = "Back"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(2, 2)
+
+[connection signal="toggled" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2/Fullscreen" to="." method="_on_check_box_toggled"]
+[connection signal="item_selected" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer/Resolution" to="." method="_on_option_button_item_selected"]
+[connection signal="drag_ended" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer/Master" to="." method="_on_setting_changed"]
+[connection signal="value_changed" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer/Master" to="." method="_on_master_value_changed"]
+[connection signal="drag_ended" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer2/Music" to="." method="_on_setting_changed"]
+[connection signal="value_changed" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer2/Music" to="." method="_on_music_value_changed"]
+[connection signal="drag_ended" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer3/UI" to="." method="_on_setting_changed"]
+[connection signal="value_changed" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer3/UI" to="." method="_on_ui_value_changed"]
+[connection signal="drag_ended" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer4/Game" to="." method="_on_setting_changed"]
+[connection signal="value_changed" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer4/Game" to="." method="_on_game_value_changed"]
+[connection signal="pressed" from="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer/Apply" to="." method="_on_apply_pressed"]
+[connection signal="pressed" from="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer/Back" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer/Default" to="." method="_on_default_pressed"]

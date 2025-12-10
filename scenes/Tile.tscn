@@ -1,9 +1,9 @@
 [gd_scene load_steps=13 format=3 uid="uid://bgn763vrxmmcu"]
 
-[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile_object.gd" id="1_2sjy5"]
-[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile.gd" id="1_vhibn"]
-[ext_resource type="Script" uid="uid://dpjhoykfs62y" path="res://scripts/tile_modifier_controller.gd" id="3_r3gf4"]
-[ext_resource type="Script" uid="uid://deq2syi6rrdmy" path="res://scripts/modifier_grid.gd" id="4_rvdvl"]
+[ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile/tile_object.gd" id="1_2sjy5"]
+[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile/_tile_basic.gd" id="1_vhibn"]
+[ext_resource type="Script" uid="uid://dpjhoykfs62y" path="res://scripts/tile/tile_modifier_controller.gd" id="3_r3gf4"]
+[ext_resource type="Script" uid="uid://deq2syi6rrdmy" path="res://scripts/tile/tile_modifier_grid.gd" id="4_rvdvl"]
 [ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="5_ukgqd"]
 [ext_resource type="StyleBox" uid="uid://6ic7o326yplq" path="res://assets/TileProperties.stylebox" id="6_esqu7"]
 

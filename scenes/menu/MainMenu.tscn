@@ -1,0 +1,173 @@
+[gd_scene load_steps=8 format=3 uid="uid://camv04tw28yjr"]
+
+[ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://scripts/menu/menu_main.gd" id="1_0ykhv"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/Settings.tres" id="1_2nud1"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="2_2wh52"]
+[ext_resource type="PackedScene" uid="uid://0fccgu7f77gg" path="res://scenes/menu/Settings.tscn" id="3_2wh52"]
+
+[sub_resource type="Gradient" id="Gradient_hlv2s"]
+offsets = PackedFloat32Array(0, 0.00680274, 1)
+colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2nud1"]
+gradient = SubResource("Gradient_hlv2s")
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iv2fv"]
+texture = SubResource("GradientTexture2D_2nud1")
+region_rect = Rect2(0, 18, 64, 32)
+
+[node name="MainMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_2nud1")
+script = ExtResource("1_0ykhv")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
+
+[node name="Main" type="CanvasLayer" parent="Background"]
+unique_name_in_owner = true
+
+[node name="TitleLabel" type="Label" parent="Background/Main"]
+custom_minimum_size = Vector2(350, 200)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.1
+anchor_right = 0.5
+anchor_bottom = 0.1
+offset_left = -175.0
+offset_right = 175.0
+offset_bottom = 200.0
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("2_2wh52")
+theme_override_font_sizes/font_size = 100
+text = "Chess+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/Main"]
+custom_minimum_size = Vector2(300, 250)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -23.0
+offset_right = 150.0
+offset_bottom = 227.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+
+[node name="Start" type="Button" parent="Background/Main/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+text = "Start Game"
+
+[node name="Settings" type="Button" parent="Background/Main/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+text = "Settings"
+
+[node name="Exit" type="Button" parent="Background/Main/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 30
+text = "Exit
+"
+
+[node name="Options" type="CanvasLayer" parent="Background"]
+unique_name_in_owner = true
+
+[node name="Settings" parent="Background/Options" instance=ExtResource("3_2wh52")]
+visible = false
+
+[node name="Start" type="CanvasLayer" parent="Background"]
+unique_name_in_owner = true
+visible = false
+
+[node name="SelectMatchLabel" type="Label" parent="Background/Start"]
+custom_minimum_size = Vector2(600, 200)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.1
+anchor_right = 0.5
+anchor_bottom = 0.1
+offset_left = -302.5
+offset_right = 302.5
+offset_bottom = 200.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("2_2wh52")
+theme_override_font_sizes/font_size = 86
+text = "Select Match"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/Start"]
+custom_minimum_size = Vector2(300, 250)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -23.0
+offset_right = 150.0
+offset_bottom = 227.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+
+[node name="Singleplayer" type="Button" parent="Background/Start/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Singleplayer"
+
+[node name="Host" type="Button" parent="Background/Start/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+disabled = true
+text = "Host Match
+"
+
+[node name="Join" type="Button" parent="Background/Start/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+disabled = true
+text = "Join Match
+"
+
+[connection signal="pressed" from="Background/Main/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Background/Main/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Background/Main/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
+[connection signal="ready" from="Background/Start" to="." method="_on_ready"]
+[connection signal="pressed" from="Background/Start/VBoxContainer/Singleplayer" to="." method="_on_singleplayer_pressed"]
