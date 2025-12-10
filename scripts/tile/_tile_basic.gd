@@ -20,30 +20,8 @@ signal castle
 
 @export var modifier_order: Array[TileModifier] = []:
 	set(new_modifier_order):
-		#if modifier_order.size() > new_modifier_order.size():
-			#tile_modifiers(Flag.unset_func, modifier_order[-1])
-		#elif modifier_order.size() < new_modifier_order.size():
-			#tile_modifiers(Flag.set_func, new_modifier_order[-1])
-		#elif modifier_order.size() == new_modifier_order.size():
-			#for modifier in modifier_order:
-				#if modifier_order.find(modifier) > new_modifier_order.size() and modifier != new_modifier_order[modifier_order.find(modifier)]:
-					#tile_modifiers(Flag.unset_func,modifier)
-					#tile_modifiers(Flag.set_func, new_modifier_order[modifier_order.find(modifier)-1])
-				
 		modifier_order = new_modifier_order
 		$Tile_Object/Tile_Modifiers.modifiers = modifier_order
-		
-		
-
-
-#var modifier_flags: int = 0:
-	#set(new_modifier_flags):
-		#var difference: int = new_modifier_flags - modifier_flags
-		#if difference > 0:
-			#modifier_order.push_front(difference)
-		#elif difference < 0:
-			#modifier_order.erase(abs(difference))
-		#modifier_flags = new_modifier_flags
 
 var en_passant_occupant: Piece = null
 
@@ -328,9 +306,10 @@ func _clear_castling_occupant() -> void:
 		
 
 func _connect_to_neighboring_tile(moves, direction: Direction, castling_rook:Node3D = null) -> void:
-	move_processed.connect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
-	move_processed.emit(_moving_piece, moves, castling_rook)
-	move_processed.disconnect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
+	if neighboring_tiles[direction]:
+		move_processed.connect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
+		move_processed.emit(_moving_piece, moves, castling_rook)
+		move_processed.disconnect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
 
 
 func _send_to_king(king:Node3D, rook: Node3D, direction: Direction) -> void:	
@@ -367,10 +346,3 @@ func tile_state(function:Callable, flag: TileStateFlag):
 		return result
 	$Tile_Object.state = result
 	$Tile_Object.apply_state()
-	
-
-#func tile_modifiers(function:Callable, modifier: TileModifier):
-	#var result = function.call(modifier_flags, modifier.flag) 
-	#if typeof(result) == TYPE_BOOL:
-		#return result
-	#modifier_flags = result

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://vqvs470xc1lw"]
+[gd_scene load_steps=9 format=3 uid="uid://vqvs470xc1lw"]
 
 [ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/game_board.gd" id="1_hljw5"]
 [ext_resource type="PackedScene" uid="uid://bgn763vrxmmcu" path="res://scenes/Tile.tscn" id="1_nd4as"]
@@ -8,36 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/piece/Knight.tscn" id="5_vewne"]
 [ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/piece/Queen.tscn" id="6_6pldg"]
 [ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/piece/King.tscn" id="6_grdf5"]
-[ext_resource type="Script" uid="uid://buh3iliseplj7" path="res://scripts/tile/modifier/property_cog.gd" id="8_wxh2q"]
-[ext_resource type="Script" uid="uid://cchd4al243rgh" path="res://scripts/tile/modifier/condition_icy.gd" id="9_25pyh"]
-[ext_resource type="Script" uid="uid://bn4urkra87adn" path="res://scripts/tile/modifier/_modifier_basic.gd" id="10_w8n1y"]
-[ext_resource type="Script" uid="uid://b2d7n4negj8jc" path="res://scripts/tile/modifier/condition_sticky.gd" id="10_xxb6b"]
-[ext_resource type="Script" uid="uid://cugpmq22x6mrx" path="res://scripts/tile/modifier/property_conveyer.gd" id="12_qtc5n"]
-
-[sub_resource type="Resource" id="Resource_23q4v"]
-script = ExtResource("9_25pyh")
-lifetime = 0
-metadata/_custom_type_script = "uid://cchd4al243rgh"
-
-[sub_resource type="Resource" id="Resource_s421v"]
-script = ExtResource("10_xxb6b")
-lifetime = 0
-metadata/_custom_type_script = "uid://b2d7n4negj8jc"
-
-[sub_resource type="Resource" id="Resource_aqpwq"]
-script = ExtResource("8_wxh2q")
-rotation = 0
-metadata/_custom_type_script = "uid://buh3iliseplj7"
-
-[sub_resource type="Resource" id="Resource_y61op"]
-script = ExtResource("12_qtc5n")
-direction = 0
-metadata/_custom_type_script = "uid://cugpmq22x6mrx"
-
-[sub_resource type="Resource" id="Resource_w8n1y"]
-script = ExtResource("8_wxh2q")
-rotation = 1
-metadata/_custom_type_script = "uid://buh3iliseplj7"
 
 [node name="Board" type="Node3D"]
 script = ExtResource("1_hljw5")
@@ -199,12 +169,10 @@ board_position = Vector2i(4, 4)
 [node name="Tile_R5C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 4)
 board_position = Vector2i(5, 4)
-modifier_order = Array[ExtResource("10_w8n1y")]([SubResource("Resource_23q4v"), SubResource("Resource_s421v"), SubResource("Resource_aqpwq"), SubResource("Resource_y61op")])
 
 [node name="Tile_R6C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
 board_position = Vector2i(6, 4)
-modifier_order = Array[ExtResource("10_w8n1y")]([SubResource("Resource_w8n1y")])
 
 [node name="Tile_R7C4" parent="." instance=ExtResource("1_nd4as")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)

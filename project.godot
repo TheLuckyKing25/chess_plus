@@ -49,6 +49,10 @@ Player_Two=""
 Tile=""
 Piece=""
 
+[gui]
+
+theme/custom="uid://bkyyhibmxbrq8"
+
 [input]
 
 Select={

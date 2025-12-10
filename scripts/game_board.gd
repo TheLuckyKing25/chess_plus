@@ -102,7 +102,6 @@ func change_piece_resources(old_piece: Node3D, new_piece: PieceType):
 	old_piece.find_child("Piece_Mesh").mesh = PIECE_MESH[new_piece]
 	old_piece.find_child("Outline").mesh = PIECE_MESH[new_piece]
 	old_piece.set_script(PIECE_SCRIPT[new_piece])
-	
 
 func promote(piece:Piece, promotion: PawnPromotion):
 	var piece_player = piece.player
