@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://0fccgu7f77gg"]
 
 [ext_resource type="Script" uid="uid://pjpfeiofeqj8" path="res://scripts/menu/menu_settings.gd" id="1_rbmmp"]
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/Settings.tres" id="1_tyggu"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_tyggu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rbmmp"]
 bg_color = Color(0.377919, 0.377919, 0.377919, 1)

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b7d6wfi6urnkk" path="res://scripts/menu/menu_pause.gd" id="1_etnfi"]
 [ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="1_nov15"]
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/Settings.tres" id="3_dmujr"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="3_dmujr"]
 [ext_resource type="PackedScene" uid="uid://0fccgu7f77gg" path="res://scenes/menu/Settings.tscn" id="3_komsw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_komsw"]
