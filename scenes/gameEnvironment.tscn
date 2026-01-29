@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=18 format=3 uid="uid://h7v0gyqyq0h7"]
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
@@ -75,11 +75,6 @@ normal_enabled = true
 normal_scale = 0.1
 normal_texture = SubResource("NoiseTexture2D_5gvbh")
 
-[sub_resource type="BoxMesh" id="BoxMesh_wsj4q"]
-size = Vector3(8.5, 0.1, 8.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wsj4q"]
-
 [node name="gameEnvironment" type="Node3D"]
 script = ExtResource("1_hlv2s")
 
@@ -126,12 +121,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_hlv2s")
 [node name="Board" parent="Table" instance=ExtResource("1_wsj4q")]
 unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.5, 0.2154, -3.5)
-
-[node name="BoardBase" type="MeshInstance3D" parent="Table/Board"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -0.0987513, 3.5)
-mesh = SubResource("BoxMesh_wsj4q")
-surface_material_override/0 = SubResource("StandardMaterial3D_wsj4q")
 
 [node name="Piece_move" type="AudioStreamPlayer" parent="Table/Board"]
 stream = ExtResource("4_xtwup")
@@ -239,7 +228,7 @@ theme_type_variation = &"SettingButtons"
 text = "Bishop"
 
 [connection signal="ready" from="." to="." method="_on_ready"]
-[connection signal="new_turn" from="Table/Board" to="." method="_next_turn"]
+[connection signal="next_turn" from="Table/Board" to="." method="camera_transition"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Queen" to="." method="_on_queen_pressed"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Knight" to="." method="_on_knight_pressed"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Rook" to="." method="_on_rook_pressed"]

@@ -1,32 +1,7 @@
-[gd_scene load_steps=11 format=4 uid="uid://b4axunshn8kgc"]
+[gd_scene load_steps=9 format=4 uid="uid://b4axunshn8kgc"]
 
 [ext_resource type="Script" uid="uid://d7h5wqb0lxnm" path="res://scripts/piece/piece_object.gd" id="1_5od7f"]
-[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://assets/mesh/bishop_mesh.obj" id="1_wqw4l"]
 [ext_resource type="Script" uid="uid://dbepus3pnb8xg" path="res://scripts/piece/piecetype/bishop.gd" id="2_5od7f"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5od7f"]
-resource_local_to_scene = true
-resource_name = "piece_color"
-roughness_texture_channel = 4
-clearcoat_enabled = true
-clearcoat_roughness = 0.25
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4exq"]
-resource_local_to_scene = true
-transparency = 1
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.1
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cf0mv"]
-resource_local_to_scene = true
-resource_name = "piece_color"
-roughness_texture_channel = 4
-emission = Color(0.2, 0.2, 0.2, 1)
-clearcoat_enabled = true
-clearcoat_roughness = 0.25
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
 margin = 0.0
@@ -64,22 +39,38 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_wqw4l")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pt3tq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2285w"]
 resource_local_to_scene = true
+transparency = 1
 cull_mode = 1
 shading_mode = 0
 albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qt51j"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+render_priority = 1
+next_pass = SubResource("StandardMaterial3D_2285w")
+transparency = 1
+blend_mode = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5od7f"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+next_pass = SubResource("StandardMaterial3D_qt51j")
+roughness_texture_channel = 4
+clearcoat_enabled = true
+clearcoat_roughness = 0.25
+
 [node name="Bishop" type="Node3D" groups=["Bishop", "Piece"]]
 script = ExtResource("2_5od7f")
 
-[node name="Piece_Object" type="AnimatableBody3D" parent="." groups=["Bishop", "Piece"]]
+[node name="Piece_Object" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_5od7f")
-piece_material = SubResource("StandardMaterial3D_5od7f")
-outline_material = SubResource("StandardMaterial3D_q4exq")
-mouseover_material = SubResource("StandardMaterial3D_cf0mv")
 
 [node name="Collision" type="CollisionShape3D" parent="Piece_Object"]
 transform = Transform3D(0.3, 0, 8.88178e-16, 0, 0.3, 0, -8.88178e-16, 0, 0.3, 0.003, 0.677, 0.004)
@@ -89,14 +80,7 @@ shape = SubResource("BoxShape3D_ny8vt")
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_pt3tq")
 skeleton = NodePath("../../..")
-
-[node name="Outline" type="MeshInstance3D" parent="Piece_Object"]
-transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_pt3tq")
-extra_cull_margin = 36.03
-mesh = ExtResource("1_wqw4l")
-skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_5od7f")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="input_event" from="Piece_Object" to="." method="_on_input_event"]

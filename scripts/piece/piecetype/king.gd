@@ -17,8 +17,6 @@ var castling_move_rules: Array[MoveRule]
 
 
 func _on_ready() -> void:
-	piece_clicked.connect(Callable(owner,"_on_piece_clicked"))
-	connect_to_tile()
 	direction_parity = -2 * (parity - 1)
 	
 	move_rules = [
@@ -64,4 +62,4 @@ func _on_input_event(
 			)
 		if result:
 			#var clicked_object = result.collider.get_parent()
-			piece_clicked.emit(self)
+			clicked.emit(self)

@@ -1,6 +1,8 @@
 class_name GameNode3D
 extends Node3D
 
+const BOARD_LENGTH = 8
+const BOARD_WIDTH = 8
 
 #region File Paths
 const PIECE_SCRIPT: Dictionary[int, Resource] = {
@@ -94,35 +96,35 @@ enum TileStateFlag{
 	
 #region Game Colors Constants
 ## Color of a base tile which is lightened or darkened to make the board.
-const TILE_COLOR: Color = Color(0.75, 0.5775, 0.435) 
+const TILE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1) 
 
 
 const COLOR_PALETTE: Dictionary = {
 	"TILE_COLOR_LIGHT": TILE_COLOR * 4/3,
 	"TILE_COLOR_DARK": TILE_COLOR * 2/3,
 	
-	"VALID_TILE_COLOR": Color(0.6, 1, 0.6), 
+	"VALID_TILE_COLOR": Color(0.6, 1, 0.6, 1), 
 	
-	"THREATENED_PIECE_COLOR": Color(0.9, 0, 0),
-	"THREATENED_TILE_COLOR": Color(1, 0.2, 0.2),
+	"THREATENED_PIECE_COLOR": Color(0.9, 0, 0, 1),
+	"THREATENED_TILE_COLOR": Color(1, 0.2, 0.2, 1),
 	
 	#"CHECKING_PIECE_COLOR": Color(0.9, 0.9, 0),
 	#"CHECKING_TILE_COLOR": Color(1, 1, 0.25),
 	
-	"SELECT_PIECE_COLOR": Color(0, 0.9, 0.9),
-	"SELECT_TILE_COLOR": Color(0.1, 1, 1),
+	"SELECT_PIECE_COLOR": Color(0, 0.9, 0.9, 1),
+	"SELECT_TILE_COLOR": Color(0.1, 1, 1, 1),
 	
-	"CHECKED_PIECE_COLOR": Color(0.9, 0, 0),
-	"CHECKED_TILE_COLOR": Color(1, 0.2, 0.2),
+	"CHECKED_PIECE_COLOR": Color(0.9, 0, 0, 1),
+	"CHECKED_TILE_COLOR": Color(1, 0.2, 0.2, 1),
 	
 	#"MOVE_CHECKING_TILE_COLOR": Color(1, 0.65, 0.25),
 	
-	"SPECIAL_PIECE_COLOR": Color(1,1,1),
-	"SPECIAL_TILE_COLOR": Color(1,1,1),
+	"SPECIAL_PIECE_COLOR": Color(1,1,1,1),
+	"SPECIAL_TILE_COLOR": Color(1,1,1,1),
 	
 	"PLAYER_COLOR": [
-		Color(0.9, 0.9, 0.9), 
-		Color(0.1, 0.1, 0.1),
+		Color(0.8, 0.8, 0.8), 
+		Color(0.2, 0.2, 0.2),
 	],
 	
 	"TILE_CONDITIONS_BACKGROUND_COLOR": Color(0,0,0),
@@ -142,9 +144,6 @@ const player_groups:Dictionary = {
 	Player.PLAYER_TWO: "Player_Two",
 }
 
-static var turn_num: int = 0
-static var prev_player: Player = Player.PLAYER_ONE
-static var current_player: Player = Player.PLAYER_ONE
 #endregion
 
 
@@ -157,8 +156,8 @@ static var game_setting: Dictionary = {
 		
 static var debug_setting: Dictionary = {
 	"DEBUG_RESTRICT_MOVEMENT": false,
-	"DEBUG_SKIP_TITLE": false,
-	"DEBUG_SKIP_MATCHSELECTION": false,
+	"DEBUG_SKIP_TITLE": true,
+	"DEBUG_SKIP_MATCHSELECTION": true,
 }
 
 static var user_setting: Dictionary = {
