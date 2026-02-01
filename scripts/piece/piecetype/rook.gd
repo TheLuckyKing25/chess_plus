@@ -1,9 +1,6 @@
 extends Piece
 
 
-signal king_selected(rook: Piece)
-
-
 const ROOK_MOVE_DISTANCE: int = 8
 
 

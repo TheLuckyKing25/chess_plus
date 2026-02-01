@@ -40,10 +40,10 @@ func piece_state(function:Callable, flag: PieceStateFlag):
 func moved():
 	pass
 
+
 func _select():
 	piece_state(Flag.set_func, PieceStateFlag.SELECTED)
 
-	
 func _unselect():
 	piece_state(Flag.unset_func, PieceStateFlag.SELECTED)
 
@@ -51,11 +51,15 @@ func _unselect():
 func _threaten():
 	piece_state(Flag.set_func, PieceStateFlag.THREATENED)
 
-
 func _unthreaten():
 	piece_state(Flag.unset_func, PieceStateFlag.THREATENED)
 
 
+func _show_castling():
+	piece_state(Flag.set_func, PieceStateFlag.SPECIAL)
+
+func _hide_castling():
+	piece_state(Flag.unset_func, PieceStateFlag.SPECIAL)
 
 
 
@@ -77,13 +81,5 @@ func is_threatened_by_en_passant(board_position) -> bool:
 			and abs(get_parent().board_position - board_position) == Vector2i(1,0)
 		)
 		
-func is_valid_castling_rook(occupying_piece: Piece) -> bool:
-	return (
-			occupying_piece
-			and occupying_piece.is_in_group("Rook")
-			and not is_in_group("has_moved")
-			and not is_opponent_to(occupying_piece)
-		)
-
 func is_opponent_to(piece: Piece) -> bool:
 	return piece and player != piece.player

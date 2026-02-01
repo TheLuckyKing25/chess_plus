@@ -160,7 +160,7 @@ static var debug_setting: Dictionary = {
 	"DEBUG_SKIP_MATCHSELECTION": true,
 }
 
-static var user_setting: Dictionary = {
+const USER_SETTING: Dictionary[String,float] = {
 	"PIECE_OUTLINE_THICKNESS": 0.1,
 	"CAMERA_ROTATION_SPEED": 5
 }
@@ -201,13 +201,6 @@ enum PurposeType{
 		ROOK_FINDING = 3,		# used to find rook and to check if space between king and rook is clear
 		CHECK_DETECTING = 4,	# used for check detection
 	}
-#endregion
-
-
-#region Piece Checks
-
-func pieces_are_opponent(piece1: Piece, piece2: Piece ) -> bool:
-	return piece1 and piece2 and piece1.player != piece2.player
 #endregion
 
 

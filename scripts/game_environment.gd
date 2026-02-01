@@ -9,31 +9,35 @@ extends GameNode3D
 
 var camera_rotation: float = 0
 var piece_to_promote = null
+var proceed = false
 
-func _process(delta: float):
-	if board.previous_player_turn == board.current_player_turn:
-		if player1_camera_twist_pivot.rotation != Vector3(0,0,0):
-			player1_camera_twist_pivot.rotation = Vector3(0,0,0)
-		if player2_camera_twist_pivot.rotation != Vector3(0,0,0):
-			player2_camera_twist_pivot.rotation = Vector3(0,0,0)
-	if board.previous_player_turn != board.current_player_turn:
-		if board.time_elapsed_since_turn_ended <= board.BOARD_TURN_TRANSITION_DELAY_MSEC:
-			camera_rotation += PI * ((delta * 1000)/ board.BOARD_TURN_TRANSITION_DELAY_MSEC)
+func _process(delta: float):			
+	if proceed or board.previous_player_turn != board.current_player_turn:
+		if board.time_elapsed_since_turn_ended > 0:
+			proceed = true
+		if proceed and board.time_elapsed_since_turn_ended * board.TURN_TRANSITION_SPEED <= 1:
+			camera_rotation += PI * board.TURN_TRANSITION_SPEED * delta * 1000
 			match board.current_player_turn:
 				Player.PLAYER_ONE:
 					player2_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
-					if camera_rotation > PI:
+					if camera_rotation >= PI:
 						player2_camera_twist_pivot.rotation = Vector3(0,PI,0)
 						player1_camera.make_current()				
 						player2_camera_twist_pivot.rotation = Vector3(0,0,0)
+						if player1_camera_twist_pivot.rotation != Vector3(0,0,0):
+							player1_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
+						proceed = false
 				Player.PLAYER_TWO:
 					player1_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
-					if camera_rotation > PI:
+					if camera_rotation >= PI:
 						player1_camera_twist_pivot.rotation = Vector3(0,PI,0)
 						player2_camera.make_current()		
 						player1_camera_twist_pivot.rotation = Vector3(0,0,0)
+						if player2_camera_twist_pivot.rotation != Vector3(0,0,0):
+							player2_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
+						proceed = false
 			
 
 
