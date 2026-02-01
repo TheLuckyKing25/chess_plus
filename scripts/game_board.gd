@@ -242,7 +242,9 @@ func resolve_branching_movement(moveset: MoveRule, origin_tile: Node3D):
 
 
 func capture_piece(piece):
-	piece.piece_state(Flag.set_func, PieceStateFlag.CAPTURED)
+	piece.translate(Vector3(0,-5,0))
+	piece.reparent(%Captured)
+	piece._captured()
 	piece_capture_audio.play()
 		
 func move_piece_to_tile(piece: Node3D, tile: Node3D):

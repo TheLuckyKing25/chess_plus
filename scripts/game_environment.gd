@@ -1,10 +1,10 @@
 extends GameNode3D
 
 @onready var board = %"Board"
-@onready var player1_camera = %"P1_Camera"
-@onready var player2_camera = %"P2_Camera"
 @onready var player1_camera_twist_pivot = %"Twist Pivot P1"
 @onready var player2_camera_twist_pivot = %"Twist Pivot P2"
+@onready var player1_camera = %"P1_Camera"
+@onready var player2_camera = %"P2_Camera"
 @onready var promotion_menu = $CanvasLayer/PromoteMenu
 
 var camera_rotation: float = 0
@@ -39,6 +39,10 @@ func _process(delta: float):
 						camera_rotation = 0
 						proceed = false
 			
+
+
+
+
 
 
 func _ready():

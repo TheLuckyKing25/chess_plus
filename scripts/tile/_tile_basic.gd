@@ -9,10 +9,7 @@ signal move_processed(piece: Piece, move: MoveRule, castling_rook: Piece)
 
 
 @export var occupant: Piece = null:
-	set(piece):
-		if en_passant_occupant:
-			en_passant_occupant = null
-		
+	set(piece):		
 		if occupant:
 			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
 		if piece:
@@ -26,16 +23,10 @@ signal move_processed(piece: Piece, move: MoveRule, castling_rook: Piece)
 		modifier_order = new_modifier_order
 		$Tile_Object/Tile_Modifiers.modifiers = modifier_order
 
-var en_passant_occupant: Piece = null
-
-
 var _checked_by: Array[Piece] = []
 
 
 var _moveset: MoveRule
-
-
-var _moving_piece: Piece
 
 
 var neighboring_tiles: Dictionary[Direction, Node3D] = {
@@ -118,65 +109,17 @@ func _hide_castling():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-func _is_valid_move_state() -> bool:
-	return (	
-			tile_state(Flag.is_enabled_func,TileStateFlag.SPECIAL)
-			or tile_state(Flag.is_enabled_func, TileStateFlag.MOVEMENT)
-			or (	
-					tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED) 
-					and en_passant_occupant
-					and not occupant
-			)
-	)
-
-
-func _clear_checks() -> void:
-	_checked_by.clear()
-	tile_state(Flag.unset_func, TileStateFlag.CHECKED)
-	if occupant:
-		occupant.piece_state(Flag.unset_func, PieceStateFlag.CHECKED)
-
-
-func _clear_move_states() -> void:
-	tile_state(Flag.unset_func, TileStateFlag.SELECTED)
-	tile_state(Flag.unset_func, TileStateFlag.MOVEMENT)
-	tile_state(Flag.unset_func, TileStateFlag.THREATENED)
-	tile_state(Flag.unset_func, TileStateFlag.SPECIAL)
-	_moveset = null
-	_moving_piece = null
-	if occupant:
-		occupant.piece_state(Flag.unset_func, PieceStateFlag.THREATENED)
-		occupant.piece_state(Flag.unset_func, PieceStateFlag.SPECIAL)
-
-
-func _clear_en_passant(player:int) -> void:
-	if en_passant_occupant and en_passant_occupant.player == player:
-		en_passant_occupant = null
-
-		
-func _connect_to_neighboring_tile(moves, direction: Direction, castling_rook:Node3D = null) -> void:
-	if neighboring_tiles[direction]:
-		move_processed.connect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
-		move_processed.emit(_moving_piece, moves, castling_rook)
-		move_processed.disconnect(Callable(neighboring_tiles[direction],"_on_moves_recieved"))
-
-func discover_checks() -> void:
-	if occupant:
-		_moveset = MoveRule.new(ActionType.BRANCH, PurposeType.CHECK_DETECTING,0,0,occupant.move_rules)
-		_moveset = _moveset.new_duplicate()
-		#_on_moves_recieved(tile_occupant, _moveset)
+#func _clear_checks() -> void:
+	#_checked_by.clear()
+	#tile_state(Flag.unset_func, TileStateFlag.CHECKED)
+	#if occupant:
+		#occupant.piece_state(Flag.unset_func, PieceStateFlag.CHECKED)
+#
+#
+#func discover_checks() -> void:
+	#if occupant:
+		#_moveset = MoveRule.new(ActionType.BRANCH, PurposeType.CHECK_DETECTING,0,0,occupant.move_rules)
+		#_moveset = _moveset.new_duplicate()
 
 
 func tile_state(function:Callable, flag: TileStateFlag):

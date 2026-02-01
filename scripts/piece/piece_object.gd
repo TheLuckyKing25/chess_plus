@@ -38,10 +38,6 @@ func apply_state():
 		outline_material.albedo_color = Color(0,0,0,0)
 		return
 	if state & 1 << PieceStateFlag.CAPTURED:
-		get_parent().translate(Vector3(0,-5,0)) 
-		get_parent().visible = false
-		$Collision.disabled = true
-		get_parent().reparent(%Captured)
 		return
 	if state & 1 << PieceStateFlag.CHECKED:
 		outline_material.albedo_color = COLOR_PALETTE.CHECKED_PIECE_COLOR

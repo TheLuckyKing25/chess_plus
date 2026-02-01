@@ -62,24 +62,7 @@ func _hide_castling():
 	piece_state(Flag.unset_func, PieceStateFlag.SPECIAL)
 
 
-
-
-
-
-func is_threat_to_en_passant_piece(move:MoveRule, en_passant_piece: Piece) -> bool:
-	return (
-			is_in_group("Pawn")
-			and en_passant_piece 
-			and move.action_flag_is_enabled(ActionType.THREATEN)
-			and is_opponent_to(en_passant_piece)
-		)
-
-func is_threatened_by_en_passant(board_position) -> bool:
-	return (	
-			is_in_group("Pawn")
-			and not is_in_group("has_moved")
-			and abs(get_parent().board_position - board_position) == Vector2i(1,0)
-		)
-		
-func is_opponent_to(piece: Piece) -> bool:
-	return piece and player != piece.player
+func _captured():
+	visible = false
+	$Piece_Object/Collision.disabled = true
+	piece_state(Flag.set_func, PieceStateFlag.CAPTURED)

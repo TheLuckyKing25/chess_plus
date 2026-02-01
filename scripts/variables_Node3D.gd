@@ -192,6 +192,7 @@ enum ActionType{
 		SPECIAL = 1 << 4,	# Used for special movements, flag set on last moverule of a branch
 	}
 
+
 ## Purpose of the movement
 ## The same throughout entire moveset
 enum PurposeType{ 
@@ -229,4 +230,5 @@ func toggle_flag(bitfield: int, flag: int) -> int:
 	
 func flag_is_enabled(bitfield: int, flag: int) -> bool:
 	return bitfield & (1 << flag)
+
 #endregion
