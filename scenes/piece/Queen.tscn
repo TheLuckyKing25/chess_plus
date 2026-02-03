@@ -1,17 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://bpx8asa0jn4b1"]
+[gd_scene load_steps=8 format=3 uid="uid://bpx8asa0jn4b1"]
 
 [ext_resource type="Script" uid="uid://dl4gxliogfkgr" path="res://scripts/piece/piecetype/queen.gd" id="1_dpvll"]
 [ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/mesh/queen_mesh.obj" id="2_dpvll"]
 [ext_resource type="Script" uid="uid://d7h5wqb0lxnm" path="res://scripts/piece/piece_object.gd" id="2_uof4u"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dpvll"]
-resource_local_to_scene = true
-resource_name = "piece_color"
-roughness_texture_channel = 4
-clearcoat_enabled = true
-clearcoat_roughness = 0.25
+[sub_resource type="BoxShape3D" id="BoxShape3D_c5jg2"]
+margin = 0.0
+size = Vector3(2, 4.5, 2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4exq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2285w"]
 resource_local_to_scene = true
 transparency = 1
 cull_mode = 1
@@ -20,35 +17,29 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cf0mv"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qt51j"]
 resource_local_to_scene = true
 resource_name = "piece_color"
+render_priority = 1
+next_pass = SubResource("StandardMaterial3D_2285w")
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fkja7"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+next_pass = SubResource("StandardMaterial3D_qt51j")
 roughness_texture_channel = 4
-emission = Color(0.2, 0.2, 0.2, 1)
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_c5jg2"]
-margin = 0.0
-size = Vector3(2, 4.5, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6r3y7"]
-resource_local_to_scene = true
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.1
 
 [node name="Queen" type="Node3D" groups=["Piece", "Queen"]]
 script = ExtResource("1_dpvll")
 
-[node name="Piece_Object" type="AnimatableBody3D" parent="." groups=["Piece", "Queen"]]
+[node name="Piece_Object" type="AnimatableBody3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("2_uof4u")
-piece_material = SubResource("StandardMaterial3D_dpvll")
-outline_material = SubResource("StandardMaterial3D_q4exq")
-mouseover_material = SubResource("StandardMaterial3D_cf0mv")
 
 [node name="Collision" type="CollisionShape3D" parent="Piece_Object"]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
@@ -58,14 +49,7 @@ shape = SubResource("BoxShape3D_c5jg2")
 transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
 mesh = ExtResource("2_dpvll")
 skeleton = NodePath("../../..")
-
-[node name="Outline" type="MeshInstance3D" parent="Piece_Object"]
-transform = Transform3D(-1.31134e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.31134e-08, 0, 0, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_6r3y7")
-extra_cull_margin = 36.03
-mesh = ExtResource("2_dpvll")
-skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_fkja7")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="input_event" from="Piece_Object" to="." method="_on_input_event"]

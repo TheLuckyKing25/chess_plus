@@ -1,69 +1,48 @@
 extends GameNode3D
 
 @onready var board = %"Board"
-@onready var base = %"BoardBase"
-@onready var player1_camera = %"P1_Camera"
-@onready var player2_camera = %"P2_Camera"
 @onready var player1_camera_twist_pivot = %"Twist Pivot P1"
 @onready var player2_camera_twist_pivot = %"Twist Pivot P2"
+@onready var player1_camera = %"P1_Camera"
+@onready var player2_camera = %"P2_Camera"
 @onready var promotion_menu = $CanvasLayer/PromoteMenu
 
-const CAMERA_ROTATION_DELAY_MSEC:int = 500
-var time_turn_ended:int = 0
 var camera_rotation: float = 0
 var piece_to_promote = null
+var proceed = false
 
-## Sets up the next turn
-func _next_turn() -> void:
-	# Discover if king is still in check
-	for piece in get_tree().get_nodes_in_group(player_groups[(current_player+1)%2]):
-		piece.get_parent().discover_checks()
-	
-	# Clear previous checks
-	get_tree().call_group("Tile","_clear_checks")
-	
-	# Discover which pieces check which tiles
-	for piece in get_tree().get_nodes_in_group(player_groups[current_player]):
-		piece.get_parent().discover_checks()
-	
-	# increments the turn number
-	turn_num += 1
-	prev_player = current_player
-	current_player = ((current_player + 1) % 2 ) as Player
-	
-	get_tree().call_group("Tile","_clear_castling_occupant")
-	get_tree().call_group("Tile","_clear_en_passant",current_player)
-
-
-func _process(delta: float) -> void:
-	if prev_player != current_player:
-		if time_turn_ended == 0:
-			time_turn_ended = Time.get_ticks_msec()
-		if (Time.get_ticks_msec() - time_turn_ended) >= CAMERA_ROTATION_DELAY_MSEC:
-			camera_rotation += delta * user_setting.CAMERA_ROTATION_SPEED
-			match current_player:
+func _process(delta: float):			
+	if proceed or board.previous_player_turn != board.current_player_turn:
+		if board.time_elapsed_since_turn_ended > 0:
+			proceed = true
+		if proceed and board.time_elapsed_since_turn_ended * board.TURN_TRANSITION_SPEED <= 1:
+			camera_rotation += PI * board.TURN_TRANSITION_SPEED * delta * 1000
+			match board.current_player_turn:
 				Player.PLAYER_ONE:
 					player2_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
-					base.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[prev_player].lerp(COLOR_PALETTE.PLAYER_COLOR[current_player],camera_rotation/PI)
-					if camera_rotation > PI:
+					if camera_rotation >= PI:
 						player2_camera_twist_pivot.rotation = Vector3(0,PI,0)
 						player1_camera.make_current()				
 						player2_camera_twist_pivot.rotation = Vector3(0,0,0)
-						prev_player = current_player
+						if player1_camera_twist_pivot.rotation != Vector3(0,0,0):
+							player1_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
-						time_turn_ended = 0
-						base.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[current_player]
+						proceed = false
 				Player.PLAYER_TWO:
 					player1_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
-					base.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[prev_player].lerp(COLOR_PALETTE.PLAYER_COLOR[current_player],camera_rotation/PI)
-					if camera_rotation > PI:
+					if camera_rotation >= PI:
 						player1_camera_twist_pivot.rotation = Vector3(0,PI,0)
 						player2_camera.make_current()		
 						player1_camera_twist_pivot.rotation = Vector3(0,0,0)
-						prev_player = current_player
+						if player2_camera_twist_pivot.rotation != Vector3(0,0,0):
+							player2_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
-						time_turn_ended = 0
-						base.get_surface_override_material(0).albedo_color = COLOR_PALETTE.PLAYER_COLOR[current_player]
+						proceed = false
+			
+
+
+
+
 
 
 func _ready():

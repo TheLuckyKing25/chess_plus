@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bgn763vrxmmcu"]
+[gd_scene load_steps=15 format=3 uid="uid://bgn763vrxmmcu"]
 
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile/tile_object.gd" id="1_2sjy5"]
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile/_tile_basic.gd" id="1_vhibn"]
@@ -7,26 +7,47 @@
 [ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="5_ukgqd"]
 [ext_resource type="StyleBox" uid="uid://6ic7o326yplq" path="res://assets/TileProperties.stylebox" id="6_esqu7"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhibn"]
-resource_local_to_scene = true
-emission = Color(1, 1, 1, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvdvl"]
-resource_local_to_scene = true
-resource_name = "piece_color"
-render_priority = 1
-emission = Color(0.5, 0.5, 0.5, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3gf4"]
-resource_local_to_scene = true
-emission = Color(1, 1, 1, 1)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
 margin = 0.06
 size = Vector3(1, 0.163, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_iixfe"]
+lightmap_size_hint = Vector2i(11, 8)
+add_uv2 = true
+uv2_padding = 1.0
 size = Vector3(0.95, 0.1, 0.95)
+
+[sub_resource type="Gradient" id="Gradient_esqu7"]
+offsets = PackedFloat32Array(0.7, 0.9)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1g878"]
+gradient = SubResource("Gradient_esqu7")
+width = 128
+height = 128
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvdvl"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3gf4"]
+resource_local_to_scene = true
+next_pass = SubResource("StandardMaterial3D_rvdvl")
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_1g878")
+emission = Color(1, 1, 1, 1)
+uv1_scale = Vector3(3, 2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhibn"]
+resource_local_to_scene = true
+next_pass = SubResource("StandardMaterial3D_r3gf4")
+emission = Color(1, 1, 1, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_rvdvl"]
 viewport_path = NodePath("Tile_Object/Tile_Modifiers/Modifier_Grid")
@@ -36,9 +57,6 @@ script = ExtResource("1_vhibn")
 
 [node name="Tile_Object" type="AnimatableBody3D" parent="."]
 script = ExtResource("1_2sjy5")
-tile_material = SubResource("StandardMaterial3D_vhibn")
-state_material = SubResource("StandardMaterial3D_rvdvl")
-mouseover_material = SubResource("StandardMaterial3D_r3gf4")
 
 [node name="Collision" type="CollisionShape3D" parent="Tile_Object"]
 shape = SubResource("BoxShape3D_iixfe")
@@ -46,6 +64,7 @@ shape = SubResource("BoxShape3D_iixfe")
 [node name="Tile_Mesh" type="MeshInstance3D" parent="Tile_Object"]
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_vhibn")
 
 [node name="Tile_Modifiers" type="Sprite3D" parent="Tile_Object"]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
