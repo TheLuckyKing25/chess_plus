@@ -90,6 +90,7 @@ enum TileStateFlag{
 	SPECIAL = 4,
 	THREATENED = 5,
 	CHECKED = 6,
+	CHECKED_MOVEMENT = 7,
 	}
 #endregion
 
@@ -117,7 +118,7 @@ const COLOR_PALETTE: Dictionary = {
 	"CHECKED_PIECE_COLOR": Color(0.9, 0, 0, 1),
 	"CHECKED_TILE_COLOR": Color(1, 0.2, 0.2, 1),
 	
-	#"MOVE_CHECKING_TILE_COLOR": Color(1, 0.65, 0.25),
+	"MOVE_CHECKING_TILE_COLOR": Color(1, 0.392, 0.153),
 	
 	"SPECIAL_PIECE_COLOR": Color(1,1,1,1),
 	"SPECIAL_TILE_COLOR": Color(1,1,1,1),
@@ -198,9 +199,7 @@ enum ActionType{
 enum PurposeType{ 
 		UNSET = 0,
 		STANDARD_MOVEMENT = 1,
-		CASTLING = 2,			# used to find rook and to check if space between king and rook is clear
-		ROOK_FINDING = 3,		# used to find rook and to check if space between king and rook is clear
-		CHECK_DETECTING = 4,	# used for check detection
+		GENERATE_ALL_MOVES = 2,
 	}
 #endregion
 

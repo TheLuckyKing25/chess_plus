@@ -281,17 +281,6 @@ size_flags_horizontal = 3
 theme_type_variation = &"SettingButtons"
 text = "Default"
 
-[node name="Back2" type="Button" parent="Background_Blur/SettingMenu/VBoxContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"SettingButtons"
-text = "Back"
-
-[node name="SubViewport" type="SubViewport" parent="."]
-transparent_bg = true
-size = Vector2i(2, 2)
-
 [connection signal="toggled" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2/Fullscreen" to="." method="_on_check_box_toggled"]
 [connection signal="item_selected" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer/Resolution" to="." method="_on_option_button_item_selected"]
 [connection signal="drag_ended" from="Background_Blur/SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer/Master" to="." method="_on_setting_changed"]

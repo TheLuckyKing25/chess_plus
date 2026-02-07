@@ -56,12 +56,6 @@ func unset_action_flag(flag: ActionType):
 	action_flags &= ~flag
 
 
-func is_castling_movement():
-	return (	
-			purpose == PurposeType.CASTLING
-			and action_flag_is_enabled(ActionType.JUMP)
-	)
-
 func call_func_on_moves(function: Callable):
 		if action_flags == ActionType.BRANCH:
 			for move in branches:
