@@ -157,8 +157,8 @@ static var game_setting: Dictionary = {
 		
 static var debug_setting: Dictionary = {
 	"DEBUG_RESTRICT_MOVEMENT": false,
-	"DEBUG_SKIP_TITLE": true,
-	"DEBUG_SKIP_MATCHSELECTION": true,
+	"DEBUG_SKIP_TITLE": false,
+	"DEBUG_SKIP_MATCHSELECTION": false,
 }
 
 const USER_SETTING: Dictionary[String,float] = {
