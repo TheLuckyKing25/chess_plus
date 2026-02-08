@@ -6,15 +6,15 @@ func _on_ready():
 
 func _input(event) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		$ScreenControl.position = Vector2(0,0)
+		$ScreenController.position = Vector2(0,0)
 
 
 func _on_start_pressed():
-	$ScreenControl.position = Vector2(-1,-1) * $ScreenControl/Start.position
+	$ScreenController.position = Vector2(-1,-1) * $ScreenController/MatchSelectionScreen.position
 
 func _on_settings_pressed():
-	$ScreenControl/Options/Settings.show()
-	$ScreenControl.position = Vector2(-1,-1) * $ScreenControl/Options.position
+	$ScreenController/SettingsScreen/Settings.show()
+	$ScreenController.position = Vector2(-1,-1) * $ScreenController/SettingsScreen.position
 
 func _on_exit_pressed():
 	get_tree().quit()

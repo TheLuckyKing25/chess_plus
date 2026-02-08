@@ -1,0 +1,201 @@
+[gd_scene load_steps=8 format=3 uid="uid://camv04tw28yjr"]
+
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_xe8rp"]
+[ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://scripts/menu/menu_main.gd" id="2_pqvbo"]
+[ext_resource type="PackedScene" uid="uid://0fccgu7f77gg" path="res://scenes/menu/SettingsMenu.tscn" id="3_krmyf"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="4_06wji"]
+
+[sub_resource type="Gradient" id="Gradient_hlv2s"]
+offsets = PackedFloat32Array(0, 0.00680274, 1)
+colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2nud1"]
+gradient = SubResource("Gradient_hlv2s")
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iv2fv"]
+texture = SubResource("GradientTexture2D_2nud1")
+region_rect = Rect2(0, 18, 64, 32)
+
+[node name="MainMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_xe8rp")
+script = ExtResource("2_pqvbo")
+
+[node name="ScreenController" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleScreen" type="ReferenceRect" parent="ScreenController"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Panel" parent="ScreenController/TitleScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
+
+[node name="BoxContainer" type="BoxContainer" parent="ScreenController/TitleScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+vertical = true
+
+[node name="TitleLabel" type="Label" parent="ScreenController/TitleScreen/BoxContainer"]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("4_06wji")
+theme_override_font_sizes/font_size = 100
+text = "Chess+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScreenController/TitleScreen/BoxContainer"]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Start" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Start Game"
+
+[node name="Settings" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Settings"
+
+[node name="Exit" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 30
+text = "Exit
+"
+
+[node name="SettingsScreen" type="ReferenceRect" parent="ScreenController"]
+z_index = 1
+layout_mode = 0
+offset_top = 658.0
+offset_right = 1152.0
+offset_bottom = 1306.0
+
+[node name="Background" type="Panel" parent="ScreenController/SettingsScreen"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
+
+[node name="Settings" parent="ScreenController/SettingsScreen" instance=ExtResource("3_krmyf")]
+z_index = 1
+layout_mode = 1
+
+[node name="MatchSelectionScreen" type="ReferenceRect" parent="ScreenController"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1162.0
+offset_right = 1162.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Panel" parent="ScreenController/MatchSelectionScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
+
+[node name="BoxContainer" type="BoxContainer" parent="ScreenController/MatchSelectionScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+vertical = true
+
+[node name="SelectMatchLabel" type="Label" parent="ScreenController/MatchSelectionScreen/BoxContainer"]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("4_06wji")
+theme_override_font_sizes/font_size = 86
+text = "Select Match"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScreenController/MatchSelectionScreen/BoxContainer"]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Singleplayer" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Singleplayer"
+
+[node name="Host" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+disabled = true
+text = "Host Match
+"
+
+[node name="Join" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+disabled = true
+text = "Join Match
+"
+
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
+[connection signal="ready" from="ScreenController/MatchSelectionScreen" to="." method="_on_ready"]
+[connection signal="pressed" from="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer/Singleplayer" to="." method="_on_singleplayer_pressed"]

@@ -1,5 +1,6 @@
 extends Control
 
+signal back_button_pressed()
 
 @onready var fullscreen_checkbox = %Fullscreen
 
@@ -9,9 +10,7 @@ extends Control
 @onready var game_slider = %Game
 
 
-func _ready():
-	hide()
-	
+func _ready():	
 	var video_settings = ConfigFileHandler.load_video_settings()
 	fullscreen_checkbox.button_pressed = video_settings.fullscreen
 	
@@ -29,7 +28,7 @@ func _ready():
 
 func _input(event) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		hide()
+		back_button_pressed.emit()
 
 #Graphics
 #Fullscreen

@@ -1,10 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://0fccgu7f77gg"]
+[gd_scene load_steps=3 format=3 uid="uid://0fccgu7f77gg"]
 
-[ext_resource type="Script" uid="uid://pjpfeiofeqj8" path="res://scripts/menu/menu_settings.gd" id="1_rbmmp"]
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_tyggu"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tyggu"]
-bg_color = Color(0.377919, 0.377919, 0.377919, 1)
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_44k28"]
+[ext_resource type="Script" uid="uid://pjpfeiofeqj8" path="res://scripts/menu/menu_settings.gd" id="2_ofko6"]
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -13,19 +10,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_tyggu")
-script = ExtResource("1_rbmmp")
+theme = ExtResource("1_44k28")
+script = ExtResource("2_ofko6")
 metadata/_edit_horizontal_guides_ = [79.0]
-
-[node name="BackgroundBlur" type="Panel" parent="."]
-self_modulate = Color(1, 1, 1, 0.694118)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_tyggu")
 
 [node name="SettingMenu" type="Panel" parent="."]
 layout_mode = 1
@@ -54,11 +41,12 @@ grow_vertical = 2
 
 [node name="TabContainer" type="TabContainer" parent="SettingMenu/VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("1_tyggu")
+theme = ExtResource("1_44k28")
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 
 [node name="Graphics" type="Control" parent="SettingMenu/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -68,7 +56,7 @@ offset_top = -1.0
 offset_right = 418.0
 offset_bottom = 375.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel"]
+[node name="BoxContainer" type="BoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,18 +67,20 @@ offset_right = -18.0
 offset_bottom = -19.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 1
+vertical = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
-theme = ExtResource("1_tyggu")
+theme = ExtResource("1_44k28")
 
-[node name="Label" type="Label" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Fullscreen"
 
-[node name="Fullscreen" type="CheckButton" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2"]
+[node name="Fullscreen" type="CheckButton" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
@@ -98,16 +88,16 @@ size_flags_vertical = 4
 text = "
 "
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "Resolution"
 
-[node name="Resolution" type="OptionButton" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer"]
+[node name="Resolution" type="OptionButton" parent="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -120,7 +110,6 @@ popup/item_1/text = "1440 x 900"
 popup/item_1/id = 1
 
 [node name="Audio" type="Control" parent="SettingMenu/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -280,8 +269,8 @@ size_flags_horizontal = 3
 theme_type_variation = &"SettingButtons"
 text = "Default"
 
-[connection signal="toggled" from="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer2/Fullscreen" to="." method="_on_check_box_toggled"]
-[connection signal="item_selected" from="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/VBoxContainer/HBoxContainer/Resolution" to="." method="_on_option_button_item_selected"]
+[connection signal="toggled" from="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer/HBoxContainer2/Fullscreen" to="." method="_on_check_box_toggled"]
+[connection signal="item_selected" from="SettingMenu/VBoxContainer/TabContainer/Graphics/GraphicsPanel/BoxContainer/HBoxContainer/Resolution" to="." method="_on_option_button_item_selected"]
 [connection signal="drag_ended" from="SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer/Master" to="." method="_on_setting_changed"]
 [connection signal="value_changed" from="SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer/Master" to="." method="_on_master_value_changed"]
 [connection signal="drag_ended" from="SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer/HBoxContainer2/Music" to="." method="_on_setting_changed"]
