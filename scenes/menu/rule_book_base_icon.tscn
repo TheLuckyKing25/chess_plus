@@ -1,0 +1,61 @@
+[gd_scene load_steps=5 format=3 uid="uid://bphfylxcjlqhr"]
+
+[ext_resource type="Script" uid="uid://bj35gy0y87jg5" path="res://scripts/menu/rule_book_base_icon.gd" id="1_qssyg"]
+[ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="2_rl7xw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pe7a6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_50d83"]
+outline_size = 7
+outline_color = Color(0, 0, 0, 1)
+
+[node name="RuleBookBaseIcon" type="Control"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qssyg")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.087
+anchor_bottom = 0.154
+offset_right = -0.224007
+offset_bottom = 0.207993
+tooltip_text = "Test"
+theme_override_styles/panel = ExtResource("2_rl7xw")
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture = SubResource("AtlasTexture_pe7a6")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -11.5
+offset_right = 0.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_50d83")
+horizontal_alignment = 1
