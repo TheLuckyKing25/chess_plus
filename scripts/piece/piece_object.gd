@@ -25,11 +25,11 @@ func _on_ready() -> void:
 
 func _on_mouse_entered() -> void:
 	mouseover_material.render_priority = 1
-	mouseover_material.albedo_color = Color(1,1,1,0.50)
+	mouseover_material.albedo_color = piece_material.albedo_color * 1.5
 
 
 func _on_mouse_exited() -> void:
-	mouseover_material.albedo_color = Color(1,1,1,0)
+	mouseover_material.albedo_color = Color(0,0,0,0)
 	mouseover_material.render_priority = 0
 
 

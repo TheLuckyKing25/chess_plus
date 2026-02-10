@@ -1,6 +1,6 @@
 extends GameNode3D
 
-
+signal next_turn(player: int)
 signal promotion_requested(piece)
 
 const TURN_TRANSITION_DELAY_MSEC:int = 500
@@ -15,7 +15,6 @@ var previous_player_turn: Player = Player.PLAYER_ONE
 
 var selected_piece: Node3D = null
 var selected_piece_tile: Node3D = null
-var selected_castling_rook_tile: Node3D = null
 
 var en_passant_player:Player
 var en_passant_tile: Node3D = null
@@ -25,10 +24,11 @@ var en_passant_piece: Node3D = null
 @onready var piece_move_audio = $Piece_move
 
 
-signal next_turn(player: int)
+var legal_moves: Array
 
+var board_array: Array
 
-var board_array = []
+var piece_location: Array
 
 
 var neighboring_tiles: Dictionary[Direction, Vector2i] = {
@@ -63,22 +63,122 @@ func _on_ready() -> void:
 	create_board()
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
+	legal_moves = _generate_legal_moves()
 	
 	
+func _create_2d_array(length:int, width:int):
+	var empty_array: Array = []
+	empty_array.resize(length)
+	for index in range(length):
+		empty_array[index] = []
+		empty_array[index].resize(width)
+	return empty_array
+
+
 func create_board():
-	board_array.resize(BOARD_LENGTH)
-	
-	for index in range(BOARD_LENGTH):
-		board_array[index] = []
-		board_array[index].resize(BOARD_WIDTH)
+	board_array = _create_2d_array(BOARD_LENGTH,BOARD_WIDTH)
+	piece_location = _create_2d_array(BOARD_LENGTH,BOARD_WIDTH)
 	
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		board_array[tile.board_position.x][tile.board_position.y] = tile
+		piece_location[tile.board_position.x][tile.board_position.y] = tile.occupant
+	#Global.print_better(piece_location)
 	#Global.print_better(board_array)
 
 
+func _get_tile_from_piece(piece):
+	for row in range(BOARD_LENGTH):
+		for column in range(BOARD_WIDTH):
+			if piece_location[row][column] == piece:
+				return board_array[row][column]
+
+
+func _generate_moves_from_piece(piece):
+	var moveset = MoveRule.new(ActionType.BRANCH, PurposeType.GENERATE_ALL_MOVES,0,0,piece.move_rules).new_duplicate()
+	var full_movement = []
+	
+	if moveset.distance == 0 and moveset.action_flag_is_enabled(ActionType.BRANCH):
+		var moves = resolve_branching_movement(piece, moveset, _get_tile_from_piece(piece))
+		while ([] in moves):
+			moves.erase([])
+		return moves
+
+
+func _generate_all_moves(player: Player):
+	var moves: Array = []
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		if tile.occupant and tile.occupant in get_tree().get_nodes_in_group(player_groups[player]):
+			moves.append_array(_generate_moves_from_piece(tile.occupant))
+	return moves
+	
+	
+func _make_virtual_move(move: Array):
+	var starting_tile = move[0]
+	var destination_tile = move[1]
+	
+	destination_tile.occupant = starting_tile.occupant
+	starting_tile.occupant = null
+
+
+func _unmake_virtual_move(move: Array):
+	var starting_tile = move[0]
+	var destination_tile = move[1]
+	
+	starting_tile.occupant = destination_tile.occupant
+	destination_tile.occupant = piece_location[destination_tile.board_position.x][destination_tile.board_position.y]
+	
+	
+func _get_opponent_of(player: Player):
+	if player == Player.PLAYER_ONE:
+		return Player.PLAYER_TWO
+	elif player == Player.PLAYER_TWO:
+		return Player.PLAYER_ONE
+	
+	
+func _get_king_of(player: Player):
+	for piece in get_tree().get_nodes_in_group(player_groups[player]):
+		if piece.is_in_group("King"):
+			return piece
+
+func _is_move_legal(move: Array):
+	var is_legal:bool = true
+	_make_virtual_move(move)
+	
+	var opponent_moves = _generate_all_moves(_get_opponent_of(current_player_turn))
+	for opposing_move in opponent_moves:
+		if opposing_move and opposing_move[1].occupant == _get_king_of(current_player_turn):
+			is_legal = false
+			break
+	
+	_unmake_virtual_move(move)
+	
+	if is_legal:
+		return true
+	
+	
+	
+func _generate_legal_moves():
+	var pseudo_legal_moves = _generate_all_moves(current_player_turn)
+	var legal_movement = []
+
+	for move in pseudo_legal_moves:
+		var is_legal:bool = true
+		_make_virtual_move(move)
+		
+		var opponent_moves = _generate_all_moves(_get_opponent_of(current_player_turn))
+		for opposing_move in opponent_moves:
+			if opposing_move and opposing_move[1].occupant == _get_king_of(current_player_turn):
+				is_legal = false
+				break
+		
+		if is_legal:
+			legal_movement.append(move)
+		
+		_unmake_virtual_move(move)
+	return legal_movement
+
 func _on_tile_clicked(clicked_tile: Node3D):
-	print("TEST")
+		
 	if selected_piece and selected_piece_tile: # piece is already selected
 		if clicked_tile.occupant: # Clicked Tile is occupied
 			# Clicked tile and selected tile are the same
@@ -125,9 +225,11 @@ func _set_en_passant(clicked_tile: Node3D):
 	en_passant_tile = board_array[en_passant_tile_x][en_passant_tile_y]
 	en_passant_player = current_player_turn
 
+
 func _clear_en_passant():
 	en_passant_piece = null
 	en_passant_tile = null
+
 
 func _select_tile(tile: Node3D):
 	selected_piece_tile = tile
@@ -146,7 +248,6 @@ func _unselect_tile():
 
 
 func show_valid_castling_movement():
-	var king = selected_piece
 	var king_tile = selected_piece_tile
 	
 	var corner_tiles = [
@@ -164,11 +265,18 @@ func show_valid_castling_movement():
 			proceed = true
 			for tile_column_position in range(king_tile.board_position.y, tile.board_position.y, step):
 				if board_array[king_tile.board_position.x][tile_column_position] == king_tile:
-					continue
+					if king_tile.tile_state(Flag.is_enabled_func, TileStateFlag.CHECKED):
+						proceed = false
+						break
+					else:
+						continue
 				elif board_array[king_tile.board_position.x][tile_column_position].occupant:
 					proceed = false
 					break
-			
+				elif abs(tile_column_position - king_tile.board_position.y) <= 2 and not _is_move_legal([king_tile,board_array[king_tile.board_position.x][tile_column_position]]):
+					proceed = false
+					break
+				
 			var castling_tile = null
 			
 			if proceed and tile.board_position > king_tile.board_position:
@@ -183,22 +291,44 @@ func show_valid_castling_movement():
 
 func perform_castling_move(castling_tile: Node3D):
 	if castling_tile.board_position.y > (BOARD_WIDTH/2) - 1:
-		move_piece_to_tile(board_array[castling_tile.board_position.x][BOARD_WIDTH-1].occupant, board_array[castling_tile.board_position.x][castling_tile.board_position.y-1])
+		var castling_rook = board_array[castling_tile.board_position.x][BOARD_WIDTH-1].occupant
+		var castling_rook_destination = board_array[castling_tile.board_position.x][castling_tile.board_position.y-1]
+		move_piece_to_tile(castling_rook, castling_rook_destination)
 	elif castling_tile.board_position.y < (BOARD_WIDTH/2) - 1:
-		move_piece_to_tile(	board_array[castling_tile.board_position.x][0].occupant, board_array[castling_tile.board_position.x][castling_tile.board_position.y+1])
+		var castling_rook = board_array[castling_tile.board_position.x][0].occupant
+		var castling_rook_destination = board_array[castling_tile.board_position.x][castling_tile.board_position.y+1]
+		move_piece_to_tile(castling_rook, castling_rook_destination)
 
-		
+				
+func detect_check():
+	var player_king = _get_king_of(current_player_turn)
+	var player_king_tile = _get_tile_from_piece(player_king)
+	
+	var opponent_moves = _generate_all_moves(_get_opponent_of(current_player_turn))
+	
+	for move in opponent_moves:
+		if move[1].occupant and move[1].occupant.is_in_group("King") and move[1].occupant.is_in_group(player_groups[current_player_turn]):
+			player_king_tile._set_check()
+			break
+	
+func clear_check():
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		if tile.tile_state(Flag.is_enabled_func, TileStateFlag.CHECKED):
+			tile._unset_check()
+	
 func show_valid_piece_movement():
 	var moveset = MoveRule.new(ActionType.BRANCH, PurposeType.STANDARD_MOVEMENT,0,0,selected_piece.move_rules).new_duplicate()
-	var current_tile_ptr = selected_piece_tile
 	
 	if moveset.distance == 0 and moveset.action_flag_is_enabled(ActionType.BRANCH):
-		resolve_branching_movement(moveset, current_tile_ptr)
+		resolve_branching_movement(selected_piece, moveset, selected_piece_tile)
 		
 		
-func resolve_branching_movement(moveset: MoveRule, origin_tile: Node3D):
+func resolve_branching_movement(active_piece:Piece, moveset: MoveRule, origin_tile: Node3D):
+	var movements = []
+	
 	for branch in moveset.branches:
 		var current_tile_ptr = origin_tile
+		
 		branch.purpose = moveset.purpose
 		while branch.distance > 0:
 			if current_tile_ptr == null:
@@ -212,42 +342,85 @@ func resolve_branching_movement(moveset: MoveRule, origin_tile: Node3D):
 			else:
 				current_tile_ptr = board_array[current_tile_ptr.board_position.x + neighboring_tiles[branch.direction].x][current_tile_ptr.board_position.y + neighboring_tiles[branch.direction].y]
 			
-			if current_tile_ptr:
-				if current_tile_ptr.occupant:
-					if selected_piece.player != current_tile_ptr.occupant.player:
+			if active_piece.is_in_group("Knight"):
+				pass
+			
+			if current_tile_ptr: # current_tile_ptr exists
+				if current_tile_ptr.occupant: # current_tile_ptr is occupied
+					if active_piece.player != current_tile_ptr.occupant.player: # current_tile_ptr is occupied by opponent piece
 						if branch.action_flag_is_enabled(ActionType.THREATEN):
-							current_tile_ptr._threaten()
-							break
-					if selected_piece != current_tile_ptr.occupant:
+							#region Tile can be Threatened
+							if moveset.purpose == PurposeType.STANDARD_MOVEMENT:
+								current_tile_ptr._threaten()
+								break
+							elif moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
+								movements.append([_get_tile_from_piece(active_piece),current_tile_ptr])
+								break				
+							#endregion
+					if active_piece != current_tile_ptr.occupant: # current_tile_ptr not is occupied by active piece
 						if not branch.action_flag_is_enabled(ActionType.JUMP):
-							break 
-				elif current_tile_ptr.occupant == null:
+							#region Tile is Blocked
+							if moveset.purpose == PurposeType.STANDARD_MOVEMENT:
+								break 
+							elif moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
+								break
+							#endregion
+				elif current_tile_ptr.occupant == null: # current_tile_ptr is not occupied
 					if current_tile_ptr == en_passant_tile:
-						if selected_piece.player != en_passant_piece.player:
-							if branch.action_flag_is_enabled(ActionType.THREATEN):
-								en_passant_tile._threaten()
-								en_passant_piece._threaten()
+						#region En Passant
+						if moveset.purpose == PurposeType.STANDARD_MOVEMENT:
+							if active_piece.player != en_passant_piece.player:
+								if branch.action_flag_is_enabled(ActionType.THREATEN):
+									en_passant_tile._threaten()
+									en_passant_piece._threaten()
+						elif moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
+							movements.append([_get_tile_from_piece(active_piece),current_tile_ptr])
+						#endregion
 					elif branch.action_flag_is_enabled(ActionType.MOVE):
-						current_tile_ptr.tile_state(Flag.set_func, TileStateFlag.MOVEMENT)
+						#region Tile is empty
+						if moveset.purpose == PurposeType.STANDARD_MOVEMENT:
+							var legal:bool = false
+							for move in legal_moves:
+								if move == [_get_tile_from_piece(active_piece), current_tile_ptr]:
+									legal = true
+							if legal:
+								current_tile_ptr.tile_state(Flag.set_func, TileStateFlag.MOVEMENT)
+							else:
+								current_tile_ptr.tile_state(Flag.set_func, TileStateFlag.CHECKED_MOVEMENT)
+							
+						elif moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
+							movements.append([_get_tile_from_piece(active_piece),current_tile_ptr])
+						#endregion
 
 				branch.distance -= 1
-
-			#if selected_piece and selected_piece.is_in_group("King") and current_tile_ptr._checked_by.is_empty():
-				#current_tile_ptr.tile_state(Flag.set_func, TileStateFlag.THREATENED)
 			
-		if moveset.distance == 0 and moveset.action_flag_is_enabled(ActionType.BRANCH):
-			resolve_branching_movement(branch,current_tile_ptr)
-		else:
-			return
-
+		if branch.distance == 0 and branch.action_flag_is_enabled(ActionType.BRANCH):
+			if moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
+				movements.append_array(resolve_branching_movement(active_piece, branch, current_tile_ptr))
+			elif moveset.purpose == PurposeType.STANDARD_MOVEMENT:
+				resolve_branching_movement(active_piece, branch, current_tile_ptr)
+	
+	if moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
+		return movements
 
 func capture_piece(piece):
 	piece.translate(Vector3(0,-5,0))
 	piece.reparent(%Captured)
 	piece._captured()
 	piece_capture_audio.play()
-		
+
+
 func move_piece_to_tile(piece: Node3D, tile: Node3D):
+	clear_check()
+	
+	#if piece.is_in_group("Pawn"):
+		#if piece.is_in_group("Player_One") and tile.board_postion.y == BOARD_LENGTH-1:
+			#piece.promote()
+			#piece.remove_from_group("Pawn")
+			#
+		#if piece.is_in_group("Player_Two") and tile.board_postion.y == 0:
+			#piece.remove_from_group("Pawn")
+	
 	selected_piece_tile._unselect()
 	clear_movement()
 	selected_piece_tile.occupant = null
@@ -265,36 +438,35 @@ func move_piece_to_tile(piece: Node3D, tile: Node3D):
 		piece.moved()
 	if selected_piece == piece:
 		selected_piece = null
+
 	
 func clear_movement():
-	for row in board_array:
-		for tile in row:
-			tile.tile_state(Flag.unset_func, TileStateFlag.MOVEMENT)
-			tile._unthreaten()
-			tile._hide_castling()
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		tile.tile_state(Flag.unset_func, TileStateFlag.MOVEMENT)
+		tile.tile_state(Flag.unset_func, TileStateFlag.CHECKED_MOVEMENT)
+		tile._unthreaten()
+		tile._hide_castling()
 	
-	
-	
+		
 ## Sets up the next turn
 func _next_turn() -> void:
-	# Discover if king is still in check
-	#for piece in get_tree().get_nodes_in_group(player_groups[(current_player_turn+1)%2]):
-		#piece.get_parent().discover_checks()
-	#
-	## Clear previous checks
-	#get_tree().call_group("Tile","_clear_checks")
-	#
-	## Discover which pieces check which tiles
-	#for piece in get_tree().get_nodes_in_group(player_groups[current_player_turn]):
-		#piece.get_parent().discover_checks()
+	
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		piece_location[tile.board_position.x][tile.board_position.y] = tile.occupant
 	
 	# increments the turn number
 	turn_num += 1
 	previous_player_turn = current_player_turn
-	current_player_turn = ((current_player_turn + 1) % 2 ) as Player
+	current_player_turn = _get_opponent_of(previous_player_turn)
 	
 	if current_player_turn == en_passant_player:
 		_clear_en_passant()
+	
+	legal_moves = _generate_legal_moves()
+	if legal_moves.is_empty():
+		pass # Checkmate
+	else:
+		detect_check()
 
 	next_turn.emit()
 
@@ -309,28 +481,7 @@ func _next_turn() -> void:
 	#
 	#if modifier_order.size() > 0:
 		#proceed = _apply_modifiers()
-	#
-	#if proceed:
-		#if _moveset.distance > 0:
-			#_moveset.distance -= 1
-		##DETERMINE TILE STATE FROM MOVES	
-		#if _moveset.purpose == PurposeType.CHECK_DETECTING:
-			#proceed = _perform_check_detection()
-			#
-		#else:
-			#proceed = _perform_show_movement()
-			#
-	##SEND MOVES TO NEIGHBORING TILES
-	#if proceed:
-		#if _moveset.distance == 0 and _moveset.action_flag_is_enabled(ActionType.BRANCH):
-			#for branching_move in _moveset.branches:
-				#branching_move.purpose = _moveset.purpose
-				#if neighboring_tiles[branching_move.direction]:
-					#_connect_to_neighboring_tile(branching_move, branching_move.direction, castling_rook)
-		#elif _moveset.distance > 0:
-			#_connect_to_neighboring_tile(_moveset, _moveset.direction, castling_rook)
-#
-#
+
 #func _apply_modifiers():
 	#var slide_direction: Direction = _moveset.direction
 #
@@ -363,36 +514,19 @@ func _next_turn() -> void:
 			#TileModifierFlag.PROPERTY_PRISM:
 				#pass
 	#return true
-#
-#
-#func _perform_check_detection():
-	#if _moveset.action_flag_is_enabled(ActionType.THREATEN):
-		#_checked_by.append(_moving_piece)
-		#
-		#if _moving_piece.is_opponent_to(occupant):	
-			#if occupant and not occupant.is_in_group("King"): 
-				#return false
-			#if occupant.piece_state(Flag.is_enabled_func, PieceStateFlag.CHECKED):
-				#print("END GAME")
-			#tile_state(Flag.set_func, TileStateFlag.CHECKED)
-			#occupant.piece_state(Flag.set_func, PieceStateFlag.CHECKED)
-			#return false
-	#return true
 
-func _on_tile_selected(tile: Node3D) -> void:
-	
-	if selected_piece.is_in_group("Pawn"):
-		if selected_piece.is_in_group("Player_One") and not tile.neighboring_tiles[Direction.SOUTH]:
-			selected_piece.remove_from_group("Pawn")
-			promotion_requested.emit(selected_piece)
-			
-		if selected_piece.is_in_group("Player_Two") and not tile.neighboring_tiles[Direction.NORTH]:
-			selected_piece.remove_from_group("Pawn")
-			promotion_requested.emit(selected_piece)
+
+
+
+
+
+
+
+
+
 		
 func change_piece_resources(old_piece: Node3D, new_piece: PieceType):
 	old_piece.find_child("Piece_Mesh").mesh = PIECE_MESH[new_piece]
-	old_piece.find_child("Outline").mesh = PIECE_MESH[new_piece]
 	old_piece.set_script(PIECE_SCRIPT[new_piece])
 
 func promote(piece:Piece, promotion: PawnPromotion):

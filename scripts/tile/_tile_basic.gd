@@ -2,13 +2,11 @@ extends GameNode3D
 
 signal clicked(tile:Node3D)
 
-signal move_processed(piece: Piece, move: MoveRule, castling_rook: Piece)
-
 
 @export var board_position: Vector2i
 
 
-@export var occupant: Piece = null:
+var occupant: Piece:
 	set(piece):		
 		if occupant:
 			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
@@ -22,11 +20,6 @@ signal move_processed(piece: Piece, move: MoveRule, castling_rook: Piece)
 	set(new_modifier_order):
 		modifier_order = new_modifier_order
 		$Tile_Object/Tile_Modifiers.modifiers = modifier_order
-
-var _checked_by: Array[Piece] = []
-
-
-var _moveset: MoveRule
 
 
 var neighboring_tiles: Dictionary[Direction, Node3D] = {
@@ -46,8 +39,6 @@ func _on_ready() -> void:
 		0: $Tile_Object.tile_material.albedo_color = COLOR_PALETTE.TILE_COLOR_LIGHT
 		1: $Tile_Object.tile_material.albedo_color = COLOR_PALETTE.TILE_COLOR_DARK
 	occupant = find_child("*_P*", false, true)
-	if occupant:
-		occupant.clicked.connect(Callable(self, "_on_occupant_clicked"))
 	$Tile_Object/Tile_Modifiers.modifiers = modifier_order
 
 
@@ -106,21 +97,13 @@ func _hide_castling():
 	if occupant:
 		occupant._hide_castling()
 
-
-
-
-#func _clear_checks() -> void:
-	#_checked_by.clear()
-	#tile_state(Flag.unset_func, TileStateFlag.CHECKED)
-	#if occupant:
-		#occupant.piece_state(Flag.unset_func, PieceStateFlag.CHECKED)
-#
-#
-#func discover_checks() -> void:
-	#if occupant:
-		#_moveset = MoveRule.new(ActionType.BRANCH, PurposeType.CHECK_DETECTING,0,0,occupant.move_rules)
-		#_moveset = _moveset.new_duplicate()
-
+func _set_check():
+	tile_state(Flag.set_func, TileStateFlag.CHECKED)
+	occupant._set_check()
+	
+func _unset_check():
+	tile_state(Flag.unset_func, TileStateFlag.CHECKED)
+	occupant._unset_check()
 
 func tile_state(function:Callable, flag: TileStateFlag):
 	var result = function.call($Tile_Object.state, flag) 

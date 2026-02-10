@@ -65,3 +65,6 @@ func apply_state():
 	if state & 1 << TileStateFlag.SPECIAL:
 		state_material.albedo_color =  COLOR_PALETTE.SPECIAL_TILE_COLOR
 		state_material.emission_enabled = true
+	
+	if state & 1 << TileStateFlag.CHECKED_MOVEMENT:
+		state_material.albedo_color = COLOR_PALETTE.MOVE_CHECKING_TILE_COLOR

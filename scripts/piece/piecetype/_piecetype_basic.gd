@@ -15,6 +15,7 @@ var direction_parity: int
 
 var move_rules: Array[MoveRule] 
 
+var is_mouse_on_piece: bool = false
 
 func _ready() -> void:
 	$Piece_Object.piece_material.albedo_color = COLOR_PALETTE.PLAYER_COLOR[player]
@@ -62,7 +63,32 @@ func _hide_castling():
 	piece_state(Flag.unset_func, PieceStateFlag.SPECIAL)
 
 
+func _set_check():
+	piece_state(Flag.set_func, PieceStateFlag.CHECKED)
+
+func _unset_check():
+	piece_state(Flag.unset_func, PieceStateFlag.CHECKED)
+
+	
 func _captured():
 	visible = false
 	$Piece_Object/Collision.disabled = true
 	piece_state(Flag.set_func, PieceStateFlag.CAPTURED)
+
+func promote():
+	remove_from_group("Pawn")
+	pass
+
+func _on_piece_object_mouse_entered() -> void:
+	is_mouse_on_piece = true
+	
+func _on_piece_object_mouse_exited() -> void:
+	is_mouse_on_piece = false
+	
+func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int) -> void:
+	if (	event is InputEventMouseButton
+			and event.is_pressed()
+			and event.button_index == MOUSE_BUTTON_LEFT
+			and is_mouse_on_piece
+		):
+		clicked.emit(self)

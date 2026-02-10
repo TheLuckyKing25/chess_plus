@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
-[ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/menu/PauseMenu.tscn" id="3_q1h0t"]
 [ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="4_xtwup"]
 [ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="5_hekqh"]
+[ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/GameUI.tscn" id="5_xtwup"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true
@@ -170,13 +170,6 @@ omni_range = 16.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_q1h0t")]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-
 [node name="PromoteMenu" type="Panel" parent="CanvasLayer"]
 visible = false
 anchors_preset = -1
@@ -226,6 +219,8 @@ process_mode = 2
 layout_mode = 2
 theme_type_variation = &"SettingButtons"
 text = "Bishop"
+
+[node name="GameUi" parent="CanvasLayer" instance=ExtResource("5_xtwup")]
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="next_turn" from="Table/Board" to="." method="camera_transition"]
