@@ -93,12 +93,14 @@ offset_bottom = 225.0
 [node name="Resume" type="Button" parent="ScreenController/PauseScreen/BoxContainer/MenuButtonPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Resume Game"
 
 [node name="Settings" type="Button" parent="ScreenController/PauseScreen/BoxContainer/MenuButtonPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Settings
 "
@@ -106,6 +108,7 @@ text = "Settings
 [node name="Exit" type="Button" parent="ScreenController/PauseScreen/BoxContainer/MenuButtonPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Leave Match"
 

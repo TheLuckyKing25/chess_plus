@@ -88,18 +88,21 @@ alignment = 1
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 text = "Start Game"
 
 [node name="Settings" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 text = "Settings"
 
 [node name="Exit" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 30
 text = "Exit
 "
@@ -178,6 +181,7 @@ alignment = 1
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 text = "Singleplayer"
 
 [node name="Host" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]

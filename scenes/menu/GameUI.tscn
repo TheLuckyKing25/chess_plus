@@ -31,6 +31,7 @@ offset_left = 15.0
 offset_top = 15.0
 offset_right = 55.0
 offset_bottom = 56.0
+mouse_default_cursor_shape = 2
 theme_override_styles/focus = SubResource("StyleBoxFlat_buhkf")
 theme_override_styles/hover = SubResource("StyleBoxFlat_buhkf")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_buhkf")
@@ -44,6 +45,7 @@ offset_top = 8.0
 offset_right = 33.0
 offset_bottom = 13.0
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="ColorRect2" type="ColorRect" parent="PauseButton"]
 layout_mode = 0
@@ -52,6 +54,7 @@ offset_top = 18.0
 offset_right = 33.0
 offset_bottom = 23.0
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="ColorRect3" type="ColorRect" parent="PauseButton"]
 layout_mode = 0
@@ -60,6 +63,7 @@ offset_top = 28.0
 offset_right = 33.0
 offset_bottom = 33.0
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [connection signal="leave_button_pressed" from="PauseMenu" to="." method="_on_pause_menu_leave_button_pressed"]
 [connection signal="resume_button_pressed" from="PauseMenu" to="." method="_on_pause_menu_resume_button_pressed"]

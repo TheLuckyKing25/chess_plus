@@ -1,35 +1,39 @@
-[gd_scene load_steps=12 format=3 uid="uid://dedyjixehwbni"]
+[gd_scene load_steps=14 format=3 uid="uid://dedyjixehwbni"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_cerxa"]
-[ext_resource type="PackedScene" uid="uid://bphfylxcjlqhr" path="res://scenes/menu/rule_book_base_icon.tscn" id="2_ntemk"]
-[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://assets/mesh/bishop_mesh.obj" id="3_64o5b"]
+[ext_resource type="Script" uid="uid://0lo8ogxef2my" path="res://scenes/menu/rule_book_menu.gd" id="2_fg3jc"]
 [ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/Pieces.png" id="3_fg3jc"]
+[ext_resource type="ButtonGroup" uid="uid://brunnymjx12aj" path="res://scenes/menu/RulebookPieceButtonGroup.tres" id="3_ntemk"]
+[ext_resource type="ButtonGroup" uid="uid://4yfbyl31jj4m" path="res://scenes/menu/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
+[ext_resource type="ButtonGroup" uid="uid://drxtnr7owjbg1" path="res://scenes/menu/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fg3jc"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_2g7lo"]
 atlas = ExtResource("3_fg3jc")
 region = Rect2(1665, 0, 333, 333)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4kig3"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(999, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hpf6x"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(0, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ntemk"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(666, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2g7lo"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_fg3jc"]
 atlas = ExtResource("3_fg3jc")
 region = Rect2(1332, 0, 333, 333)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1517t"]
 atlas = ExtResource("3_fg3jc")
+region = Rect2(666, 0, 333, 333)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ntemk"]
+atlas = ExtResource("3_fg3jc")
+region = Rect2(999, 0, 333, 333)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4kig3"]
+atlas = ExtResource("3_fg3jc")
+region = Rect2(0, 0, 333, 333)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hpf6x"]
+atlas = ExtResource("3_fg3jc")
 region = Rect2(333, 0, 333, 333)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_64o5b"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_64o5b"]
+atlas = ExtResource("3_fg3jc")
+region = Rect2(666, 0, 333, 333)
 
 [node name="RuleBook" type="Control"]
 layout_mode = 3
@@ -40,7 +44,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_cerxa")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="RuleBookControl" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_fg3jc")
+tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,33 +66,35 @@ theme_override_constants/margin_top = 75
 theme_override_constants/margin_right = 125
 theme_override_constants/margin_bottom = 75
 
-[node name="BoxContainer" type="BoxContainer" parent="MarginContainer"]
+[node name="BoxContainer" type="BoxContainer" parent="RuleBookControl/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 vertical = true
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/BoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="TabBar" type="TabBar" parent="MarginContainer/BoxContainer/MarginContainer"]
+[node name="TabBar" type="TabBar" parent="RuleBookControl/MarginContainer/BoxContainer/MarginContainer"]
 z_index = 1
 layout_mode = 2
-current_tab = 0
+mouse_default_cursor_shape = 2
+current_tab = 1
 scrolling_enabled = false
-tab_count = 2
+tab_count = 3
 tab_0/title = "Pieces"
-tab_1/title = "Tiles"
+tab_1/title = "Piece Modifiers"
+tab_2/title = "Tile Modifiers"
 
-[node name="BackgroundPanel" type="Panel" parent="MarginContainer/BoxContainer"]
+[node name="BackgroundPanel" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_type_variation = &"BackgroundPanel"
 
-[node name="TabContainer" type="TabContainer" parent="MarginContainer/BoxContainer/BackgroundPanel"]
+[node name="LeftPageTabContainer" type="TabContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -86,110 +102,293 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 
-[node name="BoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer"]
+[node name="Pieces" type="BoxContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer"]
+visible = false
 layout_mode = 2
 alignment = 1
 metadata/_tab_index = 0
 
-[node name="Left Page" type="Panel" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer"]
+[node name="Left Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces"]
 z_index = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page"]
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 20
+theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
+theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 20
 
-[node name="BoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer"]
 layout_mode = 2
-alignment = 1
+size_flags_horizontal = 3
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 0
 columns = 4
 
-[node name="King2" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer/GridContainer" instance=ExtResource("2_ntemk")]
+[node name="Pawn" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-label_name = "Pawn"
-icon_image = SubResource("AtlasTexture_fg3jc")
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Pawn
+"
+icon = SubResource("AtlasTexture_2g7lo")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="Knight" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer/GridContainer" instance=ExtResource("2_ntemk")]
+[node name="Rook" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-label_name = "Knight"
-icon_image = SubResource("AtlasTexture_4kig3")
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Rook
+"
+icon = SubResource("AtlasTexture_fg3jc")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="King" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer/GridContainer" instance=ExtResource("2_ntemk")]
+[node name="Bishop" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-label_name = "King"
-icon_image = SubResource("AtlasTexture_hpf6x")
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Bishop"
+icon = SubResource("AtlasTexture_1517t")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="Bishop" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer/GridContainer" instance=ExtResource("2_ntemk")]
+[node name="Knight" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-label_name = "Bishop"
-icon_image = SubResource("AtlasTexture_ntemk")
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Knight
+"
+icon = SubResource("AtlasTexture_ntemk")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="Rook" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer/GridContainer" instance=ExtResource("2_ntemk")]
+[node name="King" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-label_name = "Rook"
-icon_image = SubResource("AtlasTexture_2g7lo")
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "King"
+icon = SubResource("AtlasTexture_4kig3")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="Queen" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer/Left Page/MarginContainer/BoxContainer/GridContainer" instance=ExtResource("2_ntemk")]
+[node name="Queen" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-label_name = "Queen"
-icon_image = SubResource("AtlasTexture_1517t")
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Queen"
+icon = SubResource("AtlasTexture_hpf6x")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="Right Page" type="Panel" parent="MarginContainer/BoxContainer/BackgroundPanel/TabContainer/BoxContainer"]
+[node name="Right Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces"]
 z_index = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SubViewport" type="SubViewport" parent="."]
-transparent_bg = true
+[node name="Piece Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer"]
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport"]
-transform = Transform3D(0.844075, 0, 0.536225, 0, 1, 0, -0.536225, 0, 0.844075, 0, 0, 0)
-mesh = ExtResource("3_64o5b")
-surface_material_override/0 = SubResource("StandardMaterial3D_64o5b")
+[node name="Left Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="Twist Pivot P2" type="Node3D" parent="SubViewport"]
-unique_name_in_owner = true
-transform = Transform3D(-0.6958, 0, -0.718236, 0, 1, 0, 0.718236, 0, -0.6958, 0, 3.30732, 0)
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
 
-[node name="Pitch Pivot P2" type="Node3D" parent="SubViewport/Twist Pivot P2"]
-unique_name_in_owner = true
-transform = Transform3D(-1, 3.34553e-08, -8.07682e-08, 0, 0.92388, 0.382684, 8.74228e-08, 0.382684, -0.92388, 0, 0, 0)
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="P2_Camera" type="Camera3D" parent="SubViewport/Twist Pivot P2/Pitch Pivot P2"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 21.485)
-cull_mask = 1048573
-fov = 20.0
-size = 6.475
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+columns = 4
 
-[node name="OmniLight3D" type="OmniLight3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.11181, 15.313, 6.26651)
-light_energy = 5.0
-omni_range = 32.9556
+[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_ntemk")
+text = "Piece
+Modifier
+Placeholder
+Text"
+icon = SubResource("AtlasTexture_64o5b")
+text_overrun_behavior = 1
+autowrap_mode = 2
+clip_text = true
+icon_alignment = 1
+expand_icon = true
 
-[node name="OmniLight3D2" type="OmniLight3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.99086, 4.5514, -9.08776)
-light_energy = 5.0
-omni_range = 35.2379
+[node name="Right Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="OmniLight3D3" type="OmniLight3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.70064, 10.3219, -0.0400915)
-light_energy = 5.0
-omni_range = 32.9556
+[node name="Tile Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer"]
+visible = false
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 2
+
+[node name="Left Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer"]
+custom_minimum_size = Vector2(412, 204)
+layout_mode = 2
+size_flags_vertical = 0
+columns = 4
+
+[node name="Cog" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Cog
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Conveyer" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Conveyer
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Sticky" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Sticky
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Icy" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Icey
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+disabled = true
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Tile
+Modifier
+Placeholder
+Text"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Right Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers"]
+z_index = 2
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="tab_changed" from="RuleBookControl/MarginContainer/BoxContainer/MarginContainer/TabBar" to="RuleBookControl" method="_on_tab_bar_tab_changed"]
