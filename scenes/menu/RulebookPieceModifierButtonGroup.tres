@@ -1,4 +1,4 @@
-[gd_resource type="ButtonGroup" format=3 uid="uid://4yfbyl31jj4m"]
+[gd_resource type="ButtonGroup" load_steps=0 format=3 uid="uid://4yfbyl31jj4m"]
 
 [resource]
 resource_name = "RulebookPieceModifierButtonGroup"

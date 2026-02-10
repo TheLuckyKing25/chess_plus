@@ -1,11 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://dedyjixehwbni"]
+[gd_scene load_steps=14 format=3 uid="uid://c0md30urlwow5"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_cerxa"]
-[ext_resource type="Script" uid="uid://0lo8ogxef2my" path="res://scenes/menu/rule_book_menu.gd" id="2_fg3jc"]
+[ext_resource type="Script" path="res://scenes/menu/rule_book_menu.gd" id="2_fg3jc"]
 [ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/Pieces.png" id="3_fg3jc"]
-[ext_resource type="ButtonGroup" uid="uid://brunnymjx12aj" path="res://scenes/menu/RulebookPieceButtonGroup.tres" id="3_ntemk"]
-[ext_resource type="ButtonGroup" uid="uid://4yfbyl31jj4m" path="res://scenes/menu/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
-[ext_resource type="ButtonGroup" uid="uid://drxtnr7owjbg1" path="res://scenes/menu/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
+[ext_resource type="ButtonGroup" path="res://scenes/menu/RulebookPieceButtonGroup.tres" id="3_ntemk"]
+[ext_resource type="ButtonGroup" path="res://scenes/menu/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
+[ext_resource type="ButtonGroup" path="res://scenes/menu/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2g7lo"]
 atlas = ExtResource("3_fg3jc")
