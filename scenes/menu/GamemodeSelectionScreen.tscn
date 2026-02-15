@@ -1,0 +1,340 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmtcaraovyhdt"]
+
+[ext_resource type="Script" uid="uid://svm21ghbijp" path="res://scenes/menu/gamemode_selection_screen.gd" id="1_t3451"]
+
+[node name="GamemodeSelection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_t3451")
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+border_width = 3.0
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical = true
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+
+[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"BackgroundPanel"
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="Search" type="Panel" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/BoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/BoxContainer/Search"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="LineEdit" type="LineEdit" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/BoxContainer/Search/MarginContainer"]
+layout_mode = 2
+placeholder_text = "Search"
+emoji_menu_enabled = false
+
+[node name="GamemodeList" type="Panel" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/BoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/BoxContainer/GamemodeList"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ItemList" type="ItemList" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/BoxContainer/GamemodeList/MarginContainer"]
+layout_mode = 2
+item_count = 2
+item_0/text = "Custom Match"
+item_1/text = "Standard Chess"
+
+[node name="TabContainer" type="TabContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_alignment = 1
+current_tab = 0
+
+[node name="Game Settings" type="Panel" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Board Rank Number" type="HBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="Label" type="Label" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer/Board Rank Number"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Ranks (Rows)"
+
+[node name="SpinBox" type="SpinBox" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer/Board Rank Number"]
+layout_mode = 2
+min_value = 1.0
+max_value = 16.0
+value = 8.0
+rounded = true
+alignment = 1
+
+[node name="Board File Number" type="HBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="Label" type="Label" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer/Board File Number"]
+layout_mode = 2
+text = "Files (Columns)"
+
+[node name="SpinBox" type="SpinBox" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer/Board File Number"]
+layout_mode = 2
+min_value = 1.0
+max_value = 16.0
+value = 8.0
+rounded = true
+alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Castling" type="CheckBox" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer2"]
+layout_mode = 2
+button_pressed = true
+text = "Allow Castling"
+
+[node name="En Passant" type="CheckBox" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer2"]
+layout_mode = 2
+button_pressed = true
+text = "Allow En Passant
+"
+
+[node name="Promotion" type="CheckBox" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer/VBoxContainer2"]
+layout_mode = 2
+button_pressed = true
+text = "Allow Promotion
+"
+
+[node name="VSeparator2" type="VSeparator" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Game Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Tile Settings" type="Panel" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Tile Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Tile Settings/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Tile Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Tile Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Tile Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Piece Settings" type="Panel" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Piece Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Piece Settings/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Piece Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Piece Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ReferenceRect/BoxContainer/MarginContainer/Panel/BoxContainer/TabContainer/Piece Settings/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScreenNavigationMenu" type="MarginContainer" parent="ReferenceRect/BoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 20
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu"]
+layout_mode = 2
+theme_override_constants/separation = 775
+alignment = 1
+
+[node name="BackBackgroundPanel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BackButton" type="Button" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"SettingButtons"
+text = "Back"
+
+[node name="ContinueBackgroundPanel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ContinueButton" type="Button" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"SettingButtons"
+text = "Continue"
+
+[connection signal="pressed" from="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

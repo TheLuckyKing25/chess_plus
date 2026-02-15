@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://vqvs470xc1lw"]
+[gd_scene load_steps=15 format=3 uid="uid://vqvs470xc1lw"]
 
 [ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/game_board.gd" id="1_hljw5"]
 [ext_resource type="PackedScene" uid="uid://bgn763vrxmmcu" path="res://scenes/Tile.tscn" id="1_nd4as"]
@@ -8,9 +8,13 @@
 [ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/piece/Knight.tscn" id="5_vewne"]
 [ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/piece/Queen.tscn" id="6_6pldg"]
 [ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/piece/King.tscn" id="6_grdf5"]
+[ext_resource type="Script" uid="uid://bk6erub2o2qnt" path="res://scenes/board_screen_controller.gd" id="9_338j4"]
+[ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/GamemodeSelectionScreen.tscn" id="9_gc1oq"]
+[ext_resource type="PackedScene" uid="uid://111w7dffrqkh" path="res://scenes/menu/TileModifierScreen.tscn" id="9_wxh2q"]
+[ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/GameOverlay.tscn" id="10_w8n1y"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_hljw5"]
-size = Vector3(8.5, 0.1, 8.5)
+size = Vector3(9, 0.2, 9)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
@@ -377,4 +381,34 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -0.0987513, 3.5)
 mesh = SubResource("BoxMesh_hljw5")
 surface_material_override/0 = SubResource("StandardMaterial3D_wxh2q")
 
+[node name="TileModifierScreenCanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScreenController" type="Control" parent="TileModifierScreenCanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("9_338j4")
+
+[node name="GamemodeSelection" parent="TileModifierScreenCanvasLayer/ScreenController" instance=ExtResource("9_gc1oq")]
+layout_mode = 1
+
+[node name="TileModifierScreen" parent="TileModifierScreenCanvasLayer/ScreenController" instance=ExtResource("9_wxh2q")]
+layout_mode = 1
+offset_left = 1162.0
+offset_right = 1162.0
+
+[node name="GameOverlay" parent="TileModifierScreenCanvasLayer/ScreenController" instance=ExtResource("10_w8n1y")]
+layout_mode = 1
+offset_left = 2324.0
+offset_right = 2324.0
+
 [connection signal="ready" from="." to="." method="_on_ready"]
+[connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_gamemode_selection_back_button_pressed"]
+[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_gamemode_selection_continue_button_pressed"]
+[connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_tile_modifier_screen_back_button_pressed"]
+[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="." method="_on_tile_modifier_screen_continue_button_pressed"]
+[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_tile_modifier_screen_continue_button_pressed"]

@@ -84,26 +84,41 @@ layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="Start" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+[node name="NewMatchButton" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
-text = "Start Game"
+text = "New Match"
 
-[node name="Settings" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+[node name="JoinMatchButton" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+disabled = true
+text = "Join Match"
+
+[node name="RulebookButton" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+disabled = true
+text = "Rulebook"
+
+[node name="SettingsButton" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Settings"
 
-[node name="Exit" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="ScreenController/TitleScreen/BoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
-theme_override_font_sizes/font_size = 30
 text = "Exit
 "
 
@@ -129,6 +144,7 @@ z_index = 1
 layout_mode = 1
 
 [node name="MatchSelectionScreen" type="ReferenceRect" parent="ScreenController"]
+visible = false
 z_index = 1
 layout_mode = 1
 anchors_preset = 15
@@ -178,13 +194,14 @@ size_flags_horizontal = 4
 alignment = 1
 
 [node name="Singleplayer" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Singleplayer"
 
 [node name="Host" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_vertical = 3
 disabled = true
@@ -192,14 +209,17 @@ text = "Host Match
 "
 
 [node name="Join" type="Button" parent="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 size_flags_vertical = 3
 disabled = true
 text = "Join Match
 "
 
-[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/NewMatchButton" to="." method="_on_new_match_button_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/JoinMatchButton" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/RulebookButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_pressed"]
 [connection signal="ready" from="ScreenController/MatchSelectionScreen" to="." method="_on_ready"]
 [connection signal="pressed" from="ScreenController/MatchSelectionScreen/BoxContainer/VBoxContainer/Singleplayer" to="." method="_on_singleplayer_pressed"]

@@ -18,6 +18,9 @@ func _on_options_pressed():
 func _on_exit_pressed():
 	leave_button_pressed.emit()
 
+func _input(event) -> void:
+	if event.is_action_pressed("ui_cancel") and get_tree().paused:
+		_on_resume_pressed()
 
 func _on_settings_back_button_pressed() -> void:
 	$ScreenController.position = Vector2(0,0)

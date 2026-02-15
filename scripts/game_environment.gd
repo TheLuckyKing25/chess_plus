@@ -39,7 +39,16 @@ func _process(delta: float):
 						camera_rotation = 0
 						proceed = false
 			
-
+func _on_board_game_state_changed(game_state: int) -> void:
+	match game_state:
+		GameState.BoardCustomization:
+			$OverheadCamera.current = true
+		GameState.Gameplay:
+			match board.current_player_turn:
+				Player.PLAYER_ONE:
+					player1_camera.current = true
+				Player.PLAYER_TWO:
+					player2_camera.current = true
 
 
 

@@ -1,5 +1,0 @@
-[gd_resource type="ButtonGroup" load_steps=0 format=3 uid="uid://4yfbyl31jj4m"]
-
-[resource]
-resource_name = "RulebookPieceModifierButtonGroup"
-allow_unpress = true

@@ -4,6 +4,11 @@ extends Node3D
 const BOARD_LENGTH = 8
 const BOARD_WIDTH = 8
 
+enum GameState {
+	BoardCustomization,
+	Gameplay
+}
+
 #region File Paths
 const PIECE_SCRIPT: Dictionary[int, Resource] = {
 	PieceType.PAWN: preload("res://scripts/piece/piecetype/pawn.gd"),

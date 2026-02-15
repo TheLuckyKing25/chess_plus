@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bgn763vrxmmcu"]
+[gd_scene load_steps=16 format=3 uid="uid://bgn763vrxmmcu"]
 
 [ext_resource type="Script" uid="uid://r66mv5p80r5" path="res://scripts/tile/tile_object.gd" id="1_2sjy5"]
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile/_tile_basic.gd" id="1_vhibn"]
@@ -49,8 +49,13 @@ resource_local_to_scene = true
 next_pass = SubResource("StandardMaterial3D_r3gf4")
 emission = Color(1, 1, 1, 1)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_rvdvl"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_esqu7"]
 viewport_path = NodePath("Tile_Object/Tile_Modifiers/Modifier_Grid")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1g878"]
+resource_local_to_scene = true
+atlas = SubResource("ViewportTexture_esqu7")
+region = Rect2(0, 0, 150, 150)
 
 [node name="Tile" type="Node3D" groups=["Tile"]]
 script = ExtResource("1_vhibn")
@@ -69,7 +74,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_vhibn")
 [node name="Tile_Modifiers" type="Sprite3D" parent="Tile_Object"]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
 axis = 1
-texture = SubResource("ViewportTexture_rvdvl")
+texture = SubResource("AtlasTexture_1g878")
 region_enabled = true
 region_rect = Rect2(0, 0, 512, 512)
 script = ExtResource("3_r3gf4")

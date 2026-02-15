@@ -1,0 +1,6 @@
+[gd_resource type="ButtonGroup" format=3 uid="uid://brunnymjx12aj"]
+
+[resource]
+resource_local_to_scene = false
+resource_name = "RulebookPieceButtonGroup"
+allow_unpress = true

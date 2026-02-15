@@ -1,11 +1,11 @@
 [gd_scene load_steps=14 format=3 uid="uid://c0md30urlwow5"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_cerxa"]
-[ext_resource type="Script" path="res://scenes/menu/rule_book_menu.gd" id="2_fg3jc"]
+[ext_resource type="Script" uid="uid://0lo8ogxef2my" path="res://scripts/menu/rule_book_menu.gd" id="2_fg3jc"]
 [ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/Pieces.png" id="3_fg3jc"]
-[ext_resource type="ButtonGroup" path="res://scenes/menu/RulebookPieceButtonGroup.tres" id="3_ntemk"]
-[ext_resource type="ButtonGroup" path="res://scenes/menu/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
-[ext_resource type="ButtonGroup" path="res://scenes/menu/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
+[ext_resource type="ButtonGroup" uid="uid://brunnymjx12aj" path="res://assets/RulebookPieceButtonGroup.tres" id="3_ntemk"]
+[ext_resource type="ButtonGroup" uid="uid://4yfbyl31jj4m" path="res://assets/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
+[ext_resource type="ButtonGroup" uid="uid://drxtnr7owjbg1" path="res://assets/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2g7lo"]
 atlas = ExtResource("3_fg3jc")
@@ -42,6 +42,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
 theme = ExtResource("1_cerxa")
 
 [node name="RuleBookControl" type="Control" parent="."]
@@ -51,8 +52,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("2_fg3jc")
-tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="RuleBookControl"]
 layout_mode = 1
@@ -66,79 +67,91 @@ theme_override_constants/margin_top = 75
 theme_override_constants/margin_right = 125
 theme_override_constants/margin_bottom = 75
 
-[node name="BoxContainer" type="BoxContainer" parent="RuleBookControl/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-alignment = 1
-vertical = true
-
-[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
-
-[node name="TabBar" type="TabBar" parent="RuleBookControl/MarginContainer/BoxContainer/MarginContainer"]
+[node name="TabContainer" type="TabContainer" parent="RuleBookControl/MarginContainer"]
 z_index = 1
-layout_mode = 2
-mouse_default_cursor_shape = 2
-current_tab = 1
-scrolling_enabled = false
-tab_count = 3
-tab_0/title = "Pieces"
-tab_1/title = "Piece Modifiers"
-tab_2/title = "Tile Modifiers"
-
-[node name="BackgroundPanel" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_type_variation = &"BackgroundPanel"
-
-[node name="LeftPageTabContainer" type="TabContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
+theme_type_variation = &"RuleBookTabs"
 current_tab = 1
-tabs_visible = false
 
-[node name="Pieces" type="BoxContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer"]
+[node name="Chess Terminology" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
 alignment = 1
 metadata/_tab_index = 0
 
-[node name="Left Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces"]
-z_index = 2
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology"]
+z_index = -1
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page"]
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology/Background"]
+z_index = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology/Background/Left Page"]
+layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 20
 
-[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer"]
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Pieces" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 1
+
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Pieces"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background"]
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer"]
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 0
 columns = 4
 
-[node name="Pawn" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Pawn" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -152,7 +165,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Rook" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Rook" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -166,7 +179,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Bishop" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Bishop" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -179,7 +192,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Knight" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Knight" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -193,7 +206,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="King" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="King" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -206,7 +219,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Queen" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Queen" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -219,44 +232,52 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Right Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Pieces"]
-z_index = 2
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
+mouse_filter = 1
 
-[node name="Piece Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer"]
+[node name="Piece Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
+visible = false
 layout_mode = 2
 alignment = 1
-metadata/_tab_index = 1
+metadata/_tab_index = 2
 
-[node name="Left Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers"]
-z_index = 2
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers"]
+z_index = -1
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page"]
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background"]
+z_index = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page"]
+layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 20
 
-[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page/MarginContainer/ScrollContainer"]
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 0
 columns = 4
 
-[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -275,45 +296,52 @@ clip_text = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="Right Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Piece Modifiers"]
-z_index = 2
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
 
-[node name="Tile Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer"]
+[node name="Tile Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
 alignment = 1
-metadata/_tab_index = 2
+metadata/_tab_index = 3
 
-[node name="Left Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers"]
-z_index = 2
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers"]
+z_index = -1
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page"]
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background"]
+z_index = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page"]
+layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 20
 
-[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer"]
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer"]
 custom_minimum_size = Vector2(412, 204)
 layout_mode = 2
 size_flags_vertical = 0
 columns = 4
 
-[node name="Cog" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Cog" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -327,7 +355,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Conveyer" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Conveyer" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -341,7 +369,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Sticky" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Sticky" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -355,7 +383,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Icy" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Icy" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -369,7 +397,7 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -386,9 +414,6 @@ autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
 
-[node name="Right Page" type="Panel" parent="RuleBookControl/MarginContainer/BoxContainer/BackgroundPanel/LeftPageTabContainer/Tile Modifiers"]
-z_index = 2
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[connection signal="tab_changed" from="RuleBookControl/MarginContainer/BoxContainer/MarginContainer/TabBar" to="RuleBookControl" method="_on_tab_bar_tab_changed"]
+size_flags_horizontal = 4

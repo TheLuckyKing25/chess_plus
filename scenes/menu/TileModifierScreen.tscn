@@ -1,0 +1,323 @@
+[gd_scene load_steps=4 format=3 uid="uid://111w7dffrqkh"]
+
+[ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="1_kxyir"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_vcbal"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_vcbal"]
+
+[node name="TileModifierScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme = ExtResource("1_vcbal")
+script = ExtResource("1_kxyir")
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+border_width = 3.0
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+vertical = true
+
+[node name="TileModifierMenu" type="MarginContainer" parent="ReferenceRect/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 600
+
+[node name="BackgroundTopPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu"]
+custom_minimum_size = Vector2(0, 475)
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="BoxContainer2" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+
+[node name="Search" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/Search"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="LineEdit" type="LineEdit" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/Search/MarginContainer"]
+layout_mode = 2
+placeholder_text = "Search"
+emoji_menu_enabled = false
+
+[node name="AllTileModifierListPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ItemList" type="ItemList" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer"]
+layout_mode = 2
+item_count = 2
+item_0/text = "Cog"
+item_0/selectable = false
+item_1/text = "Icy"
+item_1/selectable = false
+
+[node name="BoxContainer2" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer"]
+custom_minimum_size = Vector2(325, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+vertical = true
+
+[node name="AppliedTileModifierListPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="GridContainer" type="GridContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+
+[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="BoxContainer2" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 36.0
+grow_horizontal = 2
+theme_override_constants/separation = -2
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2"]
+custom_minimum_size = Vector2(15, 30)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = -2
+alignment = 2
+vertical = true
+
+[node name="MoveUpButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2/BoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(19, 19)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TileModifierSelectedListUpButton"
+icon_alignment = 1
+expand_icon = true
+
+[node name="MoveDownButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2/BoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(19, 19)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TileModifierSelectedListDownButton"
+icon_alignment = 1
+expand_icon = true
+
+[node name="ModifierButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+text = "Cog"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="RemoveButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2"]
+z_index = 1
+custom_minimum_size = Vector2(25, 36)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"TileModifierSelectedListRemoveButton"
+icon_alignment = 1
+
+[node name="BottomPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2"]
+z_index = 1
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Add" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingButtons"
+text = "Add"
+
+[node name="Replace" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingButtons"
+text = "Replace"
+
+[node name="ScreenNavigationMenu" type="MarginContainer" parent="ReferenceRect/BoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 20
+
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu"]
+layout_mode = 2
+theme_override_constants/separation = 775
+alignment = 1
+
+[node name="BackBackgroundPanel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BackButton" type="Button" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"SettingButtons"
+text = "Back"
+
+[node name="ContinueBackgroundPanel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ContinueButton" type="Button" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"SettingButtons"
+text = "Continue"
+
+[connection signal="pressed" from="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer/ContinueButton" to="." method="_on_continue_pressed"]
