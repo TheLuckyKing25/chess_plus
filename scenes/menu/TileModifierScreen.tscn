@@ -1,7 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://111w7dffrqkh"]
+[gd_scene load_steps=6 format=3 uid="uid://111w7dffrqkh"]
 
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="1_kxyir"]
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_vcbal"]
+[ext_resource type="PackedScene" uid="uid://ca80534plviow" path="res://scenes/menu/SelectedTileModifierButton.tscn" id="3_dxaw7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vcbal"]
+bg_color = Color(0.351083, 0.55, 0.209, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.352941, 0.54902, 0.207843, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="ImageTexture" id="ImageTexture_vcbal"]
 
@@ -42,11 +55,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
-theme_override_constants/margin_right = 600
+theme_override_constants/margin_right = 25
 
 [node name="BackgroundTopPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu"]
-custom_minimum_size = Vector2(0, 475)
+custom_minimum_size = Vector2(527, 475)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 3
 theme_type_variation = &"BackgroundPanel"
 
@@ -66,7 +80,7 @@ alignment = 1
 
 [node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 size_flags_vertical = 3
 vertical = true
 
@@ -109,16 +123,77 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="ItemList" type="ItemList" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer"]
+[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer"]
 layout_mode = 2
-item_count = 2
-item_0/text = "Cog"
-item_0/selectable = false
-item_1/text = "Icy"
-item_1/selectable = false
+vertical = true
+
+[node name="Label" type="Label" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+text = "Tile Modifiers"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_vcbal")
+
+[node name="GridContainer" type="GridContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Cog" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Cog"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Icy" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Icey
+"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Sticky" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Sticky
+"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Conveyer" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Conveyer
+"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
 
 [node name="BoxContainer2" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer"]
-custom_minimum_size = Vector2(325, 0)
+custom_minimum_size = Vector2(375, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical = true
@@ -144,69 +219,15 @@ theme_override_constants/margin_bottom = 5
 [node name="GridContainer" type="GridContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
+theme_override_constants/v_separation = 5
 
-[node name="Panel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer"]
-custom_minimum_size = Vector2(0, 36)
+[node name="Cog" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
-[node name="BoxContainer2" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 36.0
-grow_horizontal = 2
-theme_override_constants/separation = -2
-
-[node name="BoxContainer" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2"]
-custom_minimum_size = Vector2(15, 30)
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/separation = -2
-alignment = 2
-vertical = true
-
-[node name="MoveUpButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2/BoxContainer"]
-z_index = 1
-custom_minimum_size = Vector2(19, 19)
-layout_mode = 2
-size_flags_vertical = 3
-mouse_default_cursor_shape = 2
-theme_type_variation = &"TileModifierSelectedListUpButton"
-icon_alignment = 1
-expand_icon = true
-
-[node name="MoveDownButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2/BoxContainer"]
-z_index = 1
-custom_minimum_size = Vector2(19, 19)
-layout_mode = 2
-size_flags_vertical = 3
-mouse_default_cursor_shape = 2
-theme_type_variation = &"TileModifierSelectedListDownButton"
-icon_alignment = 1
-expand_icon = true
-
-[node name="ModifierButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2"]
-custom_minimum_size = Vector2(0, 36)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-theme_type_variation = &"TileModifierSelectedListModifierButton"
-theme_override_font_sizes/font_size = 20
-toggle_mode = true
 text = "Cog"
-icon = SubResource("ImageTexture_vcbal")
-alignment = 0
 
-[node name="RemoveButton" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Panel/BoxContainer2"]
-z_index = 1
-custom_minimum_size = Vector2(25, 36)
+[node name="Icey" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
 layout_mode = 2
-size_flags_vertical = 0
-theme_type_variation = &"TileModifierSelectedListRemoveButton"
-icon_alignment = 1
+text = "Icey"
 
 [node name="BottomPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2"]
 z_index = 1
@@ -240,8 +261,16 @@ text = "Add"
 [node name="Replace" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+tooltip_text = "Replace all modifiers on the selected tiles with the modifiers above"
 theme_type_variation = &"SettingButtons"
 text = "Replace"
+
+[node name="Erase" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Erase All Modifiers from the selected Tiles"
+theme_type_variation = &"SettingButtons"
+text = "Erase"
 
 [node name="ScreenNavigationMenu" type="MarginContainer" parent="ReferenceRect/BoxContainer"]
 layout_mode = 2
@@ -256,7 +285,7 @@ theme_override_constants/separation = 775
 alignment = 1
 
 [node name="BackBackgroundPanel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"BackgroundPanel"
@@ -276,10 +305,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
 [node name="BackButton" type="Button" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer"]
 custom_minimum_size = Vector2(0, 40)
@@ -288,7 +317,7 @@ theme_type_variation = &"SettingButtons"
 text = "Back"
 
 [node name="ContinueBackgroundPanel" type="Panel" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"BackgroundPanel"
@@ -308,10 +337,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
 [node name="ContinueButton" type="Button" parent="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer"]
 custom_minimum_size = Vector2(0, 40)

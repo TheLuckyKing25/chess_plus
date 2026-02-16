@@ -1,0 +1,120 @@
+[gd_scene load_steps=4 format=3 uid="uid://ca80534plviow"]
+
+[ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_3q2uy"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_3q2uy"]
+resource_local_to_scene = false
+resource_name = "AppliedTileModifierListedButtons"
+allow_unpress = true
+
+[sub_resource type="ImageTexture" id="ImageTexture_vcbal"]
+
+[node name="SelectedTileModifierButton" type="PanelContainer"]
+custom_minimum_size = Vector2(200, 36)
+offset_right = 300.0
+offset_bottom = 36.0
+size_flags_horizontal = 3
+theme_type_variation = &"InsetPanelContainer"
+script = ExtResource("1_3q2uy")
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 2
+vertical = true
+
+[node name="ModifierButton" type="Button" parent="BoxContainer"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+button_group = SubResource("ButtonGroup_3q2uy")
+text = "Cog"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="RemoveButton" type="Button" parent="BoxContainer/ModifierButton"]
+z_index = 1
+custom_minimum_size = Vector2(25, 36)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_vertical = 0
+theme_type_variation = &"TileModifierSelectedListRemoveButton"
+icon_alignment = 1
+
+[node name="BoxContainer" type="BoxContainer" parent="BoxContainer/ModifierButton"]
+custom_minimum_size = Vector2(15, 30)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 19.0
+grow_vertical = 2
+size_flags_vertical = 0
+theme_override_constants/separation = -2
+alignment = 2
+vertical = true
+
+[node name="MoveUpButton" type="Button" parent="BoxContainer/ModifierButton/BoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(19, 19)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TileModifierSelectedListUpButton"
+icon_alignment = 1
+expand_icon = true
+
+[node name="MoveDownButton" type="Button" parent="BoxContainer/ModifierButton/BoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(19, 19)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TileModifierSelectedListDownButton"
+icon_alignment = 1
+expand_icon = true
+
+[node name="DropdownOptions" type="MarginContainer" parent="BoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="BoxContainer3" type="BoxContainer" parent="BoxContainer/DropdownOptions"]
+layout_mode = 2
+alignment = 1
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="BoxContainer/DropdownOptions/BoxContainer3"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Label" type="Label" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
+layout_mode = 2
+text = "Rotation Amount"
+
+[node name="Rotation Amount" type="SpinBox" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+tooltip_text = "Determines the amount a Piece's movement is rotated. Positive values are clockwise,  negative values are counter-clockwise."
+min_value = -135.0
+max_value = 135.0
+step = 45.0
+suffix = "Degrees"
+custom_arrow_step = 45.0
+
+[connection signal="toggled" from="BoxContainer/ModifierButton" to="." method="_on_modifier_button_toggled"]
+[connection signal="pressed" from="BoxContainer/ModifierButton/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="pressed" from="BoxContainer/ModifierButton/BoxContainer/MoveUpButton" to="." method="_on_move_up_button_pressed"]
+[connection signal="pressed" from="BoxContainer/ModifierButton/BoxContainer/MoveDownButton" to="." method="_on_move_down_button_pressed"]

@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://d2oersqf5cg6a" path="res://scenes/piece/Knight.tscn" id="5_vewne"]
 [ext_resource type="PackedScene" uid="uid://bpx8asa0jn4b1" path="res://scenes/piece/Queen.tscn" id="6_6pldg"]
 [ext_resource type="PackedScene" uid="uid://d2jy7efa8dtxo" path="res://scenes/piece/King.tscn" id="6_grdf5"]
-[ext_resource type="Script" uid="uid://bk6erub2o2qnt" path="res://scenes/board_screen_controller.gd" id="9_338j4"]
+[ext_resource type="Script" uid="uid://bk6erub2o2qnt" path="res://scripts/menu/board_screen_controller.gd" id="9_338j4"]
 [ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/GamemodeSelectionScreen.tscn" id="9_gc1oq"]
 [ext_resource type="PackedScene" uid="uid://111w7dffrqkh" path="res://scenes/menu/TileModifierScreen.tscn" id="9_wxh2q"]
 [ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/GameOverlay.tscn" id="10_w8n1y"]
