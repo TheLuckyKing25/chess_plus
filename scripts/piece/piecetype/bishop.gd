@@ -1,5 +1,7 @@
-extends Piece
+@icon("res://assets/icons/WhiteBishop.tres")
 
+class_name BishopPiece
+extends Piece
 
 const BISHOP_MOVE_DISTANCE: int = 8
 

@@ -5,7 +5,6 @@ signal clicked(tile:Node3D)
 
 @export var board_position: Vector2i
 
-
 var occupant: Piece:
 	set(piece):		
 		if occupant:

@@ -4,32 +4,14 @@
 [ext_resource type="Script" uid="uid://0lo8ogxef2my" path="res://scripts/menu/rule_book_menu.gd" id="2_fg3jc"]
 [ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/Pieces.png" id="3_fg3jc"]
 [ext_resource type="ButtonGroup" uid="uid://brunnymjx12aj" path="res://assets/RulebookPieceButtonGroup.tres" id="3_ntemk"]
+[ext_resource type="Texture2D" uid="uid://lepc2qnq7lph" path="res://assets/icons/WhitePawn.tres" id="4_4kig3"]
+[ext_resource type="Texture2D" uid="uid://bc3lgf0m3b26c" path="res://assets/icons/WhiteRook.tres" id="5_hpf6x"]
 [ext_resource type="ButtonGroup" uid="uid://4yfbyl31jj4m" path="res://assets/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
 [ext_resource type="ButtonGroup" uid="uid://drxtnr7owjbg1" path="res://assets/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2g7lo"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(1665, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fg3jc"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(1332, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1517t"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(666, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ntemk"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(999, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4kig3"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(0, 0, 333, 333)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hpf6x"]
-atlas = ExtResource("3_fg3jc")
-region = Rect2(333, 0, 333, 333)
+[ext_resource type="Texture2D" uid="uid://ctj7t3c1hhtqh" path="res://assets/icons/WhiteBishop.tres" id="6_t6n28"]
+[ext_resource type="Texture2D" uid="uid://d2dnk5daptu4d" path="res://assets/icons/WhiteKnight.tres" id="7_sx0n0"]
+[ext_resource type="Texture2D" uid="uid://t8lfyd4522e8" path="res://assets/icons/WhiteKing.tres" id="8_o3447"]
+[ext_resource type="Texture2D" uid="uid://dslwjyvgm5j66" path="res://assets/icons/BlackPawn.tres" id="9_eau3i"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_64o5b"]
 atlas = ExtResource("3_fg3jc")
@@ -160,7 +142,7 @@ toggle_mode = true
 button_group = ExtResource("3_ntemk")
 text = "Pawn
 "
-icon = SubResource("AtlasTexture_2g7lo")
+icon = ExtResource("4_4kig3")
 autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
@@ -174,7 +156,7 @@ toggle_mode = true
 button_group = ExtResource("3_ntemk")
 text = "Rook
 "
-icon = SubResource("AtlasTexture_fg3jc")
+icon = ExtResource("5_hpf6x")
 autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
@@ -187,7 +169,7 @@ theme_type_variation = &"RulebookPieceButton"
 toggle_mode = true
 button_group = ExtResource("3_ntemk")
 text = "Bishop"
-icon = SubResource("AtlasTexture_1517t")
+icon = ExtResource("6_t6n28")
 autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
@@ -201,7 +183,7 @@ toggle_mode = true
 button_group = ExtResource("3_ntemk")
 text = "Knight
 "
-icon = SubResource("AtlasTexture_ntemk")
+icon = ExtResource("7_sx0n0")
 autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
@@ -214,7 +196,7 @@ theme_type_variation = &"RulebookPieceButton"
 toggle_mode = true
 button_group = ExtResource("3_ntemk")
 text = "King"
-icon = SubResource("AtlasTexture_4kig3")
+icon = ExtResource("8_o3447")
 autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true
@@ -227,7 +209,7 @@ theme_type_variation = &"RulebookPieceButton"
 toggle_mode = true
 button_group = ExtResource("3_ntemk")
 text = "Queen"
-icon = SubResource("AtlasTexture_hpf6x")
+icon = ExtResource("9_eau3i")
 autowrap_mode = 2
 icon_alignment = 1
 expand_icon = true

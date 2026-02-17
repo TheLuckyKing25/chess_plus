@@ -1,3 +1,5 @@
+@icon("res://assets/icons/WhiteRook.tres")
+class_name RookPiece
 extends Piece
 
 

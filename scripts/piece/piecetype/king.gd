@@ -1,3 +1,6 @@
+@icon("res://assets/icons/WhiteKing.tres")
+
+class_name KingPiece
 extends Piece
 
 

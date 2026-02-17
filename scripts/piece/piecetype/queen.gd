@@ -1,3 +1,6 @@
+@icon("res://assets/icons/WhitePawn.tres")
+
+class_name QueenPiece
 extends Piece
 
 

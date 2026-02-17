@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2b5f3ejhqp35"]
+[gd_scene load_steps=6 format=3 uid="uid://b2b5f3ejhqp35"]
 
 [ext_resource type="Script" uid="uid://btrxdnasph4pi" path="res://scripts/menu/game_overlay.gd" id="1_pobaf"]
 [ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/menu/PauseScreen.tscn" id="2_886vj"]
+[ext_resource type="PackedScene" uid="uid://cjbu5mxcqaic4" path="res://scenes/menu/debug_menu.tscn" id="3_886vj"]
 [ext_resource type="Texture2D" uid="uid://bhrcs34u8qeqj" path="res://assets/rulebook-icon.png" id="3_ee4yq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_buhkf"]
@@ -35,6 +36,10 @@ layout_mode = 1
 offset_top = 658.0
 offset_bottom = 658.0
 
+[node name="DebugMenu" parent="ScreenController" instance=ExtResource("3_886vj")]
+visible = false
+layout_mode = 1
+
 [node name="ReferenceRect" type="ReferenceRect" parent="ScreenController"]
 layout_mode = 1
 anchors_preset = 15
@@ -61,6 +66,20 @@ theme_override_constants/margin_bottom = 25
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
+
+[node name="Debug" type="Button" parent="ScreenController/ReferenceRect/MarginContainer/BoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 16
+theme_override_styles/focus = SubResource("StyleBoxFlat_buhkf")
+theme_override_styles/hover = SubResource("StyleBoxFlat_buhkf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_buhkf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_buhkf")
+toggle_mode = true
+text = "Debug"
 
 [node name="PauseButton" type="Button" parent="ScreenController/ReferenceRect/MarginContainer/BoxContainer"]
 custom_minimum_size = Vector2(40, 40)
@@ -125,4 +144,5 @@ expand_mode = 1
 
 [connection signal="leave_button_pressed" from="ScreenController/PauseMenu" to="." method="_on_pause_menu_leave_button_pressed"]
 [connection signal="resume_button_pressed" from="ScreenController/PauseMenu" to="." method="_on_pause_menu_resume_button_pressed"]
+[connection signal="toggled" from="ScreenController/ReferenceRect/MarginContainer/BoxContainer/Debug" to="." method="_on_debug_toggled"]
 [connection signal="pressed" from="ScreenController/ReferenceRect/MarginContainer/BoxContainer/PauseButton" to="." method="_on_pause_button_pressed"]

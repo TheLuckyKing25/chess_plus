@@ -1,9 +1,6 @@
 class_name GameNode3D
 extends Node3D
 
-const BOARD_LENGTH = 8
-const BOARD_WIDTH = 8
-
 enum GameState {
 	BoardCustomization,
 	Gameplay

@@ -20,3 +20,7 @@ func _on_pause_menu_leave_button_pressed() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/menu/StartScreen.tscn")
 	#get_tree().quit()
+
+
+func _on_debug_toggled(toggled_on: bool) -> void:
+	$ScreenController/DebugMenu.visible = toggled_on
