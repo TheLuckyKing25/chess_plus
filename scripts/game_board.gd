@@ -73,6 +73,14 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	clear_movement()
 
 
+func _on_game_overlay_new_placement_selected(placement: String) -> void:
+	for row in piece_location:
+		for piece in row:
+			if piece:
+				piece.queue_free()
+	place_pieces(placement)
+
+
 func _on_gamemode_selection_continue_button_pressed() -> void:
 	generate_board(num_board_rows,num_board_columns)
 	place_pieces(FEN_piece_layout)
@@ -142,9 +150,9 @@ func place_pieces(FE_notation: String):
 				continue
 			_:
 				continue
-		board_array[int(tile_count/8)][int(tile_count%8)].add_child(new_piece,true)
-		board_array[int(tile_count/8)][int(tile_count%8)].occupant = new_piece
-		piece_location[int(tile_count/8)][int(tile_count%8)] = new_piece
+		board_array[int(tile_count/num_board_columns)][int(tile_count%num_board_columns)].add_child(new_piece,true)
+		board_array[int(tile_count/num_board_columns)][int(tile_count%num_board_columns)].occupant = new_piece
+		piece_location[int(tile_count/num_board_columns)][int(tile_count%num_board_columns)] = new_piece
 		tile_count += 1
 			
 func _on_gamemode_selection_fen_notation_verified(FEN_notation: String) -> void:
@@ -168,11 +176,7 @@ func _process(delta: float) -> void:
 
 
 func _on_ready() -> void:
-	current_game_state = GameState.BoardCustomization
-	create_board()
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
-	legal_moves = _generate_legal_moves()
+	pass
 
 
 func _create_2d_array(length:int, width:int):
@@ -182,17 +186,6 @@ func _create_2d_array(length:int, width:int):
 		empty_array[index] = []
 		empty_array[index].resize(width)
 	return empty_array
-
-
-func create_board():
-	board_array = _create_2d_array(num_board_rows,num_board_columns)
-	piece_location = _create_2d_array(num_board_rows,num_board_columns)
-	
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		board_array[tile.board_position.x][tile.board_position.y] = tile
-		piece_location[tile.board_position.x][tile.board_position.y] = tile.occupant
-	#Global.print_better(piece_location)
-	#Global.print_better(board_array)
 
 
 func _get_tile_from_piece(piece):

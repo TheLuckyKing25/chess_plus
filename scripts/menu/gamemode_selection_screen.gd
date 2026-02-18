@@ -40,7 +40,6 @@ func _on_board_state_fen_text_changed() -> void:
 	var fullmove_clock = split_text[5]
 	
 	var row_representation = piece_placement_data.split("/",false)
-	print(row_representation)
 	if row_representation.size() != row_num:
 		%PieceLayoutERRORLabel.show()
 		return

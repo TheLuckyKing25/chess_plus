@@ -132,20 +132,21 @@ pitch_scale = 0.75
 bus = &"Game"
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.00268785, 0.999996, 0, -0.999996, -0.00268785, 0, 16.2394, 0)
-light_color = Color(0.988235, 0.882353, 0.807843, 1)
-light_energy = 25.0
+transform = Transform3D(1, 0, 0, 0, -0.00268785, 0.999996, 0, -0.999996, -0.00268785, 0, 12.0144, 0)
+light_color = Color(0.99, 0.938025, 0.9009, 1)
+light_energy = 10.0
 light_indirect_energy = 2.0
+light_volumetric_fog_energy = 0.0
 shadow_enabled = true
 shadow_opacity = 0.7
-spot_range = 26.3594
-spot_angle = 28.2661
+spot_range = 24.0741
+spot_angle = 72.1925
 
 [node name="OverheadCamera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -5.331, 13.48, 0)
 projection = 1
 current = true
-size = 13.076
+size = 13.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
