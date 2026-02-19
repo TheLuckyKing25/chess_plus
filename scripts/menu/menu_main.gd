@@ -9,9 +9,6 @@ func _input(event) -> void:
 		$ScreenController.position = Vector2(0,0)
 
 
-func _on_start_pressed():
-	$ScreenController.position = Vector2(-1,-1) * $ScreenController/MatchSelectionScreen.position
-
 func _on_settings_pressed():
 	$ScreenController/SettingsScreen/Settings.show()
 	$ScreenController.position = Vector2(-1,-1) * $ScreenController/SettingsScreen.position
@@ -19,5 +16,5 @@ func _on_settings_pressed():
 func _on_exit_pressed():
 	get_tree().quit()
 
-func _on_singleplayer_pressed():
+func _on_new_match_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/gameEnvironment.tscn")

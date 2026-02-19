@@ -40,7 +40,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TabContainer" type="TabContainer" parent="SettingMenu/VBoxContainer"]
+z_index = 1
 layout_mode = 2
+mouse_default_cursor_shape = 2
 theme = ExtResource("1_44k28")
 tab_alignment = 1
 current_tab = 1
@@ -85,6 +87,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 text = "
 "
 
@@ -101,6 +104,7 @@ text = "Resolution"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+mouse_default_cursor_shape = 2
 alignment = 1
 selected = 0
 item_count = 2
@@ -156,6 +160,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
 layout_mode = 2
@@ -181,6 +186,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
 layout_mode = 2
@@ -206,6 +212,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="SettingMenu/VBoxContainer/TabContainer/Audio/AudioPanel/VBoxContainer"]
 layout_mode = 2
@@ -231,6 +238,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="Controls" type="Control" parent="SettingMenu/VBoxContainer/TabContainer"]
 visible = false
@@ -259,6 +267,7 @@ text = "Apply
 [node name="Back" type="Button" parent="SettingMenu/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Back
 "
@@ -266,6 +275,7 @@ text = "Back
 [node name="Default" type="Button" parent="SettingMenu/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Default"
 

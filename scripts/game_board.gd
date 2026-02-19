@@ -2,10 +2,13 @@ extends GameNode3D
 
 signal next_turn(player: int)
 signal promotion_requested(piece)
+signal game_state_changed(game_state: int)
 
 const TURN_TRANSITION_DELAY_MSEC:int = 500
 const MAX_TURN_TRANSITION_LENGTH_MSEC:float = 2000 # 2 Seconds
 const TURN_TRANSITION_SPEED: float = USER_SETTING.CAMERA_ROTATION_SPEED/MAX_TURN_TRANSITION_LENGTH_MSEC
+
+var current_game_state = GameState.BoardCustomization
 
 var time_turn_ended:int = 0
 var time_elapsed_since_turn_ended = 0
@@ -23,12 +26,21 @@ var en_passant_piece: Node3D = null
 @onready var piece_capture_audio = $Piece_capture
 @onready var piece_move_audio = $Piece_move
 
+const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
+const PAWN_SCENE:PackedScene = preload("res://scenes/piece/Pawn.tscn")
+const BISHOP_SCENE:PackedScene = preload("res://scenes/piece/Bishop.tscn")
+const KING_SCENE:PackedScene = preload("res://scenes/piece/King.tscn")
+const QUEEN_SCENE:PackedScene = preload("res://scenes/piece/Queen.tscn")
+const KNIGHT_SCENE:PackedScene = preload("res://scenes/piece/Knight.tscn")
+const ROOK_SCENE:PackedScene = preload("res://scenes/piece/Rook.tscn")
+
 
 var legal_moves: Array
 
 var board_array: Array
 
 var piece_location: Array
+
 
 
 var neighboring_tiles: Dictionary[Direction, Vector2i] = {
@@ -41,6 +53,110 @@ var neighboring_tiles: Dictionary[Direction, Vector2i] = {
 	Direction.WEST: Vector2i(0,-1),
 	Direction.NORTHWEST: Vector2i(-1,-1)
 }
+
+var num_board_rows: int = 8
+var num_board_columns: int = 8
+
+var FEN_piece_layout: String
+
+func _on_gamemode_selection_column_number_changed(value: int) -> void:
+	num_board_columns = value
+
+
+func _on_gamemode_selection_row_number_changed(value: int) -> void:
+	num_board_rows = value
+
+
+func _on_tile_modifier_screen_continue_button_pressed() -> void:
+	current_game_state = GameState.Gameplay
+	game_state_changed.emit(current_game_state)
+	clear_movement()
+
+
+func _on_game_overlay_new_placement_selected(placement: String) -> void:
+	for row in piece_location:
+		for piece in row:
+			if piece:
+				piece.queue_free()
+	place_pieces(placement)
+
+
+func _on_gamemode_selection_continue_button_pressed() -> void:
+	generate_board(num_board_rows,num_board_columns)
+	place_pieces(FEN_piece_layout)
+	current_game_state = GameState.BoardCustomization
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
+	legal_moves = _generate_legal_moves()
+	
+	
+func generate_board(row_count:int, column_count:int):
+	board_array = _create_2d_array(row_count, column_count)
+	piece_location = _create_2d_array(row_count, column_count)
+	
+	$BoardBase.mesh.size = Vector3(column_count+1 ,0.2, row_count+1)
+	
+	for column in range(column_count):
+		for row in range(row_count):
+			var new_tile = TILE_SCENE.instantiate()
+			new_tile.board_position = Vector2i(row,column)
+			new_tile.translate(Vector3(column-(float(column_count)/2)+0.5, 0.1, row-(float(row_count)/2)+0.5))
+			$BoardBase.add_child(new_tile,true)			
+			board_array[row][column] = new_tile
+
+func place_pieces(FE_notation: String):
+	var tile_count = 0
+	var new_piece
+	for char in FE_notation.split(" ")[0]:
+		match char:
+			"p":
+				new_piece = PAWN_SCENE.instantiate()
+				new_piece.player = 1
+			"r":
+				new_piece = ROOK_SCENE.instantiate()
+				new_piece.player = 1
+			"b":
+				new_piece = BISHOP_SCENE.instantiate()
+				new_piece.player = 1
+			"n":
+				new_piece = KNIGHT_SCENE.instantiate()
+				new_piece.player = 1
+			"q":
+				new_piece = QUEEN_SCENE.instantiate()
+				new_piece.player = 1
+			"k":
+				new_piece = KING_SCENE.instantiate()
+				new_piece.player = 1
+			"P":
+				new_piece = PAWN_SCENE.instantiate()
+				new_piece.player = 0
+			"R":
+				new_piece = ROOK_SCENE.instantiate()
+				new_piece.player = 0
+			"B":
+				new_piece =BISHOP_SCENE.instantiate()
+				new_piece.player = 0
+			"N":
+				new_piece = KNIGHT_SCENE.instantiate()
+				new_piece.player = 0
+			"Q":
+				new_piece = QUEEN_SCENE.instantiate()
+				new_piece.player = 0
+			"K":
+				new_piece = KING_SCENE.instantiate()
+				new_piece.player = 0
+			"1","2","3","4","5","6","7","8","9":
+				tile_count += char.to_int()
+				continue
+			_:
+				continue
+		board_array[int(tile_count/num_board_columns)][int(tile_count%num_board_columns)].add_child(new_piece,true)
+		board_array[int(tile_count/num_board_columns)][int(tile_count%num_board_columns)].occupant = new_piece
+		piece_location[int(tile_count/num_board_columns)][int(tile_count%num_board_columns)] = new_piece
+		tile_count += 1
+			
+func _on_gamemode_selection_fen_notation_verified(FEN_notation: String) -> void:
+	FEN_piece_layout = FEN_notation
 
 
 func _process(delta: float) -> void:
@@ -60,12 +176,9 @@ func _process(delta: float) -> void:
 
 
 func _on_ready() -> void:
-	create_board()
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
-	legal_moves = _generate_legal_moves()
-	
-	
+	pass
+
+
 func _create_2d_array(length:int, width:int):
 	var empty_array: Array = []
 	empty_array.resize(length)
@@ -75,20 +188,9 @@ func _create_2d_array(length:int, width:int):
 	return empty_array
 
 
-func create_board():
-	board_array = _create_2d_array(BOARD_LENGTH,BOARD_WIDTH)
-	piece_location = _create_2d_array(BOARD_LENGTH,BOARD_WIDTH)
-	
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		board_array[tile.board_position.x][tile.board_position.y] = tile
-		piece_location[tile.board_position.x][tile.board_position.y] = tile.occupant
-	#Global.print_better(piece_location)
-	#Global.print_better(board_array)
-
-
 func _get_tile_from_piece(piece):
-	for row in range(BOARD_LENGTH):
-		for column in range(BOARD_WIDTH):
+	for row in range(num_board_rows):
+		for column in range(num_board_columns):
 			if piece_location[row][column] == piece:
 				return board_array[row][column]
 
@@ -110,8 +212,8 @@ func _generate_all_moves(player: Player):
 		if tile.occupant and tile.occupant in get_tree().get_nodes_in_group(player_groups[player]):
 			moves.append_array(_generate_moves_from_piece(tile.occupant))
 	return moves
-	
-	
+
+
 func _make_virtual_move(move: Array):
 	var starting_tile = move[0]
 	var destination_tile = move[1]
@@ -126,19 +228,20 @@ func _unmake_virtual_move(move: Array):
 	
 	starting_tile.occupant = destination_tile.occupant
 	destination_tile.occupant = piece_location[destination_tile.board_position.x][destination_tile.board_position.y]
-	
-	
+
+
 func _get_opponent_of(player: Player):
 	if player == Player.PLAYER_ONE:
 		return Player.PLAYER_TWO
 	elif player == Player.PLAYER_TWO:
 		return Player.PLAYER_ONE
-	
-	
+
+
 func _get_king_of(player: Player):
 	for piece in get_tree().get_nodes_in_group(player_groups[player]):
 		if piece.is_in_group("King"):
 			return piece
+
 
 func _is_move_legal(move: Array):
 	var is_legal:bool = true
@@ -154,9 +257,8 @@ func _is_move_legal(move: Array):
 	
 	if is_legal:
 		return true
-	
-	
-	
+
+
 func _generate_legal_moves():
 	var pseudo_legal_moves = _generate_all_moves(current_player_turn)
 	var legal_movement = []
@@ -177,45 +279,51 @@ func _generate_legal_moves():
 		_unmake_virtual_move(move)
 	return legal_movement
 
+
 func _on_tile_clicked(clicked_tile: Node3D):
-		
-	if selected_piece and selected_piece_tile: # piece is already selected
-		if clicked_tile.occupant: # Clicked Tile is occupied
-			# Clicked tile and selected tile are the same
-			if selected_piece == clicked_tile.occupant and selected_piece_tile == clicked_tile:
-				_unselect_tile()
-			# occupant piece belongs to current player
-			elif clicked_tile.occupant.is_in_group(player_groups[current_player_turn]):
-				_unselect_tile()
-				clear_movement()
-				_select_tile(clicked_tile)
-			# occupant piece belongs to different player
-			elif not clicked_tile.occupant.is_in_group(player_groups[current_player_turn]):
-				if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
-					capture_piece(clicked_tile.occupant)
-					move_piece_to_tile(selected_piece,clicked_tile)
-					_next_turn()
-		elif clicked_tile.occupant == null:
-			if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.MOVEMENT):
-				if selected_piece.is_in_group("Pawn") and not selected_piece.is_in_group("has_moved") and abs(clicked_tile.board_position - selected_piece_tile.board_position) == Vector2i(2,0):
-					_set_en_passant(clicked_tile)
-				move_piece_to_tile(selected_piece,clicked_tile)
-				_next_turn()
-			elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SPECIAL):
-				move_piece_to_tile(selected_piece,clicked_tile)
-				perform_castling_move(clicked_tile) # castling
-				_next_turn()
-			elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
-				if en_passant_tile and clicked_tile == en_passant_tile:
-					if en_passant_piece and not en_passant_piece.is_in_group(player_groups[current_player_turn]):
-						capture_piece(en_passant_piece)
+	if current_game_state == GameState.BoardCustomization:
+		if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SELECTED):
+			clicked_tile.tile_state(Flag.unset_func, TileStateFlag.SELECTED)
+		elif not clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SELECTED):
+			clicked_tile.tile_state(Flag.set_func, TileStateFlag.SELECTED)
+	elif current_game_state == GameState.Gameplay:	
+		if selected_piece and selected_piece_tile: # piece is already selected
+			if clicked_tile.occupant: # Clicked Tile is occupied
+				# Clicked tile and selected tile are the same
+				if selected_piece == clicked_tile.occupant and selected_piece_tile == clicked_tile:
+					_unselect_tile()
+				# occupant piece belongs to current player
+				elif clicked_tile.occupant.is_in_group(player_groups[current_player_turn]):
+					_unselect_tile()
+					clear_movement()
+					_select_tile(clicked_tile)
+				# occupant piece belongs to different player
+				elif not clicked_tile.occupant.is_in_group(player_groups[current_player_turn]):
+					if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
+						capture_piece(clicked_tile.occupant)
 						move_piece_to_tile(selected_piece,clicked_tile)
 						_next_turn()
-			
-	elif selected_piece == null: # no piece selected
-		if clicked_tile.occupant: # Clicked Tile is occupied
-			if clicked_tile.occupant.is_in_group(player_groups[current_player_turn]): # occupant piece belongs to current player
-				_select_tile(clicked_tile)
+			elif clicked_tile.occupant == null:
+				if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.MOVEMENT):
+					if selected_piece.is_in_group("Pawn") and not selected_piece.is_in_group("has_moved") and abs(clicked_tile.board_position - selected_piece_tile.board_position) == Vector2i(2,0):
+						_set_en_passant(clicked_tile)
+					move_piece_to_tile(selected_piece,clicked_tile)
+					_next_turn()
+				elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SPECIAL):
+					move_piece_to_tile(selected_piece,clicked_tile)
+					perform_castling_move(clicked_tile) # castling
+					_next_turn()
+				elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
+					if en_passant_tile and clicked_tile == en_passant_tile:
+						if en_passant_piece and not en_passant_piece.is_in_group(player_groups[current_player_turn]):
+							capture_piece(en_passant_piece)
+							move_piece_to_tile(selected_piece,clicked_tile)
+							_next_turn()
+				
+		elif selected_piece == null: # no piece selected
+			if clicked_tile.occupant: # Clicked Tile is occupied
+				if clicked_tile.occupant.is_in_group(player_groups[current_player_turn]): # occupant piece belongs to current player
+					_select_tile(clicked_tile)
 
 
 func _set_en_passant(clicked_tile: Node3D):
@@ -252,7 +360,7 @@ func show_valid_castling_movement():
 	
 	var corner_tiles = [
 		board_array[selected_piece_tile.board_position.x][0],
-		board_array[selected_piece_tile.board_position.x][BOARD_WIDTH-1]
+		board_array[selected_piece_tile.board_position.x][num_board_columns-1]
 	]
 	
 	# Check if corner tiles are occupied by unmoved rooks
@@ -290,16 +398,16 @@ func show_valid_castling_movement():
 
 
 func perform_castling_move(castling_tile: Node3D):
-	if castling_tile.board_position.y > (BOARD_WIDTH/2) - 1:
-		var castling_rook = board_array[castling_tile.board_position.x][BOARD_WIDTH-1].occupant
+	if castling_tile.board_position.y > (num_board_columns/2) - 1:
+		var castling_rook = board_array[castling_tile.board_position.x][num_board_columns-1].occupant
 		var castling_rook_destination = board_array[castling_tile.board_position.x][castling_tile.board_position.y-1]
 		move_piece_to_tile(castling_rook, castling_rook_destination)
-	elif castling_tile.board_position.y < (BOARD_WIDTH/2) - 1:
+	elif castling_tile.board_position.y < (num_board_columns/2) - 1:
 		var castling_rook = board_array[castling_tile.board_position.x][0].occupant
 		var castling_rook_destination = board_array[castling_tile.board_position.x][castling_tile.board_position.y+1]
 		move_piece_to_tile(castling_rook, castling_rook_destination)
 
-				
+
 func detect_check():
 	var player_king = _get_king_of(current_player_turn)
 	var player_king_tile = _get_tile_from_piece(player_king)
@@ -310,19 +418,21 @@ func detect_check():
 		if move[1].occupant and move[1].occupant.is_in_group("King") and move[1].occupant.is_in_group(player_groups[current_player_turn]):
 			player_king_tile._set_check()
 			break
-	
+
+
 func clear_check():
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		if tile.tile_state(Flag.is_enabled_func, TileStateFlag.CHECKED):
 			tile._unset_check()
-	
+
+
 func show_valid_piece_movement():
 	var moveset = MoveRule.new(ActionType.BRANCH, PurposeType.STANDARD_MOVEMENT,0,0,selected_piece.move_rules).new_duplicate()
 	
 	if moveset.distance == 0 and moveset.action_flag_is_enabled(ActionType.BRANCH):
 		resolve_branching_movement(selected_piece, moveset, selected_piece_tile)
-		
-		
+
+
 func resolve_branching_movement(active_piece:Piece, moveset: MoveRule, origin_tile: Node3D):
 	var movements = []
 	
@@ -334,9 +444,9 @@ func resolve_branching_movement(active_piece:Piece, moveset: MoveRule, origin_ti
 			if current_tile_ptr == null:
 				break
 			
-			if (current_tile_ptr.board_position.x + neighboring_tiles[branch.direction].x > BOARD_LENGTH-1 
+			if (current_tile_ptr.board_position.x + neighboring_tiles[branch.direction].x > num_board_rows-1 
 					or current_tile_ptr.board_position.x + neighboring_tiles[branch.direction].x < 0
-					or current_tile_ptr.board_position.y + neighboring_tiles[branch.direction].y > BOARD_WIDTH-1
+					or current_tile_ptr.board_position.y + neighboring_tiles[branch.direction].y > num_board_columns-1
 					or current_tile_ptr.board_position.y + neighboring_tiles[branch.direction].y < 0):
 				break
 			else:
@@ -403,6 +513,7 @@ func resolve_branching_movement(active_piece:Piece, moveset: MoveRule, origin_ti
 	if moveset.purpose == PurposeType.GENERATE_ALL_MOVES:
 		return movements
 
+
 func capture_piece(piece):
 	piece.translate(Vector3(0,-5,0))
 	piece.reparent(%Captured)
@@ -439,15 +550,16 @@ func move_piece_to_tile(piece: Node3D, tile: Node3D):
 	if selected_piece == piece:
 		selected_piece = null
 
-	
+
 func clear_movement():
 	for tile in get_tree().get_nodes_in_group("Tile"):
+		tile.tile_state(Flag.unset_func, TileStateFlag.SELECTED)
 		tile.tile_state(Flag.unset_func, TileStateFlag.MOVEMENT)
 		tile.tile_state(Flag.unset_func, TileStateFlag.CHECKED_MOVEMENT)
 		tile._unthreaten()
 		tile._hide_castling()
-	
-		
+
+
 ## Sets up the next turn
 func _next_turn() -> void:
 	
@@ -522,9 +634,6 @@ func _next_turn() -> void:
 
 
 
-
-
-		
 func change_piece_resources(old_piece: Node3D, new_piece: PieceType):
 	old_piece.find_child("Piece_Mesh").mesh = PIECE_MESH[new_piece]
 	old_piece.set_script(PIECE_SCRIPT[new_piece])

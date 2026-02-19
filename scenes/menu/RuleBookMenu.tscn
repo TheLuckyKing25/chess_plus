@@ -1,0 +1,401 @@
+[gd_scene load_steps=14 format=3 uid="uid://c0md30urlwow5"]
+
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_cerxa"]
+[ext_resource type="Script" uid="uid://0lo8ogxef2my" path="res://scripts/menu/rule_book_menu.gd" id="2_fg3jc"]
+[ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/Pieces.png" id="3_fg3jc"]
+[ext_resource type="ButtonGroup" uid="uid://brunnymjx12aj" path="res://assets/RulebookPieceButtonGroup.tres" id="3_ntemk"]
+[ext_resource type="Texture2D" uid="uid://lepc2qnq7lph" path="res://assets/icons/WhitePawn.tres" id="4_4kig3"]
+[ext_resource type="Texture2D" uid="uid://bc3lgf0m3b26c" path="res://assets/icons/WhiteRook.tres" id="5_hpf6x"]
+[ext_resource type="ButtonGroup" uid="uid://4yfbyl31jj4m" path="res://assets/RulebookPieceModifierButtonGroup.tres" id="5_ntemk"]
+[ext_resource type="ButtonGroup" uid="uid://drxtnr7owjbg1" path="res://assets/RulebookTileModifierButtonGroup.tres" id="6_1517t"]
+[ext_resource type="Texture2D" uid="uid://ctj7t3c1hhtqh" path="res://assets/icons/WhiteBishop.tres" id="6_t6n28"]
+[ext_resource type="Texture2D" uid="uid://d2dnk5daptu4d" path="res://assets/icons/WhiteKnight.tres" id="7_sx0n0"]
+[ext_resource type="Texture2D" uid="uid://t8lfyd4522e8" path="res://assets/icons/WhiteKing.tres" id="8_o3447"]
+[ext_resource type="Texture2D" uid="uid://dslwjyvgm5j66" path="res://assets/icons/BlackPawn.tres" id="9_eau3i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_64o5b"]
+atlas = ExtResource("3_fg3jc")
+region = Rect2(666, 0, 333, 333)
+
+[node name="RuleBook" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_cerxa")
+
+[node name="RuleBookControl" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("2_fg3jc")
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 125
+theme_override_constants/margin_top = 75
+theme_override_constants/margin_right = 125
+theme_override_constants/margin_bottom = 75
+
+[node name="TabContainer" type="TabContainer" parent="RuleBookControl/MarginContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"RuleBookTabs"
+current_tab = 1
+
+[node name="Chess Terminology" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
+visible = false
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 0
+
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology/Background"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology/Background/Left Page"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
+
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Chess Terminology/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Pieces" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 1
+
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Pieces"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background"]
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+columns = 4
+
+[node name="Pawn" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Pawn
+"
+icon = ExtResource("4_4kig3")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Rook" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Rook
+"
+icon = ExtResource("5_hpf6x")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Bishop" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Bishop"
+icon = ExtResource("6_t6n28")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Knight" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Knight
+"
+icon = ExtResource("7_sx0n0")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="King" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "King"
+icon = ExtResource("8_o3447")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Queen" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+toggle_mode = true
+button_group = ExtResource("3_ntemk")
+text = "Queen"
+icon = ExtResource("9_eau3i")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Pieces/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
+
+[node name="Piece Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
+visible = false
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 2
+
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+columns = 4
+
+[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookPieceButton"
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_ntemk")
+text = "Piece
+Modifier
+Placeholder
+Text"
+icon = SubResource("AtlasTexture_64o5b")
+text_overrun_behavior = 1
+autowrap_mode = 2
+clip_text = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Piece Modifiers/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Tile Modifiers" type="BoxContainer" parent="RuleBookControl/MarginContainer/TabContainer"]
+visible = false
+layout_mode = 2
+alignment = 1
+metadata/_tab_index = 3
+
+[node name="Background" type="Panel" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="Left Page" type="PanelContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GridContainer" type="GridContainer" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer"]
+custom_minimum_size = Vector2(412, 204)
+layout_mode = 2
+size_flags_vertical = 0
+columns = 4
+
+[node name="Cog" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Cog
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Conveyer" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Conveyer
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Sticky" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Sticky
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Icy" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Icey
+"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="Placeholder" type="Button" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"RulebookTileModifierButton"
+disabled = true
+toggle_mode = true
+button_group = ExtResource("6_1517t")
+text = "Tile
+Modifier
+Placeholder
+Text"
+icon = SubResource("AtlasTexture_64o5b")
+autowrap_mode = 2
+icon_alignment = 1
+expand_icon = true
+
+[node name="VSeparator" type="VSeparator" parent="RuleBookControl/MarginContainer/TabContainer/Tile Modifiers/Background/Left Page/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4

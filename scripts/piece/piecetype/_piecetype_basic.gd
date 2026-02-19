@@ -10,7 +10,9 @@ signal clicked(piece: Node3D)
 var parity: int ## determines which direction is the front
 
 
-var direction_parity: int
+var direction_parity: int:
+	get():
+		return -2 * (parity - 1)
 
 
 var move_rules: Array[MoveRule] 

@@ -5,7 +5,6 @@ signal clicked(tile:Node3D)
 
 @export var board_position: Vector2i
 
-
 var occupant: Piece:
 	set(piece):		
 		if occupant:
@@ -33,36 +32,22 @@ var neighboring_tiles: Dictionary[Direction, Node3D] = {
 	Direction.NORTHWEST:null
 }
 
+var is_mouse_on_tile: bool = false
 
 func _on_ready() -> void:
 	match (board_position.x + board_position.y) % 2:
 		0: $Tile_Object.tile_material.albedo_color = COLOR_PALETTE.TILE_COLOR_LIGHT
 		1: $Tile_Object.tile_material.albedo_color = COLOR_PALETTE.TILE_COLOR_DARK
-	occupant = find_child("*_P*", false, true)
 	$Tile_Object/Tile_Modifiers.modifiers = modifier_order
 
 
-func _on_input_event(
-		camera: Node, 
-		event: InputEvent, 
-		event_position: Vector3, 
-		normal: Vector3, 
-		shape_idx: int
-		) -> void:
-	if ( 	event is InputEventMouseButton
+func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int) -> void:
+	if ( 	is_mouse_on_tile 
+			and event is InputEventMouseButton
 			and event.is_pressed()
 			and event.button_index == MOUSE_BUTTON_LEFT
 			):
-		var mouse_pos = event.position
-		var from = camera.project_ray_origin(mouse_pos)
-		var to = from + camera.project_ray_normal(mouse_pos)*1000
-		var space_state = get_world_3d().direct_space_state
-		var result = space_state.intersect_ray(
-				PhysicsRayQueryParameters3D.create(from,to)
-				)
-		if result:
-			#var clicked_object = result.collider.get_parent()	
-			clicked.emit(self)
+		clicked.emit(self)
 
 func _on_occupant_clicked(piece: Node3D):
 	clicked.emit(self)
@@ -111,3 +96,11 @@ func tile_state(function:Callable, flag: TileStateFlag):
 		return result
 	$Tile_Object.state = result
 	$Tile_Object.apply_state()
+
+
+func _on_tile_object_mouse_entered() -> void:
+	is_mouse_on_tile = true
+
+
+func _on_tile_object_mouse_exited() -> void:
+	is_mouse_on_tile = false
