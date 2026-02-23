@@ -1,0 +1,112 @@
+[gd_resource type="Resource" script_class="Movement" load_steps=10 format=3 uid="uid://q8akjmkx2n2y"]
+
+[ext_resource type="Script" uid="uid://dmcenymnmgc5f" path="res://scripts/piece/movement.gd" id="1_ylpno"]
+
+[sub_resource type="Resource" id="Resource_5d7a6"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 0
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_6epxs"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 1
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_p7fyn"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 2
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_nm7v2"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 3
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_t2u2f"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 4
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_wnj15"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 5
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_tjdt0"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 6
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_p6vt8"]
+script = ExtResource("1_ylpno")
+distance = -1
+direction = 7
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_ylpno")
+distance = 0
+direction = -1
+is_jump = false
+is_move = false
+is_threaten = false
+is_branching = true
+is_special = false
+branches = Array[ExtResource("1_ylpno")]([SubResource("Resource_5d7a6"), SubResource("Resource_6epxs"), SubResource("Resource_p7fyn"), SubResource("Resource_nm7v2"), SubResource("Resource_t2u2f"), SubResource("Resource_wnj15"), SubResource("Resource_tjdt0"), SubResource("Resource_p6vt8")])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"

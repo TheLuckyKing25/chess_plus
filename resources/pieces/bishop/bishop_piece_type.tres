@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://dsh3khcglwsn0"]
+
+[ext_resource type="Resource" uid="uid://5k73t3ur6po5" path="res://resources/pieces/bishop/bishop_movement.tres" id="1_v8isx"]
+[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://assets/mesh/bishop_mesh.obj" id="2_ttqdm"]
+[ext_resource type="Script" uid="uid://n546spqb0ipo" path="res://scripts/piece/piece_type.gd" id="3_lxr4v"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("3_lxr4v")
+name = "Bishop"
+description = ""
+object_mesh = ExtResource("2_ttqdm")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_v8isx")
+metadata/_custom_type_script = "uid://n546spqb0ipo"

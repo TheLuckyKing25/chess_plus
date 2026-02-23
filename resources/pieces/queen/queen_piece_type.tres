@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://be5o5w1cx2r73"]
+
+[ext_resource type="Resource" uid="uid://q8akjmkx2n2y" path="res://resources/pieces/queen/queen_movement.tres" id="1_42ypx"]
+[ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/mesh/queen_mesh.obj" id="2_7g48x"]
+[ext_resource type="Script" uid="uid://n546spqb0ipo" path="res://scripts/piece/piece_type.gd" id="3_xs6yl"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("3_xs6yl")
+name = "Queen"
+description = ""
+object_mesh = ExtResource("2_7g48x")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_42ypx")
+metadata/_custom_type_script = "uid://n546spqb0ipo"

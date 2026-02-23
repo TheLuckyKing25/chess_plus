@@ -4,7 +4,7 @@ signal new_placement_selected(placement:String)
 
 var placement_list: Dictionary[String,String] = {
 	"Standard Board": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-	"Different Board": "rnbqkbnr/pppppppp/8/8/kKkK4/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+	"Castling Test 1": "r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1"
 }
 
 func _ready():
@@ -13,7 +13,6 @@ func _ready():
 
 func _on_piece_placement_list_item_selected(index: int) -> void:
 	var placement_key = %PiecePlacementList.get_item_text(index)
-	print(placement_list[placement_key])
 	new_placement_selected.emit(placement_list[placement_key])
 
 func _on_pause_button_pressed() -> void:

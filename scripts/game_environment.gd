@@ -12,13 +12,13 @@ var piece_to_promote = null
 var proceed = false
 
 func _process(delta: float):			
-	if proceed or board.previous_player_turn != board.current_player_turn:
+	if proceed or Player.previous != Player.current:
 		if board.time_elapsed_since_turn_ended > 0:
 			proceed = true
 		if proceed and board.time_elapsed_since_turn_ended * board.TURN_TRANSITION_SPEED <= 1:
 			camera_rotation += PI * board.TURN_TRANSITION_SPEED * delta * 1000
-			match board.current_player_turn:
-				Player.PLAYER_ONE:
+			match Player.current:
+				board.player_one:
 					player2_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
 					if camera_rotation >= PI:
 						player2_camera_twist_pivot.rotation = Vector3(0,PI,0)
@@ -28,7 +28,7 @@ func _process(delta: float):
 							player1_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
 						proceed = false
-				Player.PLAYER_TWO:
+				board.player_two:
 					player1_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
 					if camera_rotation >= PI:
 						player1_camera_twist_pivot.rotation = Vector3(0,PI,0)
@@ -44,10 +44,10 @@ func _on_board_game_state_changed(game_state: int) -> void:
 		GameState.BoardCustomization:
 			$OverheadCamera.current = true
 		GameState.Gameplay:
-			match board.current_player_turn:
-				Player.PLAYER_ONE:
+			match Player.current:
+				board.player_one:
 					player1_camera.current = true
-				Player.PLAYER_TWO:
+				board.player_two:
 					player2_camera.current = true
 
 
@@ -68,24 +68,24 @@ func _on_promotion_requested(piece):
 
 func _on_queen_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.QUEEN)
+	#board.promote(piece_to_promote, PawnPromotion.QUEEN)
 	piece_to_promote = null
 	promotion_menu.hide()
 
 func _on_knight_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.KNIGHT)
+	#board.promote(piece_to_promote, PawnPromotion.KNIGHT)
 	piece_to_promote = null
 	promotion_menu.hide()
 	
 func _on_rook_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.ROOK)
+	#board.promote(piece_to_promote, PawnPromotion.ROOK)
 	piece_to_promote = null
 	promotion_menu.hide()
 
 func _on_bishop_pressed():
 	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.BISHOP)
+	#board.promote(piece_to_promote, PawnPromotion.BISHOP)
 	piece_to_promote = null
 	promotion_menu.hide()

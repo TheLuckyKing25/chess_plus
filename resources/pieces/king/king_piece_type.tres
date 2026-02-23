@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://dimmpertmq7mj"]
+
+[ext_resource type="Resource" uid="uid://xk6w8bj7uf8k" path="res://resources/pieces/king/king_movement.tres" id="1_uy5ou"]
+[ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://assets/mesh/king_mesh.obj" id="2_f2gnb"]
+[ext_resource type="Script" uid="uid://n546spqb0ipo" path="res://scripts/piece/piece_type.gd" id="3_8dnyj"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("3_8dnyj")
+name = "King"
+description = ""
+object_mesh = ExtResource("2_f2gnb")
+can_promote = false
+promotion_option = false
+movement = ExtResource("1_uy5ou")
+metadata/_custom_type_script = "uid://n546spqb0ipo"

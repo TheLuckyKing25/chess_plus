@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="Movement" load_steps=5 format=3 uid="uid://bpexpwlvi0ymy"]
+
+[ext_resource type="Script" uid="uid://dmcenymnmgc5f" path="res://scripts/piece/movement.gd" id="1_tpq17"]
+
+[sub_resource type="Resource" id="Resource_iplx7"]
+script = ExtResource("1_tpq17")
+distance = 1
+direction = 0
+is_jump = false
+is_move = true
+is_threaten = false
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_tpq17")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_eyk32"]
+script = ExtResource("1_tpq17")
+distance = 1
+direction = 1
+is_jump = false
+is_move = false
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_tpq17")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_q6pmn"]
+script = ExtResource("1_tpq17")
+distance = 1
+direction = 7
+is_jump = false
+is_move = false
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_tpq17")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_tpq17")
+distance = 0
+direction = -1
+is_jump = false
+is_move = false
+is_threaten = false
+is_branching = true
+is_special = false
+branches = Array[ExtResource("1_tpq17")]([SubResource("Resource_iplx7"), SubResource("Resource_eyk32"), SubResource("Resource_q6pmn")])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"

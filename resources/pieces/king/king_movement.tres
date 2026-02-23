@@ -1,0 +1,113 @@
+[gd_resource type="Resource" script_class="Movement" load_steps=10 format=3 uid="uid://xk6w8bj7uf8k"]
+
+[ext_resource type="Script" uid="uid://dmcenymnmgc5f" path="res://scripts/piece/movement.gd" id="1_461e3"]
+
+[sub_resource type="Resource" id="Resource_p0klq"]
+resource_local_to_scene = true
+script = ExtResource("1_461e3")
+distance = 1
+direction = 0
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_vilm8"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 1
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_0we4i"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 2
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_38ub1"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 3
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_3deoh"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 4
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_5qmhb"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 5
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_ddfpp"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 6
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[sub_resource type="Resource" id="Resource_xf5u2"]
+script = ExtResource("1_461e3")
+distance = 1
+direction = 7
+is_jump = false
+is_move = true
+is_threaten = true
+is_branching = false
+is_special = false
+branches = Array[ExtResource("1_461e3")]([])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_461e3")
+distance = 0
+direction = -1
+is_jump = false
+is_move = false
+is_threaten = false
+is_branching = true
+is_special = false
+branches = Array[ExtResource("1_461e3")]([SubResource("Resource_p0klq"), SubResource("Resource_vilm8"), SubResource("Resource_0we4i"), SubResource("Resource_38ub1"), SubResource("Resource_3deoh"), SubResource("Resource_5qmhb"), SubResource("Resource_ddfpp"), SubResource("Resource_xf5u2")])
+metadata/_custom_type_script = "uid://dmcenymnmgc5f"

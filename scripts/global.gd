@@ -6,7 +6,7 @@ func print_array(array, indent:int = 0):
 			print("\t".repeat(indent),"[")
 			print_array(item, indent+1)
 			print("\t".repeat(indent), "],")
-		elif item is MoveRule:
+		elif item is Movement:
 			print("\t".repeat(indent), "{")
 			print_rule(item, indent+1)
 			print("\t".repeat(indent), "},")
@@ -22,7 +22,7 @@ func print_rule(rule, indent:int = 0):
 	print("\t".repeat(indent), "}")
 
 func print_better(tree,indent:int = 0):
-	if tree is MoveRule:
+	if tree is Movement:
 		print("\t".repeat(indent),"{")
 		print_rule(tree,indent+1)
 		print("\t".repeat(indent),"}")

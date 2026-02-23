@@ -33,11 +33,11 @@ window/stretch/mode="canvas_items"
 
 folder_colors={
 "res://assets/": "purple",
+"res://resources/": "orange",
 "res://scenes/": "gray",
 "res://scripts/": "blue",
 "res://scripts/menu/": "green",
 "res://scripts/piece/": "red",
-"res://scripts/piece/piecetype/": "orange",
 "res://scripts/tile/": "red",
 "res://scripts/tile/modifier/": "orange"
 }

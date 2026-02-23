@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://cknkqdj0bey2f"]
+
+[ext_resource type="Resource" uid="uid://dl1o3ayyjvnlf" path="res://resources/pieces/pawn/pawn_movement_initial.tres" id="1_0sclr"]
+[ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/mesh/pawn_mesh.obj" id="2_ay8wa"]
+[ext_resource type="Script" uid="uid://n546spqb0ipo" path="res://scripts/piece/piece_type.gd" id="3_nl5mr"]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "Pawn"
+script = ExtResource("3_nl5mr")
+name = "Pawn"
+description = ""
+object_mesh = ExtResource("2_ay8wa")
+can_promote = true
+promotion_option = false
+movement = ExtResource("1_0sclr")
+metadata/_custom_type_script = "uid://n546spqb0ipo"

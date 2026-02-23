@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://b1s2jldvg05or"]
+
+[ext_resource type="Resource" uid="uid://b0ucks7w4ums8" path="res://resources/pieces/rook/rook_movement.tres" id="1_louae"]
+[ext_resource type="ArrayMesh" uid="uid://047i1asw03nw" path="res://assets/mesh/rook_mesh.obj" id="2_lwyvg"]
+[ext_resource type="Script" uid="uid://n546spqb0ipo" path="res://scripts/piece/piece_type.gd" id="3_xnh10"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("3_xnh10")
+name = "Rook"
+description = ""
+object_mesh = ExtResource("2_lwyvg")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_louae")
+metadata/_custom_type_script = "uid://n546spqb0ipo"

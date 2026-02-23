@@ -1,8 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=19 format=3 uid="uid://h7v0gyqyq0h7"]
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
+[ext_resource type="Resource" uid="uid://dxvl1tq0afyxx" path="res://resources/players/player_one.tres" id="3_hekqh"]
 [ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="4_xtwup"]
+[ext_resource type="Resource" uid="uid://dc7e5u71wtrpp" path="res://resources/players/player_two.tres" id="4_y38w1"]
 [ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="5_hekqh"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
@@ -118,6 +120,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_hlv2s")
 [node name="Board" parent="Table" instance=ExtResource("1_wsj4q")]
 unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.115, 0)
+player_one = ExtResource("3_hekqh")
+player_two = ExtResource("4_y38w1")
 
 [node name="Piece_move" type="AudioStreamPlayer" parent="Table/Board"]
 stream = ExtResource("4_xtwup")
@@ -202,7 +206,7 @@ text = "Bishop"
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="game_state_changed" from="Table/Board" to="." method="_on_board_game_state_changed"]
-[connection signal="next_turn" from="Table/Board" to="." method="camera_transition"]
+[connection signal="promotion_requested" from="Table/Board" to="." method="_on_board_promotion_requested"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Queen" to="." method="_on_queen_pressed"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Knight" to="." method="_on_knight_pressed"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Rook" to="." method="_on_rook_pressed"]
