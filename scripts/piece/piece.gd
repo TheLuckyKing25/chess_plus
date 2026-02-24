@@ -7,7 +7,7 @@ static var selected: Piece = null
 static var en_passant: Piece = null
 
 const THREATENED_COLOR = Color(0.9, 0, 0, 1)
-const CHECKING_COLOR = Color(0.9, 0.9, 0)
+const CHECKING_COLOR = Color(0.9, 0.9, 0, 1)
 const SELECT_COLOR = Color(0, 0.9, 0.9, 1)
 const CHECKED_COLOR = Color(0.9, 0, 0, 1)
 const SPECIAL_COLOR = Color(1,1,1,1)
@@ -28,12 +28,11 @@ func _init(
 	stats = PieceStats.new(piece_type, player)
 
 func _ready() -> void:
+	stats.changed.connect(Callable(self,"_on_stats_changed"))
 	add_to_group(stats.type.name)
 	$Piece_Mesh.mesh = stats.type.object_mesh
 	
-	piece_material = $Piece_Mesh.get_surface_override_material(0)
-	if not piece_material:
-		piece_material = $Piece_Mesh.material_override
+	piece_material = $Piece_Mesh.material_override
 	mouseover_material = piece_material.next_pass
 	outline_material = mouseover_material.next_pass
 	outline_material.albedo_color = Color(0,0,0,0)
@@ -47,58 +46,24 @@ func _ready() -> void:
 		"Player_Two": 
 			remove_from_group("Player_One")
 
+func _on_stats_changed():
+	apply_state()
+
 func moved():
 	if stats.type.name == "Pawn":
 		stats.movement = load("res://resources/pieces/pawn/pawn_movement.tres")
 	stats.has_moved = true
 	add_to_group("has_moved")
 	
-		
 
-
-func _select():
-	stats.is_selected = true
-	apply_state()
-
-func _unselect():
-	stats.is_selected = false
-	apply_state()
-
-func _threaten():
-	stats.is_threatened = true
-	apply_state()
-
-func _unthreaten():
-	stats.is_threatened = false
-	apply_state()
-
-
-func _show_castling():
-	stats.is_special = true
-	apply_state()
-
-func _hide_castling():
-	stats.is_special = false
-	apply_state()
-
-
-func _set_check():
-	stats.is_checked = true
-	apply_state()
-
-func _unset_check():
-	stats.is_checked = false
-	apply_state()
-
-	
 func _captured():
 	visible = false
 	$Collision.disabled = true
 	stats.is_captured = true
 
+
 func promote():
 	remove_from_group("Pawn")
-	pass
 
 	
 func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
@@ -112,7 +77,7 @@ func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3,
 
 func _on_mouse_entered() -> void:
 	is_mouse_on_piece = true
-	mouseover_material.render_priority = 1
+	mouseover_material.render_priority = 2
 	mouseover_material.albedo_color = piece_material.albedo_color * 1.5
 
 
@@ -124,20 +89,15 @@ func _on_mouse_exited() -> void:
 func apply_state():
 	if stats.is_captured:
 		return
-	if stats.is_checked:
-		outline_material.albedo_color = CHECKED_COLOR
-		
-	if stats.is_checked:
-		outline_material.albedo_color = SELECT_COLOR
-		
-	if stats.is_threatened:
-		outline_material.albedo_color = THREATENED_COLOR
-		
-	if stats.is_checking:
-		outline_material.albedo_color = CHECKING_COLOR
-		
-	if stats.is_special:
+	elif stats.is_special:
 		outline_material.albedo_color = SPECIAL_COLOR
-	
+	elif stats.is_checking:
+		outline_material.albedo_color = CHECKING_COLOR
+	elif stats.is_threatened:
+		outline_material.albedo_color = THREATENED_COLOR
+	elif stats.is_selected:
+		outline_material.albedo_color = SELECT_COLOR
+	elif stats.is_checked:
+		outline_material.albedo_color = CHECKED_COLOR
 	else:
 		outline_material.albedo_color = Color(0,0,0,0)

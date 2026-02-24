@@ -26,22 +26,45 @@ const SPECIAL_COLOR = Color(1,1,1,1)
 var parity: int
 
 ## Used to rotate the movement of the piece
-var direction_parity:int
+var direction_parity: int
 
 
-var movement:Movement:
+var movement: Movement:
 	set(new_movement):
 		movement = new_movement.get_duplicate()
 		movement.set_direction_parity(direction_parity)
 		
 
 @export_group("Piece States")
-@export var is_selected: bool = false
-@export var is_threatened: bool = false
-@export var is_captured: bool = false
-@export var is_checked: bool = false
-@export var is_checking: bool = false
-@export var is_special: bool = false
+@export var is_selected: bool = false:
+	set(new_state):
+		is_selected = new_state
+		emit_changed()
+
+@export var is_threatened: bool = false:
+	set(new_state):
+		is_threatened = new_state
+		emit_changed()
+
+@export var is_captured: bool = false:
+	set(new_state):
+		is_captured = new_state
+		emit_changed()
+
+@export var is_checked: bool = false:
+	set(new_state):
+		is_checked = new_state
+		emit_changed()
+
+@export var is_checking: bool = false:
+	set(new_state):
+		is_checking = new_state
+		emit_changed()
+
+@export var is_special: bool = false:
+	set(new_state):
+		is_special = new_state
+		emit_changed()
 
 var has_moved: bool = false
 

@@ -1,7 +1,7 @@
 class_name Tile
 extends GameNode3D
 
-signal clicked(tile:Node3D)
+signal clicked(tile:Tile)
 
 static var selected: Tile = null
 static var en_passant: Tile = null
@@ -20,8 +20,24 @@ const CHECKING_COLOR = Color(1, 1, 0.25)
 const SPECIAL_COLOR = Color(1,1,1,1)
 const MOVE_CHECKING_COLOR = Color(1, 0.392, 0.153)
 
+var stats: TileStats = TileStats.new()
+		
+
+var tile_material: StandardMaterial3D
+var mouseover_material: StandardMaterial3D
+var state_material: StandardMaterial3D
+
+
+var occupant: Piece = null:
+	set(new_occupant):
+		if occupant:
+			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
+		if new_occupant:
+			new_occupant.clicked.connect(Callable(self, "_on_occupant_clicked"))
+		occupant = new_occupant
 
 var board_position: Vector2i
+
 
 var rank: int:
 	get():
@@ -31,44 +47,20 @@ var file: int:
 	get():
 		return board_position.x
 
-var tile_material: StandardMaterial3D
-var mouseover_material: StandardMaterial3D
-var state_material: StandardMaterial3D
-
-
-var state: int = TileStateFlag.NONE:
-	set(flag):
-		state = flag
-		apply_state()
-
-
-var occupant: Piece:
-	set(piece):		
-		if occupant:
-			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
-		if piece:
-			piece.clicked.connect(Callable(self, "_on_occupant_clicked"))
-		
-		occupant = piece
-
-
-var modifier_order: Array[TileModifier] = []:
-	set(new_modifier_order):
-		modifier_order = new_modifier_order
-		$Tile_Modifiers.modifiers = modifier_order
-
 
 var is_mouse_on_tile: bool = false
 
-func _on_ready() -> void:
-	tile_material = $Tile_Mesh.get_surface_override_material(0)
+func _ready() -> void:	
+	stats.changed.connect(Callable(self,"_on_stats_changed"))
+	tile_material = $Tile_Mesh.material_override
 	state_material = tile_material.next_pass
 	state_material.albedo_color = Color(1,1,1,0)
 	mouseover_material = state_material.next_pass
 	match (file + rank) % 2:
 		0: tile_material.albedo_color = LIGHT_COLOR
 		1: tile_material.albedo_color = DARK_COLOR
-	$Tile_Modifiers.modifiers = modifier_order
+
+	$Tile_Modifiers.modifiers = stats.modifier_order
 
 
 func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
@@ -82,51 +74,47 @@ func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3,
 func _on_occupant_clicked(piece: Piece):
 	clicked.emit(self)
 
+func _on_stats_changed():
+	apply_state()
+
 func _select():
-	tile_state(Flag.set_func, TileStateFlag.SELECTED)
+	stats.is_selected = true
 	if occupant:
-		occupant._select()
+		occupant.stats.is_selected = true
 
 func _unselect():
-	tile_state(Flag.unset_func, TileStateFlag.SELECTED)
+	stats.is_selected = false
 	if occupant:
-		occupant._unselect()
-
+		occupant.stats.is_selected = false
+	
 func _threaten():
-	tile_state(Flag.set_func, TileStateFlag.THREATENED)
+	stats.is_threatened = true
 	if occupant:
-		occupant._threaten()
-
+		occupant.stats.is_threatened = true
+	
 func _unthreaten():
-	tile_state(Flag.unset_func, TileStateFlag.THREATENED)
+	stats.is_threatened = false
 	if occupant:
-		occupant._unthreaten()
+		occupant.stats.is_threatened = false
 
 func _show_castling():
-	tile_state(Flag.set_func, TileStateFlag.SPECIAL)
+	stats.is_special = true
 	if occupant:
-		occupant._show_castling()
+		occupant.stats.is_special = true
 
 func _hide_castling():
-	tile_state(Flag.unset_func, TileStateFlag.SPECIAL)
+	stats.is_special = false
 	if occupant:
-		occupant._hide_castling()
-
+		occupant.stats.is_special = false
+	
 func _set_check():
-	tile_state(Flag.set_func, TileStateFlag.CHECKED)
-	occupant._set_check()
+	stats.is_checked = true
+	occupant.stats.is_checked = true
 	
 func _unset_check():
-	tile_state(Flag.unset_func, TileStateFlag.CHECKED)
-	occupant._unset_check()
-
-func tile_state(function:Callable, flag: TileStateFlag):
-	var result = function.call(state, flag) 
-	if typeof(result) == TYPE_BOOL:
-		return result
-	state = result
-	apply_state()
-		
+	stats.is_checked = false
+	occupant.stats.is_checked = false
+	
 func _on_mouse_entered() -> void:
 	is_mouse_on_tile = true
 	mouseover_material.render_priority = 1
@@ -148,24 +136,28 @@ func apply_state():
 	state_material.albedo_color.a = 0
 	state_material.emission_enabled = false
 	
-	if state & 1 << TileStateFlag.MOVEMENT:
-		state_material.albedo_color = VALID_COLOR
-		
-	if state & 1 << TileStateFlag.SELECTED:
-		state_material.albedo_color = SELECT_COLOR
-		
-	if state & 1 << TileStateFlag.THREATENED:
-		state_material.albedo_color = THREATENED_COLOR
-		
-	if state & 1 << TileStateFlag.CHECKED:
-		state_material.albedo_color = CHECKED_COLOR
-		
-	if state & 1 << TileStateFlag.CHECKING:
-		state_material.albedo_color = CHECKING_COLOR
-		
-	if state & 1 << TileStateFlag.SPECIAL:
+	if stats.is_checked_movement:
+		state_material.albedo_color = MOVE_CHECKING_COLOR
+	elif stats.is_special:
 		state_material.albedo_color = SPECIAL_COLOR
 		state_material.emission_enabled = true
+	elif stats.is_checking:
+		state_material.albedo_color = CHECKING_COLOR
+	elif stats.is_checked:
+		state_material.albedo_color = CHECKED_COLOR	
+	elif stats.is_threatened:
+		state_material.albedo_color = THREATENED_COLOR
+	elif stats.is_selected:
+		state_material.albedo_color = SELECT_COLOR			
+	elif stats.is_movement:
+		state_material.albedo_color = VALID_COLOR
+		
+
+		
+
+
+		
+
+		
+
 	
-	if state & 1 << TileStateFlag.CHECKED_MOVEMENT:
-		state_material.albedo_color = MOVE_CHECKING_COLOR

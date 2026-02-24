@@ -15,7 +15,6 @@ size = Vector3(9, 0.2, 9)
 script = ExtResource("1_hljw5")
 
 [node name="BoardBase" type="MeshInstance3D" parent="."]
-unique_name_in_owner = true
 mesh = SubResource("BoxMesh_hljw5")
 surface_material_override/0 = SubResource("StandardMaterial3D_wxh2q")
 

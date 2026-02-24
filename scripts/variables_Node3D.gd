@@ -33,17 +33,6 @@ enum TileModifierFlag{
 	PROPERTY_CONVEYER = 4,
 	PROPERTY_PRISM = 5,
 	}
-
-enum TileStateFlag{
-	NONE = 0,
-	SELECTED = 1,
-	MOVEMENT = 2,
-	CHECKING = 3,
-	SPECIAL = 4,
-	THREATENED = 5,
-	CHECKED = 6,
-	CHECKED_MOVEMENT = 7,
-	}
 #endregion
 
 	

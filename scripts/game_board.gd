@@ -96,7 +96,7 @@ func generate_board(file_num:int, rank_num:int):
 		var new_tile = TILE_SCENE.instantiate()
 		new_tile.board_position = get_tile_position_from_index(tile_num)
 		new_tile.translate(Vector3(new_tile.rank-(float(rank_num)/2)+0.5, 0.1, new_tile.file-(float(file_num)/2)+0.5))
-		$BoardBase.add_child(new_tile,true)			
+		$BoardBase.add_child(new_tile,true)	
 		board_array[tile_num] = new_tile
 
 func get_index_from_tile_position(file:int,rank:int) -> int:
@@ -159,12 +159,12 @@ func _process(_delta: float) -> void:
 		time_elapsed_since_turn_ended = Time.get_ticks_msec() - time_turn_ended - TURN_TRANSITION_DELAY_MSEC
 		if time_elapsed_since_turn_ended > 0:
 			if time_elapsed_since_turn_ended * TURN_TRANSITION_SPEED < 1:
-				%BoardBase.get_surface_override_material(0).albedo_color = Player.previous.color.lerp(Player.current.color,time_elapsed_since_turn_ended * TURN_TRANSITION_SPEED)
+				$BoardBase.get_surface_override_material(0).albedo_color = Player.previous.color.lerp(Player.current.color,time_elapsed_since_turn_ended * TURN_TRANSITION_SPEED)
 			elif time_elapsed_since_turn_ended * TURN_TRANSITION_SPEED >= 1:
 				Player.previous = Player.current
 				time_turn_ended = 0
 				time_elapsed_since_turn_ended = 0
-				%BoardBase.get_surface_override_material(0).albedo_color = Player.current.color
+				$BoardBase.get_surface_override_material(0).albedo_color = Player.current.color
 
 
 func _on_ready() -> void:
@@ -276,10 +276,10 @@ func _on_tile_clicked(clicked_tile: Tile):
 		_gameplay_tile_select(clicked_tile)
 
 func _customization_tile_select(clicked_tile: Tile):
-	if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SELECTED):
-		clicked_tile.tile_state(Flag.unset_func, TileStateFlag.SELECTED)
-	elif not clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SELECTED):
-		clicked_tile.tile_state(Flag.set_func, TileStateFlag.SELECTED)
+	if clicked_tile.stats.is_selected == true:
+		clicked_tile._unselect()
+	elif clicked_tile.stats.is_selected == false:
+		clicked_tile._select()
 
 func _gameplay_tile_select(clicked_tile: Tile):
 	if Piece.selected and Tile.selected: # piece is already selected
@@ -294,21 +294,21 @@ func _gameplay_tile_select(clicked_tile: Tile):
 				_select_tile(clicked_tile)
 			# occupant piece belongs to different player
 			elif not clicked_tile.occupant.is_in_group(Player.current.name):
-				if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
+				if clicked_tile.stats.is_threatened:
 					capture_piece(clicked_tile.occupant)
 					move_piece_to_tile(Piece.selected,clicked_tile)
 					_next_turn()
 		elif clicked_tile.occupant == null:
-			if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.MOVEMENT):
+			if clicked_tile.stats.is_movement:
 				if Piece.selected.is_in_group("Pawn") and not Piece.selected.is_in_group("has_moved") and abs(clicked_tile.board_position - Tile.selected.board_position) == Vector2i(2,0):
 					_set_en_passant(clicked_tile)
 				move_piece_to_tile(Piece.selected,clicked_tile)
 				_next_turn()
-			elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SPECIAL):
+			elif clicked_tile.stats.is_special:
 				move_piece_to_tile(Piece.selected,clicked_tile)
 				perform_castling_move(clicked_tile) # castling
 				_next_turn()
-			elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
+			elif clicked_tile.stats.is_threatened:
 				if Tile.en_passant and clicked_tile == Tile.en_passant:
 					if Piece.en_passant and not Piece.en_passant.is_in_group(Player.current.name):
 						capture_piece(Piece.en_passant)
@@ -370,7 +370,7 @@ func show_valid_castling_movement():
 			proceed = true
 			for tile_column_position in range(king_tile.rank, tile.rank, step):
 				if board_array[get_index_from_tile_position(king_tile.file,tile_column_position)] == king_tile:
-					if king_tile.tile_state(Flag.is_enabled_func, TileStateFlag.CHECKED):
+					if king_tile.stats.is_checked:
 						proceed = false
 						break
 					else:
@@ -421,7 +421,7 @@ func detect_check():
 
 func clear_check():
 	for tile in get_tree().get_nodes_in_group("Tile"):
-		if tile.tile_state(Flag.is_enabled_func, TileStateFlag.CHECKED):
+		if tile.stats.is_checked:
 			tile._unset_check()
 
 
@@ -492,9 +492,9 @@ func resolve_branching_movement(active_piece:Piece, moveset: Movement, origin_ti
 								if move == [_get_tile_from_piece(active_piece), current_tile_ptr]:
 									legal = true
 							if legal:
-								current_tile_ptr.tile_state(Flag.set_func, TileStateFlag.MOVEMENT)
+								current_tile_ptr.stats.is_movement = true
 							else:
-								current_tile_ptr.tile_state(Flag.set_func, TileStateFlag.CHECKED_MOVEMENT)
+								current_tile_ptr.stats.is_checked_movement = true
 							
 						elif moveset.purpose == Movement.Purpose.GENERATE_ALL_MOVES:
 							movements.append([_get_tile_from_piece(active_piece),current_tile_ptr])
@@ -547,9 +547,9 @@ func move_piece_to_tile(piece: Piece, tile: Tile):
 
 func clear_movement():
 	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.tile_state(Flag.unset_func, TileStateFlag.SELECTED)
-		tile.tile_state(Flag.unset_func, TileStateFlag.MOVEMENT)
-		tile.tile_state(Flag.unset_func, TileStateFlag.CHECKED_MOVEMENT)
+		tile.stats.is_selected = false
+		tile.stats.is_movement = false
+		tile.stats.is_checked_movement = false
 		tile._unthreaten()
 		tile._hide_castling()
 
