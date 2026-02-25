@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
 [ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/menu/PauseMenu.tscn" id="3_q1h0t"]
-[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="4_xtwup"]
-[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="5_hekqh"]
+[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/Audio/Piece_move.wav" id="4_xtwup"]
+[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/Audio/Piece_capture.wav" id="5_hekqh"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true
@@ -228,7 +228,6 @@ theme_type_variation = &"SettingButtons"
 text = "Bishop"
 
 [connection signal="ready" from="." to="." method="_on_ready"]
-[connection signal="next_turn" from="Table/Board" to="." method="camera_transition"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Queen" to="." method="_on_queen_pressed"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Knight" to="." method="_on_knight_pressed"]
 [connection signal="pressed" from="CanvasLayer/PromoteMenu/VBoxContainer/Rook" to="." method="_on_rook_pressed"]

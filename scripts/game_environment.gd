@@ -11,7 +11,11 @@ var camera_rotation: float = 0
 var piece_to_promote = null
 var proceed = false
 
-func _process(delta: float):			
+func _process(delta: float):
+	
+	if NetworkManager.is_online:
+		return
+		
 	if proceed or board.previous_player_turn != board.current_player_turn:
 		if board.time_elapsed_since_turn_ended > 0:
 			proceed = true
@@ -38,45 +42,40 @@ func _process(delta: float):
 							player2_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
 						proceed = false
-			
-
-
-
-
 
 
 func _ready():
 	board.promotion_requested.connect(_on_promotion_requested)
 	
-	
+	if NetworkManager.is_online:
+		if NetworkManager.my_player == 0:
+			player1_camera.make_current()
+		else:
+			player2_camera.make_current()
+
+
 func _on_promotion_requested(piece):
 	get_tree().paused = true
 	piece_to_promote = piece
 	var mouse_pos = get_viewport().get_mouse_position()
 	promotion_menu.position = mouse_pos
 	promotion_menu.show()
-	
 
 func _on_queen_pressed():
-	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.QUEEN)
-	piece_to_promote = null
-	promotion_menu.hide()
+	_finish_promotion(PawnPromotion.QUEEN)
 
 func _on_knight_pressed():
-	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.KNIGHT)
-	piece_to_promote = null
-	promotion_menu.hide()
-	
+	_finish_promotion(PawnPromotion.KNIGHT)
+
 func _on_rook_pressed():
-	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.ROOK)
-	piece_to_promote = null
-	promotion_menu.hide()
+	_finish_promotion(PawnPromotion.ROOK)
 
 func _on_bishop_pressed():
+	_finish_promotion(PawnPromotion.BISHOP)
+
+func _finish_promotion(promotion: PawnPromotion) -> void:
 	get_tree().paused = false
-	board.promote(piece_to_promote, PawnPromotion.BISHOP)
-	piece_to_promote = null
 	promotion_menu.hide()
+	var piece_tile = piece_to_promote.get_parent()
+	piece_to_promote = null
+	board._sync_promotion.rpc(piece_tile.board_position, promotion)

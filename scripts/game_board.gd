@@ -64,6 +64,9 @@ func _on_ready() -> void:
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 	
+	if NetworkManager.is_online:
+		NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
+	
 	
 func create_board():
 	board_array.resize(BOARD_LENGTH)
@@ -79,6 +82,8 @@ func create_board():
 
 func _on_tile_clicked(clicked_tile: Node3D):
 	print("TEST")
+	if not NetworkManager.is_my_turn(current_player_turn):
+		return
 	if selected_piece and selected_piece_tile: # piece is already selected
 		if clicked_tile.occupant: # Clicked Tile is occupied
 			# Clicked tile and selected tile are the same
@@ -92,30 +97,71 @@ func _on_tile_clicked(clicked_tile: Node3D):
 			# occupant piece belongs to different player
 			elif not clicked_tile.occupant.is_in_group(player_groups[current_player_turn]):
 				if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
-					capture_piece(clicked_tile.occupant)
-					move_piece_to_tile(selected_piece,clicked_tile)
-					_next_turn()
+					#capture_piece(clicked_tile.occupant)
+					#move_piece_to_tile(selected_piece,clicked_tile)
+					#_next_turn()
+					_sync_move.rpc(selected_piece_tile.board_position, clicked_tile.board_position, false)
 		elif clicked_tile.occupant == null:
 			if clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.MOVEMENT):
-				if selected_piece.is_in_group("Pawn") and not selected_piece.is_in_group("has_moved") and abs(clicked_tile.board_position - selected_piece_tile.board_position) == Vector2i(2,0):
-					_set_en_passant(clicked_tile)
-				move_piece_to_tile(selected_piece,clicked_tile)
 				_next_turn()
+				_sync_move.rpc(selected_piece_tile.board_position, clicked_tile.board_position, false)
+				#if selected_piece.is_in_group("Pawn") and not selected_piece.is_in_group("has_moved") and abs(clicked_tile.board_position - selected_piece_tile.board_position) == Vector2i(2,0):
+					#_set_en_passant(clicked_tile)
+				#move_piece_to_tile(selected_piece,clicked_tile)
+				#_next_turn()
 			elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.SPECIAL):
-				move_piece_to_tile(selected_piece,clicked_tile)
-				perform_castling_move(clicked_tile) # castling
-				_next_turn()
+				#move_piece_to_tile(selected_piece,clicked_tile)
+				#perform_castling_move(clicked_tile) # castling
+				#_next_turn()
+				_sync_move.rpc(selected_piece_tile.board_position, clicked_tile.board_position, true)
 			elif clicked_tile.tile_state(Flag.is_enabled_func, TileStateFlag.THREATENED):
 				if en_passant_tile and clicked_tile == en_passant_tile:
 					if en_passant_piece and not en_passant_piece.is_in_group(player_groups[current_player_turn]):
-						capture_piece(en_passant_piece)
-						move_piece_to_tile(selected_piece,clicked_tile)
-						_next_turn()
-			
+						#capture_piece(en_passant_piece)
+						#move_piece_to_tile(selected_piece,clicked_tile)
+						#_next_turn()
+						_sync_move.rpc(selected_piece_tile.board_position, clicked_tile.board_position, false)
+						
 	elif selected_piece == null: # no piece selected
 		if clicked_tile.occupant: # Clicked Tile is occupied
 			if clicked_tile.occupant.is_in_group(player_groups[current_player_turn]): # occupant piece belongs to current player
 				_select_tile(clicked_tile)
+
+@rpc("any_peer", "call_local", "reliable")
+func _sync_move(from: Vector2i, to: Vector2i, is_castling: bool) -> void:
+	var from_tile = board_array[from.x][from.y]
+	var to_tile   = board_array[to.x][to.y]
+
+	selected_piece_tile = from_tile
+	selected_piece = from_tile.occupant
+
+	# Handle en passant
+	if selected_piece.is_in_group("Pawn") and not selected_piece.is_in_group("has_moved") and abs(to.x - from.x) == 2:
+		_set_en_passant(to_tile)
+
+	# Handle capture
+	if to_tile.occupant and to_tile.occupant.player != selected_piece.player:
+		capture_piece(to_tile.occupant)
+	elif to_tile.occupant == null and en_passant_tile and to_tile == en_passant_tile:
+		if en_passant_piece and en_passant_piece.player != selected_piece.player:
+			capture_piece(en_passant_piece)
+
+	move_piece_to_tile(selected_piece, to_tile)
+
+	if is_castling:
+		perform_castling_move(to_tile)
+
+	_next_turn()
+
+@rpc("any_peer", "call_local", "reliable")
+func _sync_promotion(tile_pos: Vector2i, promotion_type: int) -> void:
+	var tile = board_array[tile_pos.x][tile_pos.y]
+	if tile and tile.occupant:
+		promote(tile.occupant, promotion_type as PawnPromotion)
+
+func _on_opponent_disconnected() -> void:
+	get_tree().paused = true
+	print("Opponent disconnected — game paused.")
 
 
 func _set_en_passant(clicked_tile: Node3D):

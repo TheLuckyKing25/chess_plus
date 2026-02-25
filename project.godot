@@ -23,6 +23,7 @@ buses/default_bus_layout="res://assets/default_bus_layout.tres"
 
 Global="*res://scripts/global.gd"
 ConfigFileHandler="*res://scripts/config_file_handler.gd"
+NetworkManager="*res://scripts/network_manager.gd"
 
 [display]
 
