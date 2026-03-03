@@ -18,7 +18,7 @@ func _process(delta: float):
 		if proceed and board.time_elapsed_since_turn_ended * board.TURN_TRANSITION_SPEED <= 1:
 			camera_rotation += PI * board.TURN_TRANSITION_SPEED * delta * 1000
 			match Player.current:
-				board.player_one:
+				board.stats.player_one:
 					player2_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
 					if camera_rotation >= PI:
 						player2_camera_twist_pivot.rotation = Vector3(0,PI,0)
@@ -28,7 +28,7 @@ func _process(delta: float):
 							player1_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
 						proceed = false
-				board.player_two:
+				board.stats.player_two:
 					player1_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
 					if camera_rotation >= PI:
 						player1_camera_twist_pivot.rotation = Vector3(0,PI,0)
@@ -45,9 +45,9 @@ func _on_board_game_state_changed(game_state: int) -> void:
 			$OverheadCamera.current = true
 		GameState.Gameplay:
 			match Player.current:
-				board.player_one:
+				board.stats.player_one:
 					player1_camera.current = true
-				board.player_two:
+				board.stats.player_two:
 					player2_camera.current = true
 
 

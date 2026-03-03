@@ -1,15 +1,12 @@
-class_name Tile
+class_name TileController
 extends GameNode3D
 
-signal clicked(tile:Tile)
-
-static var selected: Tile = null
-static var en_passant: Tile = null
+signal clicked(tile:TileController)
 
 # Standard Tile Colors
 const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1) 
 const LIGHT_COLOR = BASE_COLOR * 4/3
-const DARK_COLOR = BASE_COLOR * 2/3
+const DARK_COLOR = BASE_COLOR * 2/3 + Color(0,0,0,1)
 
 # State Tile Colors
 const THREATENED_COLOR = Color(1, 0.2, 0.2, 1)
@@ -20,33 +17,17 @@ const CHECKING_COLOR = Color(1, 1, 0.25)
 const SPECIAL_COLOR = Color(1,1,1,1)
 const MOVE_CHECKING_COLOR = Color(1, 0.392, 0.153)
 
-var stats: TileStats = TileStats.new()
-		
-
 var tile_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
 var state_material: StandardMaterial3D
 
-
-var occupant: Piece = null:
+var occupant: PieceController = null:
 	set(new_occupant):
 		if occupant:
 			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
 		if new_occupant:
 			new_occupant.clicked.connect(Callable(self, "_on_occupant_clicked"))
 		occupant = new_occupant
-
-var board_position: Vector2i
-
-
-var rank: int:
-	get():
-		return board_position.y
-
-var file: int:
-	get():
-		return board_position.x
-
 
 var is_mouse_on_tile: bool = false
 
@@ -56,7 +37,7 @@ func _ready() -> void:
 	state_material = tile_material.next_pass
 	state_material.albedo_color = Color(1,1,1,0)
 	mouseover_material = state_material.next_pass
-	match (file + rank) % 2:
+	match (stats.file + stats.rank) % 2:
 		0: tile_material.albedo_color = LIGHT_COLOR
 		1: tile_material.albedo_color = DARK_COLOR
 
@@ -64,57 +45,21 @@ func _ready() -> void:
 
 
 func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if ( 	is_mouse_on_tile 
-			and event is InputEventMouseButton
-			and event.is_pressed()
-			and event.button_index == MOUSE_BUTTON_LEFT
-			):
+	if is_mouse_on_tile and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		clicked.emit(self)
 
-func _on_occupant_clicked(piece: Piece):
+func _on_occupant_clicked(piece: PieceController):
 	clicked.emit(self)
 
-func _on_stats_changed():
-	apply_state()
 
-func _select():
-	stats.is_selected = true
-	if occupant:
-		occupant.stats.is_selected = true
+func clear_states():
+	_unselect()
+	_unthreaten()
+	_hide_castling()
+	stats.is_checked_movement = false
+	stats.is_movement = false
 
-func _unselect():
-	stats.is_selected = false
-	if occupant:
-		occupant.stats.is_selected = false
-	
-func _threaten():
-	stats.is_threatened = true
-	if occupant:
-		occupant.stats.is_threatened = true
-	
-func _unthreaten():
-	stats.is_threatened = false
-	if occupant:
-		occupant.stats.is_threatened = false
-
-func _show_castling():
-	stats.is_special = true
-	if occupant:
-		occupant.stats.is_special = true
-
-func _hide_castling():
-	stats.is_special = false
-	if occupant:
-		occupant.stats.is_special = false
-	
-func _set_check():
-	stats.is_checked = true
-	occupant.stats.is_checked = true
-	
-func _unset_check():
-	stats.is_checked = false
-	occupant.stats.is_checked = false
-	
+#region Mouse Over
 func _on_mouse_entered() -> void:
 	is_mouse_on_tile = true
 	mouseover_material.render_priority = 1
@@ -125,6 +70,7 @@ func _on_mouse_exited() -> void:
 	mouseover_material.albedo_color = Color(1,1,1,0)
 	mouseover_material.render_priority = 0
 	is_mouse_on_tile = false
+#endregion
 
 
 func tile_checked_movement():
@@ -132,7 +78,7 @@ func tile_checked_movement():
 	state_material.emission_enabled = false
 
 
-func apply_state():
+func _on_stats_changed():
 	state_material.albedo_color.a = 0
 	state_material.emission_enabled = false
 	

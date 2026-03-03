@@ -64,32 +64,3 @@ const USER_SETTING: Dictionary[String,float] = {
 	"CAMERA_ROTATION_SPEED": 5
 }
 #endregion
-
-
-#region Bit Flag Manipulation
-
-var Flag:	Dictionary[String,Callable] = {
-	"set_func": Callable(self,"set_flag"),
-	"unset_func": Callable(self,"unset_flag"),
-	"toggle_func": Callable(self,"toggle_flag"),
-	"is_enabled_func": Callable(self,"flag_is_enabled"),
-}
-
-func unset_flag(bitfield: int, flag: int) -> int:
-	bitfield &= ~(1 << flag)
-	return bitfield
-	
-
-func set_flag(bitfield: int, flag: int) -> int:
-	bitfield |= 1 << flag
-	return bitfield
-
-
-func toggle_flag(bitfield: int, flag: int) -> int:
-	bitfield ^= 1 << flag
-	return bitfield
-	
-func flag_is_enabled(bitfield: int, flag: int) -> bool:
-	return bitfield & (1 << flag)
-
-#endregion

@@ -1,5 +1,5 @@
 class_name PieceQueen
-extends PieceStats
+extends Piece
 
 static var name:String = "Queen"
 

@@ -4,7 +4,7 @@ signal back_button_pressed()
 signal continue_button_pressed()
 signal row_number_changed(value:int)
 signal column_number_changed(value:int)
-signal FEN_notation_verified(FEN_notation: String)
+signal FEN_notation_verified(FEN_notation: FEN)
 
 
 var row_num: int = 8
@@ -15,7 +15,7 @@ func _on_back_button_pressed() -> void:
 
 
 func _on_continue_button_pressed() -> void:
-	FEN_notation_verified.emit(%BoardStateFEN.text)
+	FEN_notation_verified.emit(FEN.new(%BoardStateFEN.text))
 	continue_button_pressed.emit()
 
 
@@ -31,15 +31,9 @@ func _on_column_number_spin_box_value_changed(value: float) -> void:
 
 func _on_board_state_fen_text_changed() -> void:
 	%PieceLayoutERRORLabel.hide()
-	var split_text = %BoardStateFEN.text.split(" ",false)
-	var piece_placement_data = split_text[0]
-	var active_player = split_text[1]
-	var castling_availability = split_text[2]
-	var en_passant_target = split_text[3]
-	var halfmove_clock = split_text[4]
-	var fullmove_clock = split_text[5]
+	var split_text = FEN.new(%BoardStateFEN.text)
 	
-	var row_representation = piece_placement_data.split("/",false)
+	var row_representation = split_text.piece_placement.split("/",false)
 	if row_representation.size() != row_num:
 		%PieceLayoutERRORLabel.show()
 		return
@@ -57,4 +51,4 @@ func _on_board_state_fen_text_changed() -> void:
 		if column_length != column_num:
 			%PieceLayoutERRORLabel.show()
 			return
-	FEN_notation_verified.emit(%BoardStateFEN.text)
+	FEN_notation_verified.emit(FEN.new(%BoardStateFEN.text))

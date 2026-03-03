@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://d2jy7efa8dtxo"]
 
-[ext_resource type="Script" uid="uid://cl5x46e8rhwti" path="res://scripts/piece/piecetype/king.gd" id="1_xbcl4"]
-[ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://assets/mesh/king_mesh.obj" id="2_xbcl4"]
+[ext_resource type="Script" path="res://scripts/piece/piecetype/king.gd" id="1_xbcl4"]
+[ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://resources/pieces/king/mesh_king.obj" id="2_xbcl4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wvtwp"]
 margin = 0.0

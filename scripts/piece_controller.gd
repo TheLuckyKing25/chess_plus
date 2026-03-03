@@ -1,10 +1,10 @@
-class_name Piece
+class_name PieceController
 extends GameNode3D
 
-signal clicked(piece: Piece)
+signal clicked(piece: PieceController)
 
-static var selected: Piece = null
-static var en_passant: Piece = null
+static var selected: PieceController = null
+static var en_passant: PieceController = null
 
 const THREATENED_COLOR = Color(0.9, 0, 0, 1)
 const CHECKING_COLOR = Color(0.9, 0.9, 0, 1)
@@ -21,16 +21,11 @@ var outline_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
 
 
-func _init(
-		piece_type:PieceType = load("res://resources/pieces/pawn/pawn_piece_type.tres"), 
-		player: Player = load("res://resources/players/player_one.tres")
-	):
-	stats = PieceStats.new(piece_type, player)
-
 func _ready() -> void:
 	stats.changed.connect(Callable(self,"_on_stats_changed"))
-	add_to_group(stats.type.name)
-	$Piece_Mesh.mesh = stats.type.object_mesh
+	stats.moved.connect(Callable(self,"_on_moved"))
+	add_to_group(stats.name)
+	$Piece_Mesh.mesh = stats.object_mesh
 	
 	piece_material = $Piece_Mesh.material_override
 	mouseover_material = piece_material.next_pass
@@ -49,13 +44,17 @@ func _ready() -> void:
 func _on_stats_changed():
 	apply_state()
 
-func moved():
-	if stats.type.name == "Pawn":
-		stats.movement = load("res://resources/pieces/pawn/pawn_movement.tres")
-	stats.has_moved = true
-	add_to_group("has_moved")
+func _on_moved(state:bool):
+	if state:
+		if stats.name == "Pawn":
+			stats.movement = load("res://resources/pieces/pawn/movement_pawn.tres")
+		add_to_group("has_moved")
+	else:
+		if stats.name == "Pawn":
+			stats.movement = load("res://resources/pieces/pawn/movement_pawn_initial.tres")
+		remove_from_group("has_moved")
 	
-
+	
 func _captured():
 	visible = false
 	$Collision.disabled = true

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://c54qlxs7mr3qm"]
 
-[ext_resource type="Script" uid="uid://dvppjkfmxeqhp" path="res://scripts/piece/piecetype/pawn.gd" id="2_7j1fu"]
-[ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/mesh/pawn_mesh.obj" id="2_247x2"]
+[ext_resource type="Script" path="res://scripts/piece/piecetype/pawn.gd" id="2_7j1fu"]
+[ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://resources/pieces/pawn/mesh_pawn.obj" id="2_247x2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ny8vt"]
 margin = 0.0
