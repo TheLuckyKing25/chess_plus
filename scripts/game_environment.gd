@@ -45,13 +45,10 @@ func _on_board_game_state_changed(game_state: int) -> void:
 			$OverheadCamera.current = true
 		GameState.Gameplay:
 			match Player.current:
-				board.stats.player_one:
+				Board.player_one:
 					player1_camera.current = true
-				board.stats.player_two:
+				Board.player_two:
 					player2_camera.current = true
-
-
-
 
 
 func _ready():

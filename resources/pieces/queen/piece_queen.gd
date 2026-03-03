@@ -1,23 +1,23 @@
 class_name PieceQueen
 extends Piece
 
-static var name:String = "Queen"
-
-@export var algebraic_notation: String = "Q"
-
-@export_multiline var description: String
-
-@export var object_mesh: Mesh = preload("res://resources/pieces/queen/mesh_queen.obj")
-
-## This piece can be promoted.
-@export var can_promote: bool = false
-
-## Allow this piecetype to be an option for promoting pieces to be promoted to.
-@export var promotion_option: bool = true
-
-
-
-func _init(new_player:Player,_movement:Movement = preload("res://resources/pieces/queen/movement_queen.tres")):
+func _init(
+		new_player:Player,
+		_name:String = "Queen",
+		_algebraic_notation: String = "Q",
+		_description: String = "PLACEHOLDER",
+		_object_mesh: Mesh = preload("res://resources/pieces/queen/mesh_queen.obj"),
+		_movement:Movement = preload("res://resources/pieces/queen/movement_queen.tres"),
+		_can_promote: bool = false,
+		_promotion_option: bool = true
+		):
 	resource_local_to_scene = true
+
 	player = new_player
+	name = _name
+	algebraic_notation = _algebraic_notation
+	description = _description
+	object_mesh = _object_mesh
 	movement = _movement
+	can_promote = _can_promote
+	promotion_option = _promotion_option

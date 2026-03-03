@@ -98,11 +98,11 @@ func set_direction_parity(direction_parity: int):
 		for branch in branches:
 			branch.set_direction_parity(direction_parity)
 
-static func extract_moves_from_movement(active_piece:PieceController, moveset: Movement, origin_tile: TileController):
+static func extract_moves_from_movement(active_piece:Piece, moveset: Movement, origin_tile: Tile):
 	var movements: Array[Move] = []
 	
 	for branch in moveset.branches:
-		var current_tile_ptr: TileController = origin_tile
+		var current_tile_ptr: Tile = origin_tile
 		
 		branch.purpose = moveset.purpose
 		var distance: int = branch.distance
@@ -111,7 +111,7 @@ static func extract_moves_from_movement(active_piece:PieceController, moveset: M
 			if current_tile_ptr == null:
 				break
 				
-			var next_tile_position: Vector2i = current_tile_ptr.stats.board_position + Movement.neighboring_tiles[branch.direction]
+			var next_tile_position: Vector2i = current_tile_ptr.board_position + Movement.neighboring_tiles[branch.direction]
 				
 			if (next_tile_position.x > Board.rank_count-1 
 					or next_tile_position.x < 0
@@ -119,13 +119,13 @@ static func extract_moves_from_movement(active_piece:PieceController, moveset: M
 					or next_tile_position.y < 0):
 				break
 			else:
-				current_tile_ptr = Board.tile_array[TileStats.get_index(next_tile_position.x,next_tile_position.y)]
+				current_tile_ptr = Board.tile_array[Tile.get_index(next_tile_position.x,next_tile_position.y)]
 			
 			
 			if branch.is_threaten:
 				if current_tile_ptr.occupant: # current_tile_ptr is occupied
-					if active_piece.stats.player != current_tile_ptr.occupant.stats.player: # current_tile_ptr is occupied by opponent piece
-						movements.append(Move.new(Board.tile_array[active_piece.stats.index],current_tile_ptr))
+					if active_piece.player != current_tile_ptr.occupant.player: # current_tile_ptr is occupied by opponent piece
+						movements.append(Move.new(Board.tile_array[active_piece.index],current_tile_ptr))
 						break	
 			
 			if not branch.is_jump:
@@ -135,11 +135,11 @@ static func extract_moves_from_movement(active_piece:PieceController, moveset: M
 			
 			if branch.is_move:
 				if current_tile_ptr.occupant == null: # current_tile_ptr is not occupied
-					movements.append(Move.new(Board.tile_array[active_piece.stats.index],current_tile_ptr))
+					movements.append(Move.new(Board.tile_array[active_piece.index],current_tile_ptr))
 			
-			if current_tile_ptr == TileController.en_passant:
+			if current_tile_ptr == Tile.en_passant:
 				if current_tile_ptr.occupant == null: # current_tile_ptr is not occupied
-					movements.append(Move.new(Board.tile_array[active_piece.stats.index],current_tile_ptr))
+					movements.append(Move.new(Board.tile_array[active_piece.index],current_tile_ptr))
 			
 			distance -= 1
 			

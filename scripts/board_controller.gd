@@ -9,10 +9,6 @@ const TURN_TRANSITION_DELAY_MSEC:int = 500
 const MAX_TURN_TRANSITION_LENGTH_MSEC:float = 2000 # 2 Seconds
 const TURN_TRANSITION_SPEED: float = USER_SETTING.CAMERA_ROTATION_SPEED/MAX_TURN_TRANSITION_LENGTH_MSEC
 
-
-static var stats: BoardStats
-
-
 var current_game_state = GameState.BoardCustomization
 
 var time_turn_ended:int = 0
@@ -26,12 +22,15 @@ const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
 const PIECE_SCENE:PackedScene = preload("res://scenes/piece/piece.tscn")
 
 
+func _on_gamemode_selection_fen_notation_verified(FEN_notation: FEN) -> void:
+	Board.FEN_board_state = FEN_notation
+
 func _on_gamemode_selection_column_number_changed(value: int) -> void:
-	stats.file_count = value
+	Board.file_count = value
 
 
 func _on_gamemode_selection_row_number_changed(value: int) -> void:
-	stats.rank_count = value
+	Board.rank_count = value
 
 
 func _on_tile_modifier_screen_continue_button_pressed() -> void:
@@ -44,29 +43,29 @@ func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		if tile.occupant:
 			tile.occupant.queue_free()
-	stats.piece_location.clear()
-	stats.piece_location.resize(stats.rank_count * stats.file_count)
-	stats.decode_FEN(placement)
+	Board.piece_location.clear()
+	Board.piece_location.resize(Board.rank_count * Board.file_count)
+	Board.decode_FEN(placement)
 
 
 func _on_gamemode_selection_continue_button_pressed() -> void:
 	generate_board()
-	stats.decode_FEN(stats.FEN_board_state)
+	Board.decode_FEN(Board.FEN_board_state)
 	current_game_state = GameState.BoardCustomization
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
-	
-	
-func _on_gamemode_selection_fen_notation_verified(FEN_notation: FEN) -> void:
-	stats.FEN_board_state = FEN_notation
+
 
 
 func generate_board():
-	stats.generate_virtual_board()
-	$BoardBase.mesh.size = Vector3(stats.file_count+1 ,0.2, stats.rank_count+1)
-	for tile in stats.tile_array:
-		$BoardBase.add_child(tile,true)	
+	Board.generate_virtual_board()
+	$BoardBase.mesh.size = Vector3(Board.file_count+1 ,0.2, Board.rank_count+1)
+	for tile in Board.tile_array:
+		$BoardBase.add_child(tile.controller,true)	
 
+func _ready() -> void:
+	Player.current = Board.player_one
+	Player.previous = Board.player_one
 
 func _process(_delta: float) -> void:
 	if Player.previous != Player.current:
@@ -82,13 +81,6 @@ func _process(_delta: float) -> void:
 				time_turn_ended = 0
 				time_elapsed_since_turn_ended = 0
 				$BoardBase.get_surface_override_material(0).albedo_color = Player.current.color
-
-
-func _on_ready() -> void:
-	stats = BoardStats.new()
-	Player.current = stats.player_one
-	Player.previous = stats.player_one
-
 
 #region Tile Clicked
 
@@ -123,8 +115,8 @@ func _gameplay_tile_select(clicked_tile: Tile):
 					_next_turn()
 		elif clicked_tile.occupant == null:
 			if clicked_tile.stats.is_movement:
-				if Piece.selected.is_in_group(PiecePawn.name) and not Piece.selected.stats.has_moved and abs(clicked_tile.stats.rank - Tile.selected.stats.rank) == 2:
-					stats.set_en_passant(clicked_tile)
+				if Piece.selected.is_in_group("Pawn") and not Piece.selected.stats.has_moved and abs(clicked_tile.stats.rank - Tile.selected.stats.rank) == 2:
+					Board.set_en_passant(clicked_tile)
 				move_piece_to_tile(Piece.selected,clicked_tile)
 				_next_turn()
 			elif clicked_tile.stats.is_special:
@@ -146,12 +138,12 @@ func _gameplay_tile_select(clicked_tile: Tile):
 #endregion
 
 
-func _select_tile(tile: Node3D):
+func _select_tile(tile: Tile):
 	Tile.selected = tile
 	Piece.selected = tile.occupant
 	Tile.selected._select()
 	show_valid_piece_movement()
-	if Piece.selected.is_in_group(PieceKing.name) and not Piece.selected.stats.has_moved:
+	if Piece.selected.is_in_group("King") and not Piece.selected.stats.has_moved:
 		show_valid_castling_movement()
 
 
@@ -166,54 +158,54 @@ func show_valid_castling_movement():
 	var king_tile: Tile = Tile.selected
 	
 	var corner_tiles:Array[Tile] = [
-		stats.tile_array[TileStats.get_index(king_tile.stats.rank,0)],
-		stats.tile_array[TileStats.get_index(king_tile.stats.rank,stats.file_count-1)]
+		Board.tile_array[Tile.get_index(king_tile.stats.rank,0)],
+		Board.tile_array[Tile.get_index(king_tile.stats.rank,Board.file_count-1)]
 	]
 	
 	# Check if corner tiles are occupied by unmoved rooks
 	var proceed: bool = true
 
 	for tile in corner_tiles:
-		if tile.occupant and tile.occupant.is_in_group(PieceRook.name) and not tile.occupant.stats.has_moved:
+		if tile.occupant and tile.occupant.is_in_group("Rook") and not tile.occupant.has_moved:
 			# Check if tiles between king and rook are not occupied
-			var step:int = 1 if tile.stats.file > king_tile.stats.file else -1
+			var step:int = 1 if tile.file > king_tile.file else -1
 			proceed = true
-			for tile_column_position in range(king_tile.stats.file, tile.stats.file, step):
-				if stats.tile_array[TileStats.get_index(king_tile.stats.rank,tile_column_position)] == king_tile:
+			for tile_column_position in range(king_tile.file, tile.file, step):
+				if Board.tile_array[Tile.get_index(king_tile.rank,tile_column_position)] == king_tile:
 					if king_tile.stats.is_checked:
 						proceed = false
 						break
 					else:
 						continue
-				elif stats.tile_array[TileStats.get_index(king_tile.stats.rank,tile_column_position)].occupant:
+				elif Board.tile_array[Tile.get_index(king_tile.stats.rank,tile_column_position)].occupant:
 					proceed = false
 					break
-				elif abs(tile_column_position - king_tile.stats.file) <= 2 and not Move.new(king_tile,stats.tile_array[TileStats.get_index(king_tile.stats.rank,tile_column_position)]).is_legal():
+				elif abs(tile_column_position - king_tile.file) <= 2 and not Move.new(king_tile,Board.tile_array[Tile.get_index(king_tile.rank,tile_column_position)]).is_legal():
 					proceed = false
 					break
 				
 			var castling_tile:Tile = null
 			
 			if proceed and tile.stats.file > king_tile.stats.file:
-				castling_tile = stats.tile_array[TileStats.get_index(Tile.selected.stats.rank,king_tile.stats.file + 2)]
+				castling_tile = Board.tile_array[Tile.get_index(Tile.selected.stats.rank,king_tile.stats.file + 2)]
 			elif proceed and tile.stats.file < king_tile.stats.file:
-				castling_tile = stats.tile_array[TileStats.get_index(Tile.selected.stats.rank,king_tile.stats.file - 2)]
+				castling_tile = Board.tile_array[Tile.get_index(Tile.selected.stats.rank,king_tile.stats.file - 2)]
 			
 			if castling_tile:
-				stats.legal_moves.append(Move.new(king_tile,castling_tile))
+				Board.legal_moves.append(Move.new(king_tile,castling_tile))
 				castling_tile._show_castling()
 
 
 func perform_castling_move(castling_tile: Tile):
-	if castling_tile.stats.file > (stats.file_count/2) - 1:
-		var castling_rook = stats.piece_location[TileStats.get_index(castling_tile.stats.rank,stats.file_count-1)]
-		stats.tile_array[TileStats.get_index(castling_tile.stats.rank,stats.file_count-1)].occupant = null
-		var castling_rook_destination = stats.tile_array[TileStats.get_index(castling_tile.stats.rank,castling_tile.stats.file-1)]
+	if castling_tile.file > (Board.file_count/2) - 1:
+		var castling_rook = Board.piece_location[Tile.get_index(castling_tile.rank,Board.file_count-1)]
+		Board.tile_array[Tile.get_index(castling_tile.rank,Board.file_count-1)].occupant = null
+		var castling_rook_destination = Board.tile_array[Tile.get_index(castling_tile.stats.rank,castling_tile.stats.file-1)]
 		move_piece_to_tile(castling_rook, castling_rook_destination)
-	elif castling_tile.stats.file < (stats.file_count/2) - 1:
-		var castling_rook = stats.piece_location[TileStats.get_index(castling_tile.stats.rank,0)]
-		stats.tile_array[TileStats.get_index(castling_tile.stats.rank,0)].occupant = null
-		var castling_rook_destination = stats.tile_array[TileStats.get_index(castling_tile.stats.rank,castling_tile.stats.file+1)]
+	elif castling_tile.file < (Board.file_count/2) - 1:
+		var castling_rook = Board.piece_location[Tile.get_index(castling_tile.rank,0)]
+		Board.tile_array[Tile.get_index(castling_tile.rank,0)].occupant = null
+		var castling_rook_destination = Board.tile_array[Tile.get_index(castling_tile.rank,castling_tile.file+1)]
 		move_piece_to_tile(castling_rook, castling_rook_destination)
 
 
@@ -238,13 +230,13 @@ func resolve_branching_movement(active_piece:Piece, moveset: Movement, origin_ti
 				
 			var next_tile_position: Vector2i = current_tile_ptr.stats.board_position + Movement.neighboring_tiles[branch.direction]
 				
-			if (next_tile_position.x > stats.rank_count-1 
+			if (next_tile_position.x > Board.rank_count-1 
 					or next_tile_position.x < 0
-					or next_tile_position.y > stats.file_count-1
+					or next_tile_position.y > Board.file_count-1
 					or next_tile_position.y < 0):
 				break
 			else:
-				current_tile_ptr = stats.tile_array[TileStats.get_index(next_tile_position.x,next_tile_position.y)]
+				current_tile_ptr = Board.tile_array[Tile.get_index(next_tile_position.x,next_tile_position.y)]
 			
 			if current_tile_ptr: # current_tile_ptr exists
 				if current_tile_ptr.occupant: # current_tile_ptr is occupied
@@ -274,8 +266,8 @@ func resolve_branching_movement(active_piece:Piece, moveset: Movement, origin_ti
 						#region Tile is empty
 						if moveset.purpose == Movement.Purpose.STANDARD_MOVEMENT:
 							var legal:bool = false
-							for move in stats.legal_moves:
-								if move.array_notation == [stats.tile_array[active_piece.stats.index], current_tile_ptr]:
+							for move in Board.legal_moves:
+								if move.array_notation == [Board.tile_array[active_piece.stats.index], current_tile_ptr]:
 									legal = true
 							if legal:
 								current_tile_ptr.stats.is_movement = true
@@ -302,7 +294,7 @@ func capture_piece(piece):
 
 
 func move_piece_to_tile(piece: Piece, tile: Tile):
-	stats.clear_check()
+	Board.clear_check()
 	
 	#if piece.is_in_group("Pawn"):
 		#if piece.is_in_group("Player_One") and tile.board_postion.y == BOARD_LENGTH-1:
@@ -330,22 +322,22 @@ func move_piece_to_tile(piece: Piece, tile: Tile):
 ## Sets up the next turn
 func _next_turn() -> void:
 	
-	for tile in stats.tile_array:
-		stats.piece_location[tile.stats.index] = tile.occupant
+	for tile in Board.tile_array:
+		Board.piece_location[tile.index] = tile.occupant
 	
 	# increments the turn number
 	turn_num += 1
 	Player.previous = Player.current
-	Player.current = Board.stats._get_opponent_of(Player.previous)
+	Player.current = Board.get_opponent_of(Player.previous)
 	
 	if Player.current == Player.en_passant:
-		stats.clear_en_passant()
+		Board.clear_en_passant()
 	
-	stats.legal_moves = Board.stats._generate_legal_moves()
-	if stats.legal_moves.is_empty():
+	Board.legal_moves = Board.generate_legal_moves()
+	if Board.legal_moves.is_empty():
 		pass # Checkmate
 	else:
-		stats.detect_check()
+		Board.detect_check()
 
 	next_turn.emit()
 

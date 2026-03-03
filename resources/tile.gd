@@ -1,24 +1,30 @@
 class_name Tile
 extends Resource
 
-static var selected: TileController = null
-static var en_passant: TileController = null
+# Standard Tile Colors
+const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1) 
+const LIGHT_COLOR = BASE_COLOR * 4/3
+const DARK_COLOR = BASE_COLOR * 2/3 + Color(0,0,0,1)
 
-static var total_rank_count: int:
-	get():
-		return Board.rank_count
+# State Tile Colors
+const THREATENED_COLOR = Color(1, 0.2, 0.2, 1)
+const VALID_COLOR = Color(0.6, 1, 0.6, 1)
+const SELECT_COLOR = Color(0.1, 1, 1, 1)
+const CHECKED_COLOR = Color(1, 0.2, 0.2, 1)
+const CHECKING_COLOR = Color(1, 1, 0.25)
+const SPECIAL_COLOR = Color(1,1,1,1)
+const MOVE_CHECKING_COLOR = Color(1, 0.392, 0.153)
 
 
-static var total_file_count: int:
-	get():
-		return Board.file_count
+static var selected: Tile = null
+static var en_passant: Tile = null
 
-var occupant: PieceController = null:
+var occupant: Piece = null:
 	set(new_occupant):
 		if occupant:
-			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
+			occupant.controller.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
 		if new_occupant:
-			new_occupant.clicked.connect(Callable(self, "_on_occupant_clicked"))
+			new_occupant.controller.clicked.connect(Callable(self, "_on_occupant_clicked"))
 		occupant = new_occupant
 
 #region Position
@@ -38,12 +44,12 @@ var file: int:
 
 var index: int:
 	set(new_index):
-		board_position = Vector2i(new_index/total_file_count, new_index%total_file_count)
+		board_position = Vector2i(new_index/Board.file_count, new_index%Board.file_count)
 	get():
 		return get_index(rank,file)
 #endregion
 
-var tile_object: Node3D
+var controller: TileController
 
 #region States
 var is_selected:bool = false:
@@ -89,8 +95,14 @@ func _init():
 	resource_local_to_scene = true
 
 static func get_index(rank:int,file:int) -> int:
-	return (file) + ((rank) * total_file_count)
+	return (file) + ((rank) * Board.file_count)
 
+func _on_ready():
+	match (file + rank) % 2:
+		0: controller.tile_material.albedo_color = LIGHT_COLOR
+		1: controller.tile_material.albedo_color = DARK_COLOR
+
+	# $Tile_Modifiers.modifiers = modifier_order
 
 #region States
 func _select():
@@ -134,3 +146,29 @@ func _unset_check():
 		occupant.is_checked = false
 #endregion
 	
+func _on_stats_changed():
+	controller.state_material.albedo_color.a = 0
+	controller.state_material.emission_enabled = false
+	
+	if is_checked_movement:
+		controller.state_material.albedo_color = MOVE_CHECKING_COLOR
+	elif is_special:
+		controller.state_material.albedo_color = SPECIAL_COLOR
+		controller.state_material.emission_enabled = true
+	elif is_checking:
+		controller.state_material.albedo_color = CHECKING_COLOR
+	elif is_checked:
+		controller.state_material.albedo_color = CHECKED_COLOR	
+	elif is_threatened:
+		controller.state_material.albedo_color = THREATENED_COLOR
+	elif is_selected:
+		controller.state_material.albedo_color = SELECT_COLOR			
+	elif is_movement:
+		controller.state_material.albedo_color = VALID_COLOR
+
+func clear_states():
+	_unselect()
+	_unthreaten()
+	_hide_castling()
+	is_checked_movement = false
+	is_movement = false
