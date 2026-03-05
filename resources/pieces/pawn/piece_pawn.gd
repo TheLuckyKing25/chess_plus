@@ -1,5 +1,5 @@
 class_name PiecePawn
-extends Piece
+extends PieceData
 
 func _init(
 		new_player:Player,
@@ -21,13 +21,3 @@ func _init(
 	movement = _movement
 	can_promote = _can_promote
 	promotion_option = _promotion_option
-
-
-func _moved(state:bool):
-	if state:
-		movement = load("res://resources/pieces/pawn/movement_pawn.tres")
-		controller.add_to_group("has_moved")
-	else:
-		movement = load("res://resources/pieces/pawn/movement_pawn_initial.tres")
-		controller.remove_from_group("has_moved")
-		

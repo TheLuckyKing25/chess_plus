@@ -1,5 +1,5 @@
 class_name PieceQueen
-extends Piece
+extends PieceData
 
 func _init(
 		new_player:Player,

@@ -1,5 +1,5 @@
 class_name PieceKnight
-extends Piece
+extends PieceData
 
 func _init(
 		new_player:Player,

@@ -20,16 +20,16 @@ var pieces:Dictionary[String,Array] = {
 	
 }
 
-var all_pieces: Array[Piece]:
+var all_pieces: Array[PieceObject]:
 	get():
-		var array: Array[Piece] = []
+		var array: Array[PieceObject] = []
 		for piece_type in pieces.keys():
 			array.append_array(pieces[piece_type])
 		return array
 
 
-func add_piece(new_piece: Piece):
-	if pieces.has(new_piece.name):
-		pieces[new_piece.name].append(new_piece)
+func add_piece(new_piece: PieceObject):
+	if pieces.has(new_piece.data.name):
+		pieces[new_piece.data.name].append(new_piece)
 	else:
-		pieces[new_piece.name] = [new_piece]
+		pieces[new_piece.data.name] = [new_piece]
