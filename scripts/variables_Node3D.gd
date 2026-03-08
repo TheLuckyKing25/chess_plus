@@ -35,11 +35,11 @@ enum TileModifierFlag{
 	}
 #endregion
 
-	
+
 #region Game Colors Constants
 ## Color of a base tile which is lightened or darkened to make the board.
 
-const COLOR_PALETTE: Dictionary = {		
+const COLOR_PALETTE: Dictionary = {
 	"TILE_CONDITIONS_BACKGROUND_COLOR": Color(0,0,0),
 	"TILE_PROPERTIES_BACKGROUND_COLOR": Color(0,0,0)
 }
@@ -52,7 +52,7 @@ static var game_setting: Dictionary = {
 	## You must move the first piece you select
 	"TOUCH_MOVE": false, #Not implimented
 }
-		
+
 static var debug_setting: Dictionary = {
 	"DEBUG_RESTRICT_MOVEMENT": false,
 	"DEBUG_SKIP_TITLE": false,
@@ -63,33 +63,4 @@ const USER_SETTING: Dictionary[String,float] = {
 	"PIECE_OUTLINE_THICKNESS": 0.1,
 	"CAMERA_ROTATION_SPEED": 5
 }
-#endregion
-
-
-#region Bit Flag Manipulation
-
-var Flag:	Dictionary[String,Callable] = {
-	"set_func": Callable(self,"set_flag"),
-	"unset_func": Callable(self,"unset_flag"),
-	"toggle_func": Callable(self,"toggle_flag"),
-	"is_enabled_func": Callable(self,"flag_is_enabled"),
-}
-
-func unset_flag(bitfield: int, flag: int) -> int:
-	bitfield &= ~(1 << flag)
-	return bitfield
-	
-
-func set_flag(bitfield: int, flag: int) -> int:
-	bitfield |= 1 << flag
-	return bitfield
-
-
-func toggle_flag(bitfield: int, flag: int) -> int:
-	bitfield ^= 1 << flag
-	return bitfield
-	
-func flag_is_enabled(bitfield: int, flag: int) -> bool:
-	return bitfield & (1 << flag)
-
 #endregion

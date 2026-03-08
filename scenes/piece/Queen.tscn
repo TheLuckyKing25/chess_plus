@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bpx8asa0jn4b1"]
 
-[ext_resource type="Script" uid="uid://dl4gxliogfkgr" path="res://scripts/piece/piecetype/queen.gd" id="1_dpvll"]
-[ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/mesh/queen_mesh.obj" id="2_dpvll"]
+[ext_resource type="Script" path="res://scripts/piece/piecetype/queen.gd" id="1_dpvll"]
+[ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://resources/pieces/queen/mesh_queen.obj" id="2_dpvll"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c5jg2"]
 margin = 0.0

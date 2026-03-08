@@ -12,7 +12,7 @@ func print_array(array, indent:int = 0):
 			print("\t".repeat(indent), "},")
 		else:
 			print("\t".repeat(indent), item ,", ")
-	
+
 func print_rule(rule, indent:int = 0):
 	print("\t".repeat(indent),"{")
 	print_better(rule.move_flags, indent+1)
@@ -32,3 +32,33 @@ func print_better(tree,indent:int = 0):
 		print("\t".repeat(indent),"]")
 	else:
 		print("\t".repeat(indent), tree)
+
+
+
+#region Bit Flag Manipulation
+
+var Flag:	Dictionary[String,Callable] = {
+	"set_func": Callable(self,"set_flag"),
+	"unset_func": Callable(self,"unset_flag"),
+	"toggle_func": Callable(self,"toggle_flag"),
+	"is_enabled_func": Callable(self,"flag_is_enabled"),
+}
+
+func unset_flag(bitfield: int, flag: int) -> int:
+	bitfield &= ~(1 << flag)
+	return bitfield
+
+
+func set_flag(bitfield: int, flag: int) -> int:
+	bitfield |= 1 << flag
+	return bitfield
+
+
+func toggle_flag(bitfield: int, flag: int) -> int:
+	bitfield ^= 1 << flag
+	return bitfield
+
+func flag_is_enabled(bitfield: int, flag: int) -> bool:
+	return bitfield & (1 << flag)
+
+#endregion
