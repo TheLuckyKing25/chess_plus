@@ -15,7 +15,7 @@ var destination_tile: TileObject
 # temp variable
 var array_notation:Array[TileObject]:
 	get():
-		return [starting_tile,destination_tile]
+		return [starting_tile, destination_tile]
 
 
 var algebraic_notation: String:
@@ -26,7 +26,6 @@ var algebraic_notation: String:
 func _init(start: TileObject, destination: TileObject):
 	starting_tile = start
 	destination_tile = destination
-
 
 
 func get_algebraic_notation():

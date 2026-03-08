@@ -35,11 +35,11 @@ enum TileModifierFlag{
 	}
 #endregion
 
-	
+
 #region Game Colors Constants
 ## Color of a base tile which is lightened or darkened to make the board.
 
-const COLOR_PALETTE: Dictionary = {		
+const COLOR_PALETTE: Dictionary = {
 	"TILE_CONDITIONS_BACKGROUND_COLOR": Color(0,0,0),
 	"TILE_PROPERTIES_BACKGROUND_COLOR": Color(0,0,0)
 }
@@ -52,7 +52,7 @@ static var game_setting: Dictionary = {
 	## You must move the first piece you select
 	"TOUCH_MOVE": false, #Not implimented
 }
-		
+
 static var debug_setting: Dictionary = {
 	"DEBUG_RESTRICT_MOVEMENT": false,
 	"DEBUG_SKIP_TITLE": false,

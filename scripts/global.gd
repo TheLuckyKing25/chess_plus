@@ -12,7 +12,7 @@ func print_array(array, indent:int = 0):
 			print("\t".repeat(indent), "},")
 		else:
 			print("\t".repeat(indent), item ,", ")
-	
+
 func print_rule(rule, indent:int = 0):
 	print("\t".repeat(indent),"{")
 	print_better(rule.move_flags, indent+1)
@@ -47,7 +47,7 @@ var Flag:	Dictionary[String,Callable] = {
 func unset_flag(bitfield: int, flag: int) -> int:
 	bitfield &= ~(1 << flag)
 	return bitfield
-	
+
 
 func set_flag(bitfield: int, flag: int) -> int:
 	bitfield |= 1 << flag
@@ -57,7 +57,7 @@ func set_flag(bitfield: int, flag: int) -> int:
 func toggle_flag(bitfield: int, flag: int) -> int:
 	bitfield ^= 1 << flag
 	return bitfield
-	
+
 func flag_is_enabled(bitfield: int, flag: int) -> bool:
 	return bitfield & (1 << flag)
 

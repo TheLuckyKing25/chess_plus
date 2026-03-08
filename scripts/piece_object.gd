@@ -1,18 +1,24 @@
 class_name PieceObject
 extends GameNode3D
 
+
 signal clicked(piece: PieceObject)
+
 
 static var selected: PieceObject = null
 static var en_passant: PieceObject = null
 
-var data: PieceData
 
 var is_mouse_on_piece: bool = false
+
 
 var piece_material: StandardMaterial3D
 var outline_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
+
+
+var data: PieceData
+
 
 func apply_state():
 	if data.is_captured:
@@ -34,23 +40,24 @@ func apply_state():
 	else:
 		remove_from_group("has_moved")
 
+
 func _ready() -> void:
 	data.changed.connect(Callable(self,"apply_state"))
 	add_to_group(data.name)
 	$Piece_Mesh.mesh = data.object_mesh
-	
+
 	piece_material = $Piece_Mesh.material_override
 	mouseover_material = piece_material.next_pass
 	outline_material = mouseover_material.next_pass
 	outline_material.albedo_color = Color(0,0,0,0)
-	
+
 	piece_material.albedo_color = data.player.color
 	add_to_group(data.player.name)
 	match data.player.name:
-		"Player_One": 
+		"Player_One":
 			remove_from_group("Player_Two")
 			rotate_y(PI)
-		"Player_Two": 
+		"Player_Two":
 			remove_from_group("Player_One")
 
 
@@ -58,20 +65,23 @@ func _captured():
 	visible = false
 	$Collision.disabled = true
 
-func promote():
-	remove_from_group("Pawn")
+#func promote():
+	#remove_from_group("Pawn")
 
 
 func _moved(state:bool):
+	data.has_moved = state
 	if state:
 		if data.name == "Pawn":
+			print("TEST")
 			data.movement = load("res://resources/pieces/pawn/movement_pawn.tres")
 		add_to_group("has_moved")
 	else:
 		if data.name == "Pawn":
 			data.movement = load("res://resources/pieces/pawn/movement_pawn_initial.tres")
 		remove_from_group("has_moved")
-	
+
+
 func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 	if (	event is InputEventMouseButton
 			and event.is_pressed()
@@ -79,7 +89,7 @@ func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3,
 			and is_mouse_on_piece
 		):
 		clicked.emit(self)
-	
+
 
 func _on_mouse_entered() -> void:
 	is_mouse_on_piece = true

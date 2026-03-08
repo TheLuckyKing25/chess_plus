@@ -26,10 +26,10 @@ var name:String = "NULL"
 		player = owner
 		match owner.name:
 			"Player_One":
-				parity = 1 
+				parity = 1
 				direction_parity = 0
 			"Player_Two":
-				parity = -1 
+				parity = -1
 				direction_parity = 4
 
 

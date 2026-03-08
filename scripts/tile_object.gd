@@ -25,12 +25,12 @@ var data: TileDataChess
 
 func _ready() -> void:
 	data.changed.connect(Callable(self, "_on_stats_changed"))
-	
+
 	tile_material = $Tile_Mesh.material_override
 	state_material = tile_material.next_pass
 	state_material.albedo_color = Color(1,1,1,0)
 	mouseover_material = state_material.next_pass
-	
+
 	match (data.file + data.rank) % 2:
 		0: tile_material.albedo_color = TileDataChess.LIGHT_COLOR
 		1: tile_material.albedo_color = TileDataChess.DARK_COLOR
@@ -75,12 +75,12 @@ func _unselect():
 	data.is_selected = false
 	if occupant:
 		occupant.data.is_selected = false
-	
+
 func _threaten():
 	data.is_threatened = true
 	if occupant:
 		occupant.data.is_threatened = true
-	
+
 func _unthreaten():
 	data.is_threatened = false
 	if occupant:
@@ -95,22 +95,22 @@ func _hide_castling():
 	data.is_special = false
 	if occupant:
 		occupant.data.is_special = false
-	
+
 func _set_check():
 	data.is_checked = true
 	if occupant:
 		occupant.data.is_checked = true
-	
+
 func _unset_check():
 	data.is_checked = false
 	if occupant:
 		occupant.data.is_checked = false
 #endregion
-	
+
 func _on_stats_changed():
 	state_material.albedo_color.a = 0
 	state_material.emission_enabled = false
-	
+
 	if data.is_checked_movement:
 		state_material.albedo_color = data.MOVE_CHECKING_COLOR
 	elif data.is_special:
@@ -119,11 +119,11 @@ func _on_stats_changed():
 	elif data.is_checking:
 		state_material.albedo_color = data.CHECKING_COLOR
 	elif data.is_checked:
-		state_material.albedo_color = data.CHECKED_COLOR	
+		state_material.albedo_color = data.CHECKED_COLOR
 	elif data.is_threatened:
 		state_material.albedo_color = data.THREATENED_COLOR
 	elif data.is_selected:
-		state_material.albedo_color = data.SELECT_COLOR			
+		state_material.albedo_color = data.SELECT_COLOR
 	elif data.is_movement:
 		state_material.albedo_color = data.VALID_COLOR
 

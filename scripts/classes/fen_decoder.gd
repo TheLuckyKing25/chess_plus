@@ -1,16 +1,20 @@
+# decodes Forsyth–Edwards Notation and generates a board state
 class_name FENDecoder
+
 
 var FEN_board_position: FEN
 
+
 func _init(FEN_board_position:FEN):
 	self.FEN_board_position = FEN_board_position
-	
+
 
 func apply(board: BoardObject):
 	place_pieces(board)
 	set_active_player(board)
 	set_castling_availability(board)
 	set_en_passant_target_tile(board)
+
 
 func place_pieces(board: BoardObject):
 	var tile_num = 0
@@ -64,8 +68,8 @@ func place_pieces(board: BoardObject):
 		board.data.tile_array[tile_index].add_child(new_piece,true)
 		board.data.tile_array[tile_index].occupant = new_piece
 		board.data.piece_location[tile_index] = new_piece
+		new_piece.data.index = tile_index
 		tile_num += 1
-
 
 func set_active_player(board: BoardObject):
 	match FEN_board_position.active_player:
@@ -77,7 +81,7 @@ func set_active_player(board: BoardObject):
 
 func set_castling_availability(board: BoardObject):
 	var piece_array = board.data.piece_location
-	
+
 	if piece_array[63] and piece_array[63].is_in_group("Rook"):
 		piece_array[63].data.has_moved = true
 	if piece_array[56] and piece_array[56].is_in_group("Rook"):

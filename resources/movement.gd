@@ -13,19 +13,19 @@ static var neighboring_tiles: Dictionary[Direction, Vector2i] = {
 }
 
 
-enum Direction{ 
+enum Direction{
 	NONE = -1, ## Only to be used when  [param Distance]  equals  [code]0[/code].
-	NORTH = 0, 
-	NORTHEAST = 1, 
-	EAST = 2, 
-	SOUTHEAST = 3, 
-	SOUTH = 4, 
-	SOUTHWEST = 5, 
-	WEST = 6, 
+	NORTH = 0,
+	NORTHEAST = 1,
+	EAST = 2,
+	SOUTHEAST = 3,
+	SOUTH = 4,
+	SOUTHWEST = 5,
+	WEST = 6,
 	NORTHWEST = 7,
 	}
 
-enum Purpose{ 
+enum Purpose{
 	UNSET = 0,
 	STANDARD_MOVEMENT = 1,
 	GENERATE_ALL_MOVES = 2,
@@ -40,11 +40,11 @@ enum Purpose{
 	set(cardinal):
 		if cardinal <= Direction.NONE:
 			direction = Direction.NONE
-		else:	
+		else:
 			direction = (cardinal % 8)
-	
 
-# Actions performed by the piece on a tile	
+
+# Actions performed by the piece on a tile
 @export var is_jump: bool = false # Continue through occupied tile
 @export var is_move: bool = false # Tile unoccupied
 @export var is_threaten: bool = false # Tile occupied by opponent
@@ -68,7 +68,7 @@ func get_duplicate():
 		for branch in duplicated_movement.branches:
 			duplicated_movement_branches.append(branch.get_duplicate())
 		duplicated_movement.branches = duplicated_movement_branches
-	
+
 	return duplicated_movement
 
 

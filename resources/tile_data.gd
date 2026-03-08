@@ -4,7 +4,7 @@ class_name TileDataChess
 extends Resource
 
 # Standard Tile Colors
-const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1) 
+const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
 const LIGHT_COLOR = BASE_COLOR * 4/3
 const DARK_COLOR = BASE_COLOR * 2/3 + Color(0,0,0,1)
 
