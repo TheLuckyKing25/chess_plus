@@ -35,12 +35,12 @@ var all_pieces: Array[PieceObject]:
 		return array
 
 
-func add_piece(new_piece: PieceObject):
+func add_piece(new_piece: PieceObject) -> void:
 	if pieces.has(new_piece.data.name):
 		pieces[new_piece.data.name].append(new_piece)
 	else:
 		pieces[new_piece.data.name] = [new_piece]
 
-func remove_piece(piece:PieceObject):
+func remove_piece(piece:PieceObject) -> void:
 	if pieces.has(piece.data.name):
 		pieces[piece.data.name].erase(piece)

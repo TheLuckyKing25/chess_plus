@@ -10,7 +10,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -22,7 +22,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -34,7 +34,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -46,7 +46,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -58,7 +58,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -70,7 +70,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -82,7 +82,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -94,7 +94,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -107,6 +107,6 @@ is_jump = false
 is_move = false
 is_threaten = false
 is_branching = true
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_ylpno")]([SubResource("Resource_5d7a6"), SubResource("Resource_6epxs"), SubResource("Resource_p7fyn"), SubResource("Resource_nm7v2"), SubResource("Resource_t2u2f"), SubResource("Resource_wnj15"), SubResource("Resource_tjdt0"), SubResource("Resource_p6vt8")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"

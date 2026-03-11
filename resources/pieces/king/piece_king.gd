@@ -1,6 +1,10 @@
 class_name PieceKing
 extends PieceData
 
+var castling_queenside_valid:bool = true
+
+var castling_kingside_valid:bool = true
+
 func _init(
 		new_player:Player,
 		_name:String = "King",

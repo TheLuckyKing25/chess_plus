@@ -29,5 +29,5 @@ var fullmove_number: String:
 	get(): return FE_notation.split(" ")[5]
 
 
-func _init(layout:String):
+func _init(layout:String) -> void:
 	FE_notation = layout

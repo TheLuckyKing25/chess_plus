@@ -1,5 +1,5 @@
 class_name PieceObject
-extends GameNode3D
+extends Node3D
 
 
 signal clicked(piece: PieceObject)
@@ -23,8 +23,8 @@ var data: PieceData
 func apply_state():
 	if data.is_captured:
 		_captured()
-	elif data.is_special:
-		outline_material.albedo_color = PieceData.SPECIAL_COLOR
+	elif data.is_castling:
+		outline_material.albedo_color = PieceData.CASTLING_COLOR
 	elif data.is_checking:
 		outline_material.albedo_color = PieceData.CHECKING_COLOR
 	elif data.is_threatened:
@@ -73,7 +73,6 @@ func _moved(state:bool):
 	data.has_moved = state
 	if state:
 		if data.name == "Pawn":
-			print("TEST")
 			data.movement = load("res://resources/pieces/pawn/movement_pawn.tres")
 		add_to_group("has_moved")
 	else:

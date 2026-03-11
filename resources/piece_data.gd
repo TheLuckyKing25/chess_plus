@@ -1,11 +1,11 @@
 class_name PieceData
 extends Resource
 
-const THREATENED_COLOR = Color(0.9, 0, 0, 1)
-const CHECKING_COLOR = Color(0.9, 0.9, 0)
-const SELECT_COLOR = Color(0, 0.9, 0.9, 1)
-const CHECKED_COLOR = Color(0.9, 0, 0, 1)
-const SPECIAL_COLOR = Color(1,1,1,1)
+const THREATENED_COLOR:Color = Color(0.9, 0, 0, 1)
+const CHECKING_COLOR:Color = Color(0.9, 0.9, 0)
+const SELECT_COLOR:Color = Color(0, 0.9, 0.9, 1)
+const CHECKED_COLOR:Color = Color(0.9, 0, 0, 1)
+const CASTLING_COLOR:Color = Color(1,1,1,1)
 
 var name:String = "NULL"
 
@@ -78,9 +78,9 @@ var is_checking: bool = false:
 		emit_changed()
 
 
-var is_special: bool = false:
+var is_castling: bool = false:
 	set(new_state):
-		is_special = new_state
+		is_castling = new_state
 		emit_changed()
 
 

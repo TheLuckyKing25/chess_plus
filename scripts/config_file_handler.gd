@@ -1,3 +1,5 @@
+extends Node
+
 var config = ConfigFile.new()
 const SETTINGS_FILE_PATH = "user://settings.ini"
 

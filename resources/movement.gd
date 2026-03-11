@@ -42,6 +42,8 @@ enum Purpose{
 			direction = Direction.NONE
 		else:
 			direction = (cardinal % 8)
+	get():
+		return direction as Direction
 
 
 # Actions performed by the piece on a tile
@@ -49,7 +51,7 @@ enum Purpose{
 @export var is_move: bool = false # Tile unoccupied
 @export var is_threaten: bool = false # Tile occupied by opponent
 @export var is_branching: bool = false # Branch from tile, flag set on last moverule of a branch
-@export var is_special: bool = false # Used for special movements, flag set on last moverule of a branch
+@export var is_castling: bool = false # Used for castling movements, flag set on last moverule of a branch
 
 
 @export var branches: Array[Movement]
@@ -58,10 +60,10 @@ enum Purpose{
 # The same throughout entire moveset
 var purpose: Purpose = Purpose.UNSET
 
-func _init():
+func _init() -> void:
 	resource_local_to_scene = true
 
-func get_duplicate():
+func get_duplicate() -> Movement:
 	var duplicated_movement:Movement = duplicate(true)
 	if duplicated_movement.is_branching:
 		var duplicated_movement_branches:Array[Movement] = []
@@ -72,26 +74,26 @@ func get_duplicate():
 	return duplicated_movement
 
 
-func rotate_movement():
+func rotate_movement() -> void:
 	pass
 
-func set_purpose_type(new_purpose: Purpose):
+func set_purpose_type(new_purpose: Purpose) -> void:
 	purpose = new_purpose
 	if is_branching:
 		for branch in branches:
 			branch.set_purpose_type(new_purpose)
 
-func set_max_distance(max_distance:int):
+func set_max_distance(max_distance:int) -> void:
 	if distance == -1:
 		distance = max_distance
 	if is_branching:
 		for branch in branches:
 			branch.set_max_distance(max_distance)
 
-func change_movement_distance():
+func change_movement_distance() -> void:
 	pass
 
-func set_direction_parity(direction_parity: int):
+func set_direction_parity(direction_parity: int) -> void:
 	if direction != Direction.NONE:
 		direction = (direction + direction_parity) % 8
 	if is_branching:

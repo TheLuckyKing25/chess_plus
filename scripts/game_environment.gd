@@ -1,4 +1,4 @@
-extends GameNode3D
+extends Node3D
 
 @onready var board = %"Board"
 @onready var player1_camera_twist_pivot = %"Twist Pivot P1"
@@ -13,9 +13,9 @@ var proceed = false
 
 func _process(delta: float):
 	if proceed or Player.previous != Player.current:
-		if board.time_elapsed_since_turn_ended > 0:
+		if board._time_elapsed_since_turn_ended > 0:
 			proceed = true
-		if proceed and board.time_elapsed_since_turn_ended * BoardData.TURN_TRANSITION_SPEED <= 1:
+		if proceed and board._time_elapsed_since_turn_ended * BoardData.TURN_TRANSITION_SPEED <= 1:
 			camera_rotation += PI * BoardData.TURN_TRANSITION_SPEED * delta * 1000
 			match Player.current:
 				board.data.player_one:
@@ -41,9 +41,9 @@ func _process(delta: float):
 
 func _on_board_game_state_changed(game_state: int) -> void:
 	match game_state:
-		GameState.BoardCustomization:
+		BoardObject.GameState.BoardCustomization:
 			$OverheadCamera.current = true
-		GameState.Gameplay:
+		BoardObject.GameState.Gameplay:
 			match Player.current:
 				board.data.player_one:
 					player1_camera.current = true

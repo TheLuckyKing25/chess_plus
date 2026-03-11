@@ -23,7 +23,7 @@ var algebraic_notation: String:
 		return ""
 
 
-func _init(start: TileObject, destination: TileObject):
+func _init(start: TileObject, destination: TileObject) -> void:
 	starting_tile = start
 	destination_tile = destination
 

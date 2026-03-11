@@ -10,7 +10,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -22,7 +22,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -34,7 +34,7 @@ is_jump = true
 is_move = false
 is_threaten = false
 is_branching = true
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([SubResource("Resource_10j12"), SubResource("Resource_c4t7f")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -46,7 +46,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -58,7 +58,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -70,7 +70,7 @@ is_jump = true
 is_move = false
 is_threaten = false
 is_branching = true
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([SubResource("Resource_ccej3"), SubResource("Resource_01d2o")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -82,7 +82,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -94,7 +94,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -106,7 +106,7 @@ is_jump = true
 is_move = false
 is_threaten = false
 is_branching = true
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([SubResource("Resource_1gyax"), SubResource("Resource_u2t2h")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -118,7 +118,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -130,7 +130,7 @@ is_jump = false
 is_move = true
 is_threaten = true
 is_branching = false
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -142,7 +142,7 @@ is_jump = true
 is_move = false
 is_threaten = false
 is_branching = true
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([SubResource("Resource_lm335"), SubResource("Resource_bib0y")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
@@ -155,6 +155,6 @@ is_jump = false
 is_move = false
 is_threaten = false
 is_branching = true
-is_special = false
+is_castling = false
 branches = Array[ExtResource("1_10j12")]([SubResource("Resource_p2wv4"), SubResource("Resource_7pbxk"), SubResource("Resource_lxl25"), SubResource("Resource_8t77s")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"

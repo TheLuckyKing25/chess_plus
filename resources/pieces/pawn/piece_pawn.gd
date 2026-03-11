@@ -10,7 +10,7 @@ func _init(
 		_movement:Movement = preload("res://resources/pieces/pawn/movement_pawn_initial.tres"),
 		_can_promote: bool = true,
 		_promotion_option: bool = false
-		):
+		) -> void:
 	resource_local_to_scene = true
 
 	player = new_player

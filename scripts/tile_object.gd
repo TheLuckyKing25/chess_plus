@@ -1,5 +1,5 @@
 class_name TileObject
-extends GameNode3D
+extends Node3D
 
 signal clicked(tile:TileObject)
 
@@ -62,7 +62,7 @@ func _on_mouse_exited() -> void:
 
 
 func tile_checked_movement():
-	state_material.albedo_color = COLOR_PALETTE.MOVE_CHECKING_TILE_COLOR
+	state_material.albedo_color = data.MOVE_CHECKING_COLOR
 	state_material.emission_enabled = false
 
 #region States
@@ -87,14 +87,14 @@ func _unthreaten():
 		occupant.data.is_threatened = false
 
 func _show_castling():
-	data.is_special = true
+	data.is_castling = true
 	if occupant:
-		occupant.data.is_special = true
+		occupant.data.is_castling = true
 
 func _hide_castling():
-	data.is_special = false
+	data.is_castling = false
 	if occupant:
-		occupant.data.is_special = false
+		occupant.data.is_castling = false
 
 func _set_check():
 	data.is_checked = true
@@ -113,8 +113,8 @@ func _on_stats_changed():
 
 	if data.is_checked_movement:
 		state_material.albedo_color = data.MOVE_CHECKING_COLOR
-	elif data.is_special:
-		state_material.albedo_color = data.SPECIAL_COLOR
+	elif data.is_castling:
+		state_material.albedo_color = data.CASTLING_COLOR
 		state_material.emission_enabled = true
 	elif data.is_checking:
 		state_material.albedo_color = data.CHECKING_COLOR
