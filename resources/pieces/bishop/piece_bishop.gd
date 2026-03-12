@@ -1,3 +1,4 @@
+@icon ("res://resources/pieces/bishop/icon_bishop_light.tres")
 class_name PieceBishop
 extends PieceData
 

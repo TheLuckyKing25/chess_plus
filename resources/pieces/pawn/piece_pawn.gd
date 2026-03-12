@@ -1,3 +1,4 @@
+@icon ("res://resources/pieces/pawn/icon_pawn_light.tres")
 class_name PiecePawn
 extends PieceData
 

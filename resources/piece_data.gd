@@ -1,11 +1,11 @@
 class_name PieceData
 extends Resource
 
-const THREATENED_COLOR:Color = Color(0.9, 0, 0, 1)
-const CHECKING_COLOR:Color = Color(0.9, 0.9, 0)
-const SELECT_COLOR:Color = Color(0, 0.9, 0.9, 1)
-const CHECKED_COLOR:Color = Color(0.9, 0, 0, 1)
-const CASTLING_COLOR:Color = Color(1,1,1,1)
+const THREATENED_COLOR:= Color(0.9, 0, 0, 1)
+const CHECKING_COLOR:= Color(0.9, 0.9, 0)
+const SELECT_COLOR:= Color(0, 0.9, 0.9, 1)
+const CHECKED_COLOR:= Color(0.9, 0, 0, 1)
+const CASTLING_COLOR:= Color(1,1,1,1)
 
 var name:String = "NULL"
 
@@ -16,10 +16,11 @@ var name:String = "NULL"
 @export var object_mesh: Mesh = null
 
 ## This piece can be promoted.
-@export var can_promote: bool = false
+@export var can_promote:= false
 
 ## Allow this piecetype to be an option for promoting pieces to be promoted to.
-@export var promotion_option: bool = false
+@export var promotion_option:= false
+
 
 @export var player: Player:
 	set(owner):

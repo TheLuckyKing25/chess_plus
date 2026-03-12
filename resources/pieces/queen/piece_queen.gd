@@ -1,3 +1,4 @@
+@icon ("res://resources/pieces/queen/icon_queen_light.tres.tres")
 class_name PieceQueen
 extends PieceData
 

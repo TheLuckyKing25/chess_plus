@@ -17,7 +17,7 @@ var outline_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
 
 
-var data: PieceData
+@export var data: PieceData
 
 
 func apply_state():
@@ -64,6 +64,8 @@ func _ready() -> void:
 func _captured():
 	visible = false
 	$Collision.disabled = true
+	translate(Vector3(0,-5,0))
+	reparent(%Captured)
 
 #func promote():
 	#remove_from_group("Pawn")

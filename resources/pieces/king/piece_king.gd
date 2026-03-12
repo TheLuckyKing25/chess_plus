@@ -1,9 +1,10 @@
+@icon ("res://resources/pieces/king/icon_king_light.tres")
 class_name PieceKing
 extends PieceData
 
-var castling_queenside_valid:bool = true
+var _castling_queenside_valid := true
 
-var castling_kingside_valid:bool = true
+var _castling_kingside_valid := true
 
 func _init(
 		new_player:Player,

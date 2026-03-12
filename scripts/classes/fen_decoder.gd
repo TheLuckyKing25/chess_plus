@@ -93,20 +93,20 @@ func set_active_player(board: BoardObject):
 
 
 func set_castling_availability(board: BoardObject):
-	board.data.player_one.pieces["King"][0].data.castling_kingside_valid = false
-	board.data.player_one.pieces["King"][0].data.castling_queenside_valid = false
-	board.data.player_two.pieces["King"][0].data.castling_kingside_valid = false
-	board.data.player_two.pieces["King"][0].data.castling_queenside_valid = false
+	board.data.player_one.pieces["King"][0].data._castling_kingside_valid = false
+	board.data.player_one.pieces["King"][0].data._castling_queenside_valid = false
+	board.data.player_two.pieces["King"][0].data._castling_kingside_valid = false
+	board.data.player_two.pieces["King"][0].data._castling_queenside_valid = false
 	for character in FEN_board_position.castling_availability:
 		match character:
 			"K":
-				board.data.player_one.pieces["King"][0].data.castling_kingside_valid = true
+				board.data.player_one.pieces["King"][0].data._castling_kingside_valid = true
 			"Q":
-				board.data.player_one.pieces["King"][0].data.castling_queenside_valid = true
+				board.data.player_one.pieces["King"][0].data._castling_queenside_valid = true
 			"k":
-				board.data.player_two.pieces["King"][0].data.castling_kingside_valid = true
+				board.data.player_two.pieces["King"][0].data._castling_kingside_valid = true
 			"q":
-				board.data.player_two.pieces["King"][0].data.castling_queenside_valid = true
+				board.data.player_two.pieces["King"][0].data._castling_queenside_valid = true
 
 
 func set_en_passant_target_tile(board: BoardObject):

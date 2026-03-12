@@ -1,3 +1,4 @@
+@icon ("res://resources/pieces/knight/icon_knight_light.tres")
 class_name PieceKnight
 extends PieceData
 

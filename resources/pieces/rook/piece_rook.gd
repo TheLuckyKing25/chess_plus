@@ -1,3 +1,4 @@
+@icon ("res://resources/pieces/rook/icon_rook_light.tres")
 class_name PieceRook
 extends PieceData
 
