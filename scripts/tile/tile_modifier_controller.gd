@@ -1,4 +1,4 @@
-extends GameNode3D
+extends Node3D
 
 signal modifierCountChanged(modifier_number:int, modifiers: Array)
 
