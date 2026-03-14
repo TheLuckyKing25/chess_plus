@@ -8,7 +8,6 @@ var duplicated_board: BoardData = null
 var virtual_tiles: Array[TileObject]
 var virtual_pieces: Array[PieceObject]
 
-
 func _init(board_data: BoardData) -> void:
 	duplicated_board = board_data.duplicate()
 	duplicated_board.tile_array = board_data.tile_array.duplicate()
@@ -24,7 +23,6 @@ func reset() -> void:
 func make_move(move:Move) -> void:
 	move.destination_tile.occupant = move.starting_tile.occupant
 	move.starting_tile.occupant = null
-
 
 func unmake_move(move:Move) -> void:
 	move.starting_tile.occupant = move.destination_tile.occupant

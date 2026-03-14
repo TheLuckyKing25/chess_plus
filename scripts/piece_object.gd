@@ -65,7 +65,7 @@ func _captured():
 	visible = false
 	$Collision.disabled = true
 	translate(Vector3(0,-5,0))
-	reparent(%Captured)
+	#reparent(%Captured)
 
 #func promote():
 	#remove_from_group("Pawn")

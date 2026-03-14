@@ -139,34 +139,43 @@ func generate_board() -> void:
 
 
 func load_FEN(FE_notation:FEN) -> void:
-	var fen_decoder = FENDecoder.new(FE_notation)
+	var fen_decoder := FENDecoder.new(FE_notation)
 	data.FEN_board_state = FE_notation
 	get_tree().call_group("Tile","clear_states")
 
 	fen_decoder.apply(self)
 
 	data.legal_moves = MoveList.new(data)
-	data.legal_moves.generate_legal_moves()
+	data.legal_moves.generate_legal_moves(Player.current)
 
 	_clear_check()
-	detect_check()
+	detect_check(Player.current)
 
 
-func detect_check() -> void:
-	var player_king: PieceObject = Player.current.pieces["King"][0]
+func detect_check(player:Player) -> void:
+	var player_king: PieceObject = player.pieces["King"][0]
 	var player_king_tile: TileObject = data.tile_array[player_king.data.index]
 
 	var opponent_moves: MoveList = MoveList.new(data)
-	opponent_moves.generate_pseudo_legal_moves(data.get_opponent_of(Player.current))
+	opponent_moves.generate_pseudo_legal_moves(data.get_opponent_of(player))
 
 	for move in opponent_moves.moves:
 		if (	move.destination_tile.occupant
 				and move.destination_tile.occupant.is_in_group("King")
-				and move.destination_tile.occupant.is_in_group(Player.current.name)
+				and move.destination_tile.occupant.is_in_group(player.name)
 				):
 			player_king_tile._set_check()
 			break
 
+func detect_checkmate(player:Player):
+	var player_king: PieceObject = player.pieces["King"][0]
+	var player_king_tile: TileObject = data.tile_array[player_king.data.index]
+
+	var moves: MoveList = MoveList.new(data)
+	moves.generate_legal_moves(player)
+
+	if player_king.data.is_checked and moves.is_empty:
+		return "CHECKMATE" # CHECKMATE
 
 func _clear_check() -> void:
 	for tile in data.tile_array:
@@ -225,7 +234,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 					and clicked_tile.data.is_threatened
 					):
 				_capture_piece(clicked_tile.occupant)
-				move_piece_to_tile(PieceObject.selected,clicked_tile)
+				perform_move(Move.new(TileObject.selected, clicked_tile, Move.Type.CAPTURING))
 				next_turn()
 
 		elif clicked_tile.occupant == null:
@@ -237,12 +246,11 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 						and abs(clicked_tile.data.rank - TileObject.selected.data.rank) == 2 # Pawn piece has moved two tiles
 						):
 					_set_en_passant(clicked_tile)
-				move_piece_to_tile(PieceObject.selected,clicked_tile)
+				perform_move(Move.new(TileObject.selected, clicked_tile))
 				next_turn()
 
 			# perform castling movement
 			elif clicked_tile.data.is_castling:
-				move_piece_to_tile(PieceObject.selected,clicked_tile)
 				_perform_castling_move(clicked_tile) # castling
 				next_turn()
 
@@ -253,7 +261,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 					and not PieceObject.en_passant.is_in_group(Player.current.name)
 					):
 						_capture_piece(PieceObject.en_passant)
-						move_piece_to_tile(PieceObject.selected,clicked_tile)
+						perform_move(Move.new(TileObject.selected, clicked_tile, Move.Type.CAPTURING|Move.Type.EN_PASSANT))
 						next_turn()
 #endregion
 
@@ -276,7 +284,9 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 	var middle_file_value: float = (data.file_count/2) - 1
 	var castling_rook_index: int
 	var destination_index: int
+	var castling_flag: int
 
+	# kingside castling
 	if castling_tile.data.file > middle_file_value:
 		castling_rook_index = data.get_index(
 				castling_tile.data.rank,
@@ -287,18 +297,22 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 				castling_tile.data.rank,
 				castling_tile.data.file-1
 				)
+		castling_flag = Move.Type.CASTLING_KINGSIDE
+		perform_move(Move.new(TileObject.selected, castling_tile, Move.Type.CASTLING_KINGSIDE))
 
+	# queenside castling
 	elif castling_tile.data.file < middle_file_value:
 		castling_rook_index = data.get_index(castling_tile.data.rank,0)
 		destination_index = data.get_index(
 				castling_tile.data.rank,
 				castling_tile.data.file+1
 				)
+		castling_flag = Move.Type.CASTLING_QUEENSIDE
+		perform_move(Move.new(TileObject.selected, castling_tile, Move.Type.CASTLING_QUEENSIDE))
 
-	var castling_rook = data.piece_array[castling_rook_index]
 	var castling_rook_destination = data.tile_array[destination_index]
-	data.tile_array[castling_rook_index].occupant = null
-	move_piece_to_tile(castling_rook, castling_rook_destination)
+
+	perform_move(Move.new(data.tile_array[castling_rook_index],castling_rook_destination,Move.Type.IGNORE))
 
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
@@ -442,32 +456,41 @@ func _capture_piece(piece) -> void:
 	piece._captured()
 	_piece_capture_audio.play()
 
-
-func move_piece_to_tile(piece: PieceObject, tile: TileObject) -> void:
+func perform_move(move: Move):
 	_clear_check()
 	get_tree().call_group("Tile","clear_states")
-	TileObject.selected.occupant = null
+	var piece: PieceObject = move.starting_tile.occupant
+	move.starting_tile.occupant = null
 
-
-	tile.occupant = piece
-	piece.global_position = (piece.position * Vector3(0,1,0)) + tile.global_position
-	piece.global_rotation = tile.global_rotation + piece.global_rotation
-	piece.reparent(tile)
-	piece.data.index = tile.data.index
+	move.destination_tile.occupant = piece
+	piece.global_position = (piece.position * Vector3(0,1,0)) + move.destination_tile.global_position
+	piece.global_rotation = move.destination_tile.global_rotation + piece.global_rotation
+	piece.reparent(move.destination_tile)
+	piece.data.index = move.destination_tile.data.index
 	_piece_move_audio.play()
 
 	if not piece.data.has_moved:
 		piece._moved(true)
 
-	if PieceObject.selected == piece:
-		PieceObject.selected = null
-
-## Sets up the next turn
-func next_turn() -> void:
 	# match occupants in piece_array to their respective tiles in tile_array
 	for tile in data.tile_array:
 		data.piece_array[tile.data.index] = tile.occupant
 
+	# determine if check or checkmate has occured
+	var opponent_moves:= MoveList.new(data)
+	opponent_moves.generate_legal_moves(data.get_opponent_of(Player.current))
+	if opponent_moves.moves.is_empty():
+		move.flags += Move.Type.CHECKMATE
+
+	detect_check(data.get_opponent_of(Player.current))
+	if data.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
+		move.flags += Move.Type.CHECK
+
+	print(move.algebraic_notation)
+
+
+## Sets up the next turn
+func next_turn() -> void:
 	# increments the turn number
 	_turn_num += 1
 	Player.previous = Player.current
@@ -478,10 +501,6 @@ func next_turn() -> void:
 		PieceObject.en_passant = null
 		TileObject.en_passant = null
 
-	data.legal_moves.generate_legal_moves()
-	if data.legal_moves.moves.is_empty():
-		pass # Checkmate
-	else:
-		detect_check()
+	data.legal_moves.generate_legal_moves(Player.current)
 
 	turn_changed.emit()
