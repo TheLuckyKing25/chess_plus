@@ -13,7 +13,6 @@ var column_num: int = 8
 func _on_back_button_pressed() -> void:
 	back_button_pressed.emit()
 
-
 func _on_continue_button_pressed() -> void:
 	FEN_notation_verified.emit(FEN.new(%BoardStateFEN.text))
 	continue_button_pressed.emit()
@@ -32,7 +31,7 @@ func _on_column_number_spin_box_value_changed(value: float) -> void:
 func _on_board_state_fen_text_changed() -> void:
 	%PieceLayoutERRORLabel.hide()
 	var split_text = FEN.new(%BoardStateFEN.text)
-	
+
 	var row_representation = split_text.piece_placement.split("/",false)
 	if row_representation.size() != row_num:
 		%PieceLayoutERRORLabel.show()

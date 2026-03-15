@@ -10,6 +10,12 @@ enum GameState {
 	Gameplay
 }
 
+const GAMEMODE_SELECTION_MENU:PackedScene = preload("res://scenes/menu/gamemode_selection_menu.tscn")
+const TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/TileModifierScreen.tscn")
+
+var _gamemode_selection_menu: Node
+var _tile_modifier_menu: Node
+
 const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
 const PIECE_SCENE:PackedScene = preload("res://scenes/piece/piece.tscn")
 
@@ -32,7 +38,17 @@ func _ready() -> void:
 
 	Player.current = data.player_one
 	Player.previous = data.player_one
+	_connect_gamemode_selection_menu()
 
+
+func _connect_gamemode_selection_menu():
+	_gamemode_selection_menu = GAMEMODE_SELECTION_MENU.instantiate()
+	$CanvasLayer.add_child(_gamemode_selection_menu)
+	_gamemode_selection_menu.back_button_pressed.connect(Callable(self,"_on_gamemode_selection_back_button_pressed"))
+	_gamemode_selection_menu.column_number_changed.connect(Callable(self,"_on_gamemode_selection_column_number_changed"))
+	_gamemode_selection_menu.continue_button_pressed.connect(Callable(self,"_on_gamemode_selection_continue_button_pressed"))
+	_gamemode_selection_menu.FEN_notation_verified.connect(Callable(self,"_on_gamemode_selection_fen_notation_verified"))
+	_gamemode_selection_menu.row_number_changed.connect(Callable(self,"_on_gamemode_selection_row_number_changed"))
 
 func _process(_delta: float) -> void:
 	if Player.previous != Player.current:
@@ -61,8 +77,15 @@ func _process(_delta: float) -> void:
 				_time_elapsed_since_turn_ended = 0
 				board_base_color = Player.current.color
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
 
-#region UI Signal Functions
+#region Gamemode Selection Menu Signal Connections
+
+func _on_gamemode_selection_back_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
+
 func _on_gamemode_selection_fen_notation_verified(FEN_notation: FEN) -> void:
 	data.FEN_board_state = FEN_notation
 
@@ -74,7 +97,20 @@ func _on_gamemode_selection_column_number_changed(value: int) -> void:
 func _on_gamemode_selection_row_number_changed(value: int) -> void:
 	data.rank_count = value
 
+func _on_gamemode_selection_continue_button_pressed() -> void:
+	_tile_modifier_menu = TILE_MODIFIER_MENU.instantiate()
+	$CanvasLayer.add_child(_tile_modifier_menu)
+	_gamemode_selection_menu.hide()
+	generate_board()
+	load_FEN(data.FEN_board_state)
+	_current_game_state = GameState.BoardCustomization
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 
+#endregion
+
+
+#region Tile Modifier Selection Menu Signal Connections
 func _on_tile_modifier_screen_back_button_pressed() -> void:
 	for child in $BoardBase.get_children():
 		if child.occupant:
@@ -90,8 +126,10 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	_current_game_state = GameState.Gameplay
 	game_state_changed.emit(_current_game_state)
 	get_tree().call_group("Tile","clear_states")
+#endregion
 
 
+#region Game Overlay Signal Connections
 func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
 	data.piece_array.clear()
 	for tile in data.tile_array:
@@ -105,13 +143,6 @@ func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
 	data.piece_array.resize(data.rank_count * data.file_count)
 	load_FEN(placement)
 
-
-func _on_gamemode_selection_continue_button_pressed() -> void:
-	generate_board()
-	load_FEN(data.FEN_board_state)
-	_current_game_state = GameState.BoardCustomization
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 #endregion
 
 

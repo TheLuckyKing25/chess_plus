@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b7d6wfi6urnkk" path="res://scripts/menu/menu_pause.gd" id="1_etnfi"]
 [ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="1_nov15"]
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="3_dmujr"]
-[ext_resource type="PackedScene" uid="uid://0fccgu7f77gg" path="res://scenes/menu/SettingsMenu.tscn" id="3_komsw"]
+[ext_resource type="PackedScene" uid="uid://0fccgu7f77gg" path="res://scenes/menu/settings_menu.tscn" id="3_komsw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_komsw"]
 bg_color = Color(0.377919, 0.377919, 0.377919, 1)
@@ -104,7 +104,6 @@ mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Leave Match"
 
-[connection signal="back_button_pressed" from="ScreenController/SettingsScreen/Settings" to="." method="_on_settings_back_button_pressed"]
 [connection signal="pressed" from="ScreenController/PauseScreen/BoxContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="ScreenController/PauseScreen/BoxContainer/VBoxContainer/Settings" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="ScreenController/PauseScreen/BoxContainer/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
