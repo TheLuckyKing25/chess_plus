@@ -6,22 +6,18 @@ func _on_ready():
 	NetworkManager.connected_to_game.connect(_on_connected_to_game)
 
 func _input(event) -> void:
-	if event.is_action_pressed("ui_cancel") and %Main.visible == false:
-		%Start.hide()
-		%Main.show()
+	if event.is_action_pressed("ui_cancel"):
+		$ScreenController.position = Vector2(0,0)
 
-func _on_start_pressed():
-	%Main.hide()
-	%Start.show()
 
 func _on_settings_pressed():
-	%Options/Settings.show()
-	%Main.hide()
+	$ScreenController/SettingsScreen/Settings.show()
+	$ScreenController.position = Vector2(-1,-1) * $ScreenController/SettingsScreen.position
 
 func _on_exit_pressed():
 	get_tree().quit()
 
-func _on_singleplayer_pressed():
+func _on_new_match_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/gameEnvironment.tscn")
 
 func _on_host_pressed() -> void:

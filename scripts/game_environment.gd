@@ -1,4 +1,4 @@
-extends GameNode3D
+extends Node3D
 
 @onready var board = %"Board"
 @onready var player1_camera_twist_pivot = %"Twist Pivot P1"
@@ -12,46 +12,51 @@ var piece_to_promote = null
 var proceed = false
 
 func _process(delta: float):
-	
-	if NetworkManager.is_online:
-		return
-		
-	if proceed or board.previous_player_turn != board.current_player_turn:
-		if board.time_elapsed_since_turn_ended > 0:
+	if proceed or Player.previous != Player.current:
+		if board._time_elapsed_since_turn_ended > 0:
 			proceed = true
-		if proceed and board.time_elapsed_since_turn_ended * board.TURN_TRANSITION_SPEED <= 1:
-			camera_rotation += PI * board.TURN_TRANSITION_SPEED * delta * 1000
-			match board.current_player_turn:
-				Player.PLAYER_ONE:
+		if proceed and board._time_elapsed_since_turn_ended * BoardData.TURN_TRANSITION_SPEED <= 1:
+			camera_rotation += PI * BoardData.TURN_TRANSITION_SPEED * delta * 1000
+			match Player.current:
+				board.data.player_one:
 					player2_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
 					if camera_rotation >= PI:
 						player2_camera_twist_pivot.rotation = Vector3(0,PI,0)
-						player1_camera.make_current()				
+						player1_camera.make_current()
 						player2_camera_twist_pivot.rotation = Vector3(0,0,0)
 						if player1_camera_twist_pivot.rotation != Vector3(0,0,0):
 							player1_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
 						proceed = false
-				Player.PLAYER_TWO:
+				board.data.player_two:
 					player1_camera_twist_pivot.rotation = Vector3(0,camera_rotation,0)
 					if camera_rotation >= PI:
 						player1_camera_twist_pivot.rotation = Vector3(0,PI,0)
-						player2_camera.make_current()		
+						player2_camera.make_current()
 						player1_camera_twist_pivot.rotation = Vector3(0,0,0)
 						if player2_camera_twist_pivot.rotation != Vector3(0,0,0):
 							player2_camera_twist_pivot.rotation = Vector3(0,0,0)
 						camera_rotation = 0
 						proceed = false
 
+func _on_board_game_state_changed(game_state: int) -> void:
+	match game_state:
+		BoardObject.GameState.BoardCustomization:
+			$OverheadCamera.current = true
+		BoardObject.GameState.Gameplay:
+			match Player.current:
+				board.data.player_one:
+					player1_camera.current = true
+				board.data.player_two:
+					player2_camera.current = true
+
+
+
+
+
 
 func _ready():
 	board.promotion_requested.connect(_on_promotion_requested)
-	
-	if NetworkManager.is_online:
-		if NetworkManager.my_player == 0:
-			player1_camera.make_current()
-		else:
-			player2_camera.make_current()
 
 
 func _on_promotion_requested(piece):
@@ -61,21 +66,27 @@ func _on_promotion_requested(piece):
 	promotion_menu.position = mouse_pos
 	promotion_menu.show()
 
+
 func _on_queen_pressed():
-	_finish_promotion(PawnPromotion.QUEEN)
+	get_tree().paused = false
+	#board.promote(piece_to_promote, PawnPromotion.QUEEN)
+	piece_to_promote = null
+	promotion_menu.hide()
 
 func _on_knight_pressed():
-	_finish_promotion(PawnPromotion.KNIGHT)
+	get_tree().paused = false
+	#board.promote(piece_to_promote, PawnPromotion.KNIGHT)
+	piece_to_promote = null
+	promotion_menu.hide()
 
 func _on_rook_pressed():
-	_finish_promotion(PawnPromotion.ROOK)
+	get_tree().paused = false
+	#board.promote(piece_to_promote, PawnPromotion.ROOK)
+	piece_to_promote = null
+	promotion_menu.hide()
 
 func _on_bishop_pressed():
-	_finish_promotion(PawnPromotion.BISHOP)
-
-func _finish_promotion(promotion: PawnPromotion) -> void:
 	get_tree().paused = false
-	promotion_menu.hide()
-	var piece_tile = piece_to_promote.get_parent()
+	#board.promote(piece_to_promote, PawnPromotion.BISHOP)
 	piece_to_promote = null
-	board._sync_promotion.rpc(piece_tile.board_position, promotion)
+	promotion_menu.hide()
