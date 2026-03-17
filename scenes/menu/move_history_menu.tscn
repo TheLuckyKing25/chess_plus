@@ -1,9 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c6srt74gaynlp"]
+[gd_scene load_steps=2 format=3 uid="uid://cppchrwn6onja"]
 
-[ext_resource type="Script" uid="uid://dhwqe6e58yyyp" path="res://scripts/menu/debug_menu.gd" id="1_euyyq"]
+[ext_resource type="Script" uid="uid://cct1kx7w4fbui" path="res://scripts/menu/move_history_menu.gd" id="1_w0pjt"]
 
-[node name="DebugMenu" type="MarginContainer"]
-z_index = -1
+[node name="MoveHistoryMenu" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,13 +13,12 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-script = ExtResource("1_euyyq")
+script = ExtResource("1_w0pjt")
 
 [node name="Panel" type="Panel" parent="."]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 1
+size_flags_horizontal = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 1
@@ -34,13 +32,9 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="PiecePlacementList" type="Tree" parent="Panel/MarginContainer"]
-unique_name_in_owner = true
+[node name="ItemList" type="ItemList" parent="Panel/MarginContainer"]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 14
-allow_reselect = true
-hide_root = true
-auto_tooltip = false
-
-[connection signal="item_selected" from="Panel/MarginContainer/PiecePlacementList" to="." method="_on_piece_placement_list_item_selected"]
+allow_search = false
+max_columns = 2
+same_column_width = true
+fixed_column_width = 110

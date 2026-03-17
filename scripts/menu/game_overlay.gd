@@ -10,6 +10,9 @@ func _connect_to_pause_button(function: Callable):
 func _connect_to_rulebook_button(function: Callable):
 	$MenuButtons/MenuButtons/RuleBookButton.pressed.connect(function)
 
+func _connect_to_move_history_button(function: Callable):
+	$MenuButtons/MenuButtons/MoveHistoryButton.toggled.connect(function)
+
 # When Escape pressed: pause game or resume game, depenent on state.
 func _input(event) -> void:
 	if event.is_action_pressed("ui_cancel") and !get_tree().paused:

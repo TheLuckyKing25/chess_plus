@@ -18,13 +18,14 @@ const _TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/tile_modifier
 const _GAME_OVERLAY: PackedScene = preload("res://scenes/menu/game_overlay.tscn")
 const _DEBUG_MENU: PackedScene = preload("res://scenes/menu/debug_menu.tscn")
 const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
-
+const _MOVE_HISTORY_MENU: PackedScene = preload("res://scenes/menu/move_history_menu.tscn")
 
 var _gamemode_selection_menu: Node
 var _tile_modifier_menu: Node
 var _game_overlay: Node
 var _debug_menu: Node
 var _pause_menu: Node
+var _move_history_menu: Node
 
 
 const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
@@ -41,6 +42,7 @@ var _turn_num: int = 0
 
 var data: BoardData
 
+var move_history: MoveList = MoveList.new(data)
 
 @onready var _piece_capture_audio = $Piece_capture
 @onready var _piece_move_audio = $Piece_move
@@ -154,6 +156,9 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	_game_overlay._connect_to_pause_button(Callable(self,"_on_game_overlay_pause_button_pressed"))
 	_game_overlay._connent_to_debug_button(Callable(self,"_on_game_overlay_debug_button_toggled"))
 	_game_overlay._connect_to_rulebook_button(Callable(self,"_on_game_overlay_rulebook_button_pressed"))
+	_game_overlay._connect_to_move_history_button(Callable(self,"_on_game_overlay_move_history_button_pressed"))
+	_move_history_menu = _MOVE_HISTORY_MENU.instantiate()
+
 
 	_tile_modifier_menu.hide()
 	_tile_modifier_menu.queue_free()
@@ -169,6 +174,8 @@ func _on_game_overlay_pause_button_pressed():
 	_game_overlay.hide()
 	if _debug_menu:
 		_debug_menu.hide()
+	if _move_history_menu:
+		_move_history_menu.hide()
 
 	get_tree().paused = true
 	_pause_menu._connect_to_resume_button(Callable(self,"_on_pause_menu_resume_button_pressed"))
@@ -189,6 +196,12 @@ func _on_game_overlay_debug_button_toggled(toggled_on:bool):
 func _on_game_overlay_rulebook_button_pressed():
 	pass
 
+func _on_game_overlay_move_history_button_pressed(toggled_on:bool):
+	if toggled_on:
+		$MenuLayer.add_child(_move_history_menu)
+	else:
+		$MenuLayer.remove_child(_move_history_menu)
+
 	#endregion
 
 
@@ -200,6 +213,8 @@ func _on_pause_menu_resume_button_pressed():
 	_game_overlay.show()
 	if _debug_menu:
 		_debug_menu.show()
+	if _move_history_menu:
+		_move_history_menu.show()
 	_pause_menu.queue_free()
 
 func _on_pause_menu_leave_button_pressed():
@@ -584,7 +599,8 @@ func perform_move(move: Move):
 	if data.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
 		move.flags += Move.Type.CHECK
 
-	print(move.algebraic_notation)
+	if move.algebraic_notation != "": # empty string due to castling move
+		_move_history_menu.add_move(move)
 
 
 ## Sets up the next turn

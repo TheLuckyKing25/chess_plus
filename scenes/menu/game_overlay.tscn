@@ -116,3 +116,20 @@ modulate = Color(100, 100, 100, 1)
 layout_mode = 2
 texture = ExtResource("3_7fcqw")
 expand_mode = 1
+
+[node name="MoveHistoryButton" type="Button" parent="MenuButtons/MenuButtons"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(0.423529, 0.423529, 0.423529, 1)
+theme_override_colors/font_hover_color = Color(0.643137, 0.643137, 0.643137, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.486275, 0.486275, 0.486275, 1)
+theme_override_colors/font_pressed_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 16
+theme_override_styles/focus = SubResource("StyleBoxFlat_siigl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_siigl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_siigl")
+theme_override_styles/normal = SubResource("StyleBoxFlat_siigl")
+toggle_mode = true
+text = "MoveHistory"
