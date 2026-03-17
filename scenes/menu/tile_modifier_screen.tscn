@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://111w7dffrqkh"]
 
-[ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="1_kxyir"]
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_vcbal"]
-[ext_resource type="PackedScene" uid="uid://ca80534plviow" path="res://scenes/menu/SelectedTileModifierButton.tscn" id="3_dxaw7"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_xor8o"]
+[ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="2_hqvri"]
+[ext_resource type="PackedScene" uid="uid://ca80534plviow" path="res://scenes/menu/SelectedTileModifierButton.tscn" id="3_toi5x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vcbal"]
 bg_color = Color(0.351083, 0.55, 0.209, 1)
@@ -26,8 +26,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-theme = ExtResource("1_vcbal")
-script = ExtResource("1_kxyir")
+theme = ExtResource("1_xor8o")
+script = ExtResource("2_hqvri")
 
 [node name="ReferenceRect" type="ReferenceRect" parent="."]
 layout_mode = 1
@@ -221,11 +221,11 @@ layout_mode = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 5
 
-[node name="Cog" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
+[node name="Cog" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_toi5x")]
 layout_mode = 2
 text = "Cog"
 
-[node name="Icey" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
+[node name="Icey" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_toi5x")]
 layout_mode = 2
 text = "Icey"
 

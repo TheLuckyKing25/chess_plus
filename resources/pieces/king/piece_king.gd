@@ -2,8 +2,10 @@
 class_name PieceKing
 extends PieceData
 
+@warning_ignore("unused_private_class_variable")
 var _castling_queenside_valid := true
 
+@warning_ignore("unused_private_class_variable")
 var _castling_kingside_valid := true
 
 func _init(

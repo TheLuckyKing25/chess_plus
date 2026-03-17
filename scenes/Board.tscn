@@ -1,10 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://vqvs470xc1lw"]
+[gd_scene load_steps=6 format=3 uid="uid://vqvs470xc1lw"]
 
 [ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/board_object.gd" id="1_hljw5"]
 [ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="2_kqf1l"]
 [ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="3_hljw5"]
-[ext_resource type="PackedScene" uid="uid://111w7dffrqkh" path="res://scenes/menu/TileModifierScreen.tscn" id="9_wxh2q"]
-[ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/GameOverlay.tscn" id="10_w8n1y"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
@@ -33,18 +31,7 @@ volume_db = -70.0
 pitch_scale = 0.75
 bus = &"Game"
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="MenuLayer" type="CanvasLayer" parent="."]
 layer = 3
 
-[node name="GameOverlay" parent="CanvasLayer" instance=ExtResource("10_w8n1y")]
-offset_left = 2324.0
-offset_right = 2324.0
-
-[node name="TileModifierScreen" parent="CanvasLayer" instance=ExtResource("9_wxh2q")]
-offset_left = 1162.0
-offset_right = 1162.0
-
 [connection signal="ready" from="." to="." method="_on_ready"]
-[connection signal="new_placement_selected" from="CanvasLayer/GameOverlay" to="." method="_on_game_overlay_new_placement_selected"]
-[connection signal="back_button_pressed" from="CanvasLayer/TileModifierScreen" to="." method="_on_tile_modifier_screen_back_button_pressed"]
-[connection signal="continue_button_pressed" from="CanvasLayer/TileModifierScreen" to="." method="_on_tile_modifier_screen_continue_button_pressed"]

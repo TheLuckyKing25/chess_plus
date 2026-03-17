@@ -1,11 +1,9 @@
 extends Control
 
-signal back_button_pressed()
-signal continue_button_pressed()
+func _connect_to_back_button(function:Callable):
+	var back_button: Button = $ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer/BackButton
+	back_button.pressed.connect(function)
 
-func _on_continue_pressed() -> void:
-	continue_button_pressed.emit()
-
-
-func _on_back_button_pressed() -> void:
-	back_button_pressed.emit()
+func _connect_to_continue_button(function:Callable):
+	var continue_button: Button = $ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer/ContinueButton
+	continue_button.pressed.connect(function)

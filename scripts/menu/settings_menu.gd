@@ -8,6 +8,9 @@ extends Control
 @onready var game_slider = %Game
 
 
+func _connect_to_back_button(function:Callable):
+	$SettingMenu/VBoxContainer/HBoxContainer/Back.pressed.connect(function)
+
 func _ready():
 	var video_settings = ConfigFileHandler.load_video_settings()
 	fullscreen_checkbox.button_pressed = video_settings.fullscreen

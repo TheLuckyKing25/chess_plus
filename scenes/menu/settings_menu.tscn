@@ -1,20 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://0fccgu7f77gg"]
+[gd_scene load_steps=3 format=3 uid="uid://0fccgu7f77gg"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_0sh77"]
 [ext_resource type="Script" uid="uid://pjpfeiofeqj8" path="res://scripts/menu/settings_menu.gd" id="2_cags2"]
-
-[sub_resource type="Gradient" id="Gradient_0sh77"]
-offsets = PackedFloat32Array(0, 0.00680274, 1)
-colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_viyhn"]
-gradient = SubResource("Gradient_0sh77")
-fill_from = Vector2(1, 0.803419)
-fill_to = Vector2(1, 0.269231)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cags2"]
-texture = SubResource("GradientTexture2D_viyhn")
-region_rect = Rect2(0, 18, 64, 32)
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -26,16 +13,6 @@ grow_vertical = 2
 theme = ExtResource("1_0sh77")
 script = ExtResource("2_cags2")
 metadata/_edit_horizontal_guides_ = [79.0]
-
-[node name="Background" type="Panel" parent="."]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_cags2")
 
 [node name="SettingMenu" type="Panel" parent="."]
 layout_mode = 1

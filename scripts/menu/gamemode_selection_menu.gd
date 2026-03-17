@@ -2,9 +2,7 @@ extends Control
 
 signal back_button_pressed()
 signal continue_button_pressed()
-signal row_number_changed(value:int)
-signal column_number_changed(value:int)
-signal FEN_notation_verified(FEN_notation: FEN)
+signal board_verified(rank_count: int, file_count: int, FEN_notation: FEN)
 
 
 var row_num: int = 8
@@ -14,18 +12,16 @@ func _on_back_button_pressed() -> void:
 	back_button_pressed.emit()
 
 func _on_continue_button_pressed() -> void:
-	FEN_notation_verified.emit(FEN.new(%BoardStateFEN.text))
+	board_verified.emit(row_num,column_num,FEN.new(%BoardStateFEN.text))
 	continue_button_pressed.emit()
 
 
 func _on_row_number_spin_box_value_changed(value: float) -> void:
 	row_num = value
-	row_number_changed.emit(value)
 
 
 func _on_column_number_spin_box_value_changed(value: float) -> void:
 	column_num = value
-	column_number_changed.emit(value)
 
 
 func _on_board_state_fen_text_changed() -> void:
@@ -50,4 +46,4 @@ func _on_board_state_fen_text_changed() -> void:
 		if column_length != column_num:
 			%PieceLayoutERRORLabel.show()
 			return
-	FEN_notation_verified.emit(FEN.new(%BoardStateFEN.text))
+	board_verified.emit(row_num, column_num, FEN.new(%BoardStateFEN.text))
