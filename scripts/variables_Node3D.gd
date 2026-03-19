@@ -82,6 +82,7 @@ enum TileModifierFlag{
 	CONDITION_STICKY = 3,
 	PROPERTY_CONVEYER = 4,
 	PROPERTY_PRISM = 5,
+	PROPERTY_SPRINGY = 6,
 	}
 
 enum TileStateFlag{

@@ -194,15 +194,79 @@ func _get_tile_from_piece(piece):
 			if piece_location[row][column] == piece:
 				return board_array[row][column]
 
+# This function applies modifiers that affect the final set of legal moves.
+func _apply_tile_modifiers(tile, piece, moves):
+	var result = moves
+	for modifier in tile.modifier_order:
+			result = modifier.modify_moves(self, piece, tile, result)
+	return result
+
+# This function is used to update a pieces moveset when effected by a modifier,
+# like when a piece is on a cog.
+func _apply_tile_modifiers_to_moveset(tile, piece, moveset): 
+	var result = moveset
+	for modifier in tile.modifier_order:
+			result = modifier.modify_moveset(self, piece, tile, result)
+	return result
+
+# This function is used to trigger modifiers that should activate when a piece
+# enters a tile, such as with icy.
+func _apply_on_piece_enter(piece, from_tile, to_tile):
+	for modifier in to_tile.modifier_order:
+		modifier.on_piece_enter(self, piece, from_tile, to_tile)
+
+# This function is used to trigger modifiers that should activate when a piece 
+# ends a turn on a tile. It's different than _apply_on_piece_enter to distinguish
+# between immediate effects like icy, and effects that should trigger because the turn is over.
+# One example is when a piece is sprung and lands on a conveyer, and then because the turn is over
+# conveyer still works even though we didnt directly move there on our own.
+var end_turn_modifier_moved: bool = false
+func _apply_turn_end_modifiers() -> void:
+	var max := 16
+	var t := 0
+	
+	while t < max: # Loop is used for back to back movement modifiers, otherwise only one works
+		end_turn_modifier_moved = false
+		for tile in get_tree().get_nodes_in_group("Tile"):
+			for modifier in tile.modifier_order:
+				modifier.on_turn_end(self, tile)
+		
+		# resync after moving
+		for tile in get_tree().get_nodes_in_group("Tile"):
+			piece_location[tile.board_position.x][tile.board_position.y] = tile.occupant
+		
+		if not end_turn_modifier_moved:
+			break
+		
+		t += 1
+
+# This function is used to tick down a condition's lifetime, and update the tile's
+# modifier array to delete a condition once its lifetime runs out.
+func _update_modifier_lifetimes() -> void:
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		var updated_modifiers: Array[TileModifier] = []
+		for modifier in tile.modifier_order:
+			if modifier.get("lifetime") != null:
+				if modifier.lifetime > 0:
+					modifier.lifetime -= 1
+				if modifier.lifetime == 0:
+					continue
+			updated_modifiers.append(modifier)
+		tile.modifier_order = updated_modifiers
 
 func _generate_moves_from_piece(piece):
+	var current_tile = _get_tile_from_piece(piece)
+
 	var moveset = MoveRule.new(ActionType.BRANCH, PurposeType.GENERATE_ALL_MOVES,0,0,piece.move_rules).new_duplicate()
+	moveset = _apply_tile_modifiers_to_moveset(current_tile, piece, moveset) # ONLY WORKS WHILE ON COG
 	var full_movement = []
 	
 	if moveset.distance == 0 and moveset.action_flag_is_enabled(ActionType.BRANCH):
 		var moves = resolve_branching_movement(piece, moveset, _get_tile_from_piece(piece))
 		while ([] in moves):
 			moves.erase([])
+			
+		moves = _apply_tile_modifiers(current_tile, piece, moves)
 		return moves
 
 
@@ -428,6 +492,7 @@ func clear_check():
 
 func show_valid_piece_movement():
 	var moveset = MoveRule.new(ActionType.BRANCH, PurposeType.STANDARD_MOVEMENT,0,0,selected_piece.move_rules).new_duplicate()
+	moveset = _apply_tile_modifiers_to_moveset(selected_piece_tile, selected_piece, moveset) # ONLY WORKS WHILE ACTIVELY ON COG
 	
 	if moveset.distance == 0 and moveset.action_flag_is_enabled(ActionType.BRANCH):
 		resolve_branching_movement(selected_piece, moveset, selected_piece_tile)
@@ -435,6 +500,11 @@ func show_valid_piece_movement():
 
 func resolve_branching_movement(active_piece:Piece, moveset: MoveRule, origin_tile: Node3D):
 	var movements = []
+	
+	# Get modifiers before checking branches
+	for modifier in origin_tile.modifier_order:
+		if modifier.blocks_movement(self, active_piece, origin_tile): # ex. if sticky, block movement completely
+			return movements
 	
 	for branch in moveset.branches:
 		var current_tile_ptr = origin_tile
@@ -522,6 +592,8 @@ func capture_piece(piece):
 
 
 func move_piece_to_tile(piece: Node3D, tile: Node3D):
+	var from_tile = piece.get_parent()
+	
 	clear_check()
 	
 	#if piece.is_in_group("Pawn"):
@@ -532,9 +604,10 @@ func move_piece_to_tile(piece: Node3D, tile: Node3D):
 		#if piece.is_in_group("Player_Two") and tile.board_postion.y == 0:
 			#piece.remove_from_group("Pawn")
 	
-	selected_piece_tile._unselect()
+	# updated to from_tile rather than selected_piece_tile as auto-moving modifiers don't cooperate with that variable
+	from_tile._unselect() 
 	clear_movement()
-	selected_piece_tile.occupant = null
+	from_tile.occupant = null
 	
 	tile.occupant = piece
 	piece.reparent(tile)
@@ -544,11 +617,15 @@ func move_piece_to_tile(piece: Node3D, tile: Node3D):
 	)
 	piece_move_audio.play()
 	
+	end_turn_modifier_moved = true
+	
 	if not piece.is_in_group("has_moved"):
 		piece.add_to_group("has_moved")
 		piece.moved()
 	if selected_piece == piece:
 		selected_piece = null
+		
+	_apply_on_piece_enter(piece, from_tile, tile)
 
 
 func clear_movement():
@@ -562,9 +639,11 @@ func clear_movement():
 
 ## Sets up the next turn
 func _next_turn() -> void:
-	
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		piece_location[tile.board_position.x][tile.board_position.y] = tile.occupant
+	
+	_apply_turn_end_modifiers()
+	_update_modifier_lifetimes()
 	
 	# increments the turn number
 	turn_num += 1

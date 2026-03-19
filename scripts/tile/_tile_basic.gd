@@ -14,12 +14,21 @@ var occupant: Piece:
 		
 		occupant = piece
 
-
-@export var modifier_order: Array[TileModifier] = []:
+# This variable is an array where all the modifiers of a tile are stored, and is
+# constantly accessed elsewhere to update modifiers.
+@export var _modifier_order: Array[TileModifier] = []
+var modifier_order: Array[TileModifier]:
 	set(new_modifier_order):
-		modifier_order = new_modifier_order
-		$Tile_Object/Tile_Modifiers.modifiers = modifier_order
+		_modifier_order = new_modifier_order
+		$Tile_Object/Tile_Modifiers.modifiers = _modifier_order
+	get:
+		return _modifier_order
 
+func has_modifier(modifier_flag: int) -> bool:
+	for modifier in modifier_order:
+		if modifier.flag == modifier_flag:
+			return true
+	return false
 
 var neighboring_tiles: Dictionary[Direction, Node3D] = {
 	Direction.NORTH: null,

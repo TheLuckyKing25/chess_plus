@@ -1,8 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://111w7dffrqkh"]
+[gd_scene load_steps=9 format=3 uid="uid://111w7dffrqkh"]
 
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="1_kxyir"]
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_vcbal"]
+[ext_resource type="Script" uid="uid://by0d78wddsfwr" path="res://scenes/menu/tile_modifier_menu.gd" id="3_5gqya"]
 [ext_resource type="PackedScene" uid="uid://ca80534plviow" path="res://scenes/menu/SelectedTileModifierButton.tscn" id="3_dxaw7"]
+[ext_resource type="PackedScene" uid="uid://dw07fl7mglbqs" path="res://scenes/menu/SelectedConditionModifierButton.tscn" id="5_qf0w8"]
+[ext_resource type="PackedScene" uid="uid://b3c8pfo1y0jhk" path="res://scenes/menu/SelectedSpringyModifierButton.tscn" id="6_qs7qg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vcbal"]
 bg_color = Color(0.351083, 0.55, 0.209, 1)
@@ -56,6 +59,7 @@ size_flags_vertical = 3
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
+script = ExtResource("3_5gqya")
 
 [node name="BackgroundTopPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu"]
 custom_minimum_size = Vector2(527, 475)
@@ -163,7 +167,7 @@ size_flags_horizontal = 3
 theme_type_variation = &"TileModifierSelectedListModifierButton"
 theme_override_constants/h_separation = 10
 theme_override_font_sizes/font_size = 16
-text = "Icey
+text = "Icy
 "
 icon = SubResource("ImageTexture_vcbal")
 alignment = 0
@@ -188,6 +192,18 @@ theme_type_variation = &"TileModifierSelectedListModifierButton"
 theme_override_constants/h_separation = 10
 theme_override_font_sizes/font_size = 16
 text = "Conveyer
+"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Springy" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Springy
 "
 icon = SubResource("ImageTexture_vcbal")
 alignment = 0
@@ -225,9 +241,21 @@ theme_override_constants/v_separation = 5
 layout_mode = 2
 text = "Cog"
 
-[node name="Icey" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
+[node name="Icy" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("5_qf0w8")]
 layout_mode = 2
-text = "Icey"
+text = "Icy"
+
+[node name="Conveyer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
+layout_mode = 2
+text = "Conveyer"
+
+[node name="Sticky" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("5_qf0w8")]
+layout_mode = 2
+text = "Sticky"
+
+[node name="Springy" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("6_qs7qg")]
+layout_mode = 2
+text = "Springy"
 
 [node name="BottomPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2"]
 z_index = 1
@@ -348,5 +376,13 @@ layout_mode = 2
 theme_type_variation = &"SettingButtons"
 text = "Continue"
 
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Cog" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_cog_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Icy" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_icy_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Sticky" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_sticky_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Conveyer" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_conveyer_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Springy" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_springy_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Add" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_add_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Replace" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_replace_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Erase" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_erase_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/Panel/MarginContainer/ContinueButton" to="." method="_on_continue_pressed"]

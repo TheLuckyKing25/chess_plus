@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://ca80534plviow"]
+[gd_scene load_steps=4 format=3 uid="uid://b3c8pfo1y0jhk"]
 
-[ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_3q2uy"]
+[ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_3stm2"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_3q2uy"]
 resource_local_to_scene = false
@@ -15,7 +15,7 @@ offset_right = 300.0
 offset_bottom = 36.0
 size_flags_horizontal = 3
 theme_type_variation = &"InsetPanelContainer"
-script = ExtResource("1_3q2uy")
+script = ExtResource("1_3stm2")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 2
@@ -102,17 +102,19 @@ alignment = 1
 
 [node name="Label" type="Label" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
 layout_mode = 2
-text = "Rotation Amount"
+text = "x, y"
 
-[node name="RotationAmount" type="SpinBox" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
+[node name="X" type="SpinBox" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-tooltip_text = "Determines the amount a Piece's movement is rotated. Positive values are clockwise,  negative values are counter-clockwise."
-min_value = -135.0
-max_value = 135.0
-step = 45.0
-suffix = "Degrees"
-custom_arrow_step = 45.0
+tooltip_text = "The x coordinate of where the piece will spring to."
+max_value = 7.0
+
+[node name="Y" type="SpinBox" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+tooltip_text = "The y coordinate of where the piece will spring to."
+max_value = 7.0
 
 [connection signal="toggled" from="BoxContainer/ModifierButton" to="." method="_on_modifier_button_toggled"]
 [connection signal="pressed" from="BoxContainer/ModifierButton/RemoveButton" to="." method="_on_remove_button_pressed"]
