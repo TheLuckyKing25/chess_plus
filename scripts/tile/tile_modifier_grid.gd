@@ -20,19 +20,19 @@ func change_grid_size():
 		5,6,7,8,9: self.columns = 3
 		_: self.columns = 3
 
-func _on_tile_modifiers_modifier_count_changed(modifier_number: int, modifiers: Array) -> void:
-	num_of_modifiers = modifier_number
-	change_grid_size()
-	while num_of_modifiers != current_visible_modifiers:
-		if current_visible_modifiers < num_of_modifiers:
-			get_child(current_visible_modifiers).visible = true
-			current_visible_modifiers += 1
-		elif current_visible_modifiers > num_of_modifiers:
-			get_child(current_visible_modifiers-1).visible = false
-			current_visible_modifiers -= 1
-	for modifier in modifiers:
-		var key = GameNode3D.TileModifierFlag.find_key(modifier.flag)
-		if key and key.begins_with("CONDITION"):
-			get_child(modifiers.find(modifier)).add_theme_stylebox_override("panel",ModifierStyleBox.CONDITION_STYLEBOX)
-		elif key and key.begins_with("PROPERTY"):
-			get_child(modifiers.find(modifier)).add_theme_stylebox_override("panel",ModifierStyleBox.PROPERTY_STYLEBOX)
+#func _on_tile_modifiers_modifier_count_changed(modifier_number: int, modifiers: Array) -> void:
+	#num_of_modifiers = modifier_number
+	#change_grid_size()
+	#while num_of_modifiers != current_visible_modifiers:
+		#if current_visible_modifiers < num_of_modifiers:
+			#get_child(current_visible_modifiers).visible = true
+			#current_visible_modifiers += 1
+		#elif current_visible_modifiers > num_of_modifiers:
+			#get_child(current_visible_modifiers-1).visible = false
+			#current_visible_modifiers -= 1
+	#for modifier in modifiers:
+		#var key = GameNode3D.TileModifierFlag.find_key(modifier.flag)
+		#if key and key.begins_with("CONDITION"):
+			#get_child(modifiers.find(modifier)).add_theme_stylebox_override("panel",ModifierStyleBox.CONDITION_STYLEBOX)
+		#elif key and key.begins_with("PROPERTY"):
+			#get_child(modifiers.find(modifier)).add_theme_stylebox_override("panel",ModifierStyleBox.PROPERTY_STYLEBOX)

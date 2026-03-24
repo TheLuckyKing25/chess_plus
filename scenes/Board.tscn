@@ -1,23 +1,22 @@
 [gd_scene load_steps=8 format=3 uid="uid://vqvs470xc1lw"]
 
-[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/game_board.gd" id="1_hljw5"]
+[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/board_object.gd" id="1_hljw5"]
 [ext_resource type="Script" uid="uid://bk6erub2o2qnt" path="res://scripts/menu/board_screen_controller.gd" id="9_338j4"]
 [ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/GamemodeSelectionScreen.tscn" id="9_gc1oq"]
 [ext_resource type="PackedScene" uid="uid://111w7dffrqkh" path="res://scenes/menu/TileModifierScreen.tscn" id="9_wxh2q"]
 [ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/GameOverlay.tscn" id="10_w8n1y"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
+
 [sub_resource type="BoxMesh" id="BoxMesh_hljw5"]
 size = Vector3(9, 0.2, 9)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
 [node name="Board" type="Node3D"]
 script = ExtResource("1_hljw5")
 
 [node name="BoardBase" type="MeshInstance3D" parent="."]
-unique_name_in_owner = true
+material_override = SubResource("StandardMaterial3D_wxh2q")
 mesh = SubResource("BoxMesh_hljw5")
-surface_material_override/0 = SubResource("StandardMaterial3D_wxh2q")
 
 [node name="Captured" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -54,6 +53,7 @@ offset_right = 2324.0
 [connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="." method="_on_gamemode_selection_continue_button_pressed"]
 [connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_gamemode_selection_continue_button_pressed"]
 [connection signal="row_number_changed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="." method="_on_gamemode_selection_row_number_changed"]
+[connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="." method="_on_tile_modifier_screen_back_button_pressed"]
 [connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_tile_modifier_screen_back_button_pressed"]
 [connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="." method="_on_tile_modifier_screen_continue_button_pressed"]
 [connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_tile_modifier_screen_continue_button_pressed"]
