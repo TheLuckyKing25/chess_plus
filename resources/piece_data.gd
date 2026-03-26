@@ -21,10 +21,17 @@ const CASTLING_COLOR:= Color(1,1,1,1)
 ## Allow this piecetype to be an option for promoting pieces to be promoted to.
 @export var promotion_option:= false
 
+
+
 @export var movement: Movement:
 	set(new_movement):
 		movement = new_movement.get_duplicate()
 		movement.set_direction_parity(player.direction_parity)
+
+# Poison Tile variables
+var is_poisoned: bool = false
+var poison_turn_applied: int = -1
+var poison_duration: int = -1
 
 var player: Player
 

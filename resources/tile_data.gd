@@ -72,7 +72,14 @@ var is_checked_movement:bool = false:
 		emit_changed()
 #endregion
 
-var modifier_order: Array[TileModifier] = []
+var _modifier_order: Array[TileModifier] = []
+
+var modifier_order: Array[TileModifier]:
+	set(new_order):
+		_modifier_order = new_order
+		emit_changed()
+	get:
+		return _modifier_order
 
 func _init() -> void:
 	resource_local_to_scene = true

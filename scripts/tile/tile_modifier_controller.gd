@@ -2,12 +2,15 @@ extends Node3D
 
 signal modifierCountChanged(modifier_number:int, modifiers: Array)
 
+var _modifiers: Array[TileModifier] = []
 
-var modifiers: Array[TileModifier] = []:
+var modifiers: Array[TileModifier]:
 	set(new_modifiers):
-		modifierCountChanged.emit(new_modifiers.size(),new_modifiers)
-		modifiers = new_modifiers
+		_modifiers = new_modifiers
+		modifierCountChanged.emit(_modifiers.size(), _modifiers)
 		_change_grid_size()
+	get:
+		return _modifiers
 
 const GRID_GAP = 31
 const MODIFIER_SUBTILE_SIZE = 150
@@ -33,9 +36,9 @@ func _on_ready():
 	_change_grid_size()
 
 func _change_grid_size():
+	visible = modifiers.size() > 0
 	match modifiers.size():
-		0: visible = false
-		1: self.texture.region = SUBVIEWPORT_1_RECT
+		0, 1: self.texture.region = SUBVIEWPORT_1_RECT
 		2,3,4: self.texture.region = SUBVIEWPORT_2_RECT
 		5,6,7,8,9: self.texture.region = SUBVIEWPORT_3_RECT
 		_: self.texture.region = SUBVIEWPORT_3_RECT

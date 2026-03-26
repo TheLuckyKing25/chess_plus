@@ -1,12 +1,19 @@
 class_name PropertyCog
 extends TileModifier
 
-enum Rotation{
-	CLOCKWISE = 0,
-	COUNTERCLOCKWISE = 1,
-}
+# The cog property changes the direction a piece is able to move in. Currently, this is temporary
+# and the piece gains its normal movement back after moving off the piece.
 
-## The
-@export var rotation: Rotation
+@export var rotation: int = 90
 
-const flag = GameNode3D.TileModifierFlag.PROPERTY_COG
+func _init():
+	flag = ModifierEnums.TileModifierFlag.PROPERTY_COG
+
+func modify_moveset(board, piece, tile, moveset):
+	if moveset == null:
+		return moveset
+	
+	var duplicated: Movement = moveset.get_duplicate()
+	var parity := int(rotation / 45)
+	duplicated.set_direction_parity(parity)
+	return duplicated

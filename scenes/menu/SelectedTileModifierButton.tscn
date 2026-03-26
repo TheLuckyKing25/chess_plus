@@ -105,7 +105,7 @@ alignment = 1
 layout_mode = 2
 text = "Rotation Amount"
 
-[node name="Rotation Amount" type="SpinBox" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
+[node name="RotationAmount" type="SpinBox" parent="BoxContainer/DropdownOptions/BoxContainer3/BoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 tooltip_text = "Determines the amount a Piece's movement is rotated. Positive values are clockwise,  negative values are counter-clockwise."
