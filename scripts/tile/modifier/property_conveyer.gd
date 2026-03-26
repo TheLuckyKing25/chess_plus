@@ -5,37 +5,38 @@ extends TileModifier
 # the player rather than changing their moveset for a turn.
 
 enum ConveyerDirection{
-	NORTH = GameNode3D.Direction.NORTH,
-	NORTHEAST = GameNode3D.Direction.NORTHEAST,
-	EAST = GameNode3D.Direction.EAST,
-	SOUTHEAST = GameNode3D.Direction.SOUTHEAST,
-	SOUTH = GameNode3D.Direction.SOUTH,
-	SOUTHWEST = GameNode3D.Direction.SOUTHWEST,
-	WEST = GameNode3D.Direction.WEST,
-	NORTHWEST = GameNode3D.Direction.NORTHWEST,
+	NORTH = Movement.Direction.NORTH,
+	NORTHEAST = Movement.Direction.NORTHEAST,
+	EAST = Movement.Direction.EAST,
+	SOUTHEAST = Movement.Direction.SOUTHEAST,
+	SOUTH = Movement.Direction.SOUTH,
+	SOUTHWEST = Movement.Direction.SOUTHWEST,
+	WEST = Movement.Direction.WEST,
+	NORTHWEST = Movement.Direction.NORTHWEST,
 }
 
 @export var direction: ConveyerDirection = ConveyerDirection.EAST
 
 func _init():
-	flag = GameNode3D.TileModifierFlag.PROPERTY_CONVEYER
+	flag = ModifierEnums.TileModifierFlag.PROPERTY_CONVEYER
 
-func on_turn_end(board, tile) -> void: # conceptually the same as icy, could probably consolidate
+func on_turn_end(board, tile) -> void: 
 	if tile == null or tile.occupant == null:
 		return
 	
-	var offset: Vector2i = board.neighboring_tiles[direction]
-	var next_pos: Vector2i = tile.board_position + offset
+	var offset: Vector2i = Movement.neighboring_tiles[direction]
+	var next_pos: Vector2i = tile.data.board_position + offset
 	
-	if next_pos.x < 0 or next_pos.x >= board.num_board_rows:
+	if next_pos.x < 0 or next_pos.x >= board.data.rank_count:
 		return
-	if next_pos.y < 0 or next_pos.y >= board.num_board_columns:
+	if next_pos.y < 0 or next_pos.y >= board.data.file_count:
 		return
 	
-	var next_tile = board.board_array[next_pos.x][next_pos.y]
+	var next_tile = board.data.tile_array[board.data.get_index(next_pos.x, next_pos.y)]
 	if next_tile == null:
 		return
 	if next_tile.occupant != null:
 		return
 	
-	board.move_piece_to_tile(tile.occupant, next_tile)
+	board.perform_move(Move.new(tile, next_tile))
+	board.end_turn_modifier_moved = true

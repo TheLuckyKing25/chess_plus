@@ -193,6 +193,83 @@ func _set_en_passant(clicked_tile: TileObject) -> void:
 	TileObject.en_passant = data.tile_array[data.get_index(en_passant_tile_rank,en_passant_tile_file)]
 	Player.en_passant = Player.current
 
+# MODIFIER HELPER FUNCTIONS
+func _apply_on_piece_enter(move: Move) -> void:
+	var destination_tile: TileObject = move.destination_tile
+	var piece: PieceObject = destination_tile.occupant
+	
+	if destination_tile == null or piece == null:
+		return
+	
+	for modifier in destination_tile.data.modifier_order:
+		modifier.on_piece_enter(self, piece, move.starting_tile, destination_tile)
+		
+var end_turn_modifier_moved: bool = false
+
+func _apply_turn_end_modifiers() -> void:
+	var max := 16
+	var t := 0
+	while t < max:
+		end_turn_modifier_moved = false
+		for tile in data.tile_array:
+			for modifier in tile.data.modifier_order:
+				modifier.on_turn_end(self, tile)
+		for tile in data.tile_array:
+			data.piece_array[tile.data.index] = tile.occupant
+		if not end_turn_modifier_moved:
+			break
+		t += 1
+
+func _update_modifier_lifetimes() -> void:
+	for tile in data.tile_array:
+		var updated_modifiers: Array[TileModifier] = []
+		for modifier in tile.data.modifier_order:
+			var lifetime = modifier.get("lifetime")
+
+			if lifetime == null:
+				updated_modifiers.append(modifier)
+				continue
+
+			if lifetime == -1:
+				updated_modifiers.append(modifier)
+				continue
+
+			if lifetime > 0:
+				modifier.lifetime -= 1
+
+			if modifier.lifetime != 0:
+				updated_modifiers.append(modifier)
+
+		tile.data.modifier_order = updated_modifiers
+
+func _update_poisoned_pieces() -> void:
+	for tile in data.tile_array:
+		var piece = tile.occupant 
+		if piece == null:
+			continue
+		if not piece.data.is_poisoned:
+			continue
+		if _turn_num - piece.data.poison_turn_applied >= piece.data.poison_duration:
+			_capture_piece(piece)
+
+func _tile_in_radius(origin_tile, target_tile, radius) -> bool:
+	var delta: Vector2i = target_tile.data.board_position - origin_tile.data.board_position
+	return max(abs(delta.x), abs(delta.y)) <= radius # return true if within specified radius
+	
+func _toggle_gates_in_radius(origin_tile, radius) -> void:
+	print("Toggling gates from ", origin_tile.data.board_position, " radius=", radius)
+	for tile in data.tile_array:
+		if not _tile_in_radius(origin_tile, tile, radius):
+			continue
+		
+		var changed := false
+		for modifier in tile.data.modifier_order:
+			if modifier is PropertyGate:
+				modifier.is_active = not modifier.is_active
+				changed = true
+		
+		if changed:
+			tile.data.emit_changed()
 
 #region Tile Clicked
 func _on_tile_clicked(clicked_tile: TileObject) -> void:
@@ -316,7 +393,8 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
-	var moveset:Movement = PieceObject.selected.data.movement
+	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
+	moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
 	_resolve_branching_movement(
 			PieceObject.selected,
 			moveset,
@@ -330,6 +408,10 @@ func _resolve_branching_movement(
 		moveset: Movement,
 		origin_tile: TileObject
 		) -> void:
+
+	for modifier in origin_tile.data.modifier_order:
+		if modifier.blocks_movement(self, active_piece, origin_tile):
+			return
 
 	for branch in moveset.branches:
 		var current_tile_ptr: TileObject = origin_tile
@@ -357,6 +439,14 @@ func _resolve_branching_movement(
 							next_tile_position.y
 							)
 					]
+			var blocked := false # if a piece blocks movement through it
+			for modifier in current_tile_ptr.data.modifier_order:
+				if modifier.blocks_passage(self, active_piece, current_tile_ptr, branch):
+					blocked = true
+					break
+			
+			if blocked:
+				break
 
 
 			if branch.is_threaten:
@@ -472,6 +562,8 @@ func perform_move(move: Move):
 	if not piece.data.has_moved:
 		piece._moved(true)
 
+	_apply_on_piece_enter(move)
+
 	# match occupants in piece_array to their respective tiles in tile_array
 	for tile in data.tile_array:
 		data.piece_array[tile.data.index] = tile.occupant
@@ -491,6 +583,8 @@ func perform_move(move: Move):
 
 ## Sets up the next turn
 func next_turn() -> void:
+	_apply_turn_end_modifiers()
+	_update_modifier_lifetimes()
 	# increments the turn number
 	_turn_num += 1
 	Player.previous = Player.current
@@ -500,6 +594,8 @@ func next_turn() -> void:
 		# clear en passant
 		PieceObject.en_passant = null
 		TileObject.en_passant = null
+
+	_update_poisoned_pieces()
 
 	data.legal_moves.generate_legal_moves(Player.current)
 

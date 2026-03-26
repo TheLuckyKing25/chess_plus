@@ -2,12 +2,15 @@ extends Node3D
 
 signal modifierCountChanged(modifier_number:int, modifiers: Array)
 
+var _modifiers: Array[TileModifier] = []
 
-var modifiers: Array[TileModifier] = []:
+var modifiers: Array[TileModifier]:
 	set(new_modifiers):
-		modifierCountChanged.emit(new_modifiers.size(),new_modifiers)
-		modifiers = new_modifiers
+		_modifiers = new_modifiers
+		modifierCountChanged.emit(_modifiers.size(), _modifiers)
 		_change_grid_size()
+	get:
+		return _modifiers
 
 const GRID_GAP = 31
 const MODIFIER_SUBTILE_SIZE = 150

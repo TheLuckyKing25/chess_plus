@@ -9,13 +9,13 @@ extends TileModifier
 @export_range(-1,1000,1.0,"suffix: turns") var lifetime: int
 
 func _init():
-	flag = GameNode3D.TileModifierFlag.CONDITION_ICY
+	flag = ModifierEnums.TileModifierFlag.CONDITION_ICY
 
 func on_piece_enter(board, piece, from_tile, to_tile) -> void:
 	if from_tile == null or to_tile == null:
 		return
 	
-	var delta: Vector2i = to_tile.board_position - from_tile.board_position
+	var delta: Vector2i = to_tile.data.board_position - from_tile.data.board_position
 	if delta == Vector2i.ZERO:
 		return
 	
@@ -23,17 +23,17 @@ func on_piece_enter(board, piece, from_tile, to_tile) -> void:
 	delta.x = sign(delta.x)
 	delta.y = sign(delta.y)
 	
-	var next_pos: Vector2i = to_tile.board_position + delta
+	var next_pos: Vector2i = to_tile.data.board_position + delta
 	
-	if next_pos.x < 0 or next_pos.x >= board.num_board_rows:
+	if next_pos.x < 0 or next_pos.x >= board.data.rank_count:
 		return
-	if next_pos.y < 0 or next_pos.y >= board.num_board_columns:
+	if next_pos.y < 0 or next_pos.y >= board.data.file_count:
 		return
 	
-	var next_tile = board.board_array[next_pos.x][next_pos.y]
+	var next_tile = board.data.tile_array[board.data.get_index(next_pos.x, next_pos.y)]
 	if next_tile == null:
 		return
 	if next_tile.occupant != null:
 		return
 	
-	board.move_piece_to_tile(piece, next_tile)
+	board.perform_move(Move.new(to_tile, next_tile))

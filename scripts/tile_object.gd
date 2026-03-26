@@ -35,7 +35,8 @@ func _ready() -> void:
 		0: tile_material.albedo_color = TileDataChess.LIGHT_COLOR
 		1: tile_material.albedo_color = TileDataChess.DARK_COLOR
 
-	#$Tile_Modifiers.modifiers = modifier_order
+	$Tile_Modifiers.modifiers = data.modifier_order
+	_on_stats_changed()
 
 
 func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
@@ -108,6 +109,8 @@ func _unset_check():
 #endregion
 
 func _on_stats_changed():
+	$Tile_Modifiers.modifiers = data.modifier_order
+	
 	state_material.albedo_color.a = 0
 	state_material.emission_enabled = false
 

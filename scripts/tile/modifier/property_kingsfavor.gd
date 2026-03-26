@@ -1,0 +1,13 @@
+class_name PropertyKingsFavor
+extends TileModifier
+
+func _init():
+	flag = ModifierEnums.TileModifierFlag.PROPERTY_KINGSFAVOR
+
+func on_piece_enter(board, piece, from_tile, to_tile) -> void:
+	if piece == null:
+		return
+	if not piece.data.can_promote:
+		return
+	
+	board.promotion_requested.emit(piece)

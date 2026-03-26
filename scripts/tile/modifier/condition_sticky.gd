@@ -9,7 +9,7 @@ extends TileModifier
 @export_range(-1,1000,1.0,"suffix: turns") var lifetime: int
 
 func _init():
-	flag = GameNode3D.TileModifierFlag.CONDITION_STICKY
+	flag = ModifierEnums.TileModifierFlag.CONDITION_STICKY
 
 func blocks_movement(board, piece, tile) -> bool:
 	return true

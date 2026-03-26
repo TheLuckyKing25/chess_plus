@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://111w7dffrqkh"]
+[gd_scene load_steps=11 format=3 uid="uid://111w7dffrqkh"]
 
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="1_kxyir"]
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_vcbal"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://ca80534plviow" path="res://scenes/menu/SelectedTileModifierButton.tscn" id="3_dxaw7"]
 [ext_resource type="PackedScene" uid="uid://dw07fl7mglbqs" path="res://scenes/menu/SelectedConditionModifierButton.tscn" id="5_qf0w8"]
 [ext_resource type="PackedScene" uid="uid://b3c8pfo1y0jhk" path="res://scenes/menu/SelectedSpringyModifierButton.tscn" id="6_qs7qg"]
+[ext_resource type="PackedScene" uid="uid://6gaus8v8jmfe" path="res://scenes/menu/PoisonModifierButton.tscn" id="7_iwyj0"]
+[ext_resource type="PackedScene" uid="uid://bx454bfr31wo8" path="res://scenes/menu/RadiusModifierButton.tscn" id="8_crbbc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vcbal"]
 bg_color = Color(0.351083, 0.55, 0.209, 1)
@@ -208,6 +210,72 @@ text = "Springy
 icon = SubResource("ImageTexture_vcbal")
 alignment = 0
 
+[node name="Wall" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Wall"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Poison" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Poison"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Kings Favor" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Kings Favor"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Gate" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Gate"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Button" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Button"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
+[node name="Lever" type="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TileModifierSelectedListModifierButton"
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 16
+text = "Lever"
+icon = SubResource("ImageTexture_vcbal")
+alignment = 0
+
 [node name="BoxContainer2" type="BoxContainer" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer"]
 custom_minimum_size = Vector2(375, 0)
 layout_mode = 2
@@ -256,6 +324,22 @@ text = "Sticky"
 [node name="Springy" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("6_qs7qg")]
 layout_mode = 2
 text = "Springy"
+
+[node name="Wall" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("3_dxaw7")]
+layout_mode = 2
+text = "Wall"
+
+[node name="Poison" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("7_iwyj0")]
+layout_mode = 2
+text = "Poison"
+
+[node name="Button" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("8_crbbc")]
+layout_mode = 2
+text = "Button"
+
+[node name="Lever" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer" instance=ExtResource("8_crbbc")]
+layout_mode = 2
+text = "Lever"
 
 [node name="BottomPanel" type="Panel" parent="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2"]
 z_index = 1
@@ -381,6 +465,12 @@ text = "Continue"
 [connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Sticky" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_sticky_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Conveyer" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_conveyer_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Springy" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_springy_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Wall" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_wall_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Poison" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_poison_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Kings Favor" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_kings_favor_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Gate" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_gate_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Button" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_button_pressed"]
+[connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ScrollContainer/GridContainer/Lever" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_lever_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Add" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_add_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Replace" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_replace_pressed"]
 [connection signal="pressed" from="ReferenceRect/BoxContainer/TileModifierMenu/BackgroundTopPanel/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Erase" to="ReferenceRect/BoxContainer/TileModifierMenu" method="_on_erase_pressed"]

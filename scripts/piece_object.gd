@@ -16,7 +16,6 @@ var piece_material: StandardMaterial3D
 var outline_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
 
-
 @export var data: PieceData
 
 
