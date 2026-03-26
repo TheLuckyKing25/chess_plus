@@ -42,11 +42,11 @@ func join_game(ip: String) -> void:
 	print("NetworkManager: Connecting to %s:%d..." % [ip, PORT])
 
 func _on_peer_connected(_id: int) -> void:
-	print("NetworkManager: Peer connected — starting game.")
+	print("NetworkManager: Peer connected. starting game.")
 	connected_to_game.emit()
 
 func _on_connected_to_server() -> void:
-	print("NetworkManager: Connected to server — starting game.")
+	print("NetworkManager: Connected to server. starting game.")
 	connected_to_game.emit()
 
 func _on_connection_failed() -> void:

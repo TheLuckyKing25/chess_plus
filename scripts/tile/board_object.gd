@@ -32,7 +32,17 @@ func _ready() -> void:
 
 	Player.current = data.player_one
 	Player.previous = data.player_one
+	
+	if NetworkManager.is_online:
+		NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
 
+	if NetworkManager.is_online and multiplayer.is_server():
+		multiplayer.peer_connected.connect(_on_peer_connected_resync)
+
+func _on_peer_connected_resync(_id: int) -> void:
+	if _current_game_state == GameState.Gameplay:
+		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
+		_sync_gameplay_start.rpc()
 
 func _process(_delta: float) -> void:
 	if Player.previous != Player.current:
@@ -61,6 +71,9 @@ func _process(_delta: float) -> void:
 				_time_elapsed_since_turn_ended = 0
 				board_base_color = Player.current.color
 
+func _on_opponent_disconnected() -> void:
+	get_tree().paused = true
+	print("Opponent disconnected. Game paused.")
 
 #region UI Signal Functions
 func _on_gamemode_selection_fen_notation_verified(FEN_notation: FEN) -> void:
@@ -89,7 +102,15 @@ func _on_tile_modifier_screen_back_button_pressed() -> void:
 func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	_current_game_state = GameState.Gameplay
 	game_state_changed.emit(_current_game_state)
-	get_tree().call_group("Tile","clear_states")
+	get_tree().call_group("Tile", "clear_states")
+	if NetworkManager.is_online:
+		_sync_gameplay_start.rpc()
+
+@rpc("authority", "call_remote", "reliable")
+func _sync_gameplay_start() -> void:
+	_current_game_state = GameState.Gameplay
+	game_state_changed.emit(_current_game_state)
+	get_tree().call_group("Tile", "clear_states")
 
 
 func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
@@ -112,8 +133,64 @@ func _on_gamemode_selection_continue_button_pressed() -> void:
 	_current_game_state = GameState.BoardCustomization
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
+		
+	if NetworkManager.is_online:
+		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.piece_placement)
+
+@rpc("authority", "call_remote", "reliable")
+func _sync_board_setup(file_count: int, rank_count: int, fen_string: String) -> void:
+	if fen_string.is_empty():
+		return
+	data.file_count = file_count
+	data.rank_count = rank_count
+	data.FEN_board_state = FEN.new(fen_string)
+	generate_board()
+	load_FEN(data.FEN_board_state)
+	_current_game_state = GameState.BoardCustomization
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		tile.clicked.connect(Callable(self, "_on_tile_clicked"))
 #endregion
 
+func _is_my_turn() -> bool:
+	var current_player_index: int = 0 if Player.current == data.player_one else 1
+	return NetworkManager.is_my_turn(current_player_index)
+
+func _submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
+	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
+	if NetworkManager.is_online:
+		_sync_move.rpc(from_index, to_index, flags, ep_piece_index, ep_tile_index)
+ 
+@rpc("any_peer", "call_remote", "reliable")
+func _sync_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
+	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
+ 
+func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
+	var from_tile: TileObject = data.tile_array[from_index]
+	var to_tile: TileObject = data.tile_array[to_index]
+ 
+	TileObject.selected = from_tile
+	PieceObject.selected = from_tile.occupant
+ 
+	if ep_piece_index >= 0 and ep_tile_index >= 0:
+		PieceObject.en_passant = data.piece_array[ep_piece_index]
+		TileObject.en_passant = data.tile_array[ep_tile_index]
+		Player.en_passant = Player.current
+ 
+	if flags & Move.Type.EN_PASSANT:
+		_capture_piece(PieceObject.en_passant)
+		perform_move(Move.new(from_tile, to_tile, flags))
+ 
+	elif flags & Move.Type.CAPTURING:
+		_capture_piece(to_tile.occupant)
+		perform_move(Move.new(from_tile, to_tile, flags))
+ 
+	elif flags & (Move.Type.CASTLING_KINGSIDE | Move.Type.CASTLING_QUEENSIDE):
+		_perform_castling_move(to_tile)
+
+	else:
+		perform_move(Move.new(from_tile, to_tile, flags))
+ 
+	next_turn()
 
 func generate_board() -> void:
 	data.tile_array.resize(data.file_count * data.rank_count)
@@ -208,6 +285,8 @@ func _customization_tile_select(clicked_tile: TileObject) -> void:
 		clicked_tile._select()
 
 func _gameplay_tile_select(clicked_tile: TileObject) -> void:
+	if NetworkManager.is_online and not _is_my_turn():
+		return
 	# select clicked tile
 	if (	PieceObject.selected == null # no piece selected
 			and clicked_tile.occupant != null # Clicked Tile is occupied
@@ -233,26 +312,28 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 			elif (	not clicked_tile.occupant.is_in_group(Player.current.name) # occupant piece belongs to opponent
 					and clicked_tile.data.is_threatened
 					):
-				_capture_piece(clicked_tile.occupant)
-				perform_move(Move.new(TileObject.selected, clicked_tile, Move.Type.CAPTURING))
-				next_turn()
+				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Type.CAPTURING)
 
 		elif clicked_tile.occupant == null:
 			# move selected piece to clicked tile
 			if clicked_tile.data.is_movement:
+				var ep_piece_idx: int = -1
+				var ep_tile_idx: int = -1
+				
 				# set en passant if conditions are met
 				if (	PieceObject.selected.is_in_group("Pawn")
 						and not PieceObject.selected.data.has_moved
 						and abs(clicked_tile.data.rank - TileObject.selected.data.rank) == 2 # Pawn piece has moved two tiles
 						):
 					_set_en_passant(clicked_tile)
-				perform_move(Move.new(TileObject.selected, clicked_tile))
-				next_turn()
+					ep_piece_idx = PieceObject.en_passant.data.index
+					ep_tile_idx = TileObject.en_passant.data.index
+
+				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, 0, ep_piece_idx, ep_tile_idx)
 
 			# perform castling movement
 			elif clicked_tile.data.is_castling:
-				_perform_castling_move(clicked_tile) # castling
-				next_turn()
+				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Type.CASTLING_KINGSIDE | Move.Type.CASTLING_QUEENSIDE)
 
 			# capture pawn via en passant
 			elif (	clicked_tile.data.is_threatened
@@ -261,8 +342,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 					and not PieceObject.en_passant.is_in_group(Player.current.name)
 					):
 						_capture_piece(PieceObject.en_passant)
-						perform_move(Move.new(TileObject.selected, clicked_tile, Move.Type.CAPTURING|Move.Type.EN_PASSANT))
-						next_turn()
+						_submit_move( TileObject.selected.data.index, clicked_tile.data.index, Move.Type.CAPTURING | Move.Type.EN_PASSANT, PieceObject.en_passant.data.index, TileObject.en_passant.data.index)
 #endregion
 
 

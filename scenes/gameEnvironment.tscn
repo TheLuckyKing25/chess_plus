@@ -1,9 +1,9 @@
 [gd_scene load_steps=17 format=3 uid="uid://h7v0gyqyq0h7"]
 
-[ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
+[ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/tile/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/Board.tscn" id="1_wsj4q"]
-[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="4_xtwup"]
-[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="5_hekqh"]
+[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/Audio/Piece_move.wav" id="4_xtwup"]
+[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/Audio/Piece_capture.wav" id="5_hekqh"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true

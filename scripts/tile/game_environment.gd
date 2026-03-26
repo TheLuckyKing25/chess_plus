@@ -12,6 +12,8 @@ var piece_to_promote = null
 var proceed = false
 
 func _process(delta: float):
+	if NetworkManager.is_online:
+		return
 	if proceed or Player.previous != Player.current:
 		if board._time_elapsed_since_turn_ended > 0:
 			proceed = true
@@ -44,16 +46,17 @@ func _on_board_game_state_changed(game_state: int) -> void:
 		BoardObject.GameState.BoardCustomization:
 			$OverheadCamera.current = true
 		BoardObject.GameState.Gameplay:
-			match Player.current:
-				board.data.player_one:
+			if NetworkManager.is_online:
+				if NetworkManager.my_player == 0:
 					player1_camera.current = true
-				board.data.player_two:
+				else:
 					player2_camera.current = true
-
-
-
-
-
+			else:
+				match Player.current:
+					board.data.player_one:
+						player1_camera.current = true
+					board.data.player_two:
+						player2_camera.current = true
 
 func _ready():
 	board.promotion_requested.connect(_on_promotion_requested)

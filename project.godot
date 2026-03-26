@@ -21,9 +21,9 @@ buses/default_bus_layout="res://assets/default_bus_layout.tres"
 
 [autoload]
 
-Global="*res://scripts/global.gd"
-ConfigFileHandler="*res://scripts/config_file_handler.gd"
-NetworkManager="*res://scripts/network_manager.gd"
+Global="*res://scripts/tile/global.gd"
+ConfigFileHandler="*res://scripts/tile/config_file_handler.gd"
+NetworkManager="*res://scripts/tile/network_manager.gd"
 
 [display]
 
