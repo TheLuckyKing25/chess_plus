@@ -14,6 +14,22 @@ theme = ExtResource("1_0sh77")
 script = ExtResource("2_cags2")
 metadata/_edit_horizontal_guides_ = [79.0]
 
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -126.0
+offset_top = 20.0
+offset_right = 126.0
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+text = "Settings"
+horizontal_alignment = 1
+
 [node name="SettingMenu" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -48,11 +64,10 @@ size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 theme = ExtResource("1_0sh77")
 tab_alignment = 1
-current_tab = 2
+current_tab = 0
 clip_tabs = false
 
 [node name="Graphics" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -141,6 +156,7 @@ size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 
 [node name="Audio" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 

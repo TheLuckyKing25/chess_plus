@@ -243,16 +243,17 @@ theme_override_font_sizes/font_size = 12
 item_count = 3
 item_0/text = "Custom Match"
 item_1/text = "Standard Chess (WIP)"
-item_2/text = "Dragon Chess"
+item_2/text = "Dragon Chess (WIP)"
 item_2/selectable = false
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 
 [node name="Match Options" type="Panel" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_tab_index = 0
@@ -457,7 +458,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Tiles" type="Panel" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_tab_index = 1
@@ -480,6 +480,14 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer/Tiles/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer/Tiles/MarginContainer/BoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 40
+text = "COMING SOON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer/Tiles/MarginContainer/BoxContainer"]
 layout_mode = 2
@@ -550,6 +558,20 @@ theme_override_constants/separation = 25
 [node name="ItemList" type="ItemList" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer/Pieces/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer/Pieces/MarginContainer/BoxContainer/ItemList"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 40
+text = "Piece Options
+COMING SOON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ScreenNavigationMenu" type="BoxContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 60)
