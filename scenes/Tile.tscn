@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://cega76qfg50kj"]
 
-[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile/tile_object.gd" id="1_gtpg2"]
+[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile_object.gd" id="1_gtpg2"]
 [ext_resource type="Script" uid="uid://dpjhoykfs62y" path="res://scripts/tile/tile_modifier_controller.gd" id="3_284l3"]
 [ext_resource type="Script" uid="uid://deq2syi6rrdmy" path="res://scripts/tile/tile_modifier_grid.gd" id="4_j3iir"]
 [ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="5_j8k5k"]
