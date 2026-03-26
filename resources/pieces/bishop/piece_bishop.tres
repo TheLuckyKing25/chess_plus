@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://cqvrcumjj4gqk"]
+
+[ext_resource type="Resource" uid="uid://5k73t3ur6po5" path="res://resources/pieces/bishop/movement_bishop.tres" id="1_j1nf6"]
+[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://resources/piece_data.gd" id="1_vlept"]
+[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://resources/pieces/bishop/mesh_bishop.obj" id="1_ybs2w"]
+
+[resource]
+script = ExtResource("1_vlept")
+name = "Bishop"
+algebraic_notation = "B"
+description = "PLACEHOLDER"
+object_mesh = ExtResource("1_ybs2w")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_j1nf6")
+metadata/_custom_type_script = "uid://cdgr42xlx8gxd"

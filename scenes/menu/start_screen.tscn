@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://camv04tw28yjr"]
 
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_gte82"]
 [ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://scripts/menu/start_screen.gd" id="2_nwdcb"]
+[ext_resource type="Theme" uid="uid://6luwubm4shti" path="res://assets/theme/main_menu_theme.tres" id="2_viyhn"]
 [ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="4_xqiyt"]
 
 [sub_resource type="Gradient" id="Gradient_hlv2s"]
@@ -25,7 +25,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_gte82")
 script = ExtResource("2_nwdcb")
 
 [node name="Background" type="Panel" parent="."]
@@ -38,26 +37,18 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
 
-[node name="MainMenu" type="ReferenceRect" parent="."]
-z_index = 1
+[node name="MainMenu" type="BoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="BoxContainer" type="BoxContainer" parent="MainMenu"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+theme = ExtResource("2_viyhn")
 alignment = 1
 vertical = true
 
-[node name="TitleLabel" type="Label" parent="MainMenu/BoxContainer"]
+[node name="TitleLabel" type="Label" parent="MainMenu"]
 custom_minimum_size = Vector2(600, 200)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -70,20 +61,20 @@ text = "Chess+"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/BoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="NewMatchButton" type="Button" parent="MainMenu/BoxContainer/VBoxContainer"]
+[node name="NewMatchButton" type="Button" parent="MainMenu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
-text = "New Match"
+text = "Create Match"
 
-[node name="JoinMatchButton" type="Button" parent="MainMenu/BoxContainer/VBoxContainer"]
+[node name="JoinMatchButton" type="Button" parent="MainMenu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -91,7 +82,7 @@ mouse_default_cursor_shape = 2
 disabled = true
 text = "Join Match"
 
-[node name="RulebookButton" type="Button" parent="MainMenu/BoxContainer/VBoxContainer"]
+[node name="RulebookButton" type="Button" parent="MainMenu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -99,14 +90,14 @@ mouse_default_cursor_shape = 2
 disabled = true
 text = "Rulebook"
 
-[node name="SettingsButton" type="Button" parent="MainMenu/BoxContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="MainMenu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Settings"
 
-[node name="ExitButton" type="Button" parent="MainMenu/BoxContainer/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="MainMenu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -114,8 +105,8 @@ mouse_default_cursor_shape = 2
 text = "Exit
 "
 
-[connection signal="pressed" from="MainMenu/BoxContainer/VBoxContainer/NewMatchButton" to="." method="_on_new_match_button_pressed"]
-[connection signal="pressed" from="MainMenu/BoxContainer/VBoxContainer/JoinMatchButton" to="." method="_on_join_match_button_pressed"]
-[connection signal="pressed" from="MainMenu/BoxContainer/VBoxContainer/RulebookButton" to="." method="_on_rulebook_button_pressed"]
-[connection signal="pressed" from="MainMenu/BoxContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="MainMenu/BoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/NewMatchButton" to="." method="_on_new_match_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/JoinMatchButton" to="." method="_on_join_match_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/RulebookButton" to="." method="_on_rulebook_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

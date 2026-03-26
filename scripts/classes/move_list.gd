@@ -130,7 +130,7 @@ func generate_legal_moves(player:Player):
 	pseudo_legal.generate_pseudo_legal_moves(player)
 
 	for move in pseudo_legal.moves:
-		var is_legal:bool = true
+		var is_legal_move:bool = true
 		virtual_board.make_move(move)
 
 		var opponent = board_data.get_opponent_of(player)
@@ -139,10 +139,10 @@ func generate_legal_moves(player:Player):
 
 		for opposing_move in opposing.moves:
 			if opposing_move and opposing_move.destination_tile.occupant == player.pieces["King"][0]:
-				is_legal = false
+				is_legal_move = false
 				break
 
-		if is_legal:
+		if is_legal_move:
 			moves.append(move)
 
 		virtual_board.unmake_move(move)
@@ -155,7 +155,7 @@ func contains_move(move:Array[TileObject]) -> bool:
 	return false
 
 func is_legal(move:Move):
-	var is_legal:bool = true
+	var is_legal_move:bool = true
 
 	var virtual_board: VirtualBoard = VirtualBoard.new(board_data)
 	virtual_board.make_move(move)
@@ -165,7 +165,7 @@ func is_legal(move:Move):
 
 	for opposing_move in opponent_moves.moves:
 		if opposing_move and opposing_move.destination_tile.occupant == Player.current.pieces["King"][0]:
-			is_legal = false
+			is_legal_move = false
 			break
 
 	virtual_board.unmake_move(move)

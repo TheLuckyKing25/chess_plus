@@ -3,7 +3,6 @@ extends Node3D
 
 
 signal turn_changed(player: int)
-signal promotion_requested(piece)
 signal game_state_changed(game_state: int)
 
 
@@ -12,20 +11,16 @@ enum GameState {
 	Gameplay
 }
 
-
 const _GAMEMODE_SELECTION_MENU:PackedScene = preload("res://scenes/menu/gamemode_selection_menu.tscn")
 const _TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/tile_modifier_screen.tscn")
 const _GAME_OVERLAY: PackedScene = preload("res://scenes/menu/game_overlay.tscn")
-const _DEBUG_MENU: PackedScene = preload("res://scenes/menu/debug_menu.tscn")
 const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
-const _MOVE_HISTORY_MENU: PackedScene = preload("res://scenes/menu/move_history_menu.tscn")
+
 
 var _gamemode_selection_menu: Node
 var _tile_modifier_menu: Node
 var _game_overlay: Node
-var _debug_menu: Node
 var _pause_menu: Node
-var _move_history_menu: Node
 
 
 const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
@@ -33,16 +28,14 @@ const PIECE_SCENE:PackedScene = preload("res://scenes/piece.tscn")
 
 
 var _current_game_state: GameState = GameState.BoardCustomization
-
+var _is_piece_promoting: bool = false
 
 var _time_turn_ended:int = 0
 var _time_elapsed_since_turn_ended:int = 0
 var _turn_num: int = 0
 
-
 var data: BoardData
 
-var move_history: MoveList = MoveList.new(data)
 
 @onready var _piece_capture_audio = $Piece_capture
 @onready var _piece_move_audio = $Piece_move
@@ -53,18 +46,16 @@ func _ready() -> void:
 			load("res://resources/players/player_one.tres"),
 			load("res://resources/players/player_two.tres")
 			)
-
 	Player.current = data.player_one
 	Player.previous = data.player_one
-	_gamemode_selection_menu = _GAMEMODE_SELECTION_MENU.instantiate()
-	$MenuLayer.add_child(_gamemode_selection_menu)
-	_gamemode_selection_menu.back_button_pressed.connect(Callable(self,"_on_gamemode_selection_back_button_pressed"))
-	_gamemode_selection_menu.continue_button_pressed.connect(Callable(self,"_on_gamemode_selection_continue_button_pressed"))
-	_gamemode_selection_menu.board_verified.connect(Callable(self,"_on_gamemode_selection_board_verified"))
+	_instantiate_gamode_selection_menu()
 
 
 func _process(_delta: float) -> void:
-	if Player.previous != Player.current:
+	if Player.previous == Player.current and data.is_match_timed:
+		Player.current.timer._update_timer_ui()
+
+	elif Player.previous != Player.current:
 		if _time_turn_ended == 0:
 			_time_turn_ended = Time.get_ticks_msec()
 
@@ -88,6 +79,9 @@ func _process(_delta: float) -> void:
 				_time_turn_ended = 0
 				_time_elapsed_since_turn_ended = 0
 				$BoardBase.material_override.albedo_color = Player.current.color
+				if data.is_match_timed:
+					Player.current.timer.start_timer()
+
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -105,6 +99,29 @@ func _input(event: InputEvent) -> void:
 
 #region UI and Menu Functions
 	#region GAMEMODE_SELECTION_MENU
+func _instantiate_gamode_selection_menu():
+	_gamemode_selection_menu = _GAMEMODE_SELECTION_MENU.instantiate()
+	$MenuLayer.add_child(_gamemode_selection_menu)
+	_gamemode_selection_menu.back_button_pressed.connect(
+			Callable(self,"_on_gamemode_selection_back_button_pressed"))
+	_gamemode_selection_menu.continue_button_pressed.connect(
+			Callable(self,"_on_gamemode_selection_continue_button_pressed"))
+	_gamemode_selection_menu.board_verified.connect(
+			Callable(self,"_on_gamemode_selection_board_verified"))
+	_gamemode_selection_menu.start_button_pressed.connect(
+			Callable(self,"_on_gamemode_selection_start_button_pressed"))
+	_gamemode_selection_menu.time_control_selected.connect(
+			Callable(self,"_on_gamemode_selection_time_control_selection"))
+
+func _on_gamemode_selection_time_control_selection(time_sec: int, increment_sec: int):
+	data.is_match_timed = true
+	TimeControl.increment_sec = increment_sec
+	TimeControl.max_time_sec = time_sec
+
+	data.player_one.timer = TimeControl.new($TimerWhite,time_sec)
+	data.player_two.timer = TimeControl.new($TimerBlack,time_sec)
+
+
 func _on_gamemode_selection_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
 
@@ -116,22 +133,39 @@ func _on_gamemode_selection_board_verified(rank_num:int,file_num:int,FEN_notatio
 
 
 func _on_gamemode_selection_continue_button_pressed() -> void:
-	_tile_modifier_menu = _TILE_MODIFIER_MENU.instantiate()
-	$MenuLayer.add_child(_tile_modifier_menu)
+	_instantiate_tile_modifier_menu()
 	_gamemode_selection_menu.hide()
-	_tile_modifier_menu._connect_to_back_button(Callable(self, "_on_tile_modifier_screen_back_button_pressed"))
-	_tile_modifier_menu._connect_to_continue_button(Callable(self, "_on_tile_modifier_screen_continue_button_pressed"))
-
 	generate_board()
 	load_FEN(data.FEN_board_state)
 	_current_game_state = GameState.BoardCustomization
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 
+func _on_gamemode_selection_start_button_pressed():
+	_current_game_state = GameState.Gameplay
+	game_state_changed.emit(_current_game_state)
+	generate_board()
+	load_FEN(data.FEN_board_state)
+	for tile in get_tree().get_nodes_in_group("Tile"):
+		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
+
+	_instantiate_game_overlay()
+
+	_gamemode_selection_menu.hide()
+	_gamemode_selection_menu.queue_free()
+
 	#endregion
 
 
 	#region TILE_MODIFIER_MENU
+func _instantiate_tile_modifier_menu():
+	_tile_modifier_menu = _TILE_MODIFIER_MENU.instantiate()
+	$MenuLayer.add_child(_tile_modifier_menu)
+	_tile_modifier_menu._connect_to_back_button(
+			Callable(self, "_on_tile_modifier_screen_back_button_pressed"))
+	_tile_modifier_menu._connect_to_continue_button(
+			Callable(self, "_on_tile_modifier_screen_continue_button_pressed"))
+
 func _on_tile_modifier_screen_back_button_pressed() -> void:
 	for child in $BoardBase.get_children():
 		if child.occupant:
@@ -151,14 +185,7 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	game_state_changed.emit(_current_game_state)
 	get_tree().call_group("Tile","clear_states")
 
-	_game_overlay = _GAME_OVERLAY.instantiate()
-	$MenuLayer.add_child(_game_overlay)
-	_game_overlay._connect_to_pause_button(Callable(self,"_on_game_overlay_pause_button_pressed"))
-	_game_overlay._connent_to_debug_button(Callable(self,"_on_game_overlay_debug_button_toggled"))
-	_game_overlay._connect_to_rulebook_button(Callable(self,"_on_game_overlay_rulebook_button_pressed"))
-	_game_overlay._connect_to_move_history_button(Callable(self,"_on_game_overlay_move_history_button_pressed"))
-	_move_history_menu = _MOVE_HISTORY_MENU.instantiate()
-
+	_instantiate_game_overlay()
 
 	_tile_modifier_menu.hide()
 	_tile_modifier_menu.queue_free()
@@ -168,62 +195,38 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 
 
 	#region _GAME_OVERLAY
+func _instantiate_game_overlay():
+	_game_overlay = _GAME_OVERLAY.instantiate()
+	$MenuLayer.add_child(_game_overlay)
+	_game_overlay._connect_to_pause_button(
+			Callable(self,"_on_game_overlay_pause_button_pressed"))
+	_game_overlay.new_placement_selected.connect(
+			Callable(self,"_on_game_overlay_new_placement_selected"))
+	_game_overlay._connect_to_rulebook_button(
+			Callable(self,"_on_game_overlay_rulebook_button_pressed"))
+
+	if data.is_match_timed:
+		_game_overlay.show_timers()
+		data.player_one.timer.label = _game_overlay._get_ui_timer_white()
+		data.player_two.timer.label = _game_overlay._get_ui_timer_black()
+
+
 func _on_game_overlay_pause_button_pressed():
 	_pause_menu = _PAUSE_MENU.instantiate()
 	$MenuLayer.add_child(_pause_menu)
 	_game_overlay.hide()
-	if _debug_menu:
-		_debug_menu.hide()
-	if _move_history_menu:
-		_move_history_menu.hide()
 
 	get_tree().paused = true
-	_pause_menu._connect_to_resume_button(Callable(self,"_on_pause_menu_resume_button_pressed"))
-	_pause_menu._connect_to_leave_button(Callable(self,"_on_pause_menu_leave_button_pressed"))
-
-
-func _on_game_overlay_debug_button_toggled(toggled_on:bool):
-	if _debug_menu == null:
-		_debug_menu = _DEBUG_MENU.instantiate()
-		_debug_menu.new_placement_selected.connect(Callable(self,"_on_debug_menu_new_placement_selected"))
-
-	if toggled_on:
-		$MenuLayer.add_child(_debug_menu)
-	elif not toggled_on:
-		$MenuLayer.remove_child(_debug_menu)
+	_pause_menu._connect_to_resume_button(
+			Callable(self,"_on_pause_menu_resume_button_pressed"))
+	_pause_menu._connect_to_leave_button(
+			Callable(self,"_on_pause_menu_leave_button_pressed"))
 
 
 func _on_game_overlay_rulebook_button_pressed():
 	pass
 
-func _on_game_overlay_move_history_button_pressed(toggled_on:bool):
-	if toggled_on:
-		$MenuLayer.add_child(_move_history_menu)
-	else:
-		$MenuLayer.remove_child(_move_history_menu)
-
-	#endregion
-
-
-	#region _PAUSE_MENU
-
-func _on_pause_menu_resume_button_pressed():
-	get_tree().paused = false
-	_pause_menu.hide()
-	_game_overlay.show()
-	if _debug_menu:
-		_debug_menu.show()
-	if _move_history_menu:
-		_move_history_menu.show()
-	_pause_menu.queue_free()
-
-func _on_pause_menu_leave_button_pressed():
-	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
-
-	#endregion
-
-	#region _DEBUG_MENU
-func _on_debug_menu_new_placement_selected(placement: FEN) -> void:
+func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
 	data.piece_array.clear()
 	for tile in data.tile_array:
 		if tile.occupant:
@@ -238,7 +241,22 @@ func _on_debug_menu_new_placement_selected(placement: FEN) -> void:
 
 	#endregion
 
+
+	#region _PAUSE_MENU
+
+func _on_pause_menu_resume_button_pressed():
+	get_tree().paused = false
+	_pause_menu.hide()
+	_game_overlay.show()
+	_pause_menu.queue_free()
+
+func _on_pause_menu_leave_button_pressed():
+	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
+
+	#endregion
+
 #endregion
+
 
 func generate_board() -> void:
 	data.tile_array.resize(data.file_count * data.rank_count)
@@ -351,7 +369,6 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 					):
 				_capture_piece(clicked_tile.occupant)
 				perform_move(Move.new(TileObject.selected, clicked_tile, Move.Type.CAPTURING))
-				next_turn()
 
 		elif clicked_tile.occupant == null:
 			# move selected piece to clicked tile
@@ -363,12 +380,10 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 						):
 					_set_en_passant(clicked_tile)
 				perform_move(Move.new(TileObject.selected, clicked_tile))
-				next_turn()
 
 			# perform castling movement
 			elif clicked_tile.data.is_castling:
 				_perform_castling_move(clicked_tile) # castling
-				next_turn()
 
 			# capture pawn via en passant
 			elif (	clicked_tile.data.is_threatened
@@ -378,7 +393,6 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 					):
 						_capture_piece(PieceObject.en_passant)
 						perform_move(Move.new(TileObject.selected, clicked_tile, Move.Type.CAPTURING|Move.Type.EN_PASSANT))
-						next_turn()
 #endregion
 
 
@@ -451,7 +465,8 @@ func _resolve_branching_movement(
 		var distance: int = branch.distance
 
 		while distance > 0:
-			if current_tile_ptr == null: break# current_tile_ptr does not exists
+			if current_tile_ptr == null:
+				break # current_tile_ptr does not exists
 
 			var next_tile_position: Vector2i = (
 					current_tile_ptr.data.board_position
@@ -464,6 +479,7 @@ func _resolve_branching_movement(
 					or next_tile_position.y < 0
 					):
 				break
+
 			current_tile_ptr = data.tile_array[
 					data.get_index(
 							next_tile_position.x,
@@ -569,6 +585,7 @@ func _capture_piece(piece) -> void:
 	piece._captured()
 	_piece_capture_audio.play()
 
+
 func perform_move(move: Move):
 	_clear_check()
 	get_tree().call_group("Tile","clear_states")
@@ -581,9 +598,6 @@ func perform_move(move: Move):
 	piece.reparent(move.destination_tile)
 	piece.data.index = move.destination_tile.data.index
 	_piece_move_audio.play()
-
-	if not piece.data.has_moved:
-		piece._moved(true)
 
 	# match occupants in piece_array to their respective tiles in tile_array
 	for tile in data.tile_array:
@@ -599,16 +613,36 @@ func perform_move(move: Move):
 	if data.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
 		move.flags += Move.Type.CHECK
 
+	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:
+		var mouse_pos = get_viewport().get_mouse_position()
+		_game_overlay._show_promotion_menu(mouse_pos)
+		_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
+		get_tree().paused = true
+		await piece.promoted
+		piece.data.movement.set_max_distance(maxi(data.file_count,data.rank_count))
+		_game_overlay._hide_promotion_menu()
+		_game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
+		get_tree().paused = false
+
+	if not piece.data.has_moved:
+		piece._moved(true)
+
 	if move.algebraic_notation != "": # empty string due to castling move
-		_move_history_menu.add_move(move)
+		_game_overlay.add_move(move)
+		next_turn()
 
 
 ## Sets up the next turn
 func next_turn() -> void:
 	# increments the turn number
 	_turn_num += 1
+	if data.is_match_timed:
+		Player.current.timer.stop_timer()
+		Player.current.timer.increase_by_increment()
+
 	Player.previous = Player.current
 	Player.current = data.get_opponent_of(Player.previous)
+	turn_changed.emit()
 
 	if Player.current == Player.en_passant:
 		# clear en passant
@@ -616,5 +650,3 @@ func next_turn() -> void:
 		TileObject.en_passant = null
 
 	data.legal_moves.generate_legal_moves(Player.current)
-
-	turn_changed.emit()

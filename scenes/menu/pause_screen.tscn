@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dh0xqsvmtokbh"]
 
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/UITheme.tres" id="1_wx27k"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_wx27k"]
 [ext_resource type="Script" uid="uid://b7d6wfi6urnkk" path="res://scripts/menu/pause_screen.gd" id="2_ruv5c"]
 [ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="3_x8jkt"]
 

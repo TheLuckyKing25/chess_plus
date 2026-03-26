@@ -1,13 +1,54 @@
-[gd_scene load_steps=4 format=3 uid="uid://b2b5f3ejhqp35"]
+[gd_scene load_steps=8 format=3 uid="uid://b2b5f3ejhqp35"]
 
 [ext_resource type="Script" uid="uid://btrxdnasph4pi" path="res://scripts/menu/game_overlay.gd" id="1_xagep"]
-[ext_resource type="Texture2D" uid="uid://bhrcs34u8qeqj" path="res://assets/rulebook-icon.png" id="3_7fcqw"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_siigl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_51lco"]
 bg_color = Color(0.470588, 0.741176, 0.282353, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 25
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oxcsm"]
+resource_name = "Panel"
+bg_color = Color(0.470588, 0.741176, 0.282353, 1)
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+corner_detail = 9
+expand_margin_left = 25.0
+expand_margin_right = 25.0
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_51kpi"]
+resource_name = "Panel"
+bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_siigl"]
+bg_color = Color(0.376471, 0.603922, 0.219608, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xagep"]
+resource_name = "Panel"
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mv175"]
+bg_color = Color(0.470588, 0.741176, 0.282353, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
 corner_radius_bottom_left = 5
 
 [node name="GameOverlay" type="Control"]
@@ -21,44 +62,141 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_xagep")
 
-[node name="MenuButtons" type="MarginContainer" parent="."]
+[node name="Rightside" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -60.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Rightside"]
+layout_mode = 2
+alignment = 2
+
+[node name="RightsideButton" type="Button" parent="Rightside/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 120)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+mouse_default_cursor_shape = 2
+theme_override_colors/font_hover_pressed_color = Color(0.423529, 0.423529, 0.423529, 1)
+theme_override_colors/font_hover_color = Color(0.643137, 0.643137, 0.643137, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.486275, 0.486275, 0.486275, 1)
+theme_override_colors/font_pressed_color = Color(0.164706, 0.164706, 0.164706, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_51lco")
+theme_override_styles/hover = SubResource("StyleBoxFlat_51lco")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_51lco")
+theme_override_styles/normal = SubResource("StyleBoxFlat_51lco")
+toggle_mode = true
+text = "<"
+
+[node name="RightsideMenu" type="VBoxContainer" parent="Rightside/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="Rightside/HBoxContainer/RightsideMenu"]
+layout_mode = 2
+current_tab = 0
+tab_alignment = 1
+scrolling_enabled = false
+scroll_to_selected = false
+tab_count = 1
+tab_0/title = "Move History"
+
+[node name="Panel" type="Panel" parent="Rightside/HBoxContainer/RightsideMenu"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Rightside/HBoxContainer/RightsideMenu/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 25
-theme_override_constants/margin_top = 25
-theme_override_constants/margin_right = 25
-theme_override_constants/margin_bottom = 25
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="MenuButtons" type="BoxContainer" parent="MenuButtons"]
+[node name="ItemList" type="ItemList" parent="Rightside/HBoxContainer/RightsideMenu/Panel/MarginContainer"]
+layout_mode = 2
+allow_search = false
+max_columns = 2
+same_column_width = true
+fixed_column_width = 110
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -30.0
+offset_right = 30.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oxcsm")
+
+[node name="MenuButtons" type="MarginContainer" parent="PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 0
+size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_edit_use_anchors_ = true
 
-[node name="Debug" type="Button" parent="MenuButtons/MenuButtons"]
-custom_minimum_size = Vector2(75, 0)
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MenuButtons"]
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(0.423651, 0.423651, 0.423651, 1)
-theme_override_colors/font_hover_color = Color(0.641934, 0.641934, 0.641934, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.485703, 0.485704, 0.485703, 1)
-theme_override_colors/font_pressed_color = Color(0.165656, 0.165656, 0.165656, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/hover = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/normal = SubResource("StyleBoxFlat_siigl")
-toggle_mode = true
-text = "Debug"
+theme_override_constants/separation = 10
+alignment = 1
 
-[node name="PauseButton" type="Button" parent="MenuButtons/MenuButtons"]
+[node name="WhiteTimer" type="PanelContainer" parent="PanelContainer/MenuButtons/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_51kpi")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MenuButtons/HBoxContainer/WhiteTimer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="PanelContainer/MenuButtons/HBoxContainer/WhiteTimer/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "00:00:00.000"
+horizontal_alignment = 1
+
+[node name="PauseButton" type="Button" parent="PanelContainer/MenuButtons/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/focus = SubResource("StyleBoxFlat_siigl")
 theme_override_styles/hover = SubResource("StyleBoxFlat_siigl")
@@ -66,7 +204,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_siigl")
 theme_override_styles/normal = SubResource("StyleBoxFlat_siigl")
 clip_text = true
 
-[node name="BoxContainer" type="BoxContainer" parent="MenuButtons/MenuButtons/PauseButton"]
+[node name="BoxContainer" type="BoxContainer" parent="PanelContainer/MenuButtons/HBoxContainer/PauseButton"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,60 +214,219 @@ grow_vertical = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="MenuButtons/MenuButtons/PauseButton/BoxContainer"]
+[node name="ColorRect" type="ColorRect" parent="PanelContainer/MenuButtons/HBoxContainer/PauseButton/BoxContainer"]
 custom_minimum_size = Vector2(8, 28)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 
-[node name="ColorRect2" type="ColorRect" parent="MenuButtons/MenuButtons/PauseButton/BoxContainer"]
+[node name="ColorRect2" type="ColorRect" parent="PanelContainer/MenuButtons/HBoxContainer/PauseButton/BoxContainer"]
 custom_minimum_size = Vector2(8, 28)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 
-[node name="RuleBookButton" type="Button" parent="MenuButtons/MenuButtons"]
-z_index = 1
-custom_minimum_size = Vector2(40, 40)
+[node name="BlackTimer" type="PanelContainer" parent="PanelContainer/MenuButtons/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_styles/focus = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/hover = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/normal = SubResource("StyleBoxFlat_siigl")
-clip_text = true
-expand_icon = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_xagep")
 
-[node name="MarginContainer" type="MarginContainer" parent="MenuButtons/MenuButtons/RuleBookButton"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MenuButtons/HBoxContainer/BlackTimer"]
+layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="TextureRect" type="TextureRect" parent="MenuButtons/MenuButtons/RuleBookButton/MarginContainer"]
-modulate = Color(100, 100, 100, 1)
+[node name="Label" type="Label" parent="PanelContainer/MenuButtons/HBoxContainer/BlackTimer/MarginContainer"]
 layout_mode = 2
-texture = ExtResource("3_7fcqw")
-expand_mode = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 20
+text = "00:00:00.000"
+horizontal_alignment = 1
 
-[node name="MoveHistoryButton" type="Button" parent="MenuButtons/MenuButtons"]
-custom_minimum_size = Vector2(120, 40)
+[node name="Leftside" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 60.0
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Leftside"]
 layout_mode = 2
+
+[node name="LeftsideMenu" type="VBoxContainer" parent="Leftside/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="Leftside/HBoxContainer/LeftsideMenu"]
+layout_mode = 2
+theme_override_constants/icon_max_width = 40
+current_tab = 0
+tab_alignment = 1
+clip_tabs = false
+scrolling_enabled = false
+scroll_to_selected = false
+tab_count = 2
+tab_0/title = "Debug"
+tab_1/title = "Rulebook"
+
+[node name="Panel" type="Panel" parent="Leftside/HBoxContainer/LeftsideMenu"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Leftside/HBoxContainer/LeftsideMenu/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="PiecePlacementList" type="Tree" parent="Leftside/HBoxContainer/LeftsideMenu/Panel/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 14
+allow_reselect = true
+hide_root = true
+auto_tooltip = false
+
+[node name="Container" type="Control" parent="Leftside/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Control" type="Control" parent="Leftside/HBoxContainer/Container"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="CameraMovementButton" type="Button" parent="Leftside/HBoxContainer/Container/Control"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Cam"
+text_overrun_behavior = 1
+
+[node name="HScrollBar" type="HScrollBar" parent="Leftside/HBoxContainer/Container/Control"]
+custom_minimum_size = Vector2(175, 20)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -10.0
+offset_right = 250.0
+offset_bottom = 10.0
+grow_vertical = 2
+value = 50.0
+
+[node name="VScrollBar" type="VScrollBar" parent="Leftside/HBoxContainer/Container/Control"]
+custom_minimum_size = Vector2(20, 175)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -200.0
+offset_right = 10.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+value = 100.0
+
+[node name="LeftsideButton" type="Button" parent="Leftside/HBoxContainer/Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 120)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -60.0
+offset_right = 40.0
+offset_bottom = 60.0
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 theme_override_colors/font_hover_pressed_color = Color(0.423529, 0.423529, 0.423529, 1)
 theme_override_colors/font_hover_color = Color(0.643137, 0.643137, 0.643137, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(0.486275, 0.486275, 0.486275, 1)
 theme_override_colors/font_pressed_color = Color(0.164706, 0.164706, 0.164706, 1)
 theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/hover = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_siigl")
-theme_override_styles/normal = SubResource("StyleBoxFlat_siigl")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_mv175")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mv175")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_mv175")
+theme_override_styles/normal = SubResource("StyleBoxFlat_mv175")
 toggle_mode = true
-text = "MoveHistory"
+text = ">"
+
+[node name="PromotionMenu" type="Control" parent="."]
+process_mode = 3
+visible = false
+anchors_preset = 0
+
+[node name="Panel" type="PanelContainer" parent="PromotionMenu"]
+layout_mode = 1
+offset_right = 116.0
+offset_bottom = 179.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PromotionMenu/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PromotionMenu/Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="PromotionMenu/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Promote To:"
+
+[node name="PromotionList" type="ItemList" parent="PromotionMenu/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 150)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[connection signal="toggled" from="Rightside/HBoxContainer/RightsideButton" to="." method="_on_rightside_button_toggled"]
+[connection signal="item_selected" from="Leftside/HBoxContainer/LeftsideMenu/Panel/MarginContainer/PiecePlacementList" to="." method="_on_piece_placement_list_item_selected"]
+[connection signal="toggled" from="Leftside/HBoxContainer/Container/LeftsideButton" to="." method="_on_leftside_button_toggled"]
+[connection signal="item_selected" from="PromotionMenu/Panel/MarginContainer/VBoxContainer/PromotionList" to="." method="_on_promotion_list_item_selected"]

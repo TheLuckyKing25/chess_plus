@@ -1,7 +1,7 @@
 class_name PieceObject
 extends Node3D
 
-
+signal promoted
 signal clicked(piece: PieceObject)
 
 
@@ -17,7 +17,36 @@ var outline_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
 
 
-@export var data: PieceData
+@export var data: PieceData:
+	set(new_data):
+		if data:
+			remove_from_group(data.name)
+			new_data.index = data.index
+		add_to_group(new_data.name)
+		$Piece_Mesh.mesh = new_data.object_mesh
+
+		piece_material = $Piece_Mesh.material_override
+		mouseover_material = piece_material.next_pass
+		outline_material = mouseover_material.next_pass
+		outline_material.albedo_color = Color(0,0,0,0)
+
+		piece_material.albedo_color = new_data.player.color
+		data = new_data
+
+
+func promote(piece_name: String):
+	data.player.remove_piece(self)
+	match piece_name:
+		"Bishop":
+			data = PieceBishop.new(data.player)
+		"Knight":
+			data = PieceKnight.new(data.player)
+		"Rook":
+			data = PieceRook.new(data.player)
+		"Queen":
+			data = PieceQueen.new(data.player)
+	data.player.add_piece(self)
+	promoted.emit()
 
 
 func apply_state():

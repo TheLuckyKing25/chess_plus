@@ -9,7 +9,7 @@ extends Control
 
 
 func _connect_to_back_button(function:Callable):
-	$SettingMenu/VBoxContainer/HBoxContainer/Back.pressed.connect(function)
+	%Back.pressed.connect(function)
 
 func _ready():
 	var video_settings = ConfigFileHandler.load_video_settings()
@@ -26,7 +26,7 @@ func _ready():
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("UI"), linear_to_db(audio_settings.ui_volume))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Game"), linear_to_db(audio_settings.game_volume))
 
-#region Graphic Settings
+#region Display Settings
 #Fullscreen
 func _on_check_box_toggled(toggled_on):
 	ConfigFileHandler.save_video_settings("fullscreen", toggled_on)

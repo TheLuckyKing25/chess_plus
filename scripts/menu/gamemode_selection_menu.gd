@@ -1,9 +1,10 @@
 extends Control
 
+signal time_control_selected(time_sec:int, increment_sec:int)
 signal back_button_pressed()
 signal continue_button_pressed()
 signal board_verified(rank_count: int, file_count: int, FEN_notation: FEN)
-
+signal start_button_pressed()
 
 var row_num: int = 8
 var column_num: int = 8
@@ -17,12 +18,21 @@ func _on_continue_button_pressed() -> void:
 
 
 func _on_row_number_spin_box_value_changed(value: float) -> void:
-	row_num = value
-
+	row_num = value as int
+	#_on_size_changed()
 
 func _on_column_number_spin_box_value_changed(value: float) -> void:
-	column_num = value
+	column_num = value as int
+	#_on_size_changed()
 
+#func _on_size_changed() -> void:
+	#%BoardRepresentation.columns = column_num
+	#for child in %BoardRepresentation.get_children():
+		#%BoardRepresentation.remove_child(child)
+	#for tile_number in range(column_num * row_num):
+		#var button = Button.new()
+		#button.custom_minimum_size = Vector2(40,40)
+		#%BoardRepresentation.add_child(button)
 
 func _on_board_state_fen_text_changed() -> void:
 	%PieceLayoutERRORLabel.hide()
@@ -47,3 +57,13 @@ func _on_board_state_fen_text_changed() -> void:
 			%PieceLayoutERRORLabel.show()
 			return
 	board_verified.emit(row_num, column_num, FEN.new(%BoardStateFEN.text))
+
+func _on_start_button_pressed():
+	board_verified.emit(row_num,column_num,FEN.new(%BoardStateFEN.text))
+	if %TimeControl/CheckBox.button_pressed:
+		time_control_selected.emit(%TimeControl/MinutesPerPlayer/SpinBox.value * 60, %TimeControl/IncrementPerMove/SpinBox.value)
+	start_button_pressed.emit()
+
+func _on_check_box_toggled(toggled_on: bool) -> void:
+	%TimeControl/MinutesPerPlayer.visible = toggled_on
+	%TimeControl/IncrementPerMove.visible = toggled_on

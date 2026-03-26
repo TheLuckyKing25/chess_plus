@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://ca80534plviow"]
+[gd_scene load_steps=5 format=3 uid="uid://ca80534plviow"]
 
 [ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_3q2uy"]
+[ext_resource type="Theme" uid="uid://ppo78g07ivy0" path="res://assets/theme/selected_tile_modifier_button_theme.tres" id="1_blv4a"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_3q2uy"]
 resource_local_to_scene = false
@@ -14,6 +15,7 @@ custom_minimum_size = Vector2(200, 36)
 offset_right = 300.0
 offset_bottom = 36.0
 size_flags_horizontal = 3
+theme = ExtResource("1_blv4a")
 theme_type_variation = &"InsetPanelContainer"
 script = ExtResource("1_3q2uy")
 
@@ -26,8 +28,7 @@ custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
-theme_type_variation = &"TileModifierSelectedListModifierButton"
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"ModifierButton"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_3q2uy")
 text = "Cog"
@@ -46,7 +47,7 @@ offset_left = -16.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_vertical = 0
-theme_type_variation = &"TileModifierSelectedListRemoveButton"
+theme_type_variation = &"RemoveButton"
 icon_alignment = 1
 
 [node name="BoxContainer" type="BoxContainer" parent="BoxContainer/ModifierButton"]
@@ -67,7 +68,7 @@ custom_minimum_size = Vector2(19, 19)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
-theme_type_variation = &"TileModifierSelectedListUpButton"
+theme_type_variation = &"UpButton"
 icon_alignment = 1
 expand_icon = true
 
@@ -77,7 +78,7 @@ custom_minimum_size = Vector2(19, 19)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
-theme_type_variation = &"TileModifierSelectedListDownButton"
+theme_type_variation = &"DownButton"
 icon_alignment = 1
 expand_icon = true
 
