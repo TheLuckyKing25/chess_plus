@@ -19,20 +19,11 @@ func _on_continue_button_pressed() -> void:
 
 func _on_row_number_spin_box_value_changed(value: float) -> void:
 	row_num = value as int
-	#_on_size_changed()
+
 
 func _on_column_number_spin_box_value_changed(value: float) -> void:
 	column_num = value as int
-	#_on_size_changed()
 
-#func _on_size_changed() -> void:
-	#%BoardRepresentation.columns = column_num
-	#for child in %BoardRepresentation.get_children():
-		#%BoardRepresentation.remove_child(child)
-	#for tile_number in range(column_num * row_num):
-		#var button = Button.new()
-		#button.custom_minimum_size = Vector2(40,40)
-		#%BoardRepresentation.add_child(button)
 
 func _on_board_state_fen_text_changed() -> void:
 	%PieceLayoutERRORLabel.hide()

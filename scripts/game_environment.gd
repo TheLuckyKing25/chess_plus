@@ -12,12 +12,12 @@ func _process(delta: float):
 		if board._time_elapsed_since_turn_ended > 0:
 			can_proceed = true
 		if can_proceed and board._time_elapsed_since_turn_ended * BoardData.TURN_TRANSITION_SPEED <= 1:
-			camera_rotation += rad_to_deg(PI) * BoardData.TURN_TRANSITION_SPEED * delta * 1000
+			camera_rotation += 180 * BoardData.TURN_TRANSITION_SPEED * delta * 1000
 			match Player.current:
 				board.data.player_one:
 					player2_camera.yaw = camera_rotation + 180
-					if camera_rotation >= rad_to_deg(PI):
-						player2_camera.yaw = rad_to_deg(PI)
+					if camera_rotation >= 180:
+						player2_camera.yaw = 180
 						player1_camera.make_current()
 						if player2_camera.yaw != 180:
 							player2_camera.yaw = 180
@@ -25,8 +25,8 @@ func _process(delta: float):
 						can_proceed = false
 				board.data.player_two:
 					player1_camera.yaw = camera_rotation
-					if camera_rotation >= rad_to_deg(PI):
-						player1_camera.yaw = rad_to_deg(PI)
+					if camera_rotation >= 180:
+						player1_camera.yaw = 180
 						player2_camera.make_current()
 						if player1_camera.yaw != 0:
 							player1_camera.yaw = 0

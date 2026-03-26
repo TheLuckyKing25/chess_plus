@@ -75,7 +75,8 @@ var flags: int:
 
 		if new_flags & Type.EN_PASSANT:
 			_notation_suffix += " " + ALGEBRAIC_NOTATION_EN_PASSANT
-
+		elif new_flags & Type.PROMOTION:
+			_notation_suffix += ALGEBRAIC_NOTATION_PROMOTION
 		flags = new_flags
 
 

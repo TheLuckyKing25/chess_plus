@@ -17,6 +17,8 @@ func apply(board: BoardObject):
 
 
 func place_pieces(board: BoardObject):
+	board.data.player_one.pieces = {}
+	board.data.player_two.pieces = {}
 	var tile_num = 0
 	var new_piece
 	for character in FEN_board_position.piece_placement:
@@ -59,7 +61,6 @@ func place_pieces(board: BoardObject):
 		board.data.piece_array[tile_index] = new_piece
 		new_piece.data.index = tile_index
 		tile_num += 1
-
 
 func set_active_player(board: BoardObject):
 	match FEN_board_position.active_player:

@@ -28,7 +28,6 @@ const PIECE_SCENE:PackedScene = preload("res://scenes/piece.tscn")
 
 
 var _current_game_state: GameState = GameState.BoardCustomization
-var _is_piece_promoting: bool = false
 
 var _time_turn_ended:int = 0
 var _time_elapsed_since_turn_ended:int = 0
@@ -251,6 +250,7 @@ func _on_pause_menu_resume_button_pressed():
 	_pause_menu.queue_free()
 
 func _on_pause_menu_leave_button_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
 
 	#endregion
@@ -285,7 +285,6 @@ func load_FEN(FE_notation:FEN) -> void:
 	var fen_decoder := FENDecoder.new(FE_notation)
 	data.FEN_board_state = FE_notation
 	get_tree().call_group("Tile","clear_states")
-
 	fen_decoder.apply(self)
 
 	data.legal_moves = MoveList.new(data)
@@ -614,6 +613,7 @@ func perform_move(move: Move):
 		move.flags += Move.Type.CHECK
 
 	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:
+		move.flags += Move.Type.PROMOTION
 		var mouse_pos = get_viewport().get_mouse_position()
 		_game_overlay._show_promotion_menu(mouse_pos)
 		_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
@@ -628,6 +628,8 @@ func perform_move(move: Move):
 		piece._moved(true)
 
 	if move.algebraic_notation != "": # empty string due to castling move
+		if move.flags & Move.Type.PROMOTION:
+			move._notation_suffix += piece.data.algebraic_notation
 		_game_overlay.add_move(move)
 		next_turn()
 
