@@ -191,6 +191,9 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	_tile_modifier_menu.queue_free()
 	_gamemode_selection_menu.queue_free()
 
+	data.legal_moves = MoveList.new(data)
+	data.legal_moves.generate_legal_moves(Player.current)
+
 	#endregion
 
 
@@ -539,6 +542,26 @@ func show_selected_piece_movement() -> void:
 			TileObject.selected
 			)
 
+
+func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
+	var next_tile_position: Vector2i = (
+			current_tile.data.board_position
+			+ Movement.neighboring_tiles[direction]
+			)
+
+	if (	next_tile_position.x > data.rank_count-1
+			or next_tile_position.x < 0
+			or next_tile_position.y > data.file_count-1
+			or next_tile_position.y < 0
+			):
+		return # next_tile does not exist
+
+	return data.tile_array[
+			data.get_index(
+					next_tile_position.x,
+					next_tile_position.y
+					)
+			]
 # SAME LOGIC USED IN MoveList RESOURCE.
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
 func _resolve_branching_movement(
@@ -547,46 +570,53 @@ func _resolve_branching_movement(
 		origin_tile: TileObject
 		) -> void:
 
+	moveset = moveset.get_duplicate()
+
+	for modifier in origin_tile.data.modifier_order:
+		if modifier.can_modify_movement:
+			modifier.modify_movement(moveset)
+
+
 	for branch in moveset.branches:
 		var current_tile_ptr: TileObject = origin_tile
 
 		branch.purpose = moveset.purpose
 		var distance: int = branch.distance
-		var can_branch:bool = branch.is_branching
+		var can_proceed_with_branch: bool = true
+		var has_slid:bool = false
 
 		while distance > 0:
+			current_tile_ptr = get_next_tile(current_tile_ptr, branch.direction)
+
 			if current_tile_ptr == null:
 				break # current_tile_ptr does not exist
 
-			var next_tile_position: Vector2i = (
-					current_tile_ptr.data.board_position
-					+ Movement.neighboring_tiles[branch.direction]
-					)
-
-			if (	next_tile_position.x > data.rank_count-1
-					or next_tile_position.x < 0
-					or next_tile_position.y > data.file_count-1
-					or next_tile_position.y < 0
-					):
-				break # next_tile does not exist
-
-			current_tile_ptr = data.tile_array[
-					data.get_index(
-							next_tile_position.x,
-							next_tile_position.y
-							)
-					]
-
 			for modifier in current_tile_ptr.data.modifier_order:
+				if moveset.is_jumping:
+					break
+
 				if modifier.is_blocking:
 					distance = 0
-					can_branch = false
+					can_proceed_with_branch = false
 					break
 				if modifier.is_stopping:
 					distance = 1
-					can_branch = false
+					moveset.is_branching = false
 				if modifier.can_modify_movement:
 					modifier.modify_movement(branch)
+				if modifier.is_slippery:
+					var next_tile = get_next_tile(current_tile_ptr, branch.direction)
+					if not next_tile.occupant:
+						has_slid = true
+						break
+
+			if has_slid:
+				has_slid = false
+				continue
+
+			if can_proceed_with_branch == false:
+				can_proceed_with_branch = true
+				break
 
 
 			if branch.is_threaten:
@@ -677,6 +707,7 @@ func _resolve_branching_movement(
 
 
 			distance -= 1
+
 
 		if branch.is_branching and distance == 0:
 			_resolve_branching_movement(active_piece, branch, current_tile_ptr)

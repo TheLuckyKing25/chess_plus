@@ -6,6 +6,7 @@ extends TileModifier
 
 func _init():
 	flag = ModifierType.PROPERTY_POISON
+	color = Color(0.5,0.25,0.7)
 
 
 func _create_dropdown_ui():
@@ -43,7 +44,10 @@ func _create_range_setting(text: String, _prefix:String, _suffix:String, _call_o
 
 
 func _on_dropdown_lifetime_changed(new_value:int):
-	lifetime = new_value
+	if new_value == 0:
+		lifetime = 1000
+	else:
+		lifetime = new_value
 
 
 func _on_dropdown_duration_changed(new_value:int):

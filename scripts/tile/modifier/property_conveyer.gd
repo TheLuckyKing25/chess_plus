@@ -20,6 +20,8 @@ enum ConveyerDirection{
 
 func _init():
 	flag = ModifierType.PROPERTY_CONVEYER
+	color = Color(0.5,0.5,0.5)
+	can_force_movement = true
 
 
 func on_turn_end(board, tile) -> void:

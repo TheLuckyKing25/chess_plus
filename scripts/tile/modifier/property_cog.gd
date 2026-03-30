@@ -58,9 +58,7 @@ func modify_movement(movement: Movement):
 	if movement == null:
 		return
 	else:
-		var duplicated_movement:Movement = movement.get_duplicate()
-		duplicated_movement.rotate_movement(rotation)
-		return duplicated_movement
+		movement.rotate_movement(rotation)
 
 	#var duplicated: Movement = movement.get_duplicate()
 	#var parity := int(rotation / 45)

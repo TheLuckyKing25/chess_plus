@@ -48,7 +48,10 @@ func _create_range_setting(text: String, _prefix:String, _suffix:String, _call_o
 
 
 func _on_dropdown_range_changed(new_value:int):
-	lifetime = new_value
+	if new_value == 0:
+		lifetime = 1000
+	else:
+		lifetime = new_value
 #endregion
 
 

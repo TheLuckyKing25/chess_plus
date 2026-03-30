@@ -60,13 +60,18 @@ func _on_selected_tile_modifier_button_remove_button_pressed():
 
 # Button Handling
 func _on_add_pressed() -> void:
-	var tiles := get_tree().get_nodes_in_group("Selected")
+	var tiles = get_tree().get_nodes_in_group("Selected")
 	#print("ADD pressed. Selected tiles:", tiles.size())
 
 	for tile in tiles:
 		var tile_modifier_order = tile.data.modifier_order
 		tile_modifier_order.append_array(tile_modifier_list.duplicate(true))
 		tile.data.modifier_order = tile_modifier_order
+		tile._unselect()
+		tile.remove_from_group("Selected")
+	for child in %AppliedTileModifiers.get_children():
+		%AppliedTileModifiers.remove_child(child)
+		child.queue_free()
 
 func _on_replace_pressed() -> void:
 	var tiles := get_tree().get_nodes_in_group("Selected")
@@ -74,6 +79,11 @@ func _on_replace_pressed() -> void:
 
 	for tile in tiles:
 		tile.data.modifier_order = tile_modifier_list.duplicate(true)
+		tile._unselect()
+		tile.remove_from_group("Selected")
+	for child in %AppliedTileModifiers.get_children():
+		%AppliedTileModifiers.remove_child(child)
+		child.queue_free()
 
 func _on_erase_pressed() -> void:
 	var tiles:= get_tree().get_nodes_in_group("Selected")
@@ -81,6 +91,7 @@ func _on_erase_pressed() -> void:
 
 	for tile in tiles:
 		tile.data.clear_modifiers()
+
 
 
 func _on_applied_tile_modifiers_child_order_changed() -> void:

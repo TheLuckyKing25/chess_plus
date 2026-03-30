@@ -44,21 +44,22 @@ enum ModifierType {
 ## When a modifier is applied.
 var modifier_application_time: TurnState
 
-
 var dropdown_ui: Control
-
 
 ## stops movement from entering the tile
 var is_blocking: bool = false
-
-
 ## stops movement from leaving the tile
 var is_stopping: bool = false
-
 ## forces movement to next tile, if said tile is not blocked.
 var is_slippery: bool = false
 
+
+## changes the piece's movement
 var can_modify_movement: bool = false
+
+## force piece to move to a different tile
+var can_force_movement: bool = false
+
 
 static func apply_modifiers_to_moveset(context, tile, piece, moveset):
 	var result = moveset
