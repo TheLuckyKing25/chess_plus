@@ -62,7 +62,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 
 			for modifier in current_tile_ptr.data.modifier_order:
-				if moveset.is_jumping:
+				if moveset.is_jump:
 					break
 
 				if modifier.is_blocking:
@@ -82,9 +82,6 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				if modifier.can_modify_movement:
 					modifier.modify_movement(branch)
-
-				if modifier.can_force_movement:
-					current_tile_ptr = modifier.get_next_tile()
 
 			if has_slid:
 				has_slid = false

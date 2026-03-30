@@ -592,23 +592,26 @@ func _resolve_branching_movement(
 				break # current_tile_ptr does not exist
 
 			for modifier in current_tile_ptr.data.modifier_order:
-				if moveset.is_jumping:
+				if moveset.is_jump:
 					break
 
 				if modifier.is_blocking:
 					distance = 0
 					can_proceed_with_branch = false
 					break
+
 				if modifier.is_stopping:
 					distance = 1
 					moveset.is_branching = false
-				if modifier.can_modify_movement:
-					modifier.modify_movement(branch)
+
 				if modifier.is_slippery:
 					var next_tile = get_next_tile(current_tile_ptr, branch.direction)
 					if not next_tile.occupant:
 						has_slid = true
 						break
+
+				if modifier.can_modify_movement:
+					modifier.modify_movement(branch)
 
 			if has_slid:
 				has_slid = false

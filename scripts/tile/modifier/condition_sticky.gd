@@ -54,7 +54,3 @@ func _on_dropdown_range_changed(new_value:int):
 		lifetime = new_value
 
 #endregion
-
-
-func blocks_movement(board, piece, tile) -> bool:
-	return true
