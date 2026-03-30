@@ -3,7 +3,7 @@ extends Control
 const MODIFIER_TILE_CORNER_RADIUS = 20
 
 const ModifierStyleBox: Dictionary = {
-	"CONDITION_STYLEBOX": preload("res://assets/TileCondition.stylebox"),
+	"CONDITION_STYLEBOX": preload("res://assets/TileModifier.stylebox"),
 	"PROPERTY_STYLEBOX": preload("res://assets/TileProperties.stylebox"),
 }
 
@@ -23,7 +23,7 @@ func change_grid_size():
 func _on_tile_modifiers_modifier_count_changed(modifier_number: int, modifiers: Array) -> void:
 	num_of_modifiers = modifier_number
 	change_grid_size()
-	
+
 	while num_of_modifiers != current_visible_modifiers:
 		if current_visible_modifiers < num_of_modifiers:
 			get_child(current_visible_modifiers).visible = true
@@ -31,9 +31,9 @@ func _on_tile_modifiers_modifier_count_changed(modifier_number: int, modifiers: 
 		elif current_visible_modifiers > num_of_modifiers:
 			get_child(current_visible_modifiers - 1).visible = false
 			current_visible_modifiers -= 1
-	
+
 	for modifier in modifiers:
-		var key = ModifierEnums.TileModifierFlag.find_key(modifier.flag)
+		var key = TileModifier.ModifierType.find_key(modifier.flag)
 		if key and key.begins_with("CONDITION"):
 			get_child(modifiers.find(modifier)).add_theme_stylebox_override("panel",ModifierStyleBox.CONDITION_STYLEBOX)
 		elif key and key.begins_with("PROPERTY"):

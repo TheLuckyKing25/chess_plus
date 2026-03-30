@@ -2,12 +2,13 @@ class_name PropertyButton
 extends TileModifier
 
 @export_range(1, 8, 1, "or_greater") var radius: int = 1
+
 var last_trigger_piece: PieceObject = null
 
 func _init():
-	flag = ModifierEnums.TileModifierFlag.PROPERTY_BUTTON
+	flag = ModifierType.PROPERTY_BUTTON
 
-func on_turn_end(board, tile) -> void:
+func on_turn_end(board,tile) -> void:
 	if tile == null or tile.occupant == null:
 		last_trigger_piece = null
 		return
@@ -17,4 +18,4 @@ func on_turn_end(board, tile) -> void:
 
 	print("BUTTON fired on tile ", tile.data.board_position, " radius=", radius)
 	last_trigger_piece = tile.occupant
-	board._toggle_gates_in_radius(tile, radius)
+	modifier_activated.emit(radius)

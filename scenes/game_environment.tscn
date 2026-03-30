@@ -77,12 +77,11 @@ normal_texture = SubResource("NoiseTexture2D_5gvbh")
 script = ExtResource("1_hlv2s")
 
 [node name="CameraWhite" parent="." instance=ExtResource("2_o3rc1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00442696, 1.01784, 0.0354185)
 distance_from_subject = 10.0
 pitch = -50.0
 
 [node name="CameraBlack" parent="." instance=ExtResource("2_o3rc1")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.00442696, 1.01784, 0.0354185)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 distance_from_subject = 10.0
 yaw = 180.0
 pitch = -50.0
@@ -121,3 +120,4 @@ spot_angle = 72.1925
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="game_state_changed" from="Table/Board" to="." method="_on_board_game_state_changed"]
+[connection signal="ready" from="Table/Board" to="." method="_on_board_ready"]

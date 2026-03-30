@@ -4,16 +4,65 @@ extends TileModifier
 # The cog property changes the direction a piece is able to move in. Currently, this is temporary
 # and the piece gains its normal movement back after moving off the piece.
 
-@export var rotation: int = 90
+@export var rotation: int
+
 
 func _init():
-	flag = ModifierEnums.TileModifierFlag.PROPERTY_COG
+	flag = ModifierType.PROPERTY_COG
+	rotation = 0
+	color = Color(0.77,0.42,0)
+	can_modify_movement = true
 
-func modify_moveset(board, piece, tile, moveset):
-	if moveset == null:
-		return moveset
-	
-	var duplicated: Movement = moveset.get_duplicate()
-	var parity := int(rotation / 45)
-	duplicated.set_direction_parity(parity)
-	return duplicated
+
+#region Dropdown UI Creation
+func _create_dropdown_ui():
+	dropdown_ui = VBoxContainer.new()
+	dropdown_ui.alignment = BoxContainer.ALIGNMENT_CENTER
+	dropdown_ui.add_theme_constant_override("separation", 10)
+
+	dropdown_ui.add_child(_create_range_setting("Rotation Amount", "", "degrees", Callable(self,"_on_dropdown_rotation_changed")))
+
+
+func _create_range_setting(text: String, _prefix:String, _suffix:String, _call_on_value_changed:Callable) -> Control:
+	var setting: HBoxContainer = HBoxContainer.new()
+	setting.alignment = BoxContainer.ALIGNMENT_CENTER
+	setting.add_theme_constant_override("separation", 10)
+
+	var label: Label = Label.new()
+	label.text = text
+
+	var amount:Range = SpinBox.new()
+	amount.value = 0
+	amount.min_value = 0
+	amount.max_value = 315
+	amount.step = 45
+	amount.allow_greater = false
+	amount.suffix = _suffix
+	amount.editable = true
+	amount.custom_minimum_size = Vector2(150,0)
+	amount.value_changed.connect(_call_on_value_changed)
+
+	setting.add_child(label)
+	setting.add_child(amount)
+
+	return setting
+
+
+func _on_dropdown_rotation_changed(new_value:int):
+	rotation = new_value/45
+	print(rotation)
+#endregion
+
+
+func modify_movement(movement: Movement):
+	if movement == null:
+		return
+	else:
+		var duplicated_movement:Movement = movement.get_duplicate()
+		duplicated_movement.rotate_movement(rotation)
+		return duplicated_movement
+
+	#var duplicated: Movement = movement.get_duplicate()
+	#var parity := int(rotation / 45)
+	#duplicated.set_direction_parity(parity)
+	#return duplicated

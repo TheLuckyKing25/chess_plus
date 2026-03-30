@@ -99,8 +99,15 @@ func set_max_distance(max_distance:int) -> void:
 			branch.set_max_distance(max_distance)
 
 
-func rotate_movement() -> void:
+func change_movement_direction() -> void:
 	pass
+
+## direction_units is a positive integer between 1 and 7, including 1 and 7.
+func rotate_movement(direction_units: int) -> void:
+	direction += direction_units
+	if is_branching:
+		for branch in branches:
+			branch.rotate_movement(direction_units)
 
 func change_movement_distance() -> void:
 	pass

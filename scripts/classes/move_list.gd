@@ -15,21 +15,16 @@ func generate_pseudo_legal_moves(player: Player):
 
 	for piece in player.all_pieces:
 		var moveset:Movement = piece.data.movement.get_duplicate()
-		moveset = TileModifier.apply_modifiers_to_moveset(self, board_data.tile_array[piece.data.index], piece, moveset)
-
 		if moveset.distance == 0 and moveset.is_branching:
 			get_all_moves(piece, moveset, board_data.tile_array[piece.data.index])
 
 func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject):
-	for modifier in origin_tile.data.modifier_order:
-		if modifier.blocks_movement(self, active_piece, origin_tile):
-			return
-	
 	for branch in moveset.branches:
 		var current_tile_ptr: TileObject = origin_tile
 
 		branch.purpose = moveset.purpose
 		var distance: int = branch.distance
+		var can_branch: bool = branch.is_branching
 
 		while distance > 0:
 			if current_tile_ptr == null: break# current_tile_ptr does not exists
@@ -52,14 +47,18 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 							next_tile_position.y
 							)
 					]
-			var blocked := false # if a piece blocks movement through it
+
 			for modifier in current_tile_ptr.data.modifier_order:
-				if modifier.blocks_passage(self, active_piece, current_tile_ptr, branch):
-					blocked = true
+				if modifier.is_blocking:
+					distance = 0
+					can_branch = false
 					break
-			
-			if blocked:
-				break
+				if modifier.is_stopping:
+					distance = 1
+					can_branch = false
+				if modifier.can_modify_movement:
+					branch = modifier.modify_movement(branch)
+
 
 			var move: Move = Move.new(
 				board_data.tile_array[active_piece.data.index],

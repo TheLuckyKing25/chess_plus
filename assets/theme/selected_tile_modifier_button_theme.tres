@@ -142,7 +142,7 @@ image = SubResource("Image_l228w")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e55u7"]
 resource_name = "ButtonDisabled"
-bg_color = Color(0.3, 0.3, 0.3, 1)
+bg_color = Color(1, 1, 1, 0)
 corner_radius_top_left = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b8cvi"]
@@ -206,7 +206,7 @@ RemoveButton/styles/hover = SubResource("StyleBoxFlat_tctgd")
 RemoveButton/styles/normal = SubResource("StyleBoxFlat_yrbnt")
 RemoveButton/styles/pressed = SubResource("StyleBoxFlat_hxiso")
 UpButton/base_type = &"Button"
-UpButton/colors/icon_disabled_color = Color(0, 0, 0, 1)
+UpButton/colors/icon_disabled_color = Color(0.54099, 0.540991, 0.54099, 1)
 UpButton/colors/icon_focus_color = Color(0, 0, 0, 1)
 UpButton/colors/icon_hover_color = Color(0, 0, 0, 1)
 UpButton/colors/icon_hover_pressed_color = Color(0, 0, 0, 1)

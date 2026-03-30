@@ -3,6 +3,9 @@ extends Control
 signal new_placement_selected(placement:FEN)
 signal promotion_piecetype_selected(piece_name: String)
 
+@onready var horizontal_slider:HSlider = %HorizontalCameraSlider
+@onready var forward_slider:VSlider = %ForwardCameraSlider
+
 var placement_tree: Dictionary = {
 	"Standard Board": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 	"Castling": {
@@ -14,7 +17,12 @@ var placement_tree: Dictionary = {
 			"Checked Close Movement": "r3k2r/ppp1p1pp/8/3Q1Q2/3q1q2/8/PPP1P1PP/R3K2R w KQkq - 0 1",
 			"Checked Far Movement": "r3k2r/pp1ppp1p/8/2Q3Q1/2q3q1/8/PP1PPP1P/R3K2R w KQkq - 0 1",
 			},
-	"Promotion": "8/PPPPPPPP/8/7K/k7/8/pppppppp/8 w KQkq - 0 1"
+	"Promotion": "8/PPPPPPPP/8/7K/k7/8/pppppppp/8 w KQkq - 0 1",
+	"16x16 Board": {
+		"Doubled layout": "rnbbnrbqkbrnbbnr/pppppppppppppppp/88/88/88/88/88/88/88/88/88/88/88/88/PPPPPPPPPPPPPPPP/RNBBNRBQKBRNBBNR w KQkq - 0 1",
+		"Centered layout": "88/88/88/88/4rnbqkbnr4/4pppppppp4/88/88/88/88/4PPPPPPPP4/4RNBQKBNR4/88/88/88/88 w KQkq - 0 1"
+
+	}
 }
 
 var promotion_menu_list: Array = [
@@ -70,7 +78,6 @@ func _connect_to_pause_button(function: Callable):
 func _connect_to_rulebook_button(function: Callable):
 	#$MenuButtons/MenuButtons/RuleBookButton.pressed.connect(function)
 	pass
-
 
 # When Escape pressed: pause game or resume game, depenent on state.
 func _input(event) -> void:

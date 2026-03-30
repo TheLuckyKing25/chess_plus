@@ -33,6 +33,8 @@ func _process(delta: float):
 						camera_rotation = 0
 						can_proceed = false
 
+
+
 func _on_board_game_state_changed(game_state: int) -> void:
 	match game_state:
 		BoardObject.GameState.BoardCustomization:
@@ -43,3 +45,25 @@ func _on_board_game_state_changed(game_state: int) -> void:
 					player1_camera.make_current()
 				board.data.player_two:
 					player2_camera.make_current()
+
+
+func _on_ready() -> void:
+	board._game_overlay_ready.connect(Callable(self,"_on_board_game_overlay_ready"))
+
+func _on_board_game_overlay_ready():
+	board._connect_to_game_overlay_forward_camera_slider(Callable(self,"_change_camera_forward_offset"))
+	board._connect_to_game_overlay_horizontal_camera_slider(Callable(self,"_change_camera_horizontal_offset"))
+
+func _change_camera_forward_offset(value:float):
+	match Player.current:
+		board.data.player_one:
+			player1_camera.forward_offset = value * Player.current.parity
+		board.data.player_two:
+			player2_camera.forward_offset = value * Player.current.parity
+
+func _change_camera_horizontal_offset(value:float):
+	match Player.current:
+		board.data.player_one:
+			player1_camera.horizonatal_offset = value * Player.current.parity
+		board.data.player_two:
+			player2_camera.horizonatal_offset = value * Player.current.parity

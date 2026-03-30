@@ -4,6 +4,7 @@ extends Node3D
 
 signal turn_changed(player: int)
 signal game_state_changed(game_state: int)
+signal _game_overlay_ready()
 
 
 enum GameState {
@@ -40,7 +41,7 @@ var data: BoardData
 @onready var _piece_move_audio = $Piece_move
 
 
-func _ready() -> void:
+func _on_ready() -> void:
 	data = BoardData.new(
 			load("res://resources/players/player_one.tres"),
 			load("res://resources/players/player_two.tres")
@@ -183,7 +184,7 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	_current_game_state = GameState.Gameplay
 	game_state_changed.emit(_current_game_state)
 	get_tree().call_group("Tile","clear_states")
-
+	get_tree().call_group("Tile","remove_from_group","Selected")
 	_instantiate_game_overlay()
 
 	_tile_modifier_menu.hide()
@@ -196,6 +197,7 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	#region _GAME_OVERLAY
 func _instantiate_game_overlay():
 	_game_overlay = _GAME_OVERLAY.instantiate()
+	_game_overlay.ready.connect(Callable(self,"_on_game_overlay_ready"))
 	$MenuLayer.add_child(_game_overlay)
 	_game_overlay._connect_to_pause_button(
 			Callable(self,"_on_game_overlay_pause_button_pressed"))
@@ -209,6 +211,14 @@ func _instantiate_game_overlay():
 		data.player_one.timer.label = _game_overlay._get_ui_timer_white()
 		data.player_two.timer.label = _game_overlay._get_ui_timer_black()
 
+func _on_game_overlay_ready():
+	_game_overlay_ready.emit()
+
+func _connect_to_game_overlay_horizontal_camera_slider(function: Callable):
+	_game_overlay.horizontal_slider.value_changed.connect(function)
+
+func _connect_to_game_overlay_forward_camera_slider(function: Callable):
+	_game_overlay.forward_slider.value_changed.connect(function)
 
 func _on_game_overlay_pause_button_pressed():
 	_pause_menu = _PAUSE_MENU.instantiate()
@@ -330,13 +340,13 @@ func _set_en_passant(clicked_tile: TileObject) -> void:
 func _apply_on_piece_enter(move: Move) -> void:
 	var destination_tile: TileObject = move.destination_tile
 	var piece: PieceObject = destination_tile.occupant
-	
+
 	if destination_tile == null or piece == null:
 		return
-	
+
 	for modifier in destination_tile.data.modifier_order:
 		modifier.on_piece_enter(self, piece, move.starting_tile, destination_tile)
-		
+
 var end_turn_modifier_moved: bool = false
 
 func _apply_turn_end_modifiers() -> void:
@@ -377,7 +387,7 @@ func _update_modifier_lifetimes() -> void:
 
 func _update_poisoned_pieces() -> void:
 	for tile in data.tile_array:
-		var piece = tile.occupant 
+		var piece = tile.occupant
 		if piece == null:
 			continue
 		if not piece.data.is_poisoned:
@@ -388,19 +398,19 @@ func _update_poisoned_pieces() -> void:
 func _tile_in_radius(origin_tile, target_tile, radius) -> bool:
 	var delta: Vector2i = target_tile.data.board_position - origin_tile.data.board_position
 	return max(abs(delta.x), abs(delta.y)) <= radius # return true if within specified radius
-	
+
 func _toggle_gates_in_radius(origin_tile, radius) -> void:
 	print("Toggling gates from ", origin_tile.data.board_position, " radius=", radius)
 	for tile in data.tile_array:
 		if not _tile_in_radius(origin_tile, tile, radius):
 			continue
-		
+
 		var changed := false
 		for modifier in tile.data.modifier_order:
 			if modifier is PropertyGate:
 				modifier.is_active = not modifier.is_active
 				changed = true
-		
+
 		if changed:
 			tile.data.emit_changed()
 
@@ -413,8 +423,10 @@ func _on_tile_clicked(clicked_tile: TileObject) -> void:
 
 func _customization_tile_select(clicked_tile: TileObject) -> void:
 	if clicked_tile.data.is_selected == true:
+		clicked_tile.remove_from_group("Selected")
 		clicked_tile._unselect()
 	elif clicked_tile.data.is_selected == false:
+		clicked_tile.add_to_group("Selected")
 		clicked_tile._select()
 
 func _gameplay_tile_select(clicked_tile: TileObject) -> void:
@@ -520,7 +532,7 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
 	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
-	moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
+	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
 	_resolve_branching_movement(
 			PieceObject.selected,
 			moveset,
@@ -535,19 +547,16 @@ func _resolve_branching_movement(
 		origin_tile: TileObject
 		) -> void:
 
-	for modifier in origin_tile.data.modifier_order:
-		if modifier.blocks_movement(self, active_piece, origin_tile):
-			return
-
 	for branch in moveset.branches:
 		var current_tile_ptr: TileObject = origin_tile
 
 		branch.purpose = moveset.purpose
 		var distance: int = branch.distance
+		var can_branch:bool = branch.is_branching
 
 		while distance > 0:
 			if current_tile_ptr == null:
-				break # current_tile_ptr does not exists
+				break # current_tile_ptr does not exist
 
 			var next_tile_position: Vector2i = (
 					current_tile_ptr.data.board_position
@@ -559,7 +568,7 @@ func _resolve_branching_movement(
 					or next_tile_position.y > data.file_count-1
 					or next_tile_position.y < 0
 					):
-				break
+				break # next_tile does not exist
 
 			current_tile_ptr = data.tile_array[
 					data.get_index(
@@ -567,14 +576,17 @@ func _resolve_branching_movement(
 							next_tile_position.y
 							)
 					]
-			var blocked := false # if a piece blocks movement through it
+
 			for modifier in current_tile_ptr.data.modifier_order:
-				if modifier.blocks_passage(self, active_piece, current_tile_ptr, branch):
-					blocked = true
+				if modifier.is_blocking:
+					distance = 0
+					can_branch = false
 					break
-			
-			if blocked:
-				break
+				if modifier.is_stopping:
+					distance = 1
+					can_branch = false
+				if modifier.can_modify_movement:
+					modifier.modify_movement(branch)
 
 
 			if branch.is_threaten:
@@ -731,6 +743,9 @@ func perform_move(move: Move):
 func next_turn() -> void:
 	_apply_turn_end_modifiers()
 	_update_modifier_lifetimes()
+	_game_overlay.horizontal_slider.value = 0
+	_game_overlay.forward_slider.value = 0
+
 	# increments the turn number
 	_turn_num += 1
 	if data.is_match_timed:
@@ -745,6 +760,7 @@ func next_turn() -> void:
 		# clear en passant
 		PieceObject.en_passant = null
 		TileObject.en_passant = null
+
 
 	_update_poisoned_pieces()
 
