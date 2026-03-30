@@ -1,27 +1,5 @@
 class_name GameNode3D
 
-##region Tile Constants
-#
-#enum TileModifierFlag{
-	#PROPERTY_COG = 1,
-	#CONDITION_ICY = 2,
-	#CONDITION_STICKY = 3,
-	#PROPERTY_CONVEYER = 4,
-	#PROPERTY_PRISM = 5,
-	#}
-##endregion
-
-
-##region Game Colors Constants
-### Color of a base tile which is lightened or darkened to make the board.
-#
-#const COLOR_PALETTE: Dictionary = {
-	#"TILE_CONDITIONS_BACKGROUND_COLOR": Color(0,0,0),
-	#"TILE_PROPERTIES_BACKGROUND_COLOR": Color(0,0,0)
-#}
-##endregion
-
-
 ## Settings that may or may not be implimented as game options
 #region Settings
 static var game_setting: Dictionary = {
@@ -40,12 +18,6 @@ const USER_SETTING: Dictionary[String,float] = {
 	"CAMERA_ROTATION_SPEED": 5
 }
 #endregion
-
-
-#var proceed = true
-	#
-	#if modifier_order.size() > 0:
-		#proceed = _apply_modifiers()
 
 #func _apply_modifiers():
 	#var slide_direction: Direction = _moveset.direction
@@ -79,34 +51,3 @@ const USER_SETTING: Dictionary[String,float] = {
 			#TileModifierFlag.PROPERTY_PRISM:
 				#pass
 	#return true
-
-
-
-
-
-
-
-
-#func change_piece_resources(old_piece: Node3D, new_piece: Piece_Type):
-	#old_piece.find_child("Piece_Mesh").mesh = PIECE_MESH[new_piece]
-	#old_piece.set_script(PIECE_SCRIPT[new_piece])
-#
-#func promote(piece:Piece, promotion: PawnPromotion):
-	#var piece_player = piece.player
-	#
-	#match promotion:
-		#PawnPromotion.ROOK:
-			#change_piece_resources(piece,Piece_Type.ROOK)
-			#piece.add_to_group("Rook")
-		#PawnPromotion.BISHOP:
-			#change_piece_resources(piece,Piece_Type.BISHOP)
-			#piece.add_to_group("Bishop")
-		#PawnPromotion.KNIGHT:
-			#change_piece_resources(piece,Piece_Type.KNIGHT)
-			#piece.add_to_group("Knight")
-		#PawnPromotion.QUEEN:
-			#change_piece_resources(piece,Piece_Type.QUEEN)
-			#piece.add_to_group("Queen")
-	#
-	#piece.player = piece_player
-	#piece.ready.emit()

@@ -746,9 +746,11 @@ func perform_move(move: Move):
 	opponent_moves.generate_legal_moves(data.get_opponent_of(Player.current))
 	if opponent_moves.moves.is_empty():
 		move.flags += Move.Type.CHECKMATE
+		_game_overlay.show_checkmate(Player.current)
+
 
 	detect_check(data.get_opponent_of(Player.current))
-	if data.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
+	if not opponent_moves.moves.is_empty() and data.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
 		move.flags += Move.Type.CHECK
 
 	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:

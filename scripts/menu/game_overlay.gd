@@ -18,6 +18,7 @@ var placement_tree: Dictionary = {
 			"Checked Far Movement": "r3k2r/pp1ppp1p/8/2Q3Q1/2q3q1/8/PP1PPP1P/R3K2R w KQkq - 0 1",
 			},
 	"Promotion": "8/PPPPPPPP/8/7K/k7/8/pppppppp/8 w KQkq - 0 1",
+	"Fool's Mate": "rnbqkbnr/pppp1ppp/4p3/8/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 1",
 	"16x16 Board": {
 		"Doubled layout": "rnbbnrbqkbrnbbnr/pppppppppppppppp/88/88/88/88/88/88/88/88/88/88/88/88/PPPPPPPPPPPPPPPP/RNBBNRBQKBRNBBNR w KQkq - 0 1",
 		"Centered layout": "88/88/88/88/4rnbqkbnr4/4pppppppp4/88/88/88/88/4PPPPPPPP4/4RNBQKBNR4/88/88/88/88 w KQkq - 0 1"
@@ -58,6 +59,10 @@ func add_placements_to_section(item: TreeItem, section:String):
 		new_item.set_text(0,placement)
 		new_item.set_metadata(0, placement_tree[section][placement])
 		new_item.set_selectable(0,true)
+
+func show_checkmate(winner:Player):
+	$Checkmate.show()
+	$Checkmate/MarginContainer/VBoxContainer/WinnerLabel.text = winner.name + " wins"
 
 
 func _on_piece_placement_list_item_selected() -> void:

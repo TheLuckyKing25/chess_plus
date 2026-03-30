@@ -51,19 +51,19 @@ func _make_selected_modifier() -> TileModifier:
 		_:
 			return _make_sticky_modifier()
 
-@onready var cog_rotation = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Cog/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/RotationAmount
+@onready var cog_rotation = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Cog/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/RotationAmount
 func _make_cog_modifier() -> TileModifier:
 	var m := PropertyCog.new()
 	m.rotation = int(cog_rotation.value)
 	return m
 
-@onready var icy_lifetime = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Icy/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Lifetime
+@onready var icy_lifetime = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Icy/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Lifetime
 func _make_icy_modifier() -> TileModifier:
 	var m := ConditionIcy.new()
 	m.lifetime = int(icy_lifetime.value)
 	return m
 
-@onready var sticky_lifetime = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Sticky/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Lifetime
+@onready var sticky_lifetime = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Sticky/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Lifetime
 func _make_sticky_modifier() -> TileModifier:
 	var m := ConditionSticky.new()
 	m.lifetime = int(sticky_lifetime.value)
@@ -74,7 +74,7 @@ func _make_conveyer_modifier() -> TileModifier:
 	m.direction = _get_conveyer_direction()
 	return m
 
-@onready var conveyer_direction = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Conveyer/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/RotationAmount
+@onready var conveyer_direction = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Conveyer/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/RotationAmount
 func _get_conveyer_direction() -> int:
 	match int(conveyer_direction.value):
 		0: return PropertyConveyer.ConveyerDirection.NORTH
@@ -87,8 +87,8 @@ func _get_conveyer_direction() -> int:
 		315: return PropertyConveyer.ConveyerDirection.NORTHWEST
 		_: return PropertyConveyer.ConveyerDirection.NORTH
 
-@onready var springy_x = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Springy/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/X
-@onready var springy_y = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Springy/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Y
+@onready var springy_x = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Springy/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/X
+@onready var springy_y = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Springy/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Y
 func _make_springy_modifier() -> TileModifier:
 	var m := PropertySpringy.new()
 	m.destination = Vector2i(
@@ -109,19 +109,19 @@ func _make_gate_modifier() -> TileModifier:
 	var m := PropertyGate.new()
 	return m
 
-@onready var button_radius = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Button/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Radius
+@onready var button_radius = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Button/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Radius
 func _make_button_modifier() -> TileModifier:
 	var m := PropertyButton.new()
 	m.radius = int(button_radius.value)
 	return m
 
-@onready var lever_radius = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Lever/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Radius
+@onready var lever_radius = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Lever/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Radius
 func _make_lever_modifier() -> TileModifier:
 	var m := PropertyLever.new()
 	m.radius = int(lever_radius.value)
 	return m
 
-@onready var poison_duration = $BackgroundTopPanel/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Poison/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Duration
+@onready var poison_duration = $BackgroundTopPanel#/BoxContainer2/BoxContainer/BoxContainer2/AppliedTileModifierListPanel/MarginContainer/GridContainer/Poison/BoxContainer/DropdownOptions/BoxContainer3/BoxContainer/Duration
 func _make_poison_modifier() -> TileModifier:
 	var m := PropertyPoison.new()
 	m.duration = int(poison_duration.value)

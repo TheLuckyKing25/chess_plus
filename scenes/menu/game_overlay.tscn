@@ -390,6 +390,45 @@ layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
 
+[node name="Checkmate" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Checkmate"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Checkmate/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="Checkmate/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 30
+text = "CHECKMATE"
+horizontal_alignment = 1
+
+[node name="WinnerLabel" type="Label" parent="Checkmate/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "wins"
+horizontal_alignment = 1
+
 [connection signal="toggled" from="Rightside/HBoxContainer/RightsideButton" to="." method="_on_rightside_button_toggled"]
 [connection signal="item_selected" from="Leftside/HBoxContainer/LeftsideMenu/Panel/MarginContainer/PiecePlacementList" to="." method="_on_piece_placement_list_item_selected"]
 [connection signal="value_changed" from="Leftside/HBoxContainer/Container/Control/HorizontalCameraSlider" to="." method="_on_h_scroll_bar_value_changed"]
