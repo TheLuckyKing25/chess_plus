@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dw07fl7mglbqs"]
 
-[ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_otyyp"]
+[ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_rpaeb"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_3q2uy"]
 resource_local_to_scene = false
@@ -15,7 +15,7 @@ offset_right = 300.0
 offset_bottom = 36.0
 size_flags_horizontal = 3
 theme_type_variation = &"InsetPanelContainer"
-script = ExtResource("1_otyyp")
+script = ExtResource("1_rpaeb")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 2

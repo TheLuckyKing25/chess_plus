@@ -83,6 +83,7 @@ theme_override_constants/separation = 0
 
 [node name="TabBar" type="TabBar" parent="Rightside/HBoxContainer/RightsideMenu"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 current_tab = 0
 tab_alignment = 1
 scrolling_enabled = false
@@ -242,7 +243,7 @@ theme_override_constants/separation = 0
 
 [node name="TabBar" type="TabBar" parent="Leftside/HBoxContainer/LeftsideMenu"]
 layout_mode = 2
-theme_override_constants/icon_max_width = 40
+theme_override_font_sizes/font_size = 14
 current_tab = 0
 tab_alignment = 1
 clip_tabs = false
@@ -250,7 +251,7 @@ scrolling_enabled = false
 scroll_to_selected = false
 tab_count = 2
 tab_0/title = "Debug"
-tab_1/title = "Rulebook"
+tab_1/title = "Rulebook(WIP"
 
 [node name="Panel" type="Panel" parent="Leftside/HBoxContainer/LeftsideMenu"]
 custom_minimum_size = Vector2(250, 0)
@@ -305,6 +306,8 @@ grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_type_variation = &"CameraButton"
+toggle_mode = true
+button_pressed = true
 text = "Cam"
 text_overrun_behavior = 1
 
@@ -431,6 +434,7 @@ horizontal_alignment = 1
 
 [connection signal="toggled" from="Rightside/HBoxContainer/RightsideButton" to="." method="_on_rightside_button_toggled"]
 [connection signal="item_selected" from="Leftside/HBoxContainer/LeftsideMenu/Panel/MarginContainer/PiecePlacementList" to="." method="_on_piece_placement_list_item_selected"]
+[connection signal="toggled" from="Leftside/HBoxContainer/Container/Control/CameraMovementButton" to="." method="_on_camera_movement_button_toggled"]
 [connection signal="value_changed" from="Leftside/HBoxContainer/Container/Control/HorizontalCameraSlider" to="." method="_on_h_scroll_bar_value_changed"]
 [connection signal="value_changed" from="Leftside/HBoxContainer/Container/Control/ForwardCameraSlider" to="." method="_on_v_scroll_bar_value_changed"]
 [connection signal="toggled" from="Leftside/HBoxContainer/Container/LeftsideButton" to="." method="_on_leftside_button_toggled"]

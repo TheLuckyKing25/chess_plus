@@ -136,3 +136,8 @@ func _show_promotion_menu(mouse_position:Vector2):
 
 func _hide_promotion_menu():
 	$PromotionMenu.hide()
+
+
+func _on_camera_movement_button_toggled(toggled_on: bool) -> void:
+	%HorizontalCameraSlider.visible = toggled_on
+	%ForwardCameraSlider.visible = toggled_on

@@ -16,7 +16,7 @@ const _GAMEMODE_SELECTION_MENU:PackedScene = preload("res://scenes/menu/gamemode
 const _TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/tile_modifier_screen.tscn")
 const _GAME_OVERLAY: PackedScene = preload("res://scenes/menu/game_overlay.tscn")
 const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
-const SMOKEY_OVERLAY = preload("res://scenes/SmokeyOverlay.tscn")
+const SMOKEY_OVERLAY = preload("res://scenes/smoke.tscn")
 
 
 var _gamemode_selection_menu: Node
@@ -349,7 +349,7 @@ func _perform_promotion(piece: PieceObject) -> void:
 		return
 	if not piece.data.can_promote:
 		return
-	
+
 	var mouse_pos = get_viewport().get_mouse_position()
 	_game_overlay._show_promotion_menu(mouse_pos)
 	_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
@@ -503,7 +503,7 @@ func _clear_smokey_visuals() -> void:
 		if is_instance_valid(overlay):
 			overlay.queue_free()
 	smokey_overlay.clear()
-	
+
 	for piece in smokey_pieces:
 		if is_instance_valid(piece):
 			piece.visible = true
@@ -527,10 +527,10 @@ func _update_smokey_visuals() -> void:
 			if modifier is PropertySmokey and modifier.is_active:
 				for affected_tile in _get_smokey_tiles(tile, modifier):
 					_create_smokey_overlay(affected_tile)
-					
+
 					if not smokey_tiles.has(affected_tile):
 						smokey_tiles.append(affected_tile)
-					
+
 					if affected_tile.occupant != null:
 						affected_tile.occupant.visible = false
 						if not smokey_pieces.has(affected_tile.occupant):

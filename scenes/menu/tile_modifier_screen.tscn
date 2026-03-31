@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://111w7dffrqkh"]
+[gd_scene load_steps=3 format=3 uid="uid://111w7dffrqkh"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_xor8o"]
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="2_hqvri"]
-[ext_resource type="Script" uid="uid://13iwag7jxjuv" path="res://scripts/Unused Scripts/tile_modifier_menu.gd" id="3_hqvri"]
 
 [node name="TileModifierScreen" type="Control"]
 layout_mode = 3
@@ -17,7 +16,7 @@ script = ExtResource("2_hqvri")
 
 [node name="TileModifierMenu" type="MarginContainer" parent="."]
 layout_mode = 2
-offset_right = 559.0
+offset_right = 1152.0
 offset_bottom = 564.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -25,38 +24,40 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
-script = ExtResource("3_hqvri")
 
-[node name="BackgroundTopPanel" type="PanelContainer" parent="TileModifierMenu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TileModifierMenu"]
+layout_mode = 2
+
+[node name="BackgroundTopPanel" type="PanelContainer" parent="TileModifierMenu/HBoxContainer"]
 custom_minimum_size = Vector2(527, 475)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/BackgroundTopPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="BoxContainer2" type="BoxContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer"]
+[node name="BoxContainer2" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2"]
+[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
-[node name="AllTileModifierListPanel" type="Panel" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
+[node name="AllTileModifierListPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
 z_index = 1
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -68,11 +69,11 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer"]
+[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+[node name="Label" type="Label" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -80,24 +81,24 @@ theme_override_constants/outline_size = 5
 text = "Tile Modifiers"
 horizontal_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
 layout_mode = 2
 placeholder_text = "Search (WIP)"
 emoji_menu_enabled = false
 
-[node name="ModiferList" type="ItemList" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+[node name="ModiferList" type="ItemList" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
 
-[node name="AppliedTileModifierListPanel" type="Panel" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
+[node name="AppliedTileModifierListPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -109,29 +110,29 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/outline_size = 5
 text = "Modifier Order"
 horizontal_alignment = 1
 
-[node name="AppliedTileModifiers" type="GridContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer"]
+[node name="AppliedTileModifiers" type="GridContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 5
 
-[node name="BottomPanel" type="Panel" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2"]
+[node name="BottomPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2"]
 z_index = 1
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,29 +145,39 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer"]
+[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Add" type="Button" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+[node name="Add" type="Button" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SettingButtons"
 text = "Add to Tile"
 
-[node name="Replace" type="Button" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+[node name="Replace" type="Button" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Replace all modifiers on the selected tiles with the modifiers above"
 theme_type_variation = &"SettingButtons"
 text = "Replace Modifiers"
 
-[node name="Erase" type="Button" parent="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+[node name="Erase" type="Button" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Erase All Modifiers from the selected Tiles"
 theme_type_variation = &"SettingButtons"
 text = "Erase Modifiers"
+
+[node name="Label" type="Label" parent="TileModifierMenu/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Click tiles to select or deselect them"
+horizontal_alignment = 1
 
 [node name="ScreenNavigationMenu" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -247,10 +258,10 @@ layout_mode = 2
 theme_type_variation = &"SettingButtons"
 text = "Start Match"
 
-[connection signal="item_selected" from="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ModiferList" to="." method="_on_modifer_list_item_selected"]
-[connection signal="child_order_changed" from="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer/AppliedTileModifiers" to="." method="_on_applied_tile_modifiers_child_order_changed"]
-[connection signal="pressed" from="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Add" to="." method="_on_add_pressed"]
-[connection signal="pressed" from="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Replace" to="." method="_on_replace_pressed"]
-[connection signal="pressed" from="TileModifierMenu/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Erase" to="." method="_on_erase_pressed"]
+[connection signal="item_selected" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ModiferList" to="." method="_on_modifer_list_item_selected"]
+[connection signal="child_order_changed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer/AppliedTileModifiers" to="." method="_on_applied_tile_modifiers_child_order_changed"]
+[connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Add" to="." method="_on_add_pressed"]
+[connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Replace" to="." method="_on_replace_pressed"]
+[connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Erase" to="." method="_on_erase_pressed"]
 [connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/ContinueButton" to="." method="_on_continue_pressed"]
