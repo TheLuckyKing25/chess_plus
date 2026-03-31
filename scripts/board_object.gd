@@ -16,6 +16,7 @@ const _GAMEMODE_SELECTION_MENU:PackedScene = preload("res://scenes/menu/gamemode
 const _TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/tile_modifier_screen.tscn")
 const _GAME_OVERLAY: PackedScene = preload("res://scenes/menu/game_overlay.tscn")
 const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
+const SMOKEY_OVERLAY = preload("res://scenes/SmokeyOverlay.tscn")
 
 
 var _gamemode_selection_menu: Node
@@ -33,6 +34,10 @@ var _current_game_state: GameState = GameState.BoardCustomization
 var _time_turn_ended:int = 0
 var _time_elapsed_since_turn_ended:int = 0
 var _turn_num: int = 0
+
+var smokey_overlay: Dictionary = {}
+var smokey_tiles: Array[TileObject] = []
+var smokey_pieces: Array[PieceObject] = []
 
 var data: BoardData
 
@@ -339,6 +344,22 @@ func _set_en_passant(clicked_tile: TileObject) -> void:
 	TileObject.en_passant = data.tile_array[data.get_index(en_passant_tile_rank,en_passant_tile_file)]
 	Player.en_passant = Player.current
 
+func _perform_promotion(piece: PieceObject) -> void:
+	if piece == null:
+		return
+	if not piece.data.can_promote:
+		return
+	
+	var mouse_pos = get_viewport().get_mouse_position()
+	_game_overlay._show_promotion_menu(mouse_pos)
+	_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
+	get_tree().paused = true
+	await piece.promoted
+	piece.data.movement.set_max_distance(maxi(data.file_count,data.rank_count))
+	_game_overlay._hide_promotion_menu()
+	_game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
+	get_tree().paused = false
+
 # MODIFIER HELPER FUNCTIONS
 func _apply_on_piece_enter(move: Move) -> void:
 	var destination_tile: TileObject = move.destination_tile
@@ -416,6 +437,104 @@ func _toggle_gates_in_radius(origin_tile, radius) -> void:
 
 		if changed:
 			tile.data.emit_changed()
+
+func _apply_on_piece_pass(move: Move) -> void:
+	var piece: PieceObject = move.destination_tile.occupant
+	if piece == null:
+		return
+
+	var start := move.starting_tile.data.board_position
+	var dest := move.destination_tile.data.board_position
+	var delta := dest - start
+
+	# Normalize delta or else the movement is strange
+	delta.x = sign(delta.x)
+	delta.y = sign(delta.y)
+
+	var current_pos := start + delta
+
+	while current_pos != dest:
+		if current_pos.x < 0 or current_pos.x >= data.rank_count:
+			break
+		if current_pos.y < 0 or current_pos.y >= data.file_count:
+			break
+		var tile := data.tile_array[data.get_index(current_pos.x, current_pos.y)]
+
+		for modifier in tile.data.modifier_order:
+			if modifier is PropertyLever:
+				modifier.activate(self, tile)
+
+		current_pos += delta
+
+func _get_smokey_tiles(origin_tile: TileObject, smokey: PropertySmokey) -> Array[TileObject]:
+	var out: Array[TileObject] = []
+	var origin := origin_tile.data.board_position
+
+	var offsets : Array[Vector2i] = []
+	if smokey.activated_by_player == data.player_one:
+		offsets = [
+			Vector2i(1, 0),
+			Vector2i(2, 0),
+		]
+	elif smokey.activated_by_player == data.player_two:
+		offsets = [
+			Vector2i(-1, 0),
+			Vector2i(-2, 0),
+		]
+	else:
+		return out
+
+	for offset in offsets:
+		var pos : Vector2i = origin + offset
+
+		if pos.x < 0 or pos.x >= data.rank_count:
+			continue
+		if pos.y < 0 or pos.y >= data.file_count:
+			continue
+
+		var tile := data.tile_array[data.get_index(pos.x, pos.y)]
+		if tile != null and not out.has(tile):
+			out.append(tile)
+
+	return out
+
+func _clear_smokey_visuals() -> void:
+	for overlay in smokey_overlay.values():
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+	smokey_overlay.clear()
+	
+	for piece in smokey_pieces:
+		if is_instance_valid(piece):
+			piece.visible = true
+	smokey_pieces.clear()
+	smokey_tiles.clear()
+
+func _create_smokey_overlay(tile: TileObject) -> void:
+	if smokey_overlay.has(tile):
+		return
+
+	var overlay = SMOKEY_OVERLAY.instantiate()
+	add_child(overlay)
+	overlay.global_position = tile.global_position + Vector3(0, 1.2, 0)
+	smokey_overlay[tile] = overlay
+
+func _update_smokey_visuals() -> void:
+	_clear_smokey_visuals()
+
+	for tile in data.tile_array:
+		for modifier in tile.data.modifier_order:
+			if modifier is PropertySmokey and modifier.is_active:
+				for affected_tile in _get_smokey_tiles(tile, modifier):
+					_create_smokey_overlay(affected_tile)
+					
+					if not smokey_tiles.has(affected_tile):
+						smokey_tiles.append(affected_tile)
+					
+					if affected_tile.occupant != null:
+						affected_tile.occupant.visible = false
+						if not smokey_pieces.has(affected_tile.occupant):
+							smokey_pieces.append(affected_tile.occupant)
 
 #region Tile Clicked
 func _on_tile_clicked(clicked_tile: TileObject) -> void:
@@ -612,6 +731,8 @@ func _resolve_branching_movement(
 
 				if modifier.can_modify_movement:
 					modifier.modify_movement(branch)
+					distance = branch.distance
+					can_proceed_with_branch = branch.is_branching
 
 			if has_slid:
 				has_slid = false
@@ -737,6 +858,9 @@ func perform_move(move: Move):
 	if not piece.data.has_moved:
 		piece._moved(true)
 
+	_apply_on_piece_enter(move) # used for poison, kings favor, smokey, and button
+	_apply_on_piece_pass(move) # used only for lever
+
 	# match occupants in piece_array to their respective tiles in tile_array
 	for tile in data.tile_array:
 		data.piece_array[tile.data.index] = tile.occupant
@@ -753,15 +877,7 @@ func perform_move(move: Move):
 
 	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:
 		move.flags += Move.Type.PROMOTION
-		var mouse_pos = get_viewport().get_mouse_position()
-		_game_overlay._show_promotion_menu(mouse_pos)
-		_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
-		get_tree().paused = true
-		await piece.promoted
-		piece.data.movement.set_max_distance(maxi(data.file_count,data.rank_count))
-		_game_overlay._hide_promotion_menu()
-		_game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
-		get_tree().paused = false
+		_perform_promotion(piece)
 
 	if not piece.data.has_moved:
 		piece._moved(true)
@@ -797,5 +913,6 @@ func next_turn() -> void:
 
 
 	_update_poisoned_pieces()
+	_update_smokey_visuals()
 
 	data.legal_moves.generate_legal_moves(Player.current)

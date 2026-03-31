@@ -11,3 +11,6 @@ func on_piece_enter(board, piece, from_tile, to_tile) -> void:
 		return
 
 	board._toggle_gates_in_radius(to_tile, radius)
+	
+func activate(board, tile) -> void:
+	board._toggle_gates_in_radius(tile, radius)
