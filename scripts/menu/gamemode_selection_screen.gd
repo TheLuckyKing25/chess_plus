@@ -15,6 +15,7 @@ func _on_back_button_pressed() -> void:
 
 
 func _on_continue_button_pressed() -> void:
+	NetworkManager.host_game()
 	FEN_notation_verified.emit(FEN.new(%BoardStateFEN.text))
 	continue_button_pressed.emit()
 

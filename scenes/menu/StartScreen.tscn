@@ -142,8 +142,78 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
 z_index = 1
 layout_mode = 1
 
+[node name="JoinScreen" type="ReferenceRect" parent="ScreenController"]
+z_index = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 2.034
+anchor_right = 1.0
+anchor_bottom = 3.034
+offset_top = -2.0321
+offset_bottom = -2.0321
+theme = ExtResource("1_xe8rp")
+
+[node name="Background" type="Panel" parent="ScreenController/JoinScreen"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
+
+[node name="BoxContainer" type="BoxContainer" parent="ScreenController/JoinScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+vertical = true
+
+[node name="TitleLabel" type="Label" parent="ScreenController/JoinScreen/BoxContainer"]
+custom_minimum_size = Vector2(600, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("4_06wji")
+theme_override_font_sizes/font_size = 100
+text = "Join Game"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScreenController/JoinScreen/BoxContainer"]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="IPLine" type="LineEdit" parent="ScreenController/JoinScreen/BoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Host IP e.g. 127.0.0.1"
+
+[node name="PortLine" type="LineEdit" parent="ScreenController/JoinScreen/BoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+placeholder_text = "4-letter code e.g. ABCD"
+
+[node name="JoinButton" type="Button" parent="ScreenController/JoinScreen/BoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Join Game
+"
+
 [connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/NewMatchButton" to="." method="_on_new_match_button_pressed"]
 [connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/JoinMatchButton" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/RulebookButton" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="ScreenController/TitleScreen/BoxContainer/VBoxContainer/ExitButton" to="." method="_on_exit_pressed"]
+[connection signal="text_changed" from="ScreenController/JoinScreen/BoxContainer/VBoxContainer/IPLine" to="." method="_on_ip_line_text_changed"]
+[connection signal="text_changed" from="ScreenController/JoinScreen/BoxContainer/VBoxContainer/PortLine" to="." method="_on_port_line_text_changed"]
+[connection signal="pressed" from="ScreenController/JoinScreen/BoxContainer/VBoxContainer/JoinButton" to="." method="_on_join__game_button_pressed"]
