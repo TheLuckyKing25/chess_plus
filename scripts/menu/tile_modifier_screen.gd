@@ -15,6 +15,8 @@ var MODIFIER_LOOKUP: Dictionary = {
 	"Gate": PropertyGate,
 	"Button": PropertyButton,
 	"Lever": PropertyLever,
+	"Smokey": PropertySmokey,
+	"Prism": PropertyPrism,
 }
 
 var tile_modifier_list: Array[TileModifier] = []

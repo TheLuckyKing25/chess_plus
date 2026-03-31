@@ -82,6 +82,8 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				if modifier.can_modify_movement:
 					modifier.modify_movement(branch)
+					distance = branch.distance
+					can_proceed_with_branch = branch.is_branching
 
 			if has_slid:
 				has_slid = false

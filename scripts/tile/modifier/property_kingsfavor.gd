@@ -10,4 +10,4 @@ func on_piece_enter(board, piece, from_tile, to_tile) -> void:
 	if not piece.data.can_promote:
 		return
 
-	board.promotion_requested.emit(piece)
+	board._perform_promotion(piece)

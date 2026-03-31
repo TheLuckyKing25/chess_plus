@@ -1,10 +1,11 @@
 class_name PropertyGate
 extends TileModifier
 
-@export var is_active: bool = true
+@export var is_active: bool = false:
+	set(value):
+		is_active = value
+		is_blocking = value
 
 func _init():
 	flag = ModifierType.PROPERTY_GATE
-
-func blocks_passage(context, piece, tile, movement) -> bool:
-	return is_active
+	is_blocking = is_active

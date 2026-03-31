@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_xor8o"]
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="2_hqvri"]
-[ext_resource type="Script" uid="uid://by0d78wddsfwr" path="res://scripts/Unused Scripts/tile_modifier_menu.gd" id="3_hqvri"]
+[ext_resource type="Script" uid="uid://13iwag7jxjuv" path="res://scripts/Unused Scripts/tile_modifier_menu.gd" id="3_hqvri"]
 
 [node name="TileModifierScreen" type="Control"]
 layout_mode = 3
