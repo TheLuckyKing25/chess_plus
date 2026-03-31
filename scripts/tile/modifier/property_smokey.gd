@@ -6,6 +6,7 @@ var activated_by_player = null # Track which side to spawn smoke
 
 func _init():
 	flag = ModifierType.PROPERTY_SMOKEY
+	color = Color(0.4, 0.4, 0.4)
 
 func on_piece_enter(board, piece, from_tile, to_tile) -> void:
 	is_active = not is_active

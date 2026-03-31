@@ -3,6 +3,7 @@ extends TileModifier
 
 func _init():
 	flag = ModifierType.PROPERTY_PRISM
+	color = Color(0.7,0.8,0.9)
 	can_modify_movement = true
 
 func modify_movement(movement: Movement) -> void:

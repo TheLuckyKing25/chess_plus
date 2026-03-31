@@ -28,10 +28,11 @@ custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
+mouse_default_cursor_shape = 2
 theme_type_variation = &"ModifierButton"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_3q2uy")
-text = "Cog"
+text = "Placeholder"
 icon = SubResource("ImageTexture_vcbal")
 alignment = 0
 
@@ -47,6 +48,7 @@ offset_left = -16.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_vertical = 0
+mouse_default_cursor_shape = 2
 theme_type_variation = &"RemoveButton"
 icon_alignment = 1
 

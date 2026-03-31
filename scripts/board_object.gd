@@ -16,7 +16,7 @@ const _GAMEMODE_SELECTION_MENU:PackedScene = preload("res://scenes/menu/gamemode
 const _TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/tile_modifier_screen.tscn")
 const _GAME_OVERLAY: PackedScene = preload("res://scenes/menu/game_overlay.tscn")
 const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
-const SMOKEY_OVERLAY = preload("res://scenes/smoke.tscn")
+const _SMOKEY_OVERLAY = preload("res://scenes/smoke.tscn")
 
 
 var _gamemode_selection_menu: Node
@@ -514,7 +514,7 @@ func _create_smokey_overlay(tile: TileObject) -> void:
 	if smokey_overlay.has(tile):
 		return
 
-	var overlay = SMOKEY_OVERLAY.instantiate()
+	var overlay = _SMOKEY_OVERLAY.instantiate()
 	add_child(overlay)
 	overlay.global_position = tile.global_position + Vector3(0, 1.2, 0)
 	smokey_overlay[tile] = overlay
