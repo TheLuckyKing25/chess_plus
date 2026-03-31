@@ -28,7 +28,6 @@ func _on_new_match_button_pressed() -> void:
 
 func _on_join_pressed() -> void:
 	$ScreenController.position = Vector2(-2,-2) * $ScreenController/SettingsScreen.position
-	#NetworkManager.join_game("127.0.0.1", "PUOA")
 
 func _on_connected_to_game():
 	print("Both players connected")

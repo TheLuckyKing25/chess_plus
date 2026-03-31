@@ -10,7 +10,7 @@ enum GameState {
 	Gameplay
 }
 
-const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
+const TILE_SCENE:PackedScene = preload("res://scenes/Tile.tscn")
 const PIECE_SCENE:PackedScene = preload("res://scenes/piece/piece.tscn")
 
 var _current_game_state: GameState = GameState.BoardCustomization

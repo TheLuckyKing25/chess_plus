@@ -14,6 +14,10 @@ func get_local_ip() -> String:
 	for address in IP.get_local_addresses():
 		if address.begins_with("192.168.") or address.begins_with("10."):
 			return address
+		if address.begins_with("172."):
+			var second_octet = address.split(".")[1].to_int()
+			if second_octet >= 16 and second_octet <= 31:
+				return address
 	return "127.0.0.1"
 
 func code_to_port(code: String) -> int:

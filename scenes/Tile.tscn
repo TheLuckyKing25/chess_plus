@@ -6,7 +6,6 @@
 [ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="5_j8k5k"]
 [ext_resource type="StyleBox" uid="uid://6ic7o326yplq" path="res://assets/TileProperties.stylebox" id="6_w8vld"]
 
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
 margin = 0.06
 size = Vector3(1, 0.163, 1)
