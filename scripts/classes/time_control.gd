@@ -9,8 +9,9 @@ var time_string: String = ""
 
 var label: Label = null:
 	set(new_label):
-		new_label.text = time_string
 		label = new_label
+		if new_label != null:
+			new_label.text = time_string
 
 var object: Timer = null
 
@@ -63,13 +64,22 @@ func _get_time_units(time_sec:float) -> Dictionary[String,int]:
 
 func _update_timer_ui():
 	_set_time_string(object.time_left)
-	label.text = time_string
+	if label != null:
+		label.text = time_string
 
 func increase_by_increment():
 	if object.time_left + increment_sec > max_time_sec:
 		object.start(max_time_sec)
 	else:
 		object.start(object.time_left + increment_sec)
+
+	_update_timer_ui()
+	
+func reduce_by(seconds: float) -> void:
+	var new_time: float = max(object.time_left - seconds, 0.0)
+	object.start(new_time)
+	if object.paused:
+		object.paused = true
 
 	_update_timer_ui()
 

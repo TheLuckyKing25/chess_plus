@@ -21,13 +21,8 @@ var MODIFIER_LOOKUP: Dictionary = {
 var tile_modifier_list: Array[TileModifier] = []
 
 func _ready() -> void:
-	NetworkManager.game_hosted.connect(_on_game_hosted)
 	for modifier in MODIFIER_LOOKUP.keys():
 		%ModiferList.add_item(modifier)
-
-func _on_game_hosted(ip: String,code: String) -> void:
-	print("signal received: ", code)
-	$ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/HostCodeBackgroundPanel/Panel/MarginContainer/HostCodeLabel.text = "Code: %s\nIP: %s" % [code, ip]
 
 func _connect_to_back_button(function:Callable):
 	%BackButton.pressed.connect(function)
@@ -35,6 +30,9 @@ func _connect_to_back_button(function:Callable):
 
 func _connect_to_continue_button(function:Callable):
 	%ContinueButton.pressed.connect(function)
+
+func _connect_to_host_button(function: Callable):
+	%HostButton.pressed.connect(function)
 
 
 func _on_modifer_list_item_selected(index: int) -> void:
