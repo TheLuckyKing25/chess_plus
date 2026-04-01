@@ -44,50 +44,15 @@ func _on_board_game_state_changed(game_state: int) -> void:
 		BoardObject.GameState.Gameplay:
 			if NetworkManager.is_online:
 				if NetworkManager.my_player == 0:
-					player1_camera.current = true
+					player1_camera.make_current()
 				else:
-					player2_camera.current = true
+					player2_camera.make_current()
 			else:
 				match Player.current:
 					board.data.player_one:
-						player1_camera.current = true
+						player1_camera.make_current()
 					board.data.player_two:
-						player2_camera.current = true
-
-func _ready():
-	board.promotion_requested.connect(_on_promotion_requested)
-
-func _on_promotion_requested(piece):
-	get_tree().paused = true
-	piece_to_promote = piece
-	var mouse_pos = get_viewport().get_mouse_position()
-	promotion_menu.position = mouse_pos
-	promotion_menu.show()
-
-
-func _on_queen_pressed():
-	get_tree().paused = false
-	#board.promote(piece_to_promote, PawnPromotion.QUEEN)
-	piece_to_promote = null
-	promotion_menu.hide()
-
-func _on_knight_pressed():
-	get_tree().paused = false
-	#board.promote(piece_to_promote, PawnPromotion.KNIGHT)
-	piece_to_promote = null
-	promotion_menu.hide()
-
-func _on_rook_pressed():
-	get_tree().paused = false
-	#board.promote(piece_to_promote, PawnPromotion.ROOK)
-	piece_to_promote = null
-	promotion_menu.hide()
-
-func _on_bishop_pressed():
-	get_tree().paused = false
-	#board.promote(piece_to_promote, PawnPromotion.BISHOP)
-	piece_to_promote = null
-	promotion_menu.hide()
+						player2_camera.make_current()
 
 func _on_ready() -> void:
 	board._game_overlay_ready.connect(Callable(self,"_on_board_game_overlay_ready"))

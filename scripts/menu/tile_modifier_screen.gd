@@ -29,9 +29,6 @@ func _on_game_hosted(ip: String,code: String) -> void:
 	print("signal received: ", code)
 	$ReferenceRect/BoxContainer/ScreenNavigationMenu/BoxContainer/HostCodeBackgroundPanel/Panel/MarginContainer/HostCodeLabel.text = "Code: %s\nIP: %s" % [code, ip]
 
-func _on_continue_pressed() -> void:
-	continue_button_pressed.emit()
-
 func _connect_to_back_button(function:Callable):
 	%BackButton.pressed.connect(function)
 

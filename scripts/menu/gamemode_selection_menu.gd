@@ -6,14 +6,41 @@ signal continue_button_pressed()
 signal board_verified(rank_count: int, file_count: int, FEN_notation: FEN)
 signal start_button_pressed()
 
+const WAIT_SCREEN = preload("res://scenes/menu/wait_screen.tscn")
+
+var wait_screen: Node
+
 var row_num: int = 8
 var column_num: int = 8
+
+func _ready() -> void:
+	if NetworkManager.is_online and NetworkManager.my_player == 1:
+		queue_free()
+		return
+
+func _on_host_game_button_pressed() -> void:
+	var result = NetworkManager.host_game()
+	if result.is_empty():
+		return
+
+	wait_screen = WAIT_SCREEN.instantiate()
+	add_child(wait_screen)
+	wait_screen.set_ip_label(result["ip"])
+	wait_screen.set_invite_code_label(result["code"])
+	
+	NetworkManager.connected_to_game.connect(_on_opponent_connected)
+
+func _on_opponent_connected() -> void:
+	wait_screen.queue_free()
+	board_verified.emit(row_num, column_num, FEN.new(%BoardStateFEN.text))
+	if %TimeControl/CheckBox.button_pressed:
+		time_control_selected.emit(%TimeControl/MinutesPerPlayer/SpinBox.value * 60, %TimeControl/IncrementPerMove/SpinBox.value)
+	start_button_pressed.emit()
 
 func _on_back_button_pressed() -> void:
 	back_button_pressed.emit()
 
 func _on_continue_button_pressed() -> void:
-	NetworkManager.host_game()
 	board_verified.emit(row_num,column_num,FEN.new(%BoardStateFEN.text))
 	continue_button_pressed.emit()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://camv04tw28yjr"]
+[gd_scene load_steps=7 format=3 uid="uid://2aw5r4ibxl8k"]
 
 [ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://scripts/menu/start_screen.gd" id="2_nwdcb"]
 [ext_resource type="Theme" uid="uid://6luwubm4shti" path="res://assets/theme/main_menu_theme.tres" id="2_viyhn"]
@@ -79,7 +79,6 @@ custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
-disabled = true
 text = "Join Match"
 
 [node name="RulebookButton" type="Button" parent="MainMenu/VBoxContainer"]

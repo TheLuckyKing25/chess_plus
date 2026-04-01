@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://crgfep2xyg10g"]
 
 [ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="1_187hj"]
-[ext_resource type="Script" uid="uid://qi3k7yrbqjkr" path="res://scripts/menu/wait_screen.gd" id="1_ul621"]
+[ext_resource type="Script" path="res://scripts/menu/wait_screen.gd" id="1_ul621"]
 [ext_resource type="FontFile" uid="uid://t25fospxxqfa" path="res://assets/font/Cousine/Cousine-Bold.ttf" id="3_o34ah"]
 
 [sub_resource type="Gradient" id="Gradient_ul621"]

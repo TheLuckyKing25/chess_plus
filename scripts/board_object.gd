@@ -46,7 +46,7 @@ var data: BoardData
 @onready var _piece_move_audio = $Piece_move
 
 
-func _on_ready() -> void:
+func _ready() -> void:
 	data = BoardData.new(
 			load("res://resources/players/player_one.tres"),
 			load("res://resources/players/player_two.tres")
@@ -162,6 +162,7 @@ func _on_gamemode_selection_continue_button_pressed() -> void:
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 
 func _on_gamemode_selection_start_button_pressed():
+	print("HOST: start pressed, sending sync")
 	_current_game_state = GameState.Gameplay
 	game_state_changed.emit(_current_game_state)
 	generate_board()
@@ -169,13 +170,16 @@ func _on_gamemode_selection_start_button_pressed():
 	for tile in get_tree().get_nodes_in_group("Tile"):
 		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 
+	if NetworkManager.is_online:
+		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
+		_sync_gameplay_start.rpc()
+		
 	_instantiate_game_overlay()
 
 	_gamemode_selection_menu.hide()
 	_gamemode_selection_menu.queue_free()
 
 	#endregion
-
 
 	#region TILE_MODIFIER_MENU
 func _instantiate_tile_modifier_menu():
@@ -216,9 +220,14 @@ func _sync_gameplay_start() -> void:
 	game_state_changed.emit(_current_game_state)
 	get_tree().call_group("Tile", "clear_states")
 
-	_tile_modifier_menu.hide()
-	_tile_modifier_menu.queue_free()
-	_gamemode_selection_menu.queue_free()
+	if _tile_modifier_menu:
+		_tile_modifier_menu.hide()
+		_tile_modifier_menu.queue_free()
+	if _gamemode_selection_menu:
+		_gamemode_selection_menu.hide()
+		_gamemode_selection_menu.queue_free()
+
+	_instantiate_game_overlay()
 
 	data.legal_moves = MoveList.new(data)
 	data.legal_moves.generate_legal_moves(Player.current)
@@ -297,18 +306,10 @@ func _on_pause_menu_leave_button_pressed():
 
 	#endregion
 
-func _on_gamemode_selection_continue_button_pressed() -> void:
-	generate_board()
-	load_FEN(data.FEN_board_state)
-	_current_game_state = GameState.BoardCustomization
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
-		
-	if NetworkManager.is_online:
-		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.piece_placement)
 
 @rpc("authority", "call_remote", "reliable")
 func _sync_board_setup(file_count: int, rank_count: int, fen_string: String) -> void:
+	print("JOINER: _sync_board_setup received", file_count, rank_count, fen_string)
 	if fen_string.is_empty():
 		return
 	data.file_count = file_count
