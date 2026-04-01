@@ -19,7 +19,6 @@ const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
 const _SMOKEY_OVERLAY = preload("res://scenes/smoke.tscn")
 const WAIT_SCREEN = preload("res://scenes/menu/wait_screen.tscn")
 
-var wait_screen: Node
 var _gamemode_selection_menu: Node
 var _tile_modifier_menu: Node
 var _game_overlay: Node
@@ -62,12 +61,28 @@ func _ready() -> void:
 		multiplayer.peer_connected.connect(_on_peer_connected_resync)
 	
 	_instantiate_gamode_selection_menu()
+	
+	if NetworkManager.is_online and not multiplayer.is_server():
+		_show_loading_screen()
 
+func _show_loading_screen() -> void:
+	var wait_layer = CanvasLayer.new()
+	wait_layer.layer = 10
+	wait_layer.name = "LoadingLayer"
+	add_child(wait_layer)
+	var loading = preload("res://scenes/menu/loading_screen.tscn").instantiate()
+	wait_layer.add_child(loading)
+
+func _hide_loading_screen() -> void:
+	var loading_layer = get_node_or_null("LoadingLayer")
+	if loading_layer:
+		loading_layer.queue_free()
 
 func _on_peer_connected_resync(_id: int) -> void:
 	if _current_game_state == GameState.Gameplay:
 		await get_tree().create_timer(0.5).timeout
 		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
+		await get_tree().create_timer(0.5).timeout
 		_sync_tile_modifiers.rpc(_serialize_tile_modifiers())
 		_sync_gameplay_start.rpc()
 
@@ -231,7 +246,6 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	
 	if NetworkManager.is_online:
 		_sync_gameplay_start.rpc()
-		_sync_tile_modifiers.rpc(_serialize_tile_modifiers())
 	_tile_modifier_menu.hide()
 	_tile_modifier_menu.queue_free()
 	
@@ -239,9 +253,11 @@ func _on_tile_modifier_screen_host_button_pressed() -> void:
 	var result = NetworkManager.host_game()
 	if result.is_empty():
 		return
-
+	var wait_layer = CanvasLayer.new()
+	wait_layer.layer = 10
+	add_child(wait_layer)
 	var wait_screen = WAIT_SCREEN.instantiate()
-	add_child(wait_screen)
+	wait_layer.add_child(wait_screen)
 	wait_screen.set_ip_label(result["ip"])
 	wait_screen.set_invite_code_label(result["code"])
 
@@ -261,7 +277,6 @@ func _on_tile_modifier_screen_host_button_pressed() -> void:
 func _sync_gameplay_start() -> void:
 	_current_game_state = GameState.Gameplay
 	game_state_changed.emit(_current_game_state)
-	get_tree().call_group("Tile", "clear_states")
 
 	if _tile_modifier_menu:
 		_tile_modifier_menu.hide()
@@ -270,11 +285,12 @@ func _sync_gameplay_start() -> void:
 		_gamemode_selection_menu.hide()
 		_gamemode_selection_menu.queue_free()
 
+	_hide_loading_screen()
 	_instantiate_game_overlay()
 
 	data.legal_moves = MoveList.new(data)
 	data.legal_moves.generate_legal_moves(Player.current)
-
+	
 	#endregion
 
 
@@ -390,7 +406,7 @@ func _serialize_tile_modifiers() -> Dictionary:
 func _sync_tile_modifiers(modifier_data: Dictionary) -> void:
 	for tile_index in modifier_data.keys():
 		var tile: TileObject = data.tile_array[tile_index]
-		tile.data.modifier_order.clear()
+		var new_modifier_order: Array[TileModifier] = []
 		for entry in modifier_data[tile_index]:
 			var modifier: TileModifier = load(entry["script"]).new()
 			match modifier.flag:
@@ -415,11 +431,11 @@ func _sync_tile_modifiers(modifier_data: Dictionary) -> void:
 					modifier.is_active = entry["is_active"]
 				TileModifier.ModifierType.PROPERTY_SPRINGY:
 					modifier.destination = Vector2i(entry["destination_x"], entry["destination_y"])
-			tile.data.modifier_order.append(modifier)
+			new_modifier_order.append(modifier)
+		tile.data.modifier_order = new_modifier_order
 
 @rpc("authority", "call_remote", "reliable")
 func _sync_board_setup(file_count: int, rank_count: int, fen_string: String) -> void:
-	print("JOINER: _sync_board_setup received", file_count, rank_count, fen_string)
 	if fen_string.is_empty():
 		return
 	data.file_count = file_count
@@ -936,7 +952,6 @@ func _resolve_branching_movement(
 				if modifier.can_modify_movement:
 					modifier.modify_movement(branch)
 					distance = branch.distance
-					can_proceed_with_branch = branch.is_branching
 
 			if has_slid:
 				has_slid = false

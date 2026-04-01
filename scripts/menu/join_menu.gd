@@ -20,4 +20,4 @@ func _on_join__game_button_pressed() -> void:
 	NetworkManager.join_game(ip, port)
 
 func _on_connected_to_game() -> void:
-	get_tree().change_scene_to_file("res://scenes/menu/loading_screen.tscn")
+	get_tree().change_scene_to_file("res://scenes/game_environment.tscn")

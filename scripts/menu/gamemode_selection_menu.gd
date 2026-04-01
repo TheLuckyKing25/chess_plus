@@ -23,8 +23,12 @@ func _on_host_game_button_pressed() -> void:
 	if result.is_empty():
 		return
 
+	var wait_layer = CanvasLayer.new()
+	wait_layer.layer = 10
+	add_child(wait_layer)
+	
 	wait_screen = WAIT_SCREEN.instantiate()
-	add_child(wait_screen)
+	wait_layer.add_child(wait_screen)
 	wait_screen.set_ip_label(result["ip"])
 	wait_screen.set_invite_code_label(result["code"])
 	
