@@ -1,0 +1,88 @@
+[gd_scene load_steps=5 format=3 uid="uid://dh0xqsvmtokbh"]
+
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_wx27k"]
+[ext_resource type="Script" uid="uid://b7d6wfi6urnkk" path="res://scripts/menu/pause_screen.gd" id="2_ruv5c"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="3_x8jkt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_komsw"]
+bg_color = Color(0.377919, 0.377919, 0.377919, 1)
+
+[node name="PauseScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_wx27k")
+script = ExtResource("2_ruv5c")
+
+[node name="BackgroundBlur" type="Panel" parent="."]
+self_modulate = Color(1, 1, 1, 0.694118)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_komsw")
+
+[node name="PauseMenu" type="ReferenceRect" parent="."]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 648.0
+border_width = 3.0
+
+[node name="BoxContainer" type="BoxContainer" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 75
+alignment = 1
+vertical = true
+
+[node name="GamePausedLabel" type="Label" parent="PauseMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -5
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("3_x8jkt")
+theme_override_font_sizes/font_size = 70
+text = "Game PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/BoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Resume" type="Button" parent="PauseMenu/BoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Resume Game"
+
+[node name="Settings" type="Button" parent="PauseMenu/BoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Settings
+"
+
+[node name="Leave" type="Button" parent="PauseMenu/BoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Leave Match"
+
+[connection signal="pressed" from="PauseMenu/BoxContainer/VBoxContainer/Settings" to="." method="_on_options_pressed"]

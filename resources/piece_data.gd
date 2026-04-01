@@ -7,7 +7,7 @@ const SELECT_COLOR:= Color(0, 0.9, 0.9, 1)
 const CHECKED_COLOR:= Color(0.9, 0, 0, 1)
 const CASTLING_COLOR:= Color(1,1,1,1)
 
-var name:String = "NULL"
+@export var name:String = "NULL"
 
 @export var algebraic_notation: String = ""
 
@@ -22,31 +22,21 @@ var name:String = "NULL"
 @export var promotion_option:= false
 
 
-@export var player: Player:
-	set(owner):
-		player = owner
-		match owner.name:
-			"Player_One":
-				parity = 1
-				direction_parity = 0
-			"Player_Two":
-				parity = -1
-				direction_parity = 4
 
-
-## determines which direction to face the piece
-var parity: int
-
-## Used to rotate the movement of the piece
-var direction_parity: int
-
-var index: int = -1
-
-
-var movement: Movement:
+@export var movement: Movement:
 	set(new_movement):
 		movement = new_movement.get_duplicate()
-		movement.set_direction_parity(direction_parity)
+		movement.set_direction_parity(player.direction_parity)
+
+# Poison Tile variables
+var is_poisoned: bool = false
+var poison_turn_applied: int = -1
+var poison_duration: int = -1
+
+var player: Player
+
+
+var index: int = -1
 
 
 var is_selected: bool = false:

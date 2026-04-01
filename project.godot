@@ -21,7 +21,7 @@ buses/default_bus_layout="res://assets/default_bus_layout.tres"
 
 [autoload]
 
-Global="*res://scripts/global.gd"
+Global="*res://scripts/Unused Scripts/global.gd"
 ConfigFileHandler="*res://scripts/config_file_handler.gd"
 NetworkManager="*res://scripts/network_manager.gd"
 
@@ -52,6 +52,7 @@ Piece=""
 [gui]
 
 theme/custom="uid://bkyyhibmxbrq8"
+theme/custom_font="uid://bkvpvpg6u23xf"
 
 [input]
 

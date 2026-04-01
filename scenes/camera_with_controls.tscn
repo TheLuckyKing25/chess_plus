@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://base8ln7a12p2"]
+
+[ext_resource type="Script" uid="uid://cxf8jqn6usloe" path="res://scripts/camera_controller.gd" id="1_6mu5b"]
+
+[node name="TwistPivot" type="Node3D"]
+script = ExtResource("1_6mu5b")
+
+[node name="PitchPivot" type="Node3D" parent="."]
+
+[node name="Camera" type="Camera3D" parent="PitchPivot"]
+current = true
+fov = 70.0

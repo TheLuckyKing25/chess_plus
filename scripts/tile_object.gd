@@ -25,6 +25,7 @@ var data: TileDataChess
 
 func _ready() -> void:
 	data.changed.connect(Callable(self, "_on_stats_changed"))
+	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
 
 	tile_material = $Tile_Mesh.material_override
 	state_material = tile_material.next_pass
@@ -35,11 +36,13 @@ func _ready() -> void:
 		0: tile_material.albedo_color = TileDataChess.LIGHT_COLOR
 		1: tile_material.albedo_color = TileDataChess.DARK_COLOR
 
-	#$Tile_Modifiers.modifiers = modifier_order
-
 
 func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if is_mouse_on_tile and event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+	if (	is_mouse_on_tile
+			and event is InputEventMouseButton
+			and event.is_pressed()
+			and event.button_index == MOUSE_BUTTON_LEFT
+			):
 		clicked.emit(self)
 
 
@@ -133,3 +136,14 @@ func clear_states():
 	_hide_castling()
 	data.is_checked_movement = false
 	data.is_movement = false
+
+func _on_tile_modifier_order_changed():
+	for child in %FlowContainer.get_children():
+		%FlowContainer.remove_child(child)
+
+	var modifier_panel:PackedScene = load("res://scenes/tile_modifier_icon.tscn")
+	for modifier in data.modifier_order:
+		var new_modifier = modifier_panel.instantiate()
+		new_modifier.panel.bg_color = modifier.color
+		new_modifier.icon = modifier.icon
+		%FlowContainer.add_child(new_modifier)

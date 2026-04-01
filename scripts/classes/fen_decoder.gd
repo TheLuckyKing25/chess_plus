@@ -17,6 +17,8 @@ func apply(board: BoardObject):
 
 
 func place_pieces(board: BoardObject):
+	board.data.player_one.pieces = {}
+	board.data.player_two.pieces = {}
 	var tile_num = 0
 	var new_piece
 	for character in FEN_board_position.piece_placement:
@@ -24,57 +26,34 @@ func place_pieces(board: BoardObject):
 		match character:
 			"p":
 				new_piece.data = PiecePawn.new(board.data.player_two)
-				board.data.player_two.add_piece(new_piece)
-				new_piece.name = "P2_Pawn"
 			"r":
 				new_piece.data = PieceRook.new(board.data.player_two)
-				board.data.player_two.add_piece(new_piece)
-				new_piece.name = "P2_Rook"
 			"b":
 				new_piece.data = PieceBishop.new(board.data.player_two)
-				board.data.player_two.add_piece(new_piece)
-				new_piece.name = "P2_Bishop"
 			"n":
 				new_piece.data = PieceKnight.new(board.data.player_two)
-				board.data.player_two.add_piece(new_piece)
-				new_piece.name = "P2_Knight"
 			"q":
 				new_piece.data = PieceQueen.new(board.data.player_two)
-				board.data.player_two.add_piece(new_piece)
-				new_piece.name = "P2_Queen"
 			"k":
 				new_piece.data = PieceKing.new(board.data.player_two)
-				board.data.player_two.add_piece(new_piece)
-				new_piece.name = "P2_King"
 			"P":
 				new_piece.data = PiecePawn.new(board.data.player_one)
-				board.data.player_one.add_piece(new_piece)
-				new_piece.name = "P1_Pawn"
 			"R":
 				new_piece.data = PieceRook.new(board.data.player_one)
-				board.data.player_one.add_piece(new_piece)
-				new_piece.name = "P1_Rook"
 			"B":
 				new_piece.data = PieceBishop.new(board.data.player_one)
-				board.data.player_one.add_piece(new_piece)
-				new_piece.name = "P1_Bishop"
 			"N":
 				new_piece.data = PieceKnight.new(board.data.player_one)
-				board.data.player_one.add_piece(new_piece)
-				new_piece.name = "P1_Knight"
 			"Q":
 				new_piece.data = PieceQueen.new(board.data.player_one)
-				board.data.player_one.add_piece(new_piece)
-				new_piece.name = "P1_Queen"
 			"K":
 				new_piece.data = PieceKing.new(board.data.player_one)
-				board.data.player_one.add_piece(new_piece)
-				new_piece.name = "P1_King"
 			"1","2","3","4","5","6","7","8","9":
 				tile_num += character.to_int()
 				continue
 			_:
 				continue
+		new_piece.data.player.add_piece(new_piece)
 		new_piece.data.movement.set_max_distance(maxi(board.data.file_count,board.data.rank_count))
 		var tile_index = tile_num%board.data.file_count + (board.data.rank_count - (tile_num/board.data.file_count)-1)*board.data.file_count
 		board.data.tile_array[tile_index].add_child(new_piece,true)
@@ -82,7 +61,6 @@ func place_pieces(board: BoardObject):
 		board.data.piece_array[tile_index] = new_piece
 		new_piece.data.index = tile_index
 		tile_num += 1
-
 
 func set_active_player(board: BoardObject):
 	match FEN_board_position.active_player:

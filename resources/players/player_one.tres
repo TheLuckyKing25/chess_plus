@@ -7,4 +7,6 @@ script = ExtResource("1_me881")
 name = "Player_One"
 color = Color(0.8, 0.8, 0.8, 1)
 pieces = Dictionary[String, Array]({})
+parity = 1
+direction_parity = 0
 metadata/_custom_type_script = "uid://bxhpvevuigen3"

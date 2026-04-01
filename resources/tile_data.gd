@@ -3,6 +3,7 @@
 class_name TileDataChess
 extends Resource
 
+signal modifier_order_changed()
 # Standard Tile Colors
 const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
 const LIGHT_COLOR: Color = BASE_COLOR * 4/3
@@ -16,6 +17,11 @@ const CHECKED_COLOR: Color = Color(1, 0.2, 0.2, 1)
 const CHECKING_COLOR: Color = Color(1, 1, 0.25)
 const CASTLING_COLOR: Color = Color(1,1,1,1)
 const MOVE_CHECKING_COLOR: Color = Color(1, 0.392, 0.153)
+
+var modifier_order: Array[TileModifier] = []:
+	set(new_order):
+		modifier_order = new_order
+		modifier_order_changed.emit()
 
 #region Position
 var board_position: Vector2i
@@ -72,7 +78,9 @@ var is_checked_movement:bool = false:
 		emit_changed()
 #endregion
 
-var modifier_order: Array[TileModifier] = []
 
 func _init() -> void:
 	resource_local_to_scene = true
+
+func clear_modifiers():
+	modifier_order = []

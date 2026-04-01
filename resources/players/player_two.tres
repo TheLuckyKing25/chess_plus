@@ -2,10 +2,11 @@
 
 [ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://resources/player.gd" id="1_yy60t"]
 
-
 [resource]
 script = ExtResource("1_yy60t")
 name = "Player_Two"
 color = Color(0.2, 0.2, 0.2, 1)
-opponent = 0
+pieces = Dictionary[String, Array]({})
+parity = -1
+direction_parity = 4
 metadata/_custom_type_script = "uid://bxhpvevuigen3"

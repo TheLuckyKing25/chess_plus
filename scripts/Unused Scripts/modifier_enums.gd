@@ -1,0 +1,2 @@
+class_name ModifierEnums
+extends Node3D

@@ -27,12 +27,24 @@ static var turn_order: Array
 @export var pieces:Dictionary[String,Array] = {}
 
 
+## determines which direction to face the piece
+@export var parity: int
+
+## Used to rotate the movement of the piece
+@export var direction_parity: int
+
+var promotion_rank: int
+
+
 var all_pieces: Array[PieceObject]:
 	get():
 		var array: Array[PieceObject] = []
 		for piece_type in pieces.keys():
 			array.append_array(pieces[piece_type])
 		return array
+
+
+var timer: TimeControl
 
 
 func add_piece(new_piece: PieceObject) -> void:
