@@ -104,11 +104,11 @@ func _moved(state:bool):
 	data.has_moved = state
 	if state:
 		if data.name == "Pawn":
-			data.movement = load("res://resources/pieces/pawn/movement_pawn.tres")
+			data.movement = load("uid://bpexpwlvi0ymy")
 		add_to_group("has_moved")
 	else:
 		if data.name == "Pawn":
-			data.movement = load("res://resources/pieces/pawn/movement_pawn_initial.tres")
+			data.movement = load("uid://dl1o3ayyjvnlf")
 		remove_from_group("has_moved")
 
 

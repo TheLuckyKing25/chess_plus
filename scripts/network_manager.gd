@@ -23,25 +23,25 @@ func get_local_ip() -> String:
 func code_to_port(code: String) -> int:
 	var port = 0
 	if code.length() < 4:
-		return -1 
-		
+		return -1
+
 	for i in range(4):
 		var char_value = code.unicode_at(i) - 65
 		port += char_value * int(pow(26, i))
-		
+
 	return port
 
 func port_to_code(port: int) -> String:
 	var code = ""
 	var n = port
 	for i in range(4):
-		code += char(65 + (n % 26)) 
+		code += char(65 + (n % 26))
 		n /= 26
 	return code
 
 func host_game() -> Dictionary:
 	is_online = true
-	my_player = 0 
+	my_player = 0
 
 	var port = randi_range(1024, 65535)
 	var peer = ENetMultiplayerPeer.new()

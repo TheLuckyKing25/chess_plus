@@ -4,7 +4,7 @@ extends Control
 var ip:   String = ""
 var port: String = ""
 
-const LOADING_SCREEN = preload("res://scenes/menu/loading_screen.tscn")
+const LOADING_SCREEN = preload("uid://v4i5knax4g12")
 
 func _on_ip_line_text_changed(updated_ip: String) -> void:
 	ip = updated_ip.strip_edges()
@@ -20,4 +20,4 @@ func _on_join__game_button_pressed() -> void:
 	NetworkManager.join_game(ip, port)
 
 func _on_connected_to_game() -> void:
-	get_tree().change_scene_to_file("res://scenes/game_environment.tscn")
+	get_tree().change_scene_to_file("uid://h7v0gyqyq0h7")

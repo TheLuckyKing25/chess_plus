@@ -141,7 +141,7 @@ func _on_tile_modifier_order_changed():
 	for child in %FlowContainer.get_children():
 		%FlowContainer.remove_child(child)
 
-	var modifier_panel:PackedScene = load("res://scenes/tile_modifier_icon.tscn")
+	var modifier_panel:PackedScene = load("uid://dmyh3g5g0c8ou")
 	for modifier in data.modifier_order:
 		var new_modifier = modifier_panel.instantiate()
 		new_modifier.panel.bg_color = modifier.color

@@ -7,7 +7,7 @@ extends Control
 	get:
 		return Icon.texture
 
-@export var panel: StyleBoxFlat = preload("res://assets/TileModifier.stylebox"):
+@export var panel: StyleBoxFlat = preload("uid://b3b8tofmh4om0"):
 	set(new_panel):
 		add_theme_stylebox_override("panel",new_panel)
 	get:

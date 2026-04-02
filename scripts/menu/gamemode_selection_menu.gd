@@ -6,7 +6,7 @@ signal continue_button_pressed()
 signal board_verified(rank_count: int, file_count: int, FEN_notation: FEN)
 signal start_button_pressed()
 
-const WAIT_SCREEN = preload("res://scenes/menu/wait_screen.tscn")
+const WAIT_SCREEN = preload("uid://crgfep2xyg10g")
 
 var wait_screen: Node
 
@@ -26,12 +26,12 @@ func _on_host_game_button_pressed() -> void:
 	var wait_layer = CanvasLayer.new()
 	wait_layer.layer = 10
 	add_child(wait_layer)
-	
+
 	wait_screen = WAIT_SCREEN.instantiate()
 	wait_layer.add_child(wait_screen)
 	wait_screen.set_ip_label(result["ip"])
 	wait_screen.set_invite_code_label(result["code"])
-	
+
 	NetworkManager.connected_to_game.connect(_on_opponent_connected)
 
 func _on_opponent_connected() -> void:

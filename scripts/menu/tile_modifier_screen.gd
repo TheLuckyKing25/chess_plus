@@ -1,6 +1,6 @@
 extends Control
 
-const TILE_MODIFIER_BUTTON:PackedScene = preload("res://scenes/menu/selected_tile_modifier_button.tscn")
+const TILE_MODIFIER_BUTTON:PackedScene = preload("uid://ca80534plviow")
 
 var MODIFIER_LOOKUP: Dictionary = {
 	"Cog": PropertyCog,

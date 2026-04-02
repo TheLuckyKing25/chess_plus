@@ -13,7 +13,7 @@ func _init():
 	name = "Icy"
 	flag = ModifierType.CONDITION_ICY
 	color = Color(0.75, 1, 1)
-	icon = load("res://resources/tiles/modifiers/icy/icon_icy.svg")
+	icon = load("uid://cw82lp67yuedh")
 	is_slippery = true
 
 #region Dropdown UI Creation

@@ -12,7 +12,7 @@ func _init():
 	name = "Sticky"
 	flag = ModifierType.CONDITION_STICKY
 	color = Color(0.1, 0.1, 0.1)
-	icon = load("res://resources/tiles/modifiers/sticky/icon_sticky.svg")
+	icon = load("uid://8jo5aw846ekg")
 	is_stopping = true
 
 

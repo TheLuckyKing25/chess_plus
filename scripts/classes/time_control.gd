@@ -74,7 +74,7 @@ func increase_by_increment():
 		object.start(object.time_left + increment_sec)
 
 	_update_timer_ui()
-	
+
 func reduce_by(seconds: float) -> void:
 	var new_time: float = max(object.time_left - seconds, 0.0)
 	object.start(new_time)

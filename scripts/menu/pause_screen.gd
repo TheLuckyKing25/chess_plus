@@ -1,7 +1,7 @@
 extends Control
 
 
-const _SETTINGS_MENU: PackedScene = preload("res://scenes/menu/settings_menu.tscn")
+const _SETTINGS_MENU: PackedScene = preload("uid://0fccgu7f77gg")
 
 
 var _settings_menu: Node

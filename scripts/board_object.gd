@@ -12,12 +12,12 @@ enum GameState {
 	Gameplay
 }
 
-const _GAMEMODE_SELECTION_MENU:PackedScene = preload("res://scenes/menu/gamemode_selection_menu.tscn")
-const _TILE_MODIFIER_MENU:PackedScene = preload("res://scenes/menu/tile_modifier_screen.tscn")
-const _GAME_OVERLAY: PackedScene = preload("res://scenes/menu/game_overlay.tscn")
-const _PAUSE_MENU: PackedScene = preload("res://scenes/menu/pause_screen.tscn")
-const _SMOKEY_OVERLAY = preload("res://scenes/smoke.tscn")
-const WAIT_SCREEN = preload("res://scenes/menu/wait_screen.tscn")
+const _GAMEMODE_SELECTION_MENU:PackedScene = preload("uid://bmtcaraovyhdt")
+const _TILE_MODIFIER_MENU:PackedScene = preload("uid://b1twmfuyqv1lx")
+const _GAME_OVERLAY: PackedScene = preload("uid://b2b5f3ejhqp35")
+const _PAUSE_MENU: PackedScene = preload("uid://dh0xqsvmtokbh")
+const _SMOKEY_OVERLAY = preload("uid://6mhxpvgl814g")
+const WAIT_SCREEN = preload("uid://crgfep2xyg10g")
 
 var _gamemode_selection_menu: Node
 var _tile_modifier_menu: Node
@@ -25,8 +25,8 @@ var _game_overlay: Node
 var _pause_menu: Node
 
 
-const TILE_SCENE:PackedScene = preload("res://scenes/tile.tscn")
-const PIECE_SCENE:PackedScene = preload("res://scenes/piece.tscn")
+const TILE_SCENE:PackedScene = preload("uid://cega76qfg50kj")
+const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
 
 
 var _current_game_state: GameState = GameState.BoardCustomization
@@ -48,20 +48,20 @@ var data: BoardData
 
 func _ready() -> void:
 	data = BoardData.new(
-			load("res://resources/players/player_one.tres"),
-			load("res://resources/players/player_two.tres")
+			load("uid://dxvl1tq0afyxx"),
+			load("uid://dc7e5u71wtrpp")
 			)
 	Player.current = data.player_one
 	Player.previous = data.player_one
-	
+
 	if NetworkManager.is_online:
 		NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
 
 	if NetworkManager.is_online and multiplayer.is_server():
 		multiplayer.peer_connected.connect(_on_peer_connected_resync)
-	
+
 	_instantiate_gamode_selection_menu()
-	
+
 	if NetworkManager.is_online and not multiplayer.is_server():
 		_show_loading_screen()
 
@@ -70,7 +70,7 @@ func _show_loading_screen() -> void:
 	wait_layer.layer = 10
 	wait_layer.name = "LoadingLayer"
 	add_child(wait_layer)
-	var loading = preload("res://scenes/menu/loading_screen.tscn").instantiate()
+	var loading = preload("uid://v4i5knax4g12").instantiate()
 	wait_layer.add_child(loading)
 
 func _hide_loading_screen() -> void:
@@ -158,7 +158,7 @@ func _on_gamemode_selection_time_control_selection(time_sec: int, increment_sec:
 
 	data.player_one.timer = TimeControl.new($TimerWhite,time_sec)
 	data.player_two.timer = TimeControl.new($TimerBlack,time_sec)
-	
+
 	if NetworkManager.is_online:
 		_sync_time_control.rpc(time_sec, increment_sec)
 
@@ -171,7 +171,7 @@ func _sync_time_control(time_sec: int, increment_sec: int) -> void:
 	data.player_two.timer = TimeControl.new($TimerBlack, time_sec)
 
 func _on_gamemode_selection_back_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
+	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
 
 
 func _on_gamemode_selection_board_verified(rank_num:int,file_num:int,FEN_notation: FEN) -> void:
@@ -204,7 +204,7 @@ func _on_gamemode_selection_start_button_pressed():
 		if data.is_match_timed:
 			_sync_time_control.rpc(TimeControl.max_time_sec, TimeControl.increment_sec)
 		_sync_gameplay_start.rpc()
-		
+
 	_instantiate_game_overlay()
 
 	_gamemode_selection_menu.hide()
@@ -243,12 +243,12 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	get_tree().call_group("Tile","clear_states")
 	get_tree().call_group("Tile","remove_from_group","Selected")
 	_instantiate_game_overlay()
-	
+
 	if NetworkManager.is_online:
 		_sync_gameplay_start.rpc()
 	_tile_modifier_menu.hide()
 	_tile_modifier_menu.queue_free()
-	
+
 func _on_tile_modifier_screen_host_button_pressed() -> void:
 	var result = NetworkManager.host_game()
 	if result.is_empty():
@@ -290,7 +290,7 @@ func _sync_gameplay_start() -> void:
 
 	data.legal_moves = MoveList.new(data)
 	data.legal_moves.generate_legal_moves(Player.current)
-	
+
 	#endregion
 
 
@@ -361,7 +361,7 @@ func _on_pause_menu_resume_button_pressed():
 
 func _on_pause_menu_leave_button_pressed():
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/menu/start_screen.tscn")
+	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
 
 	#endregion
 
@@ -456,37 +456,37 @@ func _submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: in
 	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
 	if NetworkManager.is_online:
 		_sync_move.rpc(from_index, to_index, flags, ep_piece_index, ep_tile_index)
- 
+
 @rpc("any_peer", "call_remote", "reliable")
 func _sync_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
 	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
- 
+
 func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
 	var from_tile: TileObject = data.tile_array[from_index]
 	var to_tile: TileObject = data.tile_array[to_index]
- 
+
 	TileObject.selected = from_tile
 	PieceObject.selected = from_tile.occupant
- 
+
 	if ep_piece_index >= 0 and ep_tile_index >= 0:
 		PieceObject.en_passant = data.piece_array[ep_piece_index]
 		TileObject.en_passant = data.tile_array[ep_tile_index]
 		Player.en_passant = Player.current
- 
+
 	if flags & Move.Type.EN_PASSANT:
 		_capture_piece(PieceObject.en_passant)
 		perform_move(Move.new(from_tile, to_tile, flags))
- 
+
 	elif flags & Move.Type.CAPTURING:
 		_capture_piece(to_tile.occupant)
 		perform_move(Move.new(from_tile, to_tile, flags))
- 
+
 	elif flags & (Move.Type.CASTLING_KINGSIDE | Move.Type.CASTLING_QUEENSIDE):
 		_perform_castling_move(to_tile)
 
 	else:
 		perform_move(Move.new(from_tile, to_tile, flags))
- 
+
 	next_turn()
 
 func generate_board() -> void:
@@ -799,7 +799,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 			if clicked_tile.data.is_movement:
 				var ep_piece_idx: int = -1
 				var ep_tile_idx: int = -1
-				
+
 				# set en passant if conditions are met
 				if (	PieceObject.selected.is_in_group("Pawn")
 						and not PieceObject.selected.data.has_moved
@@ -1125,8 +1125,8 @@ func next_turn() -> void:
 	Player.previous = Player.current
 	Player.current = data.get_opponent_of(Player.previous)
 	turn_changed.emit()
-	
-	
+
+
 
 	if Player.current == Player.en_passant:
 		# clear en passant
@@ -1143,8 +1143,8 @@ func next_turn() -> void:
 		Player.current.timer.start_timer()
 		if NetworkManager.is_online:
 			_sync_timer_start.rpc(Time.get_unix_time_from_system())
-	
-	
+
+
 @rpc("authority", "call_remote", "reliable")
 func _sync_timer_start(host_timestamp: float) -> void:
 	var latency_sec: float = Time.get_unix_time_from_system() - host_timestamp

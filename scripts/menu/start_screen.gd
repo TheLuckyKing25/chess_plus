@@ -1,8 +1,8 @@
 extends Control
 
-const SETTINGS_MENU = preload("res://scenes/menu/settings_menu.tscn")
-const JOIN_MENU = preload("res://scenes/menu/join_menu.tscn")
-const GAME_ENVIRONMENT = preload("res://scenes/game_environment.tscn")
+const SETTINGS_MENU = preload("uid://0fccgu7f77gg")
+const JOIN_MENU = preload("uid://cvr8wyhalupas")
+const GAME_ENVIRONMENT = preload("uid://h7v0gyqyq0h7")
 
 var settings_menu: Node
 var join_menu: Node
@@ -28,7 +28,7 @@ func _input(event) -> void:
 #region Main Menu Buttons
 
 func _on_new_match_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/game_environment.tscn")
+	get_tree().change_scene_to_file("uid://h7v0gyqyq0h7")
 
 func _on_join_match_button_pressed() -> void:
 	join_menu = JOIN_MENU.instantiate()
