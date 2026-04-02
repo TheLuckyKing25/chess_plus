@@ -29,8 +29,8 @@ var is_match_timed: bool = false
 
 
 func _init(
-		player_one:Player = load("res://resources/players/player_one.tres"),
-		player_two:Player = load("res://resources/players/player_two.tres"),
+		player_one:Player = load("uid://dxvl1tq0afyxx"),
+		player_two:Player = load("uid://dc7e5u71wtrpp"),
 		rank_count:int = 8,
 		file_count:int = 8,
 		) -> void:

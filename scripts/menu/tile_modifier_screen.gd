@@ -13,10 +13,10 @@ var MODIFIER_LOOKUP: Dictionary = {
 	"Conveyer(WIP)": PropertyConveyer,
 	"Springy(WIP)": PropertySpringy,
 	"Poison(WIP)": PropertyPoison,
-	"Promote(WIP)": PropertyKingsFavor,
+	"Promote(WIP)": PropertyPromote,
 	"Gate(WIP)": PropertyGate,
 	"Button(WIP)": PropertyButton,
-	"Lever(WIP)": PropertyLever,
+	"Lever(WIP)": PropertyLever
 }
 
 var tile_modifier_list: Array[TileModifier] = []

@@ -92,6 +92,7 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 allow_reselect = true
+wraparound_items = false
 
 [node name="AppliedTileModifierListPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
 z_index = 1
