@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://111w7dffrqkh"]
+[gd_scene load_steps=3 format=3 uid="uid://b1twmfuyqv1lx"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_xor8o"]
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="2_hqvri"]
@@ -257,13 +257,24 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="ContinueButton" type="Button" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
-text = "Start Match"
+text = "Host Match"
+
+[node name="ContinueButton" type="Button" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Start  Match"
 
 [connection signal="item_selected" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ModiferList" to="." method="_on_modifer_list_item_selected"]
 [connection signal="child_order_changed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer/AppliedTileModifiers" to="." method="_on_applied_tile_modifiers_child_order_changed"]
@@ -271,4 +282,4 @@ text = "Start Match"
 [connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Replace" to="." method="_on_replace_pressed"]
 [connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Erase" to="." method="_on_erase_pressed"]
 [connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_pressed"]

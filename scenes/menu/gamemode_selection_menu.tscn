@@ -615,7 +615,7 @@ theme_type_variation = &"SettingButtons"
 text = "Back"
 
 [node name="ContinueBackgroundPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/ScreenNavigationMenu"]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 theme_type_variation = &"BackgroundPanel"
@@ -649,6 +649,15 @@ mouse_default_cursor_shape = 2
 theme_type_variation = &"SettingButtons"
 text = "Add Modifiers"
 
+[node name="HostButton" type="Button" parent="MarginContainer/VBoxContainer/ScreenNavigationMenu/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Host Match"
+
 [node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer/ScreenNavigationMenu/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(175, 0)
@@ -665,4 +674,5 @@ text = "Start Match"
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/GamemodeMenu/BoxContainer/TabContainer/Pieces/MarginContainer/BoxContainer/VBoxContainer/BoardStateFEN" to="." method="_on_board_state_fen_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ScreenNavigationMenu/BackBackgroundPanel/MarginContainer/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ScreenNavigationMenu/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ScreenNavigationMenu/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer/HostButton" to="." method="_on_host_game_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ScreenNavigationMenu/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

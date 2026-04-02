@@ -1,6 +1,5 @@
 extends Control
 
-
 const TILE_MODIFIER_BUTTON:PackedScene = preload("res://scenes/menu/selected_tile_modifier_button.tscn")
 
 var MODIFIER_LOOKUP: Dictionary = {
@@ -25,13 +24,15 @@ func _ready() -> void:
 	for modifier in MODIFIER_LOOKUP.keys():
 		%ModiferList.add_item(modifier)
 
-
 func _connect_to_back_button(function:Callable):
 	%BackButton.pressed.connect(function)
 
 
 func _connect_to_continue_button(function:Callable):
 	%ContinueButton.pressed.connect(function)
+
+func _connect_to_host_button(function: Callable):
+	%HostButton.pressed.connect(function)
 
 
 func _on_modifer_list_item_selected(index: int) -> void:

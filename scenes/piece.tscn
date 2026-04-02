@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://5e06aauin2d1" path="res://resources/pieces/piece_object.gd" id="1_huli3"]
 [ext_resource type="Material" uid="uid://d1vk2u7swdqib" path="res://resources/pieces/piece_material.tres" id="3_ajk4a"]
 
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_huli3"]
 margin = 0.0
 size = Vector3(2, 4.5, 2)

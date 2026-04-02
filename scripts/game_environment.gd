@@ -8,6 +8,8 @@ var camera_rotation: float = 0
 var can_proceed = false
 
 func _process(delta: float):
+	if NetworkManager.is_online:
+		return
 	if can_proceed or Player.previous != Player.current:
 		if board._time_elapsed_since_turn_ended > 0:
 			can_proceed = true
@@ -40,12 +42,17 @@ func _on_board_game_state_changed(game_state: int) -> void:
 		BoardObject.GameState.BoardCustomization:
 			$OverheadCamera.current = true
 		BoardObject.GameState.Gameplay:
-			match Player.current:
-				board.data.player_one:
+			if NetworkManager.is_online:
+				if NetworkManager.my_player == 0:
 					player1_camera.make_current()
-				board.data.player_two:
+				else:
 					player2_camera.make_current()
-
+			else:
+				match Player.current:
+					board.data.player_one:
+						player1_camera.make_current()
+					board.data.player_two:
+						player2_camera.make_current()
 
 func _on_ready() -> void:
 	board._game_overlay_ready.connect(Callable(self,"_on_board_game_overlay_ready"))
