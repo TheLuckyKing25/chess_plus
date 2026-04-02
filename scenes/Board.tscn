@@ -1,10 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://vqvs470xc1lw"]
+[gd_scene load_steps=6 format=3 uid="uid://vqvs470xc1lw"]
 
 [ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/board_object.gd" id="1_hljw5"]
-[ext_resource type="Script" uid="uid://bk6erub2o2qnt" path="res://scripts/menu/board_screen_controller.gd" id="9_338j4"]
-[ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/GamemodeSelectionScreen.tscn" id="9_gc1oq"]
-[ext_resource type="PackedScene" uid="uid://111w7dffrqkh" path="res://scenes/menu/TileModifierScreen.tscn" id="9_wxh2q"]
-[ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/GameOverlay.tscn" id="10_w8n1y"]
+[ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="2_kqf1l"]
+[ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="3_hljw5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
@@ -21,40 +19,27 @@ mesh = SubResource("BoxMesh_hljw5")
 [node name="Captured" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="TileModifierScreenCanvasLayer" type="CanvasLayer" parent="."]
+[node name="Piece_move" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_kqf1l")
+volume_db = -60.0
+pitch_scale = 0.75
+bus = &"Game"
 
-[node name="ScreenController" type="Control" parent="TileModifierScreenCanvasLayer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-script = ExtResource("9_338j4")
+[node name="Piece_capture" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_hljw5")
+volume_db = -70.0
+pitch_scale = 0.75
+bus = &"Game"
 
-[node name="GamemodeSelection" parent="TileModifierScreenCanvasLayer/ScreenController" instance=ExtResource("9_gc1oq")]
-layout_mode = 1
+[node name="MenuLayer" type="CanvasLayer" parent="."]
+layer = 3
 
-[node name="TileModifierScreen" parent="TileModifierScreenCanvasLayer/ScreenController" instance=ExtResource("9_wxh2q")]
-layout_mode = 1
-offset_left = 1162.0
-offset_right = 1162.0
+[node name="TimerWhite" type="Timer" parent="."]
+one_shot = true
+ignore_time_scale = true
 
-[node name="GameOverlay" parent="TileModifierScreenCanvasLayer/ScreenController" instance=ExtResource("10_w8n1y")]
-layout_mode = 1
-offset_left = 2324.0
-offset_right = 2324.0
+[node name="TimerBlack" type="Timer" parent="."]
+one_shot = true
+ignore_time_scale = true
 
 [connection signal="ready" from="." to="." method="_on_ready"]
-[connection signal="FEN_notation_verified" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="." method="_on_gamemode_selection_fen_notation_verified"]
-[connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_gamemode_selection_back_button_pressed"]
-[connection signal="column_number_changed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="." method="_on_gamemode_selection_column_number_changed"]
-[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="." method="_on_gamemode_selection_continue_button_pressed"]
-[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_gamemode_selection_continue_button_pressed"]
-[connection signal="row_number_changed" from="TileModifierScreenCanvasLayer/ScreenController/GamemodeSelection" to="." method="_on_gamemode_selection_row_number_changed"]
-[connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="." method="_on_tile_modifier_screen_back_button_pressed"]
-[connection signal="back_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_tile_modifier_screen_back_button_pressed"]
-[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="." method="_on_tile_modifier_screen_continue_button_pressed"]
-[connection signal="continue_button_pressed" from="TileModifierScreenCanvasLayer/ScreenController/TileModifierScreen" to="TileModifierScreenCanvasLayer/ScreenController" method="_on_tile_modifier_screen_continue_button_pressed"]
-[connection signal="new_placement_selected" from="TileModifierScreenCanvasLayer/ScreenController/GameOverlay" to="." method="_on_game_overlay_new_placement_selected"]

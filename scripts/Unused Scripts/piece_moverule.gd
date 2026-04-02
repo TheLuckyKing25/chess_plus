@@ -19,10 +19,10 @@
 #
 #
 #func _init(
-			#actions: int, 
-			#moveset_purpose: PurposeType = PurposeType.UNSET, 
-			#move_distance:int = 0, 
-			#move_direction = -1, 
+			#actions: int,
+			#moveset_purpose: PurposeType = PurposeType.UNSET,
+			#move_distance:int = 0,
+			#move_direction = -1,
 			#move_branches:Array = []
 			#):
 	#action_flags = actions
@@ -50,8 +50,8 @@
 	#
 	#
 #func rotate_counterclockwise():
-	## This is set to +7 instead of -1 
-	## because it prevents negative numbers from being used as array indices 
+	## This is set to +7 instead of -1
+	## because it prevents negative numbers from being used as array indices
 	## and because they represent the same number modulo 8
 	#direction = direction + 7
 	#

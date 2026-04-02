@@ -2,7 +2,7 @@ class_name BoardData
 extends Resource
 
 const CAMERA_ROTATION_SPEED:int = 5
-const TURN_TRANSITION_DELAY_MSEC:int = 500
+const TURN_TRANSITION_DELAY_MSEC:int = 500 # time to wait before starting transition
 const MAX_TURN_TRANSITION_LENGTH_MSEC:float = 2000 # 2 Seconds
 const TURN_TRANSITION_SPEED: float = CAMERA_ROTATION_SPEED/MAX_TURN_TRANSITION_LENGTH_MSEC
 
@@ -25,12 +25,17 @@ var legal_moves: MoveList
 var FEN_board_state: FEN
 
 
+var is_match_timed: bool = false
+
+
 func _init(
-		player_one:Player = load("res://resources/players/player_one.tres"),
-		player_two:Player = load("res://resources/players/player_two.tres"),
+		player_one:Player = load("uid://dxvl1tq0afyxx"),
+		player_two:Player = load("uid://dc7e5u71wtrpp"),
 		rank_count:int = 8,
 		file_count:int = 8,
 		) -> void:
+	player_one.promotion_rank = rank_count - 1
+	player_two.promotion_rank = 0
 	self.player_one = player_one
 	self.player_two = player_two
 	self.rank_count = rank_count

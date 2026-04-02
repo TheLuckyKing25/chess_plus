@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://6mhxpvgl814g"]
+
+[sub_resource type="Gradient" id="Gradient_iqa6g"]
+colors = PackedColorArray(0.187176, 0.187176, 0.187176, 1, 0.501407, 0.501406, 0.501406, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_e0023"]
+gradient = SubResource("Gradient_iqa6g")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dxiu2"]
+emission_shape = 3
+emission_box_extents = Vector3(0.4, 0.05, 0.4)
+gravity = Vector3(0, 0, 0)
+color = Color(0.306923, 0.306923, 0.306923, 1)
+color_ramp = SubResource("GradientTexture1D_e0023")
+
+[sub_resource type="Gradient" id="Gradient_e0023"]
+offsets = PackedFloat32Array(0.81701, 1)
+colors = PackedColorArray(0.345, 0.345, 0.345, 1, 0.345, 0.345, 0.345, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dxiu2"]
+gradient = SubResource("Gradient_e0023")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.470085, 0.504274)
+fill_to = Vector2(0.217949, 0.311966)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ew02"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.707)
+albedo_texture = SubResource("GradientTexture2D_dxiu2")
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_g6c1p"]
+material = SubResource("StandardMaterial3D_6ew02")
+size = Vector2(1.5, 1.5)
+
+[node name="SmokeyOverlay" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+amount = 20
+lifetime = 1.5
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_dxiu2")
+draw_pass_1 = SubResource("QuadMesh_g6c1p")

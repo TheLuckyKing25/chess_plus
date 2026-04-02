@@ -1,0 +1,111 @@
+[gd_scene load_steps=7 format=3 uid="uid://2aw5r4ibxl8k"]
+
+[ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://scripts/menu/start_screen.gd" id="2_nwdcb"]
+[ext_resource type="Theme" uid="uid://6luwubm4shti" path="res://assets/theme/main_menu_theme.tres" id="2_viyhn"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="4_xqiyt"]
+
+[sub_resource type="Gradient" id="Gradient_hlv2s"]
+offsets = PackedFloat32Array(0, 0.00680274, 1)
+colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_viyhn"]
+gradient = SubResource("Gradient_hlv2s")
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iv2fv"]
+texture = SubResource("GradientTexture2D_viyhn")
+region_rect = Rect2(0, 18, 64, 32)
+
+[node name="StartScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_nwdcb")
+
+[node name="Background" type="Panel" parent="."]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
+
+[node name="MainMenu" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_viyhn")
+alignment = 1
+vertical = true
+
+[node name="TitleLabel" type="Label" parent="MainMenu"]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("4_xqiyt")
+theme_override_font_sizes/font_size = 100
+text = "Chess+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="NewMatchButton" type="Button" parent="MainMenu/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+text = "Create Match"
+
+[node name="JoinMatchButton" type="Button" parent="MainMenu/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+text = "Join Match"
+
+[node name="RulebookButton" type="Button" parent="MainMenu/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+disabled = true
+text = "Rulebook"
+
+[node name="SettingsButton" type="Button" parent="MainMenu/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+text = "Settings"
+
+[node name="ExitButton" type="Button" parent="MainMenu/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+text = "Exit
+"
+
+[connection signal="pressed" from="MainMenu/VBoxContainer/NewMatchButton" to="." method="_on_new_match_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/JoinMatchButton" to="." method="_on_join_match_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/RulebookButton" to="." method="_on_rulebook_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

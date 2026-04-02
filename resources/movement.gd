@@ -42,7 +42,7 @@ static var neighboring_tiles: Dictionary[Direction, Vector2i] = {
 		if cardinal <= Direction.NONE:
 			direction = Direction.NONE
 		else:
-			direction = (cardinal % 8)
+			direction = (cardinal % 8) as Direction
 	get():
 		return direction as Direction
 
@@ -86,7 +86,7 @@ func set_purpose_type(new_purpose: Purpose) -> void:
 
 func set_direction_parity(direction_parity: int) -> void:
 	if direction != Direction.NONE:
-		direction = (direction + direction_parity) % 8
+		direction = ((direction + direction_parity) % 8) as Direction
 	if is_branching:
 		for branch in branches:
 			branch.set_direction_parity(direction_parity)
@@ -99,8 +99,15 @@ func set_max_distance(max_distance:int) -> void:
 			branch.set_max_distance(max_distance)
 
 
-func rotate_movement() -> void:
+func change_movement_direction() -> void:
 	pass
+
+## direction_units is a positive integer between 1 and 7, including 1 and 7.
+func rotate_movement(direction_units: int) -> void:
+	direction += direction_units
+	if is_branching:
+		for branch in branches:
+			branch.rotate_movement(direction_units)
 
 func change_movement_distance() -> void:
 	pass

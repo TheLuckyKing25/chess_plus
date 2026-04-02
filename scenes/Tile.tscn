@@ -1,10 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://cega76qfg50kj"]
+[gd_scene load_steps=10 format=3 uid="uid://cega76qfg50kj"]
 
-[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tile_object.gd" id="1_gtpg2"]
-[ext_resource type="Script" uid="uid://dpjhoykfs62y" path="res://scripts/tile/tile_modifier_controller.gd" id="3_284l3"]
-[ext_resource type="Script" uid="uid://deq2syi6rrdmy" path="res://scripts/tile/tile_modifier_grid.gd" id="4_j3iir"]
-[ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileCondition.stylebox" id="5_j8k5k"]
-[ext_resource type="StyleBox" uid="uid://6ic7o326yplq" path="res://assets/TileProperties.stylebox" id="6_w8vld"]
+[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://resources/tiles/tile_object.gd" id="1_gtpg2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
 margin = 0.06
@@ -51,11 +47,6 @@ size = Vector3(0.95, 0.1, 0.95)
 [sub_resource type="ViewportTexture" id="ViewportTexture_esqu7"]
 viewport_path = NodePath("Tile_Modifiers/Modifier_Grid")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1g878"]
-resource_local_to_scene = true
-atlas = SubResource("ViewportTexture_esqu7")
-region = Rect2(0, 0, 150, 150)
-
 [node name="Tile" type="StaticBody3D" groups=["Tile"]]
 script = ExtResource("1_gtpg2")
 
@@ -69,12 +60,10 @@ skeleton = NodePath("")
 
 [node name="Tile_Modifiers" type="Sprite3D" parent="."]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
-visible = false
 axis = 1
-texture = SubResource("AtlasTexture_1g878")
+texture = SubResource("ViewportTexture_esqu7")
 region_enabled = true
 region_rect = Rect2(0, 0, 512, 512)
-script = ExtResource("3_284l3")
 
 [node name="Modifier_Grid" type="SubViewport" parent="Tile_Modifiers"]
 transparent_bg = true
@@ -82,76 +71,26 @@ handle_input_locally = false
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
-[node name="GridContainer" type="GridContainer" parent="Tile_Modifiers/Modifier_Grid"]
-self_modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(512, 512)
+[node name="CenterContainer" type="CenterContainer" parent="Tile_Modifiers/Modifier_Grid"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="FlowContainer" type="HFlowContainer" parent="Tile_Modifiers/Modifier_Grid/CenterContainer"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/h_separation = 31
 theme_override_constants/v_separation = 31
-columns = 3
-script = ExtResource("4_j3iir")
-
-[node name="Modifier_1" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-tooltip_text = "Test"
-theme_override_styles/panel = ExtResource("5_j8k5k")
-
-[node name="Modifier_2" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_3" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_4" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_5" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_6" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_7" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_8" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
-
-[node name="Modifier_9" type="Panel" parent="Tile_Modifiers/Modifier_Grid/GridContainer"]
-visible = false
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("6_w8vld")
+alignment = 1
+last_wrap_alignment = 2
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
-[connection signal="modifierCountChanged" from="Tile_Modifiers" to="Tile_Modifiers/Modifier_Grid/GridContainer" method="_on_tile_modifiers_modifier_count_changed"]
-[connection signal="ready" from="Tile_Modifiers/Modifier_Grid/GridContainer" to="Tile_Modifiers" method="_on_grid_container_ready"]

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Chess_Plus"
-run/main_scene="uid://camv04tw28yjr"
+run/main_scene="uid://2aw5r4ibxl8k"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -21,8 +21,9 @@ buses/default_bus_layout="res://assets/default_bus_layout.tres"
 
 [autoload]
 
-Global="*res://scripts/global.gd"
+Global="*res://scripts/Unused Scripts/global.gd"
 ConfigFileHandler="*res://scripts/config_file_handler.gd"
+NetworkManager="*res://scripts/network_manager.gd"
 
 [display]
 
@@ -36,9 +37,7 @@ folder_colors={
 "res://resources/": "orange",
 "res://scenes/": "gray",
 "res://scripts/": "blue",
-"res://scripts/menu/": "green",
-"res://scripts/tile/": "red",
-"res://scripts/tile/modifier/": "orange"
+"res://scripts/menu/": "green"
 }
 
 [global_group]
@@ -51,6 +50,7 @@ Piece=""
 [gui]
 
 theme/custom="uid://bkyyhibmxbrq8"
+theme/custom_font="uid://bkvpvpg6u23xf"
 
 [input]
 

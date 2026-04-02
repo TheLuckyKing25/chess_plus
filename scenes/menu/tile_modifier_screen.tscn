@@ -1,0 +1,285 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1twmfuyqv1lx"]
+
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_xor8o"]
+[ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="2_hqvri"]
+
+[node name="TileModifierScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme = ExtResource("1_xor8o")
+script = ExtResource("2_hqvri")
+
+[node name="TileModifierMenu" type="MarginContainer" parent="."]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 564.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TileModifierMenu"]
+layout_mode = 2
+
+[node name="BackgroundTopPanel" type="PanelContainer" parent="TileModifierMenu/HBoxContainer"]
+custom_minimum_size = Vector2(527, 475)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="BoxContainer2" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="AllTileModifierListPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+text = "Tile Modifiers"
+horizontal_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+placeholder_text = "Search (WIP)"
+emoji_menu_enabled = false
+
+[node name="ModiferList" type="ItemList" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+allow_reselect = true
+wraparound_items = false
+
+[node name="AppliedTileModifierListPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Modifier Order"
+horizontal_alignment = 1
+
+[node name="AppliedTileModifiers" type="GridContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 5
+
+[node name="BottomPanel" type="Panel" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2"]
+z_index = 1
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="BoxContainer" type="BoxContainer" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Add" type="Button" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Add to Tile"
+
+[node name="Replace" type="Button" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Replace all modifiers on the selected tiles with the modifiers above"
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Replace Modifiers"
+
+[node name="Erase" type="Button" parent="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Erase All Modifiers from the selected Tiles"
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Erase Modifiers"
+
+[node name="Label" type="Label" parent="TileModifierMenu/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Click tiles to select or deselect them"
+horizontal_alignment = 1
+
+[node name="ScreenNavigationMenu" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.875
+anchor_right = 1.0
+anchor_bottom = 0.998
+offset_top = 0.999939
+offset_bottom = 1.29596
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BoxContainer" type="BoxContainer" parent="ScreenNavigationMenu"]
+layout_mode = 2
+alignment = 1
+
+[node name="BackBackgroundPanel" type="PanelContainer" parent="ScreenNavigationMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_type_variation = &"BackgroundPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Panel" type="PanelContainer" parent="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/MarginContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="BackButton" type="Button" parent="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Back"
+
+[node name="ContinueBackgroundPanel" type="PanelContainer" parent="ScreenNavigationMenu/BoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"BackgroundPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Panel" type="PanelContainer" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Host Match"
+
+[node name="ContinueButton" type="Button" parent="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Start  Match"
+
+[connection signal="item_selected" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AllTileModifierListPanel/MarginContainer/BoxContainer/ModiferList" to="." method="_on_modifer_list_item_selected"]
+[connection signal="child_order_changed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BoxContainer/AppliedTileModifierListPanel/MarginContainer/VBoxContainer/AppliedTileModifiers" to="." method="_on_applied_tile_modifiers_child_order_changed"]
+[connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Add" to="." method="_on_add_pressed"]
+[connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Replace" to="." method="_on_replace_pressed"]
+[connection signal="pressed" from="TileModifierMenu/HBoxContainer/BackgroundTopPanel/MarginContainer/BoxContainer2/BottomPanel/MarginContainer/BoxContainer/Erase" to="." method="_on_erase_pressed"]
+[connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="ScreenNavigationMenu/BoxContainer/ContinueBackgroundPanel/MarginContainer/Panel/MarginContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_pressed"]
