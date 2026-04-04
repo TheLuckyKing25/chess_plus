@@ -13,7 +13,7 @@ func _init():
 	name = "Icy"
 	flag = ModifierType.CONDITION_ICY
 	color = Color(0.75, 1, 1)
-	icon = load("uid://cw82lp67yuedh")
+	icon = load(Constants.ICON_PATHS.modifier.icy)
 	is_slippery = true
 
 #region Dropdown UI Creation

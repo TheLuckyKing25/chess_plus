@@ -1,8 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmyh3g5g0c8ou"]
 
 [ext_resource type="StyleBox" uid="uid://b3b8tofmh4om0" path="res://assets/TileModifier.stylebox" id="1_704u8"]
-[ext_resource type="Script" uid="uid://dti6g6w315xgt" path="res://resources/tiles/modifiers/scripts/tile_modifier_icon.gd" id="2_8r5y1"]
-
+[ext_resource type="Script" uid="uid://dti6g6w315xgt" path="res://resources/tiles/modifiers/tile_modifier_icon.gd" id="2_8r5y1"]
 
 [node name="ModifierIcon" type="Panel"]
 custom_minimum_size = Vector2(150, 150)

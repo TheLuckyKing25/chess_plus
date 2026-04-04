@@ -1,5 +1,5 @@
 class_name TimeControl
-extends Node
+extends RefCounted
 
 static var max_time_sec: float = 0
 

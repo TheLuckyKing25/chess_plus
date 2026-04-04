@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://cvr8wyhalupas"]
 
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_nwval"]
-[ext_resource type="Script" uid="uid://psr8yvgsiart" path="res://scripts/menu/join_menu.gd" id="2_bnnsn"]
-[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="3_fg5b3"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_3s35x"]
+[ext_resource type="Script" uid="uid://psr8yvgsiart" path="res://scripts/menu/join_screen.gd" id="2_1v0u6"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="3_4g2ug"]
 
 [sub_resource type="Gradient" id="Gradient_ohrem"]
 offsets = PackedFloat32Array(0, 0.00680274, 1)
@@ -24,8 +24,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_nwval")
-script = ExtResource("2_bnnsn")
+theme = ExtResource("1_3s35x")
+script = ExtResource("2_1v0u6")
 metadata/_edit_horizontal_guides_ = [79.0]
 
 [node name="Background" type="Panel" parent="."]
@@ -55,7 +55,7 @@ size_flags_horizontal = 4
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = -10
 theme_override_constants/shadow_offset_y = 5
-theme_override_fonts/font = ExtResource("3_fg5b3")
+theme_override_fonts/font = ExtResource("3_4g2ug")
 theme_override_font_sizes/font_size = 100
 text = "Join Game"
 horizontal_alignment = 1

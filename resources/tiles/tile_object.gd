@@ -3,7 +3,7 @@ extends Node3D
 
 signal clicked(tile:TileObject)
 
-const TILE_SCENE:PackedScene = preload("uid://cega76qfg50kj")
+const TILE_SCENE:PackedScene = preload(Constants.SCENE_PATHS.tile)
 
 static var selected: TileObject = null
 static var en_passant: TileObject = null
@@ -150,7 +150,7 @@ func _on_tile_modifier_order_changed():
 	for child in %FlowContainer.get_children():
 		%FlowContainer.remove_child(child)
 
-	var modifier_panel:PackedScene = load("uid://dmyh3g5g0c8ou")
+	var modifier_panel:PackedScene = load(Constants.SCENE_PATHS.tile_modifier_icon)
 	for modifier in data.modifier_order:
 		var new_modifier = modifier_panel.instantiate()
 		new_modifier.panel.bg_color = modifier.color

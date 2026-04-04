@@ -24,6 +24,10 @@ buses/default_bus_layout="res://assets/default_bus_layout.tres"
 ConfigFileHandler="*res://scripts/config_file_handler.gd"
 NetworkManager="*res://scripts/network_manager.gd"
 
+[debug]
+
+gdscript/warnings/integer_division=0
+
 [display]
 
 window/subwindows/embed_subwindows=false

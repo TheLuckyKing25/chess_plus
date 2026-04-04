@@ -4,7 +4,7 @@ extends Node3D
 signal promoted
 signal clicked(piece: PieceObject)
 
-const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
+const PIECE_SCENE:PackedScene = preload(Constants.SCENE_PATHS.piece)
 
 static var selected: PieceObject = null
 static var en_passant: PieceObject = null
@@ -107,21 +107,17 @@ func _captured():
 	visible = false
 	$Collision.disabled = true
 	translate(Vector3(0,-5,0))
-	#reparent(%Captured)
-
-#func promote():
-	#remove_from_group("Pawn")
 
 
 func _moved(state:bool):
 	data.has_moved = state
 	if state:
-		if data.name == "Pawn":
-			data.movement = load("uid://bpexpwlvi0ymy")
+		if data.has_meta("movement_after_first_move"):
+			data.movement = data.get_meta("movement_after_first_move")
 		add_to_group("has_moved")
 	else:
-		if data.name == "Pawn":
-			data.movement = load("uid://dl1o3ayyjvnlf")
+		if data.has_meta("movement_of_first_move"):
+			data.movement = data.get_meta("movement_of_first_move")
 		remove_from_group("has_moved")
 
 

@@ -12,17 +12,17 @@ enum GameState {
 	Gameplay
 }
 
-const _GAMEMODE_SELECTION_MENU:PackedScene = preload("uid://bmtcaraovyhdt")
-const _TILE_MODIFIER_MENU:PackedScene = preload("uid://b1twmfuyqv1lx")
-const _GAME_OVERLAY: PackedScene = preload("uid://b2b5f3ejhqp35")
-const _PAUSE_MENU: PackedScene = preload("uid://dh0xqsvmtokbh")
-const _SMOKEY_OVERLAY = preload("uid://6mhxpvgl814g")
-const WAIT_SCREEN = preload("uid://crgfep2xyg10g")
+const MATCH_CREATION_SCREEN:PackedScene = preload(Constants.SCENE_PATHS.match_creation_screen)
+const TILE_MODIFIER_SCREEN:PackedScene = preload(Constants.SCENE_PATHS.tile_modifier_screen)
+const GAME_OVERLAY: PackedScene = preload(Constants.SCENE_PATHS.game_overlay)
+const PAUSE_SCREEN: PackedScene = preload(Constants.SCENE_PATHS.pause_screen)
+const SMOKEY_OVERLAY = preload(Constants.SCENE_PATHS.smoke)
+const WAIT_SCREEN = preload(Constants.SCENE_PATHS.wait_screen)
 
-var _gamemode_selection_menu: Node
-var _tile_modifier_menu: Node
-var _game_overlay: Node
-var _pause_menu: Node
+var match_creation_screen: Node
+var tile_modifier_screen: Node
+var game_overlay: Node
+var pause_screen: Node
 
 var _current_game_state: GameState = GameState.BoardCustomization
 
@@ -43,8 +43,8 @@ var data: BoardData
 
 func _ready() -> void:
 	data = BoardData.new(
-			load("uid://dxvl1tq0afyxx"),
-			load("uid://dc7e5u71wtrpp")
+			load(Constants.RESOURCE_PATHS.player_one),
+			load(Constants.RESOURCE_PATHS.player_two)
 			)
 	Player.current = data.player_one
 	Player.previous = data.player_one
@@ -65,7 +65,7 @@ func _show_loading_screen() -> void:
 	wait_layer.layer = 10
 	wait_layer.name = "LoadingLayer"
 	add_child(wait_layer)
-	var loading = preload("uid://v4i5knax4g12").instantiate()
+	var loading = preload(Constants.SCENE_PATHS.loading_screen).instantiate()
 	wait_layer.add_child(loading)
 
 func _hide_loading_screen() -> void:
@@ -92,13 +92,13 @@ func _process(_delta: float) -> void:
 		_time_elapsed_since_turn_ended = (
 				Time.get_ticks_msec()
 				- _time_turn_ended
-				- data.TURN_TRANSITION_DELAY_MSEC
+				- Constants.TURN_TRANSITION_DELAY_MSEC
 				)
 		if _time_elapsed_since_turn_ended > 0:
 
 			var lerp_weight: float = (
 					_time_elapsed_since_turn_ended
-					* data.TURN_TRANSITION_SPEED
+					* Constants.TURN_TRANSITION_SPEED
 					)
 
 			if lerp_weight < 1:
@@ -118,13 +118,13 @@ func _on_opponent_disconnected() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		if _gamemode_selection_menu:
-			if _tile_modifier_menu:
+		if match_creation_screen:
+			if tile_modifier_screen:
 				_on_tile_modifier_screen_back_button_pressed()
 			else:
 				_on_gamemode_selection_back_button_pressed()
-		elif _game_overlay:
-			if _pause_menu:
+		elif game_overlay:
+			if pause_screen:
 				_on_pause_menu_resume_button_pressed()
 			else:
 				_on_game_overlay_pause_button_pressed()
@@ -133,17 +133,17 @@ func _input(event: InputEvent) -> void:
 #region UI and Menu Functions
 	#region GAMEMODE_SELECTION_MENU
 func _instantiate_gamode_selection_menu():
-	_gamemode_selection_menu = _GAMEMODE_SELECTION_MENU.instantiate()
-	$MenuLayer.add_child(_gamemode_selection_menu)
-	_gamemode_selection_menu.back_button_pressed.connect(
+	match_creation_screen = MATCH_CREATION_SCREEN.instantiate()
+	$MenuLayer.add_child(match_creation_screen)
+	match_creation_screen.back_button_pressed.connect(
 			Callable(self,"_on_gamemode_selection_back_button_pressed"))
-	_gamemode_selection_menu.continue_button_pressed.connect(
+	match_creation_screen.continue_button_pressed.connect(
 			Callable(self,"_on_gamemode_selection_continue_button_pressed"))
-	_gamemode_selection_menu.board_verified.connect(
+	match_creation_screen.board_verified.connect(
 			Callable(self,"_on_gamemode_selection_board_verified"))
-	_gamemode_selection_menu.start_button_pressed.connect(
+	match_creation_screen.start_button_pressed.connect(
 			Callable(self,"_on_gamemode_selection_start_button_pressed"))
-	_gamemode_selection_menu.time_control_selected.connect(
+	match_creation_screen.time_control_selected.connect(
 			Callable(self,"_on_gamemode_selection_time_control_selection"))
 
 func _on_gamemode_selection_time_control_selection(time_sec: int, increment_sec: int):
@@ -166,7 +166,7 @@ func _sync_time_control(time_sec: int, increment_sec: int) -> void:
 	data.player_two.timer = TimeControl.new($TimerBlack, time_sec)
 
 func _on_gamemode_selection_back_button_pressed() -> void:
-	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
+	get_tree().change_scene_to_file(Constants.SCENE_PATHS.start_screen)
 
 
 func _on_gamemode_selection_board_verified(rank_num:int,file_num:int,FEN_notation: FEN) -> void:
@@ -177,7 +177,7 @@ func _on_gamemode_selection_board_verified(rank_num:int,file_num:int,FEN_notatio
 
 func _on_gamemode_selection_continue_button_pressed() -> void:
 	_instantiate_tile_modifier_menu()
-	_gamemode_selection_menu.hide()
+	match_creation_screen.hide()
 	generate_board()
 	load_FEN(data.FEN_board_state)
 	_current_game_state = GameState.BoardCustomization
@@ -202,20 +202,20 @@ func _on_gamemode_selection_start_button_pressed():
 
 	_instantiate_game_overlay()
 
-	_gamemode_selection_menu.hide()
-	_gamemode_selection_menu.queue_free()
+	match_creation_screen.hide()
+	match_creation_screen.queue_free()
 
 	#endregion
 
 	#region TILE_MODIFIER_MENU
 func _instantiate_tile_modifier_menu():
-	_tile_modifier_menu = _TILE_MODIFIER_MENU.instantiate()
-	$MenuLayer.add_child(_tile_modifier_menu)
-	_tile_modifier_menu._connect_to_back_button(
+	tile_modifier_screen = TILE_MODIFIER_SCREEN.instantiate()
+	$MenuLayer.add_child(tile_modifier_screen)
+	tile_modifier_screen._connect_to_back_button(
 			Callable(self, "_on_tile_modifier_screen_back_button_pressed"))
-	_tile_modifier_menu._connect_to_continue_button(
+	tile_modifier_screen._connect_to_continue_button(
 			Callable(self, "_on_tile_modifier_screen_continue_button_pressed"))
-	_tile_modifier_menu._connect_to_host_button(
+	tile_modifier_screen._connect_to_host_button(
 			Callable(self, "_on_tile_modifier_screen_host_button_pressed"))
 
 func _on_tile_modifier_screen_back_button_pressed() -> void:
@@ -228,9 +228,9 @@ func _on_tile_modifier_screen_back_button_pressed() -> void:
 	data.tile_array.clear()
 	data.piece_array.clear()
 
-	_gamemode_selection_menu.show()
-	_tile_modifier_menu.hide()
-	_tile_modifier_menu.queue_free()
+	match_creation_screen.show()
+	tile_modifier_screen.hide()
+	tile_modifier_screen.queue_free()
 
 func _on_tile_modifier_screen_continue_button_pressed() -> void:
 	_current_game_state = GameState.Gameplay
@@ -241,8 +241,8 @@ func _on_tile_modifier_screen_continue_button_pressed() -> void:
 
 	if NetworkManager.is_online:
 		_sync_gameplay_start.rpc()
-	_tile_modifier_menu.hide()
-	_tile_modifier_menu.queue_free()
+	tile_modifier_screen.hide()
+	tile_modifier_screen.queue_free()
 
 func _on_tile_modifier_screen_host_button_pressed() -> void:
 	var result = NetworkManager.host_game()
@@ -273,12 +273,12 @@ func _sync_gameplay_start() -> void:
 	_current_game_state = GameState.Gameplay
 	game_state_changed.emit(_current_game_state)
 
-	if _tile_modifier_menu:
-		_tile_modifier_menu.hide()
-		_tile_modifier_menu.queue_free()
-	if _gamemode_selection_menu:
-		_gamemode_selection_menu.hide()
-		_gamemode_selection_menu.queue_free()
+	if tile_modifier_screen:
+		tile_modifier_screen.hide()
+		tile_modifier_screen.queue_free()
+	if match_creation_screen:
+		match_creation_screen.hide()
+		match_creation_screen.queue_free()
 
 	_hide_loading_screen()
 	_instantiate_game_overlay()
@@ -289,41 +289,41 @@ func _sync_gameplay_start() -> void:
 	#endregion
 
 
-	#region _GAME_OVERLAY
+	#region GAME_OVERLAY
 func _instantiate_game_overlay():
-	_game_overlay = _GAME_OVERLAY.instantiate()
-	_game_overlay.ready.connect(Callable(self,"_on_game_overlay_ready"))
-	$MenuLayer.add_child(_game_overlay)
-	_game_overlay._connect_to_pause_button(
+	game_overlay = GAME_OVERLAY.instantiate()
+	game_overlay.ready.connect(Callable(self,"_on_game_overlay_ready"))
+	$MenuLayer.add_child(game_overlay)
+	game_overlay._connect_to_pause_button(
 			Callable(self,"_on_game_overlay_pause_button_pressed"))
-	_game_overlay.new_placement_selected.connect(
+	game_overlay.new_placement_selected.connect(
 			Callable(self,"_on_game_overlay_new_placement_selected"))
-	_game_overlay._connect_to_rulebook_button(
+	game_overlay._connect_to_rulebook_button(
 			Callable(self,"_on_game_overlay_rulebook_button_pressed"))
 
 	if data.is_match_timed:
-		_game_overlay.show_timers()
-		data.player_one.timer.label = _game_overlay._get_ui_timer_white()
-		data.player_two.timer.label = _game_overlay._get_ui_timer_black()
+		game_overlay.show_timers()
+		data.player_one.timer.label = game_overlay._get_ui_timer_white()
+		data.player_two.timer.label = game_overlay._get_ui_timer_black()
 
 func _on_game_overlay_ready():
 	_game_overlay_ready.emit()
 
 func _connect_to_game_overlay_horizontal_camera_slider(function: Callable):
-	_game_overlay.horizontal_slider.value_changed.connect(function)
+	game_overlay.horizontal_slider.value_changed.connect(function)
 
 func _connect_to_game_overlay_forward_camera_slider(function: Callable):
-	_game_overlay.forward_slider.value_changed.connect(function)
+	game_overlay.forward_slider.value_changed.connect(function)
 
 func _on_game_overlay_pause_button_pressed():
-	_pause_menu = _PAUSE_MENU.instantiate()
-	$MenuLayer.add_child(_pause_menu)
-	_game_overlay.hide()
+	pause_screen = PAUSE_SCREEN.instantiate()
+	$MenuLayer.add_child(pause_screen)
+	game_overlay.hide()
 
 	get_tree().paused = true
-	_pause_menu._connect_to_resume_button(
+	pause_screen._connect_to_resume_button(
 			Callable(self,"_on_pause_menu_resume_button_pressed"))
-	_pause_menu._connect_to_leave_button(
+	pause_screen._connect_to_leave_button(
 			Callable(self,"_on_pause_menu_leave_button_pressed"))
 
 
@@ -350,13 +350,13 @@ func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
 
 func _on_pause_menu_resume_button_pressed():
 	get_tree().paused = false
-	_pause_menu.hide()
-	_game_overlay.show()
-	_pause_menu.queue_free()
+	pause_screen.hide()
+	game_overlay.show()
+	pause_screen.queue_free()
 
 func _on_pause_menu_leave_button_pressed():
 	get_tree().paused = false
-	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
+	get_tree().change_scene_to_file(Constants.SCENE_PATHS.start_screen)
 
 	#endregion
 
@@ -557,13 +557,13 @@ func _perform_promotion(piece: PieceObject) -> void:
 		return
 
 	var mouse_pos = get_viewport().get_mouse_position()
-	_game_overlay._show_promotion_menu(mouse_pos)
-	_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
+	game_overlay._show_promotion_menu(mouse_pos)
+	game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
 	get_tree().paused = true
 	await piece.promoted
 	piece.data.movement.set_max_distance(maxi(data.file_count,data.rank_count))
-	_game_overlay._hide_promotion_menu()
-	_game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
+	game_overlay._hide_promotion_menu()
+	game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
 	get_tree().paused = false
 
 # MODIFIER HELPER FUNCTIONS
@@ -720,7 +720,7 @@ func _create_smokey_overlay(tile: TileObject) -> void:
 	if smokey_overlay.has(tile):
 		return
 
-	var overlay = _SMOKEY_OVERLAY.instantiate()
+	var overlay = SMOKEY_OVERLAY.instantiate()
 	add_child(overlay)
 	overlay.global_position = tile.global_position + Vector3(0, 1.2, 0)
 	smokey_overlay[tile] = overlay
@@ -1082,7 +1082,7 @@ func perform_move(move: Move):
 	opponent_moves.generate_legal_moves(data.get_opponent_of(Player.current))
 	if opponent_moves.moves.is_empty():
 		move.flags += Move.Type.CHECKMATE
-		_game_overlay.show_checkmate(Player.current)
+		game_overlay.show_checkmate(Player.current)
 
 
 	detect_check(data.get_opponent_of(Player.current))
@@ -1099,15 +1099,15 @@ func perform_move(move: Move):
 	if move.algebraic_notation != "": # empty string due to castling move
 		if move.flags & Move.Type.PROMOTION:
 			move._notation_suffix += piece.data.algebraic_notation
-		_game_overlay.add_move(move)
+		game_overlay.add_move(move)
 
 
 ## Sets up the next turn
 func next_turn() -> void:
 	_apply_turn_end_modifiers()
 	_update_modifier_lifetimes()
-	_game_overlay.horizontal_slider.value = 0
-	_game_overlay.forward_slider.value = 0
+	game_overlay.horizontal_slider.value = 0
+	game_overlay.forward_slider.value = 0
 
 	# increments the turn number
 	_turn_num += 1
