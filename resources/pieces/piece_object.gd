@@ -4,13 +4,12 @@ extends Node3D
 signal promoted
 signal clicked(piece: PieceObject)
 
+const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
 
 static var selected: PieceObject = null
 static var en_passant: PieceObject = null
 
-
 var is_mouse_on_piece: bool = false
-
 
 var piece_material: StandardMaterial3D
 var outline_material: StandardMaterial3D
@@ -33,6 +32,20 @@ var mouseover_material: StandardMaterial3D
 		piece_material.albedo_color = new_data.player.color
 		data = new_data
 
+static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int):
+	var new_piece:PieceObject = PIECE_SCENE.instantiate()
+	piece_type.resource_local_to_scene = true
+	var new_piece_data: PieceData = piece_type.duplicate(true)
+
+	new_piece_data.movement = new_piece_data.movement.get_duplicate()
+
+	new_piece_data.player = player_owner
+	new_piece_data.movement.set_max_distance(max_move_distance)
+	new_piece_data.index = index
+
+	new_piece.data = new_piece_data
+	new_piece_data.player.add_piece(new_piece)
+	return new_piece
 
 func promote(piece_name: String):
 	data.player.remove_piece(self)

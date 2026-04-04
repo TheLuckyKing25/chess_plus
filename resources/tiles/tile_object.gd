@@ -3,6 +3,8 @@ extends Node3D
 
 signal clicked(tile:TileObject)
 
+const TILE_SCENE:PackedScene = preload("uid://cega76qfg50kj")
+
 static var selected: TileObject = null
 static var en_passant: TileObject = null
 
@@ -20,8 +22,15 @@ var occupant: PieceObject = null:
 
 var is_mouse_on_tile: bool = false
 
-var data: TileDataChess
+var data: TileDataChess = TileDataChess.new()
 
+static func new_tile(index: int):
+	var new_tile_data:TileDataChess = TileDataChess.new()
+	new_tile_data.index = index
+
+	var new_tile:TileObject = TILE_SCENE.instantiate()
+	new_tile.data = new_tile_data
+	return new_tile
 
 func _ready() -> void:
 	data.changed.connect(Callable(self, "_on_stats_changed"))

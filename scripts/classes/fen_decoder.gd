@@ -19,47 +19,44 @@ func apply(board: BoardObject):
 func place_pieces(board: BoardObject):
 	board.data.player_one.pieces = {}
 	board.data.player_two.pieces = {}
+	var max_distance: int = maxi(board.data.file_count,board.data.rank_count)
 	var tile_num = 0
 	var new_piece
 	for character in FEN_board_position.piece_placement:
-		new_piece = board.PIECE_SCENE.instantiate()
+		var tile_index = tile_num%board.data.file_count + (board.data.rank_count - (tile_num/board.data.file_count)-1)*board.data.file_count
 		match character:
 			"p":
-				new_piece.data = PiecePawn.new(board.data.player_two)
+				new_piece = PieceObject.new_piece(preload("uid://dn8nakb8feeww"),board.data.player_two, max_distance, tile_index)
 			"r":
-				new_piece.data = PieceRook.new(board.data.player_two)
+				new_piece = PieceObject.new_piece(preload("uid://b5r63cf4oeak3"),board.data.player_two, max_distance, tile_index)
 			"b":
-				new_piece.data = PieceBishop.new(board.data.player_two)
+				new_piece = PieceObject.new_piece(preload("uid://b12vykyoafcox"),board.data.player_two, max_distance, tile_index)
 			"n":
-				new_piece.data = PieceKnight.new(board.data.player_two)
+				new_piece = PieceObject.new_piece(preload("uid://brd0i5dnuyf6l"),board.data.player_two, max_distance, tile_index)
 			"q":
-				new_piece.data = PieceQueen.new(board.data.player_two)
+				new_piece = PieceObject.new_piece(preload("uid://bccbxx63wac0s"),board.data.player_two, max_distance, tile_index)
 			"k":
-				new_piece.data = PieceKing.new(board.data.player_two)
+				new_piece = PieceObject.new_piece(preload("uid://qs2xxm48mer5"),board.data.player_two, max_distance, tile_index)
 			"P":
-				new_piece.data = PiecePawn.new(board.data.player_one)
+				new_piece = PieceObject.new_piece(preload("uid://dn8nakb8feeww"),board.data.player_one, max_distance, tile_index)
 			"R":
-				new_piece.data = PieceRook.new(board.data.player_one)
+				new_piece = PieceObject.new_piece(preload("uid://b5r63cf4oeak3"),board.data.player_one, max_distance, tile_index)
 			"B":
-				new_piece.data = PieceBishop.new(board.data.player_one)
+				new_piece = PieceObject.new_piece(preload("uid://b12vykyoafcox"),board.data.player_one, max_distance, tile_index)
 			"N":
-				new_piece.data = PieceKnight.new(board.data.player_one)
+				new_piece = PieceObject.new_piece(preload("uid://brd0i5dnuyf6l"),board.data.player_one, max_distance, tile_index)
 			"Q":
-				new_piece.data = PieceQueen.new(board.data.player_one)
+				new_piece = PieceObject.new_piece(preload("uid://bccbxx63wac0s"),board.data.player_one, max_distance, tile_index)
 			"K":
-				new_piece.data = PieceKing.new(board.data.player_one)
+				new_piece = PieceObject.new_piece(preload("uid://qs2xxm48mer5"),board.data.player_one, max_distance, tile_index)
 			"1","2","3","4","5","6","7","8","9":
 				tile_num += character.to_int()
 				continue
 			_:
 				continue
-		new_piece.data.player.add_piece(new_piece)
-		new_piece.data.movement.set_max_distance(maxi(board.data.file_count,board.data.rank_count))
-		var tile_index = tile_num%board.data.file_count + (board.data.rank_count - (tile_num/board.data.file_count)-1)*board.data.file_count
 		board.data.tile_array[tile_index].add_child(new_piece,true)
 		board.data.tile_array[tile_index].occupant = new_piece
 		board.data.piece_array[tile_index] = new_piece
-		new_piece.data.index = tile_index
 		tile_num += 1
 
 func set_active_player(board: BoardObject):
@@ -71,20 +68,20 @@ func set_active_player(board: BoardObject):
 
 
 func set_castling_availability(board: BoardObject):
-	board.data.player_one.pieces["King"][0].data._castling_kingside_valid = false
-	board.data.player_one.pieces["King"][0].data._castling_queenside_valid = false
-	board.data.player_two.pieces["King"][0].data._castling_kingside_valid = false
-	board.data.player_two.pieces["King"][0].data._castling_queenside_valid = false
+	board.data.player_one.pieces["King"][0].data.set_meta("is_castling_kingside_valid", false)
+	board.data.player_one.pieces["King"][0].data.set_meta("is_castling_queenside_valid", false)
+	board.data.player_two.pieces["King"][0].data.set_meta("is_castling_kingside_valid", false)
+	board.data.player_two.pieces["King"][0].data.set_meta("is_castling_queenside_valid", false)
 	for character in FEN_board_position.castling_availability:
 		match character:
 			"K":
-				board.data.player_one.pieces["King"][0].data._castling_kingside_valid = true
+				board.data.player_one.pieces["King"][0].data.set_meta("is_castling_kingside_valid", true)
 			"Q":
-				board.data.player_one.pieces["King"][0].data._castling_queenside_valid = true
+				board.data.player_one.pieces["King"][0].data.set_meta("is_castling_queenside_valid", true)
 			"k":
-				board.data.player_two.pieces["King"][0].data._castling_kingside_valid = true
+				board.data.player_two.pieces["King"][0].data.set_meta("is_castling_kingside_valid", true)
 			"q":
-				board.data.player_two.pieces["King"][0].data._castling_queenside_valid = true
+				board.data.player_two.pieces["King"][0].data.set_meta("is_castling_queenside_valid", true)
 
 
 func set_en_passant_target_tile(board: BoardObject):

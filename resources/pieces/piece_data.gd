@@ -7,6 +7,12 @@ const SELECT_COLOR:= Color(0, 0.9, 0.9, 1)
 const CHECKED_COLOR:= Color(0.9, 0, 0, 1)
 const CASTLING_COLOR:= Color(1,1,1,1)
 
+@export var player: Player:
+	set(new_player):
+		player = new_player
+		if player and movement:
+			movement.set_direction_parity(player.direction_parity)
+
 @export var name:String = "NULL"
 
 @export var algebraic_notation: String = ""
@@ -25,14 +31,14 @@ const CASTLING_COLOR:= Color(1,1,1,1)
 @export var movement: Movement:
 	set(new_movement):
 		movement = new_movement.get_duplicate()
-		movement.set_direction_parity(player.direction_parity)
+		if player:
+			movement.set_direction_parity(player.direction_parity)
+
 
 # Poison Tile variables
 var is_poisoned: bool = false
 var poison_turn_applied: int = -1
 var poison_duration: int = -1
-
-var player: Player
 
 
 var index: int = -1

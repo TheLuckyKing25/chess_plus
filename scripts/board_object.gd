@@ -24,11 +24,6 @@ var _tile_modifier_menu: Node
 var _game_overlay: Node
 var _pause_menu: Node
 
-
-const TILE_SCENE:PackedScene = preload("uid://cega76qfg50kj")
-const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
-
-
 var _current_game_state: GameState = GameState.BoardCustomization
 
 var _time_turn_ended:int = 0
@@ -497,12 +492,10 @@ func generate_board() -> void:
 	$BoardBase.mesh.size = Vector3(data.file_count+1 ,0.2, data.rank_count+1)
 
 	for tile_num in range(data.rank_count * data.file_count):
-		var new_tile = TILE_SCENE.instantiate()
-		data.tile_array[tile_num] = new_tile
-		new_tile.data = TileDataChess.new()
-		new_tile.data.index = tile_num
-		new_tile.data.board_position = data.get_board_position(tile_num)
+		var new_tile:TileObject = TileObject.new_tile(tile_num)
+		new_tile.data.board_position = data.get_board_position(new_tile.data.index)
 
+		data.tile_array[tile_num] = new_tile
 		# move tile to its location on the board
 		new_tile.translate(Vector3(
 				new_tile.data.file-(float(data.file_count)/2)+0.5,
@@ -1000,9 +993,9 @@ func _resolve_branching_movement(
 						# King cannot castle through checked tile
 						if active_piece.data.name == "King":
 							if branch.direction == Movement.Direction.EAST:
-								active_piece.data._castling_kingside_valid = false
+								active_piece.data.set_meta("is_castling_kingside_valid", false)
 							elif branch.direction == Movement.Direction.WEST:
-								active_piece.data._castling_queenside_valid = false
+								active_piece.data.set_meta("is_castling_queenside_valid", false)
 
 
 			if branch.is_castling:
@@ -1011,9 +1004,9 @@ func _resolve_branching_movement(
 				if (	active_piece.data.has_moved # if king has moved
 						or active_piece.data.is_checked # if king is in check
 						or (	branch.direction == Movement.Direction.EAST
-								and not active_piece.data._castling_kingside_valid)	# if east tile is checked
+								and not active_piece.data.get_meta("is_castling_kingside_valid"))	# if east tile is checked
 						or (	branch.direction == Movement.Direction.WEST
-								and not active_piece.data._castling_queenside_valid) # if west tile is checked
+								and not active_piece.data.get_meta("is_castling_queenside_valid")) # if west tile is checked
 						):
 					break
 

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://b5r63cf4oeak3"]
+
+[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://resources/pieces/piece_data.gd" id="1_3unrt"]
+[ext_resource type="Resource" uid="uid://b0ucks7w4ums8" path="res://resources/pieces/types/rook/movement_rook.tres" id="1_adruq"]
+[ext_resource type="ArrayMesh" uid="uid://047i1asw03nw" path="res://resources/pieces/types/rook/mesh_rook.obj" id="2_1s4ok"]
+
+[resource]
+script = ExtResource("1_3unrt")
+name = "Rook"
+algebraic_notation = "R"
+description = "PLACEHOLDER"
+object_mesh = ExtResource("2_1s4ok")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_adruq")
+metadata/_custom_type_script = "uid://cdgr42xlx8gxd"

@@ -3,17 +3,16 @@
 [ext_resource type="Script" uid="uid://5e06aauin2d1" path="res://resources/pieces/piece_object.gd" id="1_huli3"]
 [ext_resource type="Material" uid="uid://d1vk2u7swdqib" path="res://resources/pieces/piece_material.tres" id="3_ajk4a"]
 
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_huli3"]
-margin = 0.0
-size = Vector3(2, 4.5, 2)
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s58gp"]
+radius = 1.0
+height = 4.5
 
 [node name="Piece" type="StaticBody3D"]
 script = ExtResource("1_huli3")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
-shape = SubResource("BoxShape3D_huli3")
+shape = SubResource("CapsuleShape3D_s58gp")
 
 [node name="Piece_Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
