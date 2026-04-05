@@ -8,7 +8,7 @@ func _init():
 	name = "Smokey"
 	flag = ModifierType.PROPERTY_SMOKEY
 	color = Color(0.4, 0.4, 0.4)
-	icon = load(Constants.ICON_PATHS.modifier.smokey)
+	icon = load("uid://c2qxlt526rfpo")
 
 func on_piece_enter(board, piece, from_tile, to_tile) -> void:
 	is_active = not is_active

@@ -11,7 +11,7 @@ func _init():
 	name = "Cog"
 	flag = ModifierType.PROPERTY_COG
 	color = Color(0.77,0.42,0)
-	icon = load(Constants.ICON_PATHS.modifier.cog)
+	icon = load("uid://rpbtfnubhk8n")
 	can_modify_movement = true
 
 

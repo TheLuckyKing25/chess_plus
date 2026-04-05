@@ -13,8 +13,8 @@ func _process(delta: float):
 	if can_proceed or Player.previous != Player.current:
 		if board._time_elapsed_since_turn_ended > 0:
 			can_proceed = true
-		if can_proceed and board._time_elapsed_since_turn_ended * Constants.TURN_TRANSITION_SPEED <= 1:
-			camera_rotation += 180 * Constants.TURN_TRANSITION_SPEED * delta * 1000
+		if can_proceed and board._time_elapsed_since_turn_ended * BoardData.TURN_TRANSITION_SPEED <= 1:
+			camera_rotation += 180 * BoardData.TURN_TRANSITION_SPEED * delta * 1000
 			match Player.current:
 				board.data.player_one:
 					player2_camera.yaw = camera_rotation + 180
