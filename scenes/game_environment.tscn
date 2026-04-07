@@ -1,8 +1,13 @@
-[gd_scene load_steps=16 format=3 uid="uid://h7v0gyqyq0h7"]
+[gd_scene load_steps=21 format=3 uid="uid://h7v0gyqyq0h7"]
 
 [ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="1_hlv2s"]
 [ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/board.tscn" id="1_wsj4q"]
 [ext_resource type="PackedScene" uid="uid://base8ln7a12p2" path="res://scenes/camera_with_controls.tscn" id="2_o3rc1"]
+[ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/classes/state/state_machine.gd" id="4_jnac3"]
+[ext_resource type="Script" uid="uid://b1ssj14vctijh" path="res://scripts/classes/state/turn_states/player_turn.gd" id="5_mambb"]
+[ext_resource type="Resource" uid="uid://dc7e5u71wtrpp" path="res://resources/players/player_two.tres" id="6_v7g5r"]
+[ext_resource type="Script" uid="uid://befv64o3i2v02" path="res://scripts/classes/state/turn_states/turn_transition.gd" id="7_qxgoj"]
+[ext_resource type="Resource" uid="uid://dxvl1tq0afyxx" path="res://resources/players/player_one.tres" id="9_7lixw"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_noarx"]
 flip_faces = true
@@ -118,6 +123,34 @@ shadow_opacity = 0.7
 spot_range = 24.0741
 spot_angle = 72.1925
 
-[connection signal="ready" from="." to="." method="_on_ready"]
+[node name="TurnStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_jnac3")
+initial_state = NodePath("WhiteTurn")
+
+[node name="BlackTurn" type="Node" parent="TurnStateMachine" node_paths=PackedStringArray("board", "next_state")]
+script = ExtResource("5_mambb")
+player = ExtResource("6_v7g5r")
+board = NodePath("../../Table/Board")
+next_state = NodePath("../BlackToWhite")
+
+[node name="BlackToWhite" type="Node" parent="TurnStateMachine" node_paths=PackedStringArray("from_camera", "to_camera", "next_state")]
+script = ExtResource("7_qxgoj")
+from_camera = NodePath("../../CameraBlack")
+to_camera = NodePath("../../CameraWhite")
+initial_rotation_degree = 180
+next_state = NodePath("../WhiteTurn")
+
+[node name="WhiteTurn" type="Node" parent="TurnStateMachine" node_paths=PackedStringArray("board", "next_state")]
+script = ExtResource("5_mambb")
+player = ExtResource("9_7lixw")
+board = NodePath("../../Table/Board")
+next_state = NodePath("../WhiteToBlack")
+
+[node name="WhiteToBlack" type="Node" parent="TurnStateMachine" node_paths=PackedStringArray("from_camera", "to_camera", "next_state")]
+script = ExtResource("7_qxgoj")
+from_camera = NodePath("../../CameraWhite")
+to_camera = NodePath("../../CameraBlack")
+next_state = NodePath("../BlackTurn")
+
 [connection signal="game_state_changed" from="Table/Board" to="." method="_on_board_game_state_changed"]
 [connection signal="ready" from="Table/Board" to="." method="_on_board_ready"]

@@ -49,18 +49,18 @@ static func new_piece(piece_type: PieceData, player_owner:Player, max_move_dista
 	Match.add_piece(new_piece)
 	return new_piece
 
-#UPDATE PROMOTION
+
 func promote(piece_name: String):
 	data.player.remove_piece(self)
 	match piece_name:
 		"Bishop":
-			data = PieceBishop.new(data.player)
+			data = load("uid://b12vykyoafcox")
 		"Knight":
-			data = PieceKnight.new(data.player)
+			data = load("uid://brd0i5dnuyf6l")
 		"Rook":
-			data = PieceRook.new(data.player)
+			data = load("uid://bccbxx63wac0s")
 		"Queen":
-			data = PieceQueen.new(data.player)
+			data = load("uid://b5r63cf4oeak3")
 	data.player.add_piece(self)
 	promoted.emit()
 

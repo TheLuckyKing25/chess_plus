@@ -2,7 +2,7 @@ class_name BoardObject
 extends Node3D
 
 
-signal turn_changed(player: int)
+signal turn_changed()
 signal game_state_changed(game_state: int)
 signal _game_overlay_ready()
 
@@ -1117,15 +1117,13 @@ func next_turn() -> void:
 
 	# increments the turn number
 	_turn_num += 1
-	if Match.is_timed:
-		Player.current.timer.stop_timer()
-		Player.current.timer.increase_by_increment()
+	#if Match.is_timed:
+		#Player.current.timer.stop_timer()
+		#Player.current.timer.increase_by_increment()
 
 	Player.previous = Player.current
 	Player.current = Match.get_opponent_of(Player.previous)
 	turn_changed.emit()
-
-
 
 	if Player.current == Player.en_passant:
 		# clear en passant
@@ -1139,7 +1137,7 @@ func next_turn() -> void:
 	data.legal_moves.generate_legal_moves(Player.current)
 
 	if Match.is_timed:
-		Player.current.timer.start_timer()
+		#Player.current.timer.start_timer()
 		if NetworkManager.is_online:
 			_sync_timer_start.rpc(Time.get_unix_time_from_system())
 

@@ -1,7 +1,6 @@
 class_name Match
 extends RefCounted
 
-
 static var board_data:BoardData
 
 
@@ -9,7 +8,10 @@ static var board_object:BoardObject
 
 
 static var player_one: Player = load("uid://dxvl1tq0afyxx")
+static var player_one_camera
+
 static var player_two: Player = load("uid://dc7e5u71wtrpp")
+static var player_two_camera
 
 # move history
 static var move_history:MoveList
