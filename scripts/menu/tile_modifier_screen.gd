@@ -31,8 +31,21 @@ func _connect_to_back_button(function:Callable):
 func _connect_to_continue_button(function:Callable):
 	%ContinueButton.pressed.connect(function)
 
+
 func _connect_to_host_button(function: Callable):
 	%HostButton.pressed.connect(function)
+
+
+func _disconnect_from_back_button(function:Callable):
+	%BackButton.pressed.disconnect(function)
+
+
+func _disconnect_from_continue_button(function:Callable):
+	%ContinueButton.pressed.disconnect(function)
+
+
+func _disconnect_from_host_button(function: Callable):
+	%HostButton.pressed.disconnect(function)
 
 
 func _on_modifer_list_item_selected(index: int) -> void:

@@ -5,6 +5,7 @@ signal back_button_pressed()
 signal continue_button_pressed()
 signal board_verified(rank_count: int, file_count: int, FEN_notation: FEN)
 signal start_button_pressed()
+signal host_button_pressed()
 
 const WAIT_SCREEN = preload("uid://crgfep2xyg10g")
 
@@ -19,6 +20,7 @@ func _ready() -> void:
 		return
 
 func _on_host_game_button_pressed() -> void:
+	host_button_pressed.emit(self)
 	var result = NetworkManager.host_game()
 	if result.is_empty():
 		return

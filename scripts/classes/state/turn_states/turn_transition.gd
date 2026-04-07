@@ -10,12 +10,12 @@ var camera_rotation: float = 0
 var can_proceed = false
 
 func enter():
-	print_debug(name, " enter")
+	print_debug("enter ", name)
 	if NetworkManager.is_online:
 		transitioned.emit(self,next_state.name)
 
 func exit():
-	print_debug(name, " exit")
+	print_debug("exit ", name)
 	from_camera.yaw = 180
 	to_camera.make_current()
 	if from_camera.yaw != initial_rotation_degree:

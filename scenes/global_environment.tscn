@@ -1,0 +1,77 @@
+[gd_scene load_steps=16 format=3 uid="uid://c5sp4xfh2lsyp"]
+
+[ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/classes/state/state_machine.gd" id="1_nu6ja"]
+[ext_resource type="Script" uid="uid://dtw67qk6xuwgn" path="res://scripts/classes/state/ui_states/match_customization_state.gd" id="2_5d3sh"]
+[ext_resource type="Script" uid="uid://cojx763b4281c" path="res://scripts/classes/state/ui_states/start_menu_state.gd" id="2_wokhy"]
+[ext_resource type="PackedScene" uid="uid://2aw5r4ibxl8k" path="res://scenes/menu/start_screen.tscn" id="3_ub65i"]
+[ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/match_selection_screen.tscn" id="3_wokhy"]
+[ext_resource type="Script" uid="uid://dsliyrikprudw" path="res://scripts/classes/state/ui_states/tile_modifier_selection_state.gd" id="4_ub65i"]
+[ext_resource type="PackedScene" uid="uid://b1twmfuyqv1lx" path="res://scenes/menu/tile_modifier_screen.tscn" id="5_i58sr"]
+[ext_resource type="Script" uid="uid://cm1hbc3n7piww" path="res://scripts/classes/state/ui_states/game_overlay_state.gd" id="6_7ajr0"]
+[ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/game_overlay.tscn" id="7_0xc8i"]
+[ext_resource type="Script" uid="uid://cj0pks1ybadwl" path="res://scripts/classes/state/ui_states/pause_menu_state.gd" id="8_rjbag"]
+[ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/menu/pause_screen.tscn" id="9_clyl5"]
+[ext_resource type="Script" uid="uid://puhj5bsjchm4" path="res://scripts/classes/state/ui_states/wait_state.gd" id="12_7ajr0"]
+[ext_resource type="Script" uid="uid://jao881ibcsnv" path="res://scripts/classes/state/ui_states/join_state.gd" id="12_ub65i"]
+[ext_resource type="PackedScene" uid="uid://crgfep2xyg10g" path="res://scenes/menu/wait_screen.tscn" id="13_0xc8i"]
+[ext_resource type="PackedScene" uid="uid://cvr8wyhalupas" path="res://scenes/menu/join_menu.tscn" id="13_i58sr"]
+
+[node name="GlobalEnvironment" type="Node"]
+
+[node name="3DEnvironment" type="Node3D" parent="."]
+
+[node name="UIEnvironment" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UIStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_nu6ja")
+initial_state = NodePath("StartMenuState")
+
+[node name="StartMenuState" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("ui_root")]
+script = ExtResource("2_wokhy")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("3_ub65i")
+
+[node name="MatchCustomizationState" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("ui_root")]
+script = ExtResource("2_5d3sh")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("3_wokhy")
+
+[node name="TileModifierSelectionState" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("ui_root")]
+script = ExtResource("4_ub65i")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("5_i58sr")
+
+[node name="GameOverlayState" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("ui_root")]
+script = ExtResource("6_7ajr0")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("7_0xc8i")
+
+[node name="PauseMenuState" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("ui_root")]
+script = ExtResource("8_rjbag")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("9_clyl5")
+
+[node name="WaitStateMatchCustom" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("previous_state", "ui_root")]
+script = ExtResource("12_7ajr0")
+previous_state = NodePath("../MatchCustomizationState")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("13_0xc8i")
+
+[node name="WaitStateTileMod" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("previous_state", "ui_root")]
+script = ExtResource("12_7ajr0")
+previous_state = NodePath("../TileModifierSelectionState")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("13_0xc8i")
+
+[node name="JoinState" type="Node" parent="UIStateMachine" node_paths=PackedStringArray("ui_root")]
+script = ExtResource("12_ub65i")
+ui_root = NodePath("../../UIEnvironment")
+scene = ExtResource("13_i58sr")
+
+[node name="LoadingState" type="Node" parent="UIStateMachine"]

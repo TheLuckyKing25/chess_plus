@@ -79,10 +79,9 @@ func add_move(move:	Move):
 func _connect_to_pause_button(function: Callable):
 	%PauseButton.pressed.connect(function)
 
+func _disconnect_from_pause_button(function: Callable):
+	%PauseButton.pressed.disconnect(function)
 
-func _connect_to_rulebook_button(function: Callable):
-	#$MenuButtons/MenuButtons/RuleBookButton.pressed.connect(function)
-	pass
 
 # When Escape pressed: pause game or resume game, depenent on state.
 func _input(event) -> void:
@@ -93,7 +92,6 @@ func _input(event) -> void:
 func _on_pause_menu_leave_button_pressed() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
-	#get_tree().quit()
 
 
 func _on_leftside_button_toggled(toggled_on: bool) -> void:

@@ -8,9 +8,31 @@ var settings_menu: Node
 var join_menu: Node
 var game_environment: Node
 
+func connect_to_scene(
+		new_match: Callable,
+		join_match: Callable,
+		rulebook: Callable,
+		settings: Callable,
+		exit: Callable
+	):
+	%NewMatchButton.pressed.connect(new_match)
+	%JoinMatchButton.pressed.connect(join_match)
+	%RulebookButton.pressed.connect(rulebook)
+	%SettingsButton.pressed.connect(settings)
+	%ExitButton.pressed.connect(exit)
 
-func _on_ready():
-	pass
+func disconnect_from_scene(
+		new_match: Callable,
+		join_match: Callable,
+		rulebook: Callable,
+		settings: Callable,
+		exit: Callable
+	):
+	%NewMatchButton.pressed.disconnect(new_match)
+	%JoinMatchButton.pressed.disconnect(join_match)
+	%RulebookButton.pressed.disconnect(rulebook)
+	%SettingsButton.pressed.disconnect(settings)
+	%ExitButton.pressed.disconnect(exit)
 
 func _input(event) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -18,23 +40,8 @@ func _input(event) -> void:
 			remove_child(settings_menu)
 			settings_menu.queue_free()
 			$MainMenu.show()
-		elif join_menu:
-			remove_child(join_menu)
-			join_menu.queue_free()
-			$MainMenu.show()
-		else:
-			_on_exit_button_pressed()
 
 #region Main Menu Buttons
-
-func _on_new_match_button_pressed() -> void:
-	get_tree().change_scene_to_file("uid://h7v0gyqyq0h7")
-
-func _on_join_match_button_pressed() -> void:
-	join_menu = JOIN_MENU.instantiate()
-	add_child(join_menu)
-	$MainMenu.hide()
-
 func _on_rulebook_button_pressed() -> void:
 	pass # Replace with function body.
 
@@ -43,9 +50,4 @@ func _on_settings_button_pressed() -> void:
 	settings_menu = SETTINGS_MENU.instantiate()
 	add_child(settings_menu)
 	$MainMenu.hide()
-
-
-func _on_exit_button_pressed() -> void:
-	get_tree().quit()
-
 #endregion

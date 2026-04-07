@@ -1,6 +1,5 @@
 extends Control
 
-
 var ip:   String = ""
 var port: String = ""
 

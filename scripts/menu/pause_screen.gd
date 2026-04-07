@@ -15,6 +15,14 @@ func _connect_to_leave_button(function: Callable):
 	$PauseMenu/BoxContainer/VBoxContainer/Leave.pressed.connect(function)
 
 
+func _disconnect_from_resume_button(function: Callable):
+	$PauseMenu/BoxContainer/VBoxContainer/Resume.pressed.disconnect(function)
+
+
+func _disconnect_from_leave_button(function: Callable):
+	$PauseMenu/BoxContainer/VBoxContainer/Leave.pressed.disconnect(function)
+
+
 func _on_options_pressed():
 	_settings_menu = _SETTINGS_MENU.instantiate()
 	$PauseMenu.hide()

@@ -12,7 +12,6 @@ enum GameState {
 	Gameplay
 }
 
-
 const MATCH_SELECTION_SCREEN:PackedScene = preload("uid://bmtcaraovyhdt")
 const TILE_MODIFIER_MENU:PackedScene = preload("uid://b1twmfuyqv1lx")
 const GAME_OVERLAY: PackedScene = preload("uid://b2b5f3ejhqp35")
@@ -88,10 +87,7 @@ func _on_peer_connected_resync(_id: int) -> void:
 		_sync_gameplay_start.rpc()
 
 func _process(_delta: float) -> void:
-	if Player.previous == Player.current and Match.is_timed:
-		Player.current.timer._update_timer_ui()
-
-	elif Player.previous != Player.current:
+	if Player.previous != Player.current:
 		if _time_turn_ended == 0:
 			_time_turn_ended = Time.get_ticks_msec()
 
@@ -1117,9 +1113,6 @@ func next_turn() -> void:
 
 	# increments the turn number
 	_turn_num += 1
-	#if Match.is_timed:
-		#Player.current.timer.stop_timer()
-		#Player.current.timer.increase_by_increment()
 
 	Player.previous = Player.current
 	Player.current = Match.get_opponent_of(Player.previous)
@@ -1136,9 +1129,7 @@ func next_turn() -> void:
 
 	data.legal_moves.generate_legal_moves(Player.current)
 
-	if Match.is_timed:
-		#Player.current.timer.start_timer()
-		if NetworkManager.is_online:
+	if Match.is_timed and NetworkManager.is_online:
 			_sync_timer_start.rpc(Time.get_unix_time_from_system())
 
 
