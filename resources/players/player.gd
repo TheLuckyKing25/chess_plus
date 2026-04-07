@@ -33,6 +33,7 @@ static var turn_order: Array
 ## Used to rotate the movement of the piece
 @export var direction_parity: int
 
+# rank that pieces are promoted
 var promotion_rank: int
 
 

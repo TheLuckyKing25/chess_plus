@@ -1,4 +1,5 @@
 class_name MoveList
+extends RefCounted
 
 var board_data: BoardData
 
@@ -177,7 +178,7 @@ func generate_legal_moves(player:Player):
 		var is_legal_move:bool = true
 		virtual_board.make_move(move)
 
-		var opponent = board_data.get_opponent_of(player)
+		var opponent = Match.get_opponent_of(player)
 		var opposing:MoveList = MoveList.new(board_data)
 		opposing.generate_pseudo_legal_moves(opponent)
 
@@ -205,7 +206,7 @@ func is_legal(move:Move):
 	virtual_board.make_move(move)
 
 	var opponent_moves: MoveList = MoveList.new(virtual_board.get_virtual_board_data())
-	opponent_moves.generate_pseudo_legal_moves(board_data.get_opponent_of(Player.current))
+	opponent_moves.generate_pseudo_legal_moves(Match.get_opponent_of(Player.current))
 
 	for opposing_move in opponent_moves.moves:
 		if opposing_move and opposing_move.destination_tile.occupant == Player.current.pieces["King"][0]:

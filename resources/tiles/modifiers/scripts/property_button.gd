@@ -7,8 +7,8 @@ func _init():
 	name = "Button"
 	flag = ModifierType.PROPERTY_BUTTON
 
-func on_piece_enter(board, piece, from_tile, to_tile) -> void:
+func on_piece_enter(piece, from_tile, to_tile) -> void:
 	if to_tile == null:
 		return
 
-	board._toggle_gates_in_radius(to_tile, radius)
+	Match.board_object._toggle_gates_in_radius(to_tile, radius)

@@ -32,10 +32,11 @@ var mouseover_material: StandardMaterial3D
 		piece_material.albedo_color = new_data.player.color
 		data = new_data
 
-static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int):
+static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
 	var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	piece_type.resource_local_to_scene = true
 	var new_piece_data: PieceData = piece_type.duplicate(true)
+
+	piece_type.resource_local_to_scene = true
 
 	new_piece_data.movement = new_piece_data.movement.get_duplicate()
 
@@ -45,8 +46,10 @@ static func new_piece(piece_type: PieceData, player_owner:Player, max_move_dista
 
 	new_piece.data = new_piece_data
 	new_piece_data.player.add_piece(new_piece)
+	Match.add_piece(new_piece)
 	return new_piece
 
+#UPDATE PROMOTION
 func promote(piece_name: String):
 	data.player.remove_piece(self)
 	match piece_name:
@@ -107,10 +110,6 @@ func _captured():
 	visible = false
 	$Collision.disabled = true
 	translate(Vector3(0,-5,0))
-	#reparent(%Captured)
-
-#func promote():
-	#remove_from_group("Pawn")
 
 
 func _moved(state:bool):

@@ -74,7 +74,7 @@ func _create_dropdown_ui():
 	pass
 
 
-func modify_moves(board, piece, tile, moves):
+func modify_moves(piece, tile, moves):
 	return moves
 
 
@@ -82,19 +82,19 @@ func modify_movement(movement: Movement):
 	return
 
 
-func modify_threats(board, piece, tile, threats):
+func modify_threats(piece, tile, threats):
 	return threats
 
 
-func on_piece_enter(board, piece, from_tile, to_tile) -> void:
+func on_piece_enter(piece, from_tile, to_tile) -> void:
 	pass
 
 
-func on_turn_end(board,tile) -> void:
+func on_turn_end(tile) -> void:
 	pass
 
 
-func blocks_movement(board, piece, tile) -> bool:
+func blocks_movement(piece, tile) -> bool:
 	return false
 
 

@@ -1,14 +1,14 @@
 extends Node
 
 signal game_hosted(ip: String, code: String)
+signal connected_to_game
+signal opponent_disconnected
 
 const MAX_PLAYERS: int = 2
 
 var is_online: bool = false
 var my_player: int = -1
 
-signal connected_to_game
-signal opponent_disconnected
 
 func get_local_ip() -> String:
 	for address in IP.get_local_addresses():

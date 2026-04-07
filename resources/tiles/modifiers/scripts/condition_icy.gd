@@ -57,7 +57,7 @@ func _on_dropdown_range_changed(new_value:int):
 #endregion
 
 
-#func on_piece_enter(board, piece, from_tile, to_tile) -> void:
+#func on_piece_enter(piece, from_tile, to_tile) -> void:
 #	if from_tile == null or to_tile == null:
 #		return
 #
@@ -72,13 +72,13 @@ func _on_dropdown_range_changed(new_value:int):
 #	var next_pos: Vector2i = to_tile.data.board_position + delta
 #
 #		return
-#	if next_pos.y < 0 or next_pos.y >= board.data.file_count:
+#	if next_pos.y < 0 or next_pos.y >= Match.board_data.file_count:
 #		return
 #
-#	var next_tile = board.data.tile_array[board.data.get_index(next_pos.x, next_pos.y)]
+#	var next_tile = Match.board_data.tile_array[Match.board_data.get_index(next_pos.x, next_pos.y)]
 #	if next_tile == null:
 #		return
 #	if next_tile.occupant != null:
 #		return
 #
-#	board.perform_move(Move.new(to_tile, next_tile))
+#	Match.board_object.perform_move(Move.new(to_tile, next_tile))

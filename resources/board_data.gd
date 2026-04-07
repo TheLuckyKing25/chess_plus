@@ -7,10 +7,6 @@ const MAX_TURN_TRANSITION_LENGTH_MSEC:float = 2000 # 2 Seconds
 const TURN_TRANSITION_SPEED: float = CAMERA_ROTATION_SPEED/MAX_TURN_TRANSITION_LENGTH_MSEC
 
 
-var player_one:Player
-var player_two:Player
-
-
 var rank_count: int = 8
 var file_count: int = 8
 
@@ -25,30 +21,15 @@ var legal_moves: MoveList
 var FEN_board_state: FEN
 
 
-var is_match_timed: bool = false
-
-
 func _init(
-		player_one:Player = load("uid://dxvl1tq0afyxx"),
-		player_two:Player = load("uid://dc7e5u71wtrpp"),
 		rank_count:int = 8,
 		file_count:int = 8,
 		) -> void:
-	player_one.promotion_rank = rank_count - 1
-	player_two.promotion_rank = 0
-	self.player_one = player_one
-	self.player_two = player_two
+	Match.player_one.promotion_rank = rank_count - 1
+	Match.player_two.promotion_rank = 0
 	self.rank_count = rank_count
 	self.file_count = file_count
 
-
-func get_opponent_of(player: Player) -> Player:
-	if player == player_one:
-		return player_two
-	elif player == player_two:
-		return player_one
-	else:
-		return null
 
 func get_index(rank:int,file:int) -> int:
 	return (file) + ((rank) * file_count)

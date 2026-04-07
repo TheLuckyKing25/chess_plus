@@ -30,6 +30,7 @@ static func new_tile(index: int):
 
 	var new_tile:TileObject = TILE_SCENE.instantiate()
 	new_tile.data = new_tile_data
+	Match.add_tile(new_tile)
 	return new_tile
 
 func _ready() -> void:
