@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bmes5xsco1bk5"]
 
-[ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://resources/player.gd" id="1_qhqgy"]
-[ext_resource type="Script" uid="uid://dk4hgujlft1oj" path="res://scripts/classes/time_control.gd" id="2_qhqgy"]
+[ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://scripts/player.gd" id="1_qhqgy"]
+[ext_resource type="Script" uid="uid://dk4hgujlft1oj" path="res://scripts/time_control.gd" id="2_qhqgy"]
 
 [node name="Player" type="Node" node_paths=PackedStringArray("camera_camera", "timer")]
 script = ExtResource("1_qhqgy")

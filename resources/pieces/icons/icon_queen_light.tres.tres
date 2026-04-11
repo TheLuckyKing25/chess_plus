@@ -1,6 +1,7 @@
 [gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://bml5th0brus6r"]
 
-[ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/icons/Pieces.png" id="1_6ij4g"]
+[ext_resource type="Texture2D" uid="uid://ckbitvv780t8w" path="res://assets/icons/piece_icons.png" id="1_6ij4g"]
+
 
 
 [resource]

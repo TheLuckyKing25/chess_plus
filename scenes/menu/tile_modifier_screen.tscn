@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b1twmfuyqv1lx"]
 
-[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://assets/theme/base_theme.tres" id="1_xor8o"]
+[ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://resources/themes/base_theme.tres" id="1_xor8o"]
 [ext_resource type="Script" uid="uid://c7d4npped4gtd" path="res://scripts/menu/tile_modifier_screen.gd" id="2_hqvri"]
 
 [node name="TileModifierScreen" type="Control"]

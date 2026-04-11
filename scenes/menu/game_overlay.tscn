@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://b2b5f3ejhqp35"]
 
-[ext_resource type="Theme" uid="uid://dx603rimqml12" path="res://assets/theme/game_overlay_theme.tres" id="1_51kpi"]
+[ext_resource type="Theme" uid="uid://dx603rimqml12" path="res://resources/themes/game_overlay_theme.tres" id="1_51kpi"]
 [ext_resource type="Script" uid="uid://btrxdnasph4pi" path="res://scripts/menu/game_overlay.gd" id="1_xagep"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oxcsm"]

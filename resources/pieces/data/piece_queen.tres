@@ -1,8 +1,9 @@
 [gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://bccbxx63wac0s"]
 
-[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://resources/pieces/piece_data.gd" id="1_0qc3o"]
+[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://scripts/pieces/piece_data.gd" id="1_0qc3o"]
 [ext_resource type="Resource" uid="uid://q8akjmkx2n2y" path="res://resources/pieces/movement/movement_queen.tres" id="1_xgeyv"]
-[ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://resources/pieces/mesh/mesh_queen.obj" id="2_bdx5n"]
+[ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/mesh/mesh_queen.obj" id="2_bdx5n"]
+
 
 [resource]
 script = ExtResource("1_0qc3o")

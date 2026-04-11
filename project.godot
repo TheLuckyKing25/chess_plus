@@ -17,14 +17,14 @@ config/icon="res://icon.svg"
 
 [audio]
 
-buses/default_bus_layout="res://assets/default_bus_layout.tres"
+buses/default_bus_layout="res://resources/default_bus_layout.tres"
 
 [autoload]
 
-ConfigFileHandler="*res://scripts/config_file_handler.gd"
-NetworkManager="*res://scripts/network_manager.gd"
-Match="*res://resources/match.gd"
-NetworkSync="*res://scripts/network_sync.gd"
+ConfigFileHandler="*res://scripts/autoloads/config_file_handler.gd"
+NetworkManager="*res://scripts/autoloads/network_manager.gd"
+Match="*res://scripts/autoloads/match.gd"
+NetworkSync="*res://scripts/autoloads/network_sync.gd"
 
 [debug]
 

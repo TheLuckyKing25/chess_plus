@@ -1,8 +1,9 @@
 [gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://b12vykyoafcox"]
 
 [ext_resource type="Resource" uid="uid://5k73t3ur6po5" path="res://resources/pieces/movement/movement_bishop.tres" id="1_2odbt"]
-[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://resources/pieces/piece_data.gd" id="1_6aq0l"]
-[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://resources/pieces/mesh/mesh_bishop.obj" id="2_tk7f8"]
+[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://scripts/pieces/piece_data.gd" id="1_6aq0l"]
+[ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://assets/mesh/mesh_bishop.obj" id="2_tk7f8"]
+
 
 [resource]
 resource_local_to_scene = true
