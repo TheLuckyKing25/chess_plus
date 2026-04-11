@@ -77,12 +77,6 @@ func disconnect_from_pause_button(function: Callable):
 	%PauseButton.pressed.disconnect(function)
 
 
-# When Escape pressed: pause game or resume game, depenent on state.
-#func _input(event) -> void:
-	#if event.is_action_pressed("ui_cancel") and !get_tree().paused:
-		#pass
-
-
 func _on_pause_menu_leave_button_pressed() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
