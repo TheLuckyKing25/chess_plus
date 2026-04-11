@@ -21,6 +21,8 @@ var mouseover_material: StandardMaterial3D
 		if data:
 			remove_from_group(data.name)
 			new_data.index = data.index
+			new_data.player = data.player
+
 		add_to_group(new_data.name)
 		$Piece_Mesh.mesh = new_data.object_mesh
 
@@ -28,7 +30,6 @@ var mouseover_material: StandardMaterial3D
 		mouseover_material = piece_material.next_pass
 		outline_material = mouseover_material.next_pass
 		outline_material.albedo_color = Color(0,0,0,0)
-
 		piece_material.albedo_color = new_data.player.color
 		data = new_data
 
@@ -45,23 +46,31 @@ static func new_piece(piece_type: PieceData, player_owner:Player, max_move_dista
 	new_piece_data.index = index
 
 	new_piece.data = new_piece_data
-	new_piece_data.player.add_piece(new_piece)
+	new_piece.data.player.add_piece(new_piece)
 	Match.add_piece(new_piece)
 	return new_piece
 
 
 func promote(piece_name: String):
-	data.player.remove_piece(self)
+	var new_data: PieceData
 	match piece_name:
 		"Bishop":
-			data = load("uid://b12vykyoafcox")
+			new_data = load("uid://b12vykyoafcox")
 		"Knight":
-			data = load("uid://brd0i5dnuyf6l")
+			new_data = load("uid://brd0i5dnuyf6l")
 		"Rook":
-			data = load("uid://bccbxx63wac0s")
+			new_data = load("uid://b5r63cf4oeak3")
 		"Queen":
-			data = load("uid://b5r63cf4oeak3")
+			new_data = load("uid://bccbxx63wac0s")
+
+	Match.remove_piece(self)
+	data.player.remove_piece(self)
+
+	data = new_data
+
+	Match.add_piece(self)
 	data.player.add_piece(self)
+
 	promoted.emit()
 
 
@@ -98,12 +107,12 @@ func _ready() -> void:
 
 	piece_material.albedo_color = data.player.color
 	add_to_group(data.player.name)
-	match data.player.name:
-		"Player_One":
-			remove_from_group("Player_Two")
+	match data.player.name.to_lower():
+		"white":
+			remove_from_group("white")
 			rotate_y(PI)
-		"Player_Two":
-			remove_from_group("Player_One")
+		"black":
+			remove_from_group("black")
 
 
 func _captured():

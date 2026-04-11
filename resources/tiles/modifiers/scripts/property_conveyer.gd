@@ -32,16 +32,16 @@ func on_turn_end(tile) -> void:
 	var offset: Vector2i = Movement.neighboring_tiles[direction]
 	var next_pos: Vector2i = tile.data.board_position + offset
 
-	if next_pos.x < 0 or next_pos.x >= Match.board_data.rank_count:
+	if next_pos.x < 0 or next_pos.x >= Match.board.data.rank_count:
 		return
-	if next_pos.y < 0 or next_pos.y >= Match.board_data.file_count:
+	if next_pos.y < 0 or next_pos.y >= Match.board.data.file_count:
 		return
 
-	var next_tile = Match.board_data.tile_array[Match.board_data.get_index(next_pos.x, next_pos.y)]
+	var next_tile = Match.board.data.tile_array[Match.board.data.get_index(next_pos.x, next_pos.y)]
 	if next_tile == null:
 		return
 	if next_tile.occupant != null:
 		return
 
-	Match.board_object.perform_move(Move.new(tile, next_tile))
-	Match.board_object.end_turn_modifier_moved = true
+	Match.board.perform_move(Move.new(tile, next_tile))
+	Match.board.end_turn_modifier_moved = true

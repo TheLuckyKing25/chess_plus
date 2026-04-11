@@ -1,5 +1,5 @@
 class_name TimeControl
-extends Node
+extends Timer
 
 static var max_time_sec: float = 0
 
@@ -13,14 +13,12 @@ var label: Label = null:
 		if new_label != null:
 			new_label.text = time_string
 
-var object: Timer = null
 
 
-func _init(timer:Timer, time_sec: float) -> void:
-	object = timer
+func set_timer(time_sec: float) -> void:
 	_set_time_string(time_sec)
-	object.paused = true
-	object.start(time_sec)
+	paused = true
+	start(time_sec)
 
 
 func _set_time_string(time_sec:float) -> void:
@@ -63,30 +61,30 @@ func _get_time_units(time_sec:float) -> Dictionary[String,int]:
 		}
 
 func _update_timer_ui():
-	_set_time_string(object.time_left)
+	_set_time_string(time_left)
 	if label != null:
 		label.text = time_string
 
 func increase_by_increment():
-	if object.time_left + increment_sec > max_time_sec:
-		object.start(max_time_sec)
+	if time_left + increment_sec > max_time_sec:
+		start(max_time_sec)
 	else:
-		object.start(object.time_left + increment_sec)
+		start(time_left + increment_sec)
 
 	_update_timer_ui()
 
 func reduce_by(seconds: float) -> void:
-	var new_time: float = max(object.time_left - seconds, 0.0)
-	object.start(new_time)
-	if object.paused:
-		object.paused = true
+	var new_time: float = max(time_left - seconds, 0.0)
+	start(new_time)
+	if paused:
+		paused = true
 
 	_update_timer_ui()
 
 func stop_timer():
-	object.paused = true
+	paused = true
 	_update_timer_ui()
 
 func start_timer():
-	object.paused = false
+	paused = false
 	_update_timer_ui()

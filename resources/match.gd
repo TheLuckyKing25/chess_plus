@@ -1,55 +1,79 @@
-class_name Match
-extends RefCounted
+extends Node
 
-static var board_data:BoardData
+signal game_state_changed(game_state: int)
 
+const CAMERA_ROTATION_SPEED:int = 5
+const TURN_TRANSITION_DELAY_MSEC:int = 500 # time to wait before starting transition
+const MAX_TURN_TRANSITION_LENGTH_MSEC:float = 2000 # 2 Seconds
+const TURN_TRANSITION_SPEED: float = CAMERA_ROTATION_SPEED/MAX_TURN_TRANSITION_LENGTH_MSEC
 
-static var board_object:BoardObject
+enum GameState {
+	BOARD_CUSTOMIZATION,
+	GAMEPLAY,
+}
 
+var	network_invite_info: Dictionary
 
-static var player_one: Player = load("uid://dxvl1tq0afyxx")
-static var player_one_camera
+var board: BoardObject
 
-static var player_two: Player = load("uid://dc7e5u71wtrpp")
-static var player_two_camera
+var current_game_state: GameState = GameState.BOARD_CUSTOMIZATION:
+	set(new_game_state):
+		game_state_changed.emit(new_game_state)
+		current_game_state = new_game_state
 
 # move history
-static var move_history:MoveList
+var move_history:MoveList
 
+var time_turn_ended:int = 0
+var time_elapsed_since_turn_ended:int = 0
 
-static var is_timed: bool = false
+var turn_num: int = 0
 
+var is_board_generated: bool = false
+var is_timed: bool = false
 
-static var tiles:Dictionary[TileObject,TileDataChess] = {
+var is_promotion_occuring: bool = false
+
+var promotion_menu_list: Array = [
+	"Bishop",
+	"Knight",
+	"Rook",
+	"Queen"
+	]
+
+var players: Dictionary[String,Player] = {
+}
+
+var tiles:Dictionary[TileObject,TileDataChess] = {
 
 }
 
 
-static var pieces: Dictionary[PieceObject, PieceData] = {
+var pieces: Dictionary[PieceObject, PieceData] = {
 
 }
 
 
-static func add_tile(tile_object:TileObject):
+func add_tile(tile_object:TileObject):
 	tiles[tile_object] = tile_object.data
 
 
-static func remove_tile(tile_object:TileObject):
+func remove_tile(tile_object:TileObject):
 	tiles.erase(tile_object)
 
 
-static func add_piece(piece_object:PieceObject):
+func add_piece(piece_object:PieceObject):
 	pieces[piece_object] = piece_object.data
 
 
-static func remove_piece(piece_object:PieceObject):
+func remove_piece(piece_object:PieceObject):
 	tiles.erase(piece_object)
 
 
-static func get_opponent_of(player: Player) -> Player:
-	if player == player_one:
-		return player_two
-	elif player == player_two:
-		return player_one
+func get_opponent_of(player: Player) -> Player:
+	if player == Match.players.white:
+		return Match.players.black
+	elif player == Match.players.black:
+		return Match.players.white
 	else:
 		return null

@@ -2,7 +2,8 @@ class_name StartMenuState
 extends UIState
 
 func enter():
-	print_debug("enter ", name)
+	print_rich("[b][color=green]Entered[/color]: [/b]",name)
+	#print_debug("enter ", name)
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
 
@@ -14,11 +15,10 @@ func enter():
 			Callable(self,"on_exit_pressed"),
 			)
 
-	ui_root.add_child(instantiated_scene)
+	add_child(instantiated_scene)
 
 
 func exit():
-	print_debug("exit ", name)
 	instantiated_scene.disconnect_from_scene(
 			Callable(self,"on_new_match_pressed"),
 			Callable(self,"on_join_match_pressed"),
@@ -27,11 +27,13 @@ func exit():
 			Callable(self,"on_exit_pressed"),
 			)
 
-	ui_root.remove_child(instantiated_scene)
+	remove_child(instantiated_scene)
+	#print_debug("exit ", name)
+	print_rich("[b][color=red]Exited[/color]: [/b]",name)
 
 
 func on_new_match_pressed():
-	transitioned.emit(self, "MatchCustomizationState")
+	transitioned.emit(self, "MatchCustomizationStateM")
 
 
 func on_join_match_pressed():

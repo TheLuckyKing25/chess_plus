@@ -1,12 +1,14 @@
-# Credit to Bitlytic on Youtube: https://youtu.be/ow_Lum-Agbs?si=6jL0ZSBThzB-BUz7
-extends Node
+class_name StateMachineState
+extends State
 
 @export var initial_state: State
 
 var current_state: State
 var states: Dictionary = {}
 
-func _ready() -> void:
+func enter() -> void:
+	print_rich("[b][color=green]Entered[/color]: [/b]",name)
+	#print_debug("enter ", name)
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child
@@ -16,15 +18,20 @@ func _ready() -> void:
 		initial_state.enter()
 		current_state = initial_state
 
-func _process(delta: float) -> void:
-	if current_state:
-		current_state.update(delta)
+func exit() -> void:
+	current_state.exit()
+	#print_debug("exit ", name)
+	print_rich("[b][color=red]Exited[/color]: [/b]",name)
 
-func _physics_process(delta: float) -> void:
+func update(_delta: float) -> void:
 	if current_state:
-		current_state.physics_update(delta)
+		current_state.update(_delta)
 
-func _input(event) -> void:
+func physics_update(_delta: float) -> void:
+	if current_state:
+		current_state.physics_update(_delta)
+
+func input(event) -> void:
 	if current_state:
 		current_state.input(event)
 
@@ -34,6 +41,7 @@ func on_child_transition(state:State, new_state_name:String):
 
 	var new_state = states.get(new_state_name.to_lower())
 	if not new_state:
+		transitioned.emit(self,new_state_name)
 		return
 
 	if current_state:

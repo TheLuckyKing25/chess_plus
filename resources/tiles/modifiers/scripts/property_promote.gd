@@ -11,4 +11,4 @@ func on_piece_enter(piece, from_tile, to_tile) -> void:
 	if not piece.data.can_promote:
 		return
 
-	Match.board_object._perform_promotion(piece)
+	Match.board.promotion_verified.emit(piece)

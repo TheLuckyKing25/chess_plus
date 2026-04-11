@@ -11,7 +11,7 @@ func on_piece_enter(piece, from_tile, to_tile) -> void:
 	if to_tile == null:
 		return
 
-	Match.board_object._toggle_gates_in_radius(to_tile, radius)
+	Match.board._toggle_gates_in_radius(to_tile, radius)
 
 func activate(tile) -> void:
-	Match.board_object._toggle_gates_in_radius(tile, radius)
+	Match.board._toggle_gates_in_radius(tile, radius)

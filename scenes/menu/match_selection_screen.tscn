@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=4 uid="uid://bmtcaraovyhdt"]
 
-[ext_resource type="Script" uid="uid://svm21ghbijp" path="res://scripts/menu/gamemode_selection_menu.gd" id="1_ltfp2"]
+[ext_resource type="Script" uid="uid://svm21ghbijp" path="res://scripts/menu/match_customization_screen.gd" id="1_ltfp2"]
 
 [sub_resource type="Gradient" id="Gradient_hlv2s"]
 offsets = PackedFloat32Array(0, 0.00680274, 1)

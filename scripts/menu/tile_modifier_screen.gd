@@ -24,25 +24,39 @@ func _ready() -> void:
 	for modifier in MODIFIER_LOOKUP.keys():
 		%ModiferList.add_item(modifier)
 
+func connect_to_scene_buttons(
+		back_pressed: Callable,
+		continue_pressed: Callable,
+		host_pressed: Callable
+		):
+	%BackButton.pressed.connect(back_pressed)
+	%ContinueButton.pressed.connect(continue_pressed)
+	%HostButton.pressed.connect(host_pressed)
+
+func disconnect_from_scene_buttons(
+		back_pressed: Callable,
+		continue_pressed: Callable,
+		host_pressed: Callable
+		):
+	%BackButton.pressed.disconnect(back_pressed)
+	%ContinueButton.pressed.disconnect(continue_pressed)
+	%HostButton.pressed.disconnect(host_pressed)
+
+
 func _connect_to_back_button(function:Callable):
 	%BackButton.pressed.connect(function)
-
 
 func _connect_to_continue_button(function:Callable):
 	%ContinueButton.pressed.connect(function)
 
-
 func _connect_to_host_button(function: Callable):
 	%HostButton.pressed.connect(function)
-
 
 func _disconnect_from_back_button(function:Callable):
 	%BackButton.pressed.disconnect(function)
 
-
 func _disconnect_from_continue_button(function:Callable):
 	%ContinueButton.pressed.disconnect(function)
-
 
 func _disconnect_from_host_button(function: Callable):
 	%HostButton.pressed.disconnect(function)

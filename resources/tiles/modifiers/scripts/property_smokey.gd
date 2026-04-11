@@ -16,4 +16,4 @@ func on_piece_enter(piece, from_tile, to_tile) -> void:
 		activated_by_player = piece.data.player
 	else:
 		activated_by_player = null
-	Match.board_object._update_smokey_visuals()
+	Match.board._update_smokey_visuals()

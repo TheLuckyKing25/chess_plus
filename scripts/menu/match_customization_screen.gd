@@ -7,37 +7,41 @@ signal board_verified(rank_count: int, file_count: int, FEN_notation: FEN)
 signal start_button_pressed()
 signal host_button_pressed()
 
-const WAIT_SCREEN = preload("uid://crgfep2xyg10g")
-
-var wait_screen: Node
 
 var row_num: int = 8
 var column_num: int = 8
 
-func _ready() -> void:
-	if NetworkManager.is_online and NetworkManager.my_player == 1:
-		queue_free()
-		return
+#func _ready() -> void:
+	#if NetworkManager.is_online and NetworkManager.my_player == 1:
+		#queue_free()
+		#return
+
+func connect_to_scene_buttons(
+		back_pressed: Callable,
+		continue_pressed: Callable,
+		start_pressed: Callable,
+		host_pressed: Callable,
+		):
+	%BackButton.pressed.connect(back_pressed)
+	%ContinueButton.pressed.connect(continue_pressed)
+	%StartButton.pressed.connect(start_pressed)
+	%HostButton.pressed.connect(host_pressed)
+
+func disconnect_from_scene_buttons(
+		back_pressed: Callable,
+		continue_pressed: Callable,
+		start_pressed: Callable,
+		host_pressed: Callable,
+		):
+	%BackButton.pressed.disconnect(back_pressed)
+	%ContinueButton.pressed.disconnect(continue_pressed)
+	%StartButton.pressed.disconnect(start_pressed)
+	%HostButton.pressed.disconnect(host_pressed)
 
 func _on_host_game_button_pressed() -> void:
-	host_button_pressed.emit(self)
-	var result = NetworkManager.host_game()
-	if result.is_empty():
-		return
-
-	var wait_layer = CanvasLayer.new()
-	wait_layer.layer = 10
-	add_child(wait_layer)
-
-	wait_screen = WAIT_SCREEN.instantiate()
-	wait_layer.add_child(wait_screen)
-	wait_screen.set_ip_label(result["ip"])
-	wait_screen.set_invite_code_label(result["code"])
-
-	NetworkManager.connected_to_game.connect(_on_opponent_connected)
+	host_button_pressed.emit()
 
 func _on_opponent_connected() -> void:
-	wait_screen.queue_free()
 	board_verified.emit(row_num, column_num, FEN.new(%BoardStateFEN.text))
 	if %TimeControl/CheckBox.button_pressed:
 		time_control_selected.emit(%TimeControl/MinutesPerPlayer/SpinBox.value * 60, %TimeControl/IncrementPerMove/SpinBox.value)

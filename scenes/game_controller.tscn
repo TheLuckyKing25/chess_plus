@@ -1,0 +1,232 @@
+[gd_scene load_steps=36 format=3 uid="uid://c5sp4xfh2lsyp"]
+
+[ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/classes/state/state_machine.gd" id="1_twqac"]
+[ext_resource type="Script" uid="uid://cojx763b4281c" path="res://scripts/classes/state/ui_states/start_menu_state.gd" id="2_25rj4"]
+[ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="2_py7vm"]
+[ext_resource type="PackedScene" uid="uid://2aw5r4ibxl8k" path="res://scenes/menu/start_screen.tscn" id="3_wksuf"]
+[ext_resource type="Script" uid="uid://da7na1h6kx0q0" path="res://scripts/classes/state/state_machine_state.gd" id="4_25rj4"]
+[ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/board.tscn" id="4_fpu5w"]
+[ext_resource type="Script" uid="uid://dtw67qk6xuwgn" path="res://scripts/classes/state/ui_states/match_customization_state.gd" id="4_wf0ff"]
+[ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/match_selection_screen.tscn" id="5_vi7lc"]
+[ext_resource type="Script" uid="uid://b1ssj14vctijh" path="res://scripts/classes/state/turn_states/player_turn.gd" id="6_3d517"]
+[ext_resource type="Script" uid="uid://dsliyrikprudw" path="res://scripts/classes/state/ui_states/tile_modifier_selection_state.gd" id="6_kea5x"]
+[ext_resource type="PackedScene" uid="uid://b1twmfuyqv1lx" path="res://scenes/menu/tile_modifier_screen.tscn" id="7_13gk1"]
+[ext_resource type="Script" uid="uid://befv64o3i2v02" path="res://scripts/classes/state/turn_states/turn_transition.gd" id="7_d2e6m"]
+[ext_resource type="Script" uid="uid://cm1hbc3n7piww" path="res://scripts/classes/state/ui_states/game_overlay_state.gd" id="8_endrn"]
+[ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/game_overlay.tscn" id="9_shnkw"]
+[ext_resource type="Script" uid="uid://cj0pks1ybadwl" path="res://scripts/classes/state/ui_states/pause_menu_state.gd" id="10_py7vm"]
+[ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/menu/pause_screen.tscn" id="11_1m60t"]
+[ext_resource type="Script" uid="uid://puhj5bsjchm4" path="res://scripts/classes/state/ui_states/wait_state.gd" id="12_fpu5w"]
+[ext_resource type="PackedScene" uid="uid://crgfep2xyg10g" path="res://scenes/menu/wait_screen.tscn" id="13_3d517"]
+[ext_resource type="Script" uid="uid://jao881ibcsnv" path="res://scripts/classes/state/ui_states/join_state.gd" id="14_d2e6m"]
+[ext_resource type="PackedScene" uid="uid://cvr8wyhalupas" path="res://scenes/menu/join_menu.tscn" id="15_u8mor"]
+[ext_resource type="Script" uid="uid://c8i8j3hcg4xll" path="res://scripts/classes/state/ui_states/loading_state.gd" id="17_wksuf"]
+[ext_resource type="PackedScene" uid="uid://v4i5knax4g12" path="res://scenes/menu/loading_screen.tscn" id="18_wf0ff"]
+[ext_resource type="PackedScene" uid="uid://bmes5xsco1bk5" path="res://scenes/player.tscn" id="20_kea5x"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_noarx"]
+flip_faces = true
+uv2_padding = 1.08
+radius = 37.0
+height = 75.0
+radial_segments = 16
+rings = 8
+
+[sub_resource type="Gradient" id="Gradient_hlv2s"]
+offsets = PackedFloat32Array(0, 0.00680274, 1)
+colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_q1h0t"]
+gradient = SubResource("Gradient_hlv2s")
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_noarx"]
+shading_mode = 0
+albedo_color = Color(0.74978, 0.74978, 0.74978, 1)
+albedo_texture = SubResource("GradientTexture2D_q1h0t")
+disable_receive_shadows = true
+billboard_mode = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hlv2s"]
+top_radius = 6.5
+bottom_radius = 6.5
+height = 0.25
+radial_segments = 32
+rings = 5
+
+[sub_resource type="Gradient" id="Gradient_5gvbh"]
+colors = PackedColorArray(0.47788, 0.47788, 0.47788, 1, 0.834614, 0.834614, 0.834614, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_hlv2s"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hlv2s"]
+resource_local_to_scene = true
+height = 2048
+in_3d_space = true
+color_ramp = SubResource("Gradient_5gvbh")
+noise = SubResource("FastNoiseLite_hlv2s")
+
+[sub_resource type="Gradient" id="Gradient_q1h0t"]
+colors = PackedColorArray(0.359069, 0.359069, 0.359069, 1, 1, 1, 1, 1)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5gvbh"]
+height = 2048
+in_3d_space = true
+as_normal_map = true
+bump_strength = 122.5
+color_ramp = SubResource("Gradient_q1h0t")
+noise = SubResource("FastNoiseLite_hlv2s")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_q1h0t"]
+height = 2048
+in_3d_space = true
+bump_strength = 122.5
+color_ramp = SubResource("Gradient_q1h0t")
+noise = SubResource("FastNoiseLite_hlv2s")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hlv2s"]
+albedo_color = Color(0.796913, 0.58348, 0.468405, 1)
+albedo_texture = SubResource("NoiseTexture2D_hlv2s")
+roughness_texture = SubResource("NoiseTexture2D_q1h0t")
+normal_enabled = true
+normal_scale = 0.1
+normal_texture = SubResource("NoiseTexture2D_5gvbh")
+
+[node name="GameController" type="Node"]
+
+[node name="White" parent="." instance=ExtResource("20_kea5x")]
+color = Color(0.8, 0.8, 0.8, 1)
+parity = 1
+camera_distance_from_subject = 10.0
+camera_pitch = -50.0
+
+[node name="Black" parent="." instance=ExtResource("20_kea5x")]
+color = Color(0.2, 0.2, 0.2, 1)
+parity = -1
+direction_parity = 4
+camera_distance_from_subject = 10.0
+camera_yaw = 180.0
+camera_pitch = -50.0
+
+[node name="GameController3D" type="Node3D" parent="."]
+script = ExtResource("2_py7vm")
+
+[node name="OverheadCamera" type="Camera3D" parent="GameController3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -5.331, 13.48, 0)
+projection = 1
+current = true
+size = 13.0
+
+[node name="Sky" type="MeshInstance3D" parent="GameController3D"]
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("SphereMesh_noarx")
+surface_material_override/0 = SubResource("StandardMaterial3D_noarx")
+
+[node name="Table" type="MeshInstance3D" parent="GameController3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.2754, 0)
+mesh = SubResource("CylinderMesh_hlv2s")
+surface_material_override/0 = SubResource("StandardMaterial3D_hlv2s")
+
+[node name="Board" parent="GameController3D/Table" instance=ExtResource("4_fpu5w")]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.115, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="GameController3D"]
+transform = Transform3D(1, 0, 0, 0, -0.00268785, 0.999996, 0, -0.999996, -0.00268785, 0, 12.0144, 0)
+light_color = Color(0.99, 0.938025, 0.9009, 1)
+light_energy = 10.0
+light_indirect_energy = 2.0
+light_volumetric_fog_energy = 0.0
+shadow_enabled = true
+shadow_opacity = 0.7
+spot_range = 24.0741
+spot_angle = 72.1925
+
+[node name="TurnStateMachine" type="Node" parent="GameController3D" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_twqac")
+initial_state = NodePath("WhiteTurn")
+
+[node name="BlackTurn" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
+script = ExtResource("6_3d517")
+player = NodePath("../../../Black")
+board = NodePath("../../Table/Board")
+next_state = NodePath("../BlackToWhite")
+
+[node name="BlackToWhite" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
+script = ExtResource("7_d2e6m")
+previous_state = NodePath("../BlackTurn")
+initial_rotation_degree = 180
+next_state = NodePath("../WhiteTurn")
+
+[node name="WhiteTurn" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
+script = ExtResource("6_3d517")
+player = NodePath("../../../White")
+board = NodePath("../../Table/Board")
+next_state = NodePath("../WhiteToBlack")
+
+[node name="WhiteToBlack" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
+script = ExtResource("7_d2e6m")
+previous_state = NodePath("../WhiteTurn")
+next_state = NodePath("../BlackTurn")
+
+[node name="ControllerUI" type="Control" parent="." node_paths=PackedStringArray("initial_state")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_twqac")
+initial_state = NodePath("StartMenuState")
+
+[node name="StartMenuState" type="Node" parent="ControllerUI"]
+script = ExtResource("2_25rj4")
+scene = ExtResource("3_wksuf")
+
+[node name="MatchCustomizationStateM" type="Node" parent="ControllerUI" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_25rj4")
+initial_state = NodePath("MatchCustomizationState")
+
+[node name="MatchCustomizationState" type="Node" parent="ControllerUI/MatchCustomizationStateM"]
+script = ExtResource("4_wf0ff")
+scene = ExtResource("5_vi7lc")
+
+[node name="WaitState" type="Node" parent="ControllerUI/MatchCustomizationStateM" node_paths=PackedStringArray("previous_state")]
+script = ExtResource("12_fpu5w")
+previous_state = NodePath("../MatchCustomizationState")
+scene = ExtResource("13_3d517")
+
+[node name="TileModifierSelectionStateM" type="Node" parent="ControllerUI" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_25rj4")
+initial_state = NodePath("TileModifierSelectionState")
+
+[node name="TileModifierSelectionState" type="Node" parent="ControllerUI/TileModifierSelectionStateM"]
+script = ExtResource("6_kea5x")
+scene = ExtResource("7_13gk1")
+
+[node name="WaitState" type="Node" parent="ControllerUI/TileModifierSelectionStateM" node_paths=PackedStringArray("previous_state")]
+script = ExtResource("12_fpu5w")
+previous_state = NodePath("../TileModifierSelectionState")
+scene = ExtResource("13_3d517")
+
+[node name="GameOverlayState" type="Node" parent="ControllerUI"]
+script = ExtResource("8_endrn")
+scene = ExtResource("9_shnkw")
+
+[node name="PauseMenuState" type="Node" parent="ControllerUI"]
+script = ExtResource("10_py7vm")
+scene = ExtResource("11_1m60t")
+
+[node name="JoinState" type="Node" parent="ControllerUI"]
+script = ExtResource("14_d2e6m")
+scene = ExtResource("15_u8mor")
+
+[node name="LoadingState" type="Node" parent="ControllerUI"]
+script = ExtResource("17_wksuf")
+scene = ExtResource("18_wf0ff")
+
+[connection signal="game_state_changed" from="GameController3D/Table/Board" to="GameController3D" method="_on_board_game_state_changed"]
+[connection signal="ready" from="GameController3D/Table/Board" to="GameController3D" method="_on_board_ready"]

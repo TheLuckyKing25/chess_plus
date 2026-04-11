@@ -22,16 +22,9 @@ var placement_tree: Dictionary = {
 	"16x16 Board": {
 		"Doubled layout": "rnbbnrbqkbrnbbnr/pppppppppppppppp/88/88/88/88/88/88/88/88/88/88/88/88/PPPPPPPPPPPPPPPP/RNBBNRBQKBRNBBNR w KQkq - 0 1",
 		"Centered layout": "88/88/88/88/4rnbqkbnr4/4pppppppp4/88/88/88/88/4PPPPPPPP4/4RNBQKBNR4/88/88/88/88 w KQkq - 0 1"
-
 	}
 }
 
-var promotion_menu_list: Array = [
-	"Bishop",
-	"Knight",
-	"Rook",
-	"Queen"
-]
 
 var move_num: int = 1
 
@@ -50,7 +43,7 @@ func _ready() -> void:
 			new_item.set_metadata(0, placement_tree[section])
 			new_item.set_selectable(0,true)
 
-	for piecetype in promotion_menu_list:
+	for piecetype in Match.promotion_menu_list:
 		%PromotionList.add_item(piecetype)
 
 func add_placements_to_section(item: TreeItem, section:String):
@@ -59,6 +52,7 @@ func add_placements_to_section(item: TreeItem, section:String):
 		new_item.set_text(0,placement)
 		new_item.set_metadata(0, placement_tree[section][placement])
 		new_item.set_selectable(0,true)
+
 
 func show_checkmate(winner:Player):
 	$Checkmate.show()
@@ -72,21 +66,21 @@ func _on_piece_placement_list_item_selected() -> void:
 
 
 func add_move(move:	Move):
-	$Rightside/HBoxContainer/RightsideMenu/Panel/MarginContainer/ItemList.add_item(str(move_num) + ") " + move.algebraic_notation,null,false)
+	$Rightside/HBoxContainer/RightsideMenu/Panel/MarginContainer/ItemList.add_item(str(move_num) + ") " + AlgebraicNotaion.get_notation(move),null,false)
 	move_num += 1
 
 
-func _connect_to_pause_button(function: Callable):
+func connect_to_pause_button(function: Callable):
 	%PauseButton.pressed.connect(function)
 
-func _disconnect_from_pause_button(function: Callable):
+func disconnect_from_pause_button(function: Callable):
 	%PauseButton.pressed.disconnect(function)
 
 
 # When Escape pressed: pause game or resume game, depenent on state.
-func _input(event) -> void:
-	if event.is_action_pressed("ui_cancel") and !get_tree().paused:
-		pass
+#func _input(event) -> void:
+	#if event.is_action_pressed("ui_cancel") and !get_tree().paused:
+		#pass
 
 
 func _on_pause_menu_leave_button_pressed() -> void:
@@ -117,16 +111,16 @@ func show_timers():
 	%BlackTimer.show()
 
 
-func _get_ui_timer_white():
+func get_ui_timer_white():
 	return %WhiteTimer/MarginContainer/Label
 
 
-func _get_ui_timer_black():
+func get_ui_timer_black():
 	return %BlackTimer/MarginContainer/Label
 
 
 func _on_promotion_list_item_selected(index: int) -> void:
-	promotion_piecetype_selected.emit(promotion_menu_list[index])
+	promotion_piecetype_selected.emit(Match.promotion_menu_list[index])
 
 func _show_promotion_menu(mouse_position:Vector2):
 	$PromotionMenu.show()

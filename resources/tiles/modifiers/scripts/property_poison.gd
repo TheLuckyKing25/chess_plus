@@ -57,5 +57,5 @@ func _on_dropdown_duration_changed(new_value:int):
 
 func on_piece_enter(piece, from_tile, to_tile) -> void:
 	piece.data.is_poisoned = true
-	piece.data.poison_turn_applied = Match.board_object._turn_num
+	piece.data.poison_turn_applied = Match.turn_num
 	piece.data.poison_duration = duration

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmes5xsco1bk5"]
+
+[ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://resources/player.gd" id="1_qhqgy"]
+[ext_resource type="Script" uid="uid://dk4hgujlft1oj" path="res://scripts/classes/time_control.gd" id="2_qhqgy"]
+
+[node name="Player" type="Node" node_paths=PackedStringArray("camera_camera", "timer")]
+script = ExtResource("1_qhqgy")
+camera_camera = NodePath("TwistPivot/PitchPivot/Camera")
+timer = NodePath("TimeControl")
+
+[node name="TwistPivot" type="Node3D" parent="."]
+
+[node name="PitchPivot" type="Node3D" parent="TwistPivot"]
+
+[node name="Camera" type="Camera3D" parent="TwistPivot/PitchPivot"]
+current = true
+fov = 70.0
+
+[node name="TimeControl" type="Timer" parent="."]
+script = ExtResource("2_qhqgy")
+metadata/_custom_type_script = "uid://dk4hgujlft1oj"

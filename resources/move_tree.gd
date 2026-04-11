@@ -17,15 +17,15 @@ func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
 			+ Movement.neighboring_tiles[direction]
 			)
 
-	if (	next_tile_position.x > Match.board_data.rank_count-1
+	if (	next_tile_position.x > Match.board.data.rank_count-1
 			or next_tile_position.x < 0
-			or next_tile_position.y > Match.board_data.file_count-1
+			or next_tile_position.y > Match.board.data.file_count-1
 			or next_tile_position.y < 0
 			):
 		return # next_tile does not exist
 
-	return Match.board_data.tile_array[
-			Match.board_data.get_index(
+	return Match.board.data.tile_array[
+			Match.board.data.get_index(
 					next_tile_position.x,
 					next_tile_position.y
 					)
@@ -48,7 +48,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 				break # current_tile_ptr does not exist
 
 			var move: Move = Move.new(
-				Match.board_data.tile_array[active_piece.data.index],
+				Match.board.data.tile_array[active_piece.data.index],
 				current_tile_ptr)
 
 
@@ -80,14 +80,14 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 					pass #moves.append(move)
 
 			if branch.is_castling:
-				var king_tile: TileObject = Match.board_data.tile_array[Player.current.pieces["King"][0].data.index]
+				var king_tile: TileObject = Match.board.data.tile_array[Player.current.pieces["King"][0].data.index]
 
 				# Get rook tile for current castling side
 				var rook_tile: TileObject
 				if current_tile_ptr.data.board_position > king_tile.data.board_position:
-					rook_tile = Match.board_data.tile_array[Match.board_data.get_index(king_tile.data.rank,Match.board_data.file_count-1)]
+					rook_tile = Match.board.data.tile_array[Match.board.data.get_index(king_tile.data.rank,Match.board.data.file_count-1)]
 				elif current_tile_ptr.data.board_position < king_tile.data.board_position:
-					rook_tile = Match.board_data.tile_array[Match.board_data.get_index(king_tile.data.rank,0)]
+					rook_tile = Match.board.data.tile_array[Match.board.data.get_index(king_tile.data.rank,0)]
 
 				if (	not rook_tile.occupant # if no occupant
 						or not rook_tile.occupant.is_in_group("Rook") # if occupant is not a rook
@@ -103,7 +103,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				var is_empty_between_pieces: bool = true
 				for tile_file in range(king_tile.data.file + range_increment_direction, rook_tile.data.file, range_increment_direction):
-					if Match.board_data.tile_array[Match.board_data.get_index(king_tile.data.rank,tile_file)].occupant:
+					if Match.board.data.tile_array[Match.board.data.get_index(king_tile.data.rank,tile_file)].occupant:
 						is_empty_between_pieces = false
 
 				if not is_empty_between_pieces: # tiles between rook and king are occupied

@@ -72,13 +72,13 @@ func _on_dropdown_range_changed(new_value:int):
 #	var next_pos: Vector2i = to_tile.data.board_position + delta
 #
 #		return
-#	if next_pos.y < 0 or next_pos.y >= Match.board_data.file_count:
+#	if next_pos.y < 0 or next_pos.y >= Match.board.data.file_count:
 #		return
 #
-#	var next_tile = Match.board_data.tile_array[Match.board_data.get_index(next_pos.x, next_pos.y)]
+#	var next_tile = Match.board.data.tile_array[Match.board.data.get_index(next_pos.x, next_pos.y)]
 #	if next_tile == null:
 #		return
 #	if next_tile.occupant != null:
 #		return
 #
-#	Match.board_object.perform_move(Move.new(to_tile, next_tile))
+#	Match.board.perform_move(Move.new(to_tile, next_tile))

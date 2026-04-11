@@ -7,7 +7,7 @@ const SELECT_COLOR:= Color(0, 0.9, 0.9, 1)
 const CHECKED_COLOR:= Color(0.9, 0, 0, 1)
 const CASTLING_COLOR:= Color(1,1,1,1)
 
-@export var player: Player:
+var player: Player:
 	set(new_player):
 		player = new_player
 		if player and movement:

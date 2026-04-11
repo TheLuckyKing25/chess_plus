@@ -2,7 +2,6 @@ extends Control
 
 const SETTINGS_MENU = preload("uid://0fccgu7f77gg")
 const JOIN_MENU = preload("uid://cvr8wyhalupas")
-const GAME_ENVIRONMENT = preload("uid://h7v0gyqyq0h7")
 
 var settings_menu: Node
 var join_menu: Node

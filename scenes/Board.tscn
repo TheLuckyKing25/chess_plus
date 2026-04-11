@@ -31,15 +31,4 @@ volume_db = -70.0
 pitch_scale = 0.75
 bus = &"Game"
 
-[node name="MenuLayer" type="CanvasLayer" parent="."]
-layer = 3
-
-[node name="TimerWhite" type="Timer" parent="."]
-one_shot = true
-ignore_time_scale = true
-
-[node name="TimerBlack" type="Timer" parent="."]
-one_shot = true
-ignore_time_scale = true
-
 [connection signal="ready" from="." to="." method="_on_ready"]

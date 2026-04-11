@@ -4,34 +4,22 @@ extends Node3D
 
 signal turn_changed()
 signal game_state_changed(game_state: int)
-signal _game_overlay_ready()
+signal promotion_verified(piece: PieceObject)
+
+#signal _game_overlay_ready()
 
 
-enum GameState {
-	BoardCustomization,
-	Gameplay
-}
-
-const MATCH_SELECTION_SCREEN:PackedScene = preload("uid://bmtcaraovyhdt")
-const TILE_MODIFIER_MENU:PackedScene = preload("uid://b1twmfuyqv1lx")
-const GAME_OVERLAY: PackedScene = preload("uid://b2b5f3ejhqp35")
-const PAUSE_MENU: PackedScene = preload("uid://dh0xqsvmtokbh")
+#const MATCH_SELECTION_SCREEN:PackedScene = preload("uid://bmtcaraovyhdt")
+#const TILE_MODIFIER_MENU:PackedScene = preload("uid://b1twmfuyqv1lx")
+#const GAME_OVERLAY: PackedScene = preload("uid://b2b5f3ejhqp35")
+#const PAUSE_MENU: PackedScene = preload("uid://dh0xqsvmtokbh")
 const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
-const WAIT_SCREEN: PackedScene = preload("uid://crgfep2xyg10g")
+#const WAIT_SCREEN: PackedScene = preload("uid://crgfep2xyg10g")
 
-
-var match_selection_screen: Node
-var tile_modifier_menu: Node
+#var match_selection_screen: Node
+#var tile_modifier_menu: Node
 var _game_overlay: Node
-var _pause_menu: Node
-
-
-var _current_game_state: GameState = GameState.BoardCustomization
-
-
-var _time_turn_ended:int = 0
-var _time_elapsed_since_turn_ended:int = 0
-var _turn_num: int = 0
+#var _pause_menu: Node
 
 
 var smokey_overlay: Dictionary = {}
@@ -42,17 +30,18 @@ var smokey_pieces: Array[PieceObject] = []
 var data: BoardData
 
 
+@onready var board_base = $BoardBase
 @onready var _piece_capture_audio = $Piece_capture
 @onready var _piece_move_audio = $Piece_move
 
 
 func _ready() -> void:
 	data = BoardData.new()
-	Match.board_object = self
-	Match.board_data = data
+	Match.board = self
+	Match.board.data = data
 
-	Player.current = Match.player_one
-	Player.previous = Match.player_one
+	Player.current = Match.players.white
+	Player.previous = Match.players.white
 
 	if NetworkManager.is_online:
 		NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
@@ -60,7 +49,7 @@ func _ready() -> void:
 	if NetworkManager.is_online and multiplayer.is_server():
 		multiplayer.peer_connected.connect(_on_peer_connected_resync)
 
-	_instantiate_gamemode_selection_menu()
+	#_instantiate_gamemode_selection_menu()
 
 	if NetworkManager.is_online and not multiplayer.is_server():
 		_show_loading_screen()
@@ -79,286 +68,260 @@ func _hide_loading_screen() -> void:
 		loading_layer.queue_free()
 
 func _on_peer_connected_resync(_id: int) -> void:
-	if _current_game_state == GameState.Gameplay:
+	if Match.current_game_state == Match.GameState.GAMEPLAY:
 		await get_tree().create_timer(0.5).timeout
-		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
+		NetworkSync.board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
 		await get_tree().create_timer(0.5).timeout
-		_sync_tile_modifiers.rpc(_serialize_tile_modifiers())
-		_sync_gameplay_start.rpc()
+		NetworkSync.tile_modifiers.rpc(_serialize_tile_modifiers())
+		NetworkSync.gameplay_start.rpc()
 
-func _process(_delta: float) -> void:
-	if Player.previous != Player.current:
-		if _time_turn_ended == 0:
-			_time_turn_ended = Time.get_ticks_msec()
-
-		_time_elapsed_since_turn_ended = (
-				Time.get_ticks_msec()
-				- _time_turn_ended
-				- data.TURN_TRANSITION_DELAY_MSEC
-				)
-		if _time_elapsed_since_turn_ended > 0:
-
-			var lerp_weight: float = (
-					_time_elapsed_since_turn_ended
-					* data.TURN_TRANSITION_SPEED
-					)
-
-			if lerp_weight < 1:
-				$BoardBase.material_override.albedo_color = Player.previous.color.lerp(Player.current.color,lerp_weight)
-
-			elif lerp_weight >= 1:
-				Player.previous = Player.current
-				_time_turn_ended = 0
-				_time_elapsed_since_turn_ended = 0
-				$BoardBase.material_override.albedo_color = Player.current.color
-				if Match.is_timed:
-					Player.current.timer.start_timer()
 
 func _on_opponent_disconnected() -> void:
 	get_tree().paused = true
 	print("Opponent disconnected. Game paused.")
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		if match_selection_screen:
-			if tile_modifier_menu:
-				_on_tile_modifier_screen_back_button_pressed()
-			else:
-				_on_gamemode_selection_back_button_pressed()
-		elif _game_overlay:
-			if _pause_menu:
-				_on_pause_menu_resume_button_pressed()
-			else:
-				_on_game_overlay_pause_button_pressed()
 
+#func _input(event: InputEvent) -> void:
+	#if event.is_action_pressed("ui_cancel"):
+		#if match_selection_screen:
+			#if tile_modifier_menu:
+				#_on_tile_modifier_screen_back_button_pressed()
+			#else:
+				#_on_gamemode_selection_back_button_pressed()
+		#elif _game_overlay:
+			#if _pause_menu:
+				#_on_pause_menu_resume_button_pressed()
+			#else:
+				#_on_game_overlay_pause_button_pressed()
+
+#@rpc("authority", "call_remote", "reliable")
+#func _sync_time_control(time_sec: int, increment_sec: int) -> void:
+	#Match.is_timed = true
+	#TimeControl.increment_sec = increment_sec
+	#TimeControl.max_time_sec = time_sec
+	#Match.players.white.timer = TimeControl.new(%TimerWhite, time_sec)
+	#Match.players.black.timer = TimeControl.new(%TimerBlack, time_sec)
 
 #region UI and Menu Functions
 	#region GAMEMODE_SELECTION_MENU
-func _instantiate_gamemode_selection_menu():
-	match_selection_screen = MATCH_SELECTION_SCREEN.instantiate()
-	$MenuLayer.add_child(match_selection_screen)
-	match_selection_screen.back_button_pressed.connect(
-			Callable(self,"_on_gamemode_selection_back_button_pressed"))
-	match_selection_screen.continue_button_pressed.connect(
-			Callable(self,"_on_gamemode_selection_continue_button_pressed"))
-	match_selection_screen.board_verified.connect(
-			Callable(self,"_on_gamemode_selection_board_verified"))
-	match_selection_screen.start_button_pressed.connect(
-			Callable(self,"_on_gamemode_selection_start_button_pressed"))
-	match_selection_screen.time_control_selected.connect(
-			Callable(self,"_on_gamemode_selection_time_control_selection"))
+#func _instantiate_gamemode_selection_menu():
+	#match_selection_screen = MATCH_SELECTION_SCREEN.instantiate()
+	#$MenuLayer.add_child(match_selection_screen)
+	#match_selection_screen.back_button_pressed.connect(
+			#Callable(self,"_on_gamemode_selection_back_button_pressed"))
+	#match_selection_screen.continue_button_pressed.connect(
+			#Callable(self,"_on_gamemode_selection_continue_button_pressed"))
+	#match_selection_screen.board_verified.connect(
+			#Callable(self,"_on_gamemode_selection_board_verified"))
+	#match_selection_screen.start_button_pressed.connect(
+			#Callable(self,"_on_gamemode_selection_start_button_pressed"))
+	#match_selection_screen.time_control_selected.connect(
+			#Callable(self,"_on_gamemode_selection_time_control_selection"))
 
-func _on_gamemode_selection_time_control_selection(time_sec: int, increment_sec: int):
-	Match.is_timed = true
-	TimeControl.increment_sec = increment_sec
-	TimeControl.max_time_sec = time_sec
-
-	Match.player_one.timer = TimeControl.new($TimerWhite,time_sec)
-	Match.player_two.timer = TimeControl.new($TimerBlack,time_sec)
-
-	if NetworkManager.is_online:
-		_sync_time_control.rpc(time_sec, increment_sec)
-
-@rpc("authority", "call_remote", "reliable")
-func _sync_time_control(time_sec: int, increment_sec: int) -> void:
-	Match.is_timed = true
-	TimeControl.increment_sec = increment_sec
-	TimeControl.max_time_sec = time_sec
-	Match.player_one.timer = TimeControl.new($TimerWhite, time_sec)
-	Match.player_two.timer = TimeControl.new($TimerBlack, time_sec)
-
-func _on_gamemode_selection_back_button_pressed() -> void:
-	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
+#func _on_gamemode_selection_time_control_selection(time_sec: int, increment_sec: int):
+	#Match.is_timed = true
+	#TimeControl.increment_sec = increment_sec
+	#TimeControl.max_time_sec = time_sec
+#
+	#Match.players.white.timer = TimeControl.new(%TimerWhite,time_sec)
+	#Match.players.black.timer = TimeControl.new(%TimerBlack,time_sec)
+#
+	#if NetworkManager.is_online:
+		#NetworkSync.time_control.rpc(time_sec, increment_sec)
 
 
-func _on_gamemode_selection_board_verified(rank_num:int,file_num:int,FEN_notation: FEN) -> void:
-	data.FEN_board_state = FEN_notation
-	data.rank_count = rank_num
-	data.file_count = file_num
+#func _on_gamemode_selection_back_button_pressed() -> void:
+	#get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
 
 
-func _on_gamemode_selection_continue_button_pressed() -> void:
-	_instantiatetile_modifier_menu()
-	match_selection_screen.hide()
-	generate_board()
-	load_FEN(data.FEN_board_state)
-	_current_game_state = GameState.BoardCustomization
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
+#func _on_gamemode_selection_board_verified(rank_num:int,file_num:int,FEN_notation: FEN) -> void:
+	#data.FEN_board_state = FEN_notation
+	#data.rank_count = rank_num
+	#data.file_count = file_num
 
-func _on_gamemode_selection_start_button_pressed():
-	_current_game_state = GameState.Gameplay
-	game_state_changed.emit(_current_game_state)
-	generate_board()
-	load_FEN(data.FEN_board_state)
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 
-	if NetworkManager.is_online:
-		await get_tree().create_timer(0.5).timeout
-		_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
-		_sync_tile_modifiers.rpc(_serialize_tile_modifiers())
-		if Match.is_timed:
-			_sync_time_control.rpc(TimeControl.max_time_sec, TimeControl.increment_sec)
-		_sync_gameplay_start.rpc()
+#func _on_gamemode_selection_continue_button_pressed() -> void:
+	#_instantiatetile_modifier_menu()
+	#match_selection_screen.hide()
+	#generate_board()
+	#load_FEN(data.FEN_board_state)
+	#Match.current_game_state = Match.GameState.BOARD_CUSTOMIZATION
+	#for tile in get_tree().get_nodes_in_group("Tile"):
+		#tile.clicked.connect(Callable(self,"_on_tile_clicked"))
 
-	_instantiate_game_overlay()
-
-	match_selection_screen.hide()
-	match_selection_screen.queue_free()
+#func _on_gamemode_selection_start_button_pressed():
+	#Match.current_game_state = Match.GameState.GAMEPLAY
+	#Match.game_state_changed.emit(Match.current_game_state)
+	#generate_board()
+	#load_FEN(data.FEN_board_state)
+	#for tile in get_tree().get_nodes_in_group("Tile"):
+		#tile.clicked.connect(Callable(self,"_on_tile_clicked"))
+#
+	#if NetworkManager.is_online:
+		#await get_tree().create_timer(0.5).timeout
+		#NetworkSync.board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
+		#NetworkSync.tile_modifiers.rpc(_serialize_tile_modifiers())
+		#if Match.is_timed:
+			#NetworkSync.time_control.rpc(TimeControl.max_time_sec, TimeControl.increment_sec)
+		#NetworkSync.gameplay_start.rpc()
+#
+	#_instantiate_game_overlay()
+#
+	#match_selection_screen.hide()
+	#match_selection_screen.queue_free()
 
 	#endregion
 
+
 	#region TILE_MODIFIER_MENU
-func _instantiatetile_modifier_menu():
-	tile_modifier_menu =TILE_MODIFIER_MENU.instantiate()
-	$MenuLayer.add_child(tile_modifier_menu)
-	tile_modifier_menu._connect_to_back_button(
-			Callable(self, "_on_tile_modifier_screen_back_button_pressed"))
-	tile_modifier_menu._connect_to_continue_button(
-			Callable(self, "_on_tile_modifier_screen_continue_button_pressed"))
-	tile_modifier_menu._connect_to_host_button(
-			Callable(self, "_on_tile_modifier_screen_host_button_pressed"))
+#func _instantiatetile_modifier_menu():
+	#tile_modifier_menu =TILE_MODIFIER_MENU.instantiate()
+	#$MenuLayer.add_child(tile_modifier_menu)
+	#tile_modifier_menu._connect_to_back_button(
+			#Callable(self, "_on_tile_modifier_screen_back_button_pressed"))
+	#tile_modifier_menu._connect_to_continue_button(
+			#Callable(self, "_on_tile_modifier_screen_continue_button_pressed"))
+	#tile_modifier_menu._connect_to_host_button(
+			#Callable(self, "_on_tile_modifier_screen_host_button_pressed"))
 
-func _on_tile_modifier_screen_back_button_pressed() -> void:
-	for child in $BoardBase.get_children():
-		if child.occupant:
-			child.occupant.data.player.remove_piece(child.occupant)
-		$BoardBase.remove_child(child)
-		child.queue_free()
+#func _on_tile_modifier_screen_back_button_pressed() -> void:
+	#for child in board_base.get_children():
+		#if child.occupant:
+			#child.occupant.data.player.remove_piece(child.occupant)
+		#board_base.remove_child(child)
+		#child.queue_free()
+#
+	#data.tile_array.clear()
+	#data.piece_array.clear()
 
-	data.tile_array.clear()
-	data.piece_array.clear()
+	#match_selection_screen.show()
+	#tile_modifier_menu.hide()
+	#tile_modifier_menu.queue_free()
 
-	match_selection_screen.show()
-	tile_modifier_menu.hide()
-	tile_modifier_menu.queue_free()
+#func _on_tile_modifier_screen_continue_button_pressed() -> void:
+	#Match.current_game_state = Match.GameState.GAMEPLAY
+	#Match.game_state_changed.emit(Match.current_game_state)
+	#get_tree().call_group("Tile","clear_states")
+	#get_tree().call_group("Tile","remove_from_group","Selected")
+	#_instantiate_game_overlay()
+#
+	#if NetworkManager.is_online:
+		#NetworkSync.gameplay_start.rpc()
+	#tile_modifier_menu.hide()
+	#tile_modifier_menu.queue_free()
 
-func _on_tile_modifier_screen_continue_button_pressed() -> void:
-	_current_game_state = GameState.Gameplay
-	game_state_changed.emit(_current_game_state)
-	get_tree().call_group("Tile","clear_states")
-	get_tree().call_group("Tile","remove_from_group","Selected")
-	_instantiate_game_overlay()
+#func _on_tile_modifier_screen_host_button_pressed() -> void:
+	#var result = NetworkManager.host_game()
+	#if result.is_empty():
+		#return
+	#var wait_layer = CanvasLayer.new()
+	#wait_layer.layer = 10
+	#add_child(wait_layer)
+	#var wait_screen = WAIT_SCREEN.instantiate()
+	#wait_layer.add_child(wait_screen)
+	#wait_screen.set_ip_label(result["ip"])
+	#wait_screen.set_invite_code_label(result["code"])
 
-	if NetworkManager.is_online:
-		_sync_gameplay_start.rpc()
-	tile_modifier_menu.hide()
-	tile_modifier_menu.queue_free()
+	#NetworkManager.connected_to_game.connect(
+		#func():
+				#wait_screen.queue_free()
+				#await get_tree().create_timer(1.0).timeout
+				#NetworkSync.board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
+				#NetworkSync.tile_modifiers.rpc(_serialize_tile_modifiers())
+				#if Match.is_timed:
+					#NetworkSync.time_control.rpc(TimeControl.max_time_sec, TimeControl.increment_sec)
+				#NetworkSync.gameplay_start.rpc()
+				#_on_tile_modifier_screen_continue_button_pressed()
+				#)
 
-func _on_tile_modifier_screen_host_button_pressed() -> void:
-	var result = NetworkManager.host_game()
-	if result.is_empty():
-		return
-	var wait_layer = CanvasLayer.new()
-	wait_layer.layer = 10
-	add_child(wait_layer)
-	var wait_screen = WAIT_SCREEN.instantiate()
-	wait_layer.add_child(wait_screen)
-	wait_screen.set_ip_label(result["ip"])
-	wait_screen.set_invite_code_label(result["code"])
-
-	NetworkManager.connected_to_game.connect(
-		func():
-				wait_screen.queue_free()
-				await get_tree().create_timer(1.0).timeout
-				_sync_board_setup.rpc(data.file_count, data.rank_count, data.FEN_board_state.FE_notation)
-				_sync_tile_modifiers.rpc(_serialize_tile_modifiers())
-				if Match.is_timed:
-					_sync_time_control.rpc(TimeControl.max_time_sec, TimeControl.increment_sec)
-				_sync_gameplay_start.rpc()
-				_on_tile_modifier_screen_continue_button_pressed()
-				)
-
-@rpc("authority", "call_remote", "reliable")
-func _sync_gameplay_start() -> void:
-	_current_game_state = GameState.Gameplay
-	game_state_changed.emit(_current_game_state)
-
-	if tile_modifier_menu:
-		tile_modifier_menu.hide()
-		tile_modifier_menu.queue_free()
-	if match_selection_screen:
-		match_selection_screen.hide()
-		match_selection_screen.queue_free()
-
-	_hide_loading_screen()
-	_instantiate_game_overlay()
-
-	data.legal_moves = MoveList.new(data)
-	data.legal_moves.generate_legal_moves(Player.current)
+#@rpc("authority", "call_remote", "reliable")
+#func _sync_gameplay_start() -> void:
+	#Match.current_game_state = Match.GameState.GAMEPLAY
+	#Match.game_state_changed.emit(Match.current_game_state)
+#
+	#if tile_modifier_menu:
+		#tile_modifier_menu.hide()
+		#tile_modifier_menu.queue_free()
+	#if match_selection_screen:
+		#match_selection_screen.hide()
+		#match_selection_screen.queue_free()
+#
+	#_hide_loading_screen()
+	#_instantiate_game_overlay()
+#
+	#data.legal_moves = MoveList.new(data)
+	#data.legal_moves.generate_legal_moves(Player.current)
 
 	#endregion
 
 
 	#region GAME_OVERLAY
-func _instantiate_game_overlay():
-	_game_overlay = GAME_OVERLAY.instantiate()
-	_game_overlay.ready.connect(Callable(self,"_on_game_overlay_ready"))
-	$MenuLayer.add_child(_game_overlay)
-	_game_overlay._connect_to_pause_button(
-			Callable(self,"_on_game_overlay_pause_button_pressed"))
-	_game_overlay.new_placement_selected.connect(
-			Callable(self,"_on_game_overlay_new_placement_selected"))
-	_game_overlay._connect_to_rulebook_button(
-			Callable(self,"_on_game_overlay_rulebook_button_pressed"))
+#func _instantiate_game_overlay():
+	#_game_overlay = GAME_OVERLAY.instantiate()
+	#_game_overlay.ready.connect(Callable(self,"_on_game_overlay_ready"))
+	#$MenuLayer.add_child(_game_overlay)
+	#_game_overlay._connect_to_pause_button(
+			#Callable(self,"_on_game_overlay_pause_button_pressed"))
+	#_game_overlay.new_placement_selected.connect(
+			#Callable(self,"_on_game_overlay_new_placement_selected"))
+	#_game_overlay._connect_to_rulebook_button(Callable(self,"_on_game_overlay_rulebook_button_pressed"))
 
-	if Match.is_timed:
-		_game_overlay.show_timers()
-		Match.player_one.timer.label = _game_overlay._get_ui_timer_white()
-		Match.player_two.timer.label = _game_overlay._get_ui_timer_black()
+	#if Match.is_timed:
+		#_game_overlay.show_timers()
+		#Match.players.white.timer.label = _game_overlay._get_ui_timer_white()
+		#Match.players.black.timer.label = _game_overlay._get_ui_timer_black()
 
-func _on_game_overlay_ready():
-	_game_overlay_ready.emit()
+#func _on_game_overlay_ready():
+	#_game_overlay_ready.emit()
 
-func _connect_to_game_overlay_horizontal_camera_slider(function: Callable):
-	_game_overlay.horizontal_slider.value_changed.connect(function)
+#func _connect_to_game_overlay_horizontal_camera_slider(function: Callable):
+	#_game_overlay.horizontal_slider.value_changed.connect(function)
+#
+#func _connect_to_game_overlay_forward_camera_slider(function: Callable):
+	#_game_overlay.forward_slider.value_changed.connect(function)
 
-func _connect_to_game_overlay_forward_camera_slider(function: Callable):
-	_game_overlay.forward_slider.value_changed.connect(function)
-
-func _on_game_overlay_pause_button_pressed():
-	_pause_menu = PAUSE_MENU.instantiate()
-	$MenuLayer.add_child(_pause_menu)
-	_game_overlay.hide()
-
-	get_tree().paused = true
-	_pause_menu._connect_to_resume_button(
-			Callable(self,"_on_pause_menu_resume_button_pressed"))
-	_pause_menu._connect_to_leave_button(
-			Callable(self,"_on_pause_menu_leave_button_pressed"))
+#func _on_game_overlay_pause_button_pressed():
+	#_pause_menu = PAUSE_MENU.instantiate()
+	#$MenuLayer.add_child(_pause_menu)
+	#_game_overlay.hide()
+#
+	#get_tree().paused = true
+	#_pause_menu._connect_to_resume_button(
+			#Callable(self,"_on_pause_menu_resume_button_pressed"))
+	#_pause_menu._connect_to_leave_button(
+			#Callable(self,"_on_pause_menu_leave_button_pressed"))
 
 
-func _on_game_overlay_rulebook_button_pressed():
-	pass
+#func _on_game_overlay_rulebook_button_pressed():
+	#pass
 
-func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
-	data.piece_array.clear()
-	for tile in data.tile_array:
-		if tile.occupant:
-			var piece: PieceObject = tile.occupant
-			tile.occupant = null
-			tile.remove_child(piece)
-			piece.data.player.remove_piece(piece)
-			piece.queue_free()
-
-	data.piece_array.resize(data.rank_count * data.file_count)
-	load_FEN(placement)
+#func _on_game_overlay_new_placement_selected(placement: FEN) -> void:
+	#data.piece_array.clear()
+	#for tile in data.tile_array:
+		#if tile.occupant:
+			#var piece: PieceObject = tile.occupant
+			#tile.occupant = null
+			#tile.remove_child(piece)
+			#piece.data.player.remove_piece(piece)
+			#piece.queue_free()
+#
+	#data.piece_array.resize(data.rank_count * data.file_count)
+	#load_FEN(placement)
 
 	#endregion
 
 
 	#region PAUSE_MENU
 
-func _on_pause_menu_resume_button_pressed():
-	get_tree().paused = false
-	_pause_menu.hide()
-	_game_overlay.show()
-	_pause_menu.queue_free()
-
-func _on_pause_menu_leave_button_pressed():
-	get_tree().paused = false
-	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
+#func _on_pause_menu_resume_button_pressed():
+	#get_tree().paused = false
+	#_pause_menu.hide()
+	#_game_overlay.show()
+	#_pause_menu.queue_free()
+#
+#func _on_pause_menu_leave_button_pressed():
+	#get_tree().paused = false
+	#get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
 
 	#endregion
 
@@ -399,54 +362,54 @@ func _serialize_tile_modifiers() -> Dictionary:
 		result[tile.data.index] = modifier_list
 	return result
 
-@rpc("authority", "call_remote", "reliable")
-func _sync_tile_modifiers(modifier_data: Dictionary) -> void:
-	for tile_index in modifier_data.keys():
-		var tile: TileObject = data.tile_array[tile_index]
-		var new_modifier_order: Array[TileModifier] = []
-		for entry in modifier_data[tile_index]:
-			var modifier: TileModifier = load(entry["script"]).new()
-			match modifier.flag:
-				TileModifier.ModifierType.CONDITION_ICY:
-					modifier.lifetime = entry["lifetime"]
-				TileModifier.ModifierType.CONDITION_STICKY:
-					modifier.lifetime = entry["lifetime"]
-				TileModifier.ModifierType.PROPERTY_BUTTON:
-					modifier.radius = entry["radius"]
-				TileModifier.ModifierType.PROPERTY_COG:
-					modifier.rotation = entry["rotation"]
-				TileModifier.ModifierType.PROPERTY_CONVEYER:
-					modifier.direction = entry["direction"]
-				TileModifier.ModifierType.PROPERTY_GATE:
-					modifier.is_active = entry["is_active"]
-				TileModifier.ModifierType.PROPERTY_LEVER:
-					modifier.radius = entry["radius"]
-				TileModifier.ModifierType.PROPERTY_POISON:
-					modifier.lifetime = entry["lifetime"]
-					modifier.duration = entry["duration"]
-				TileModifier.ModifierType.PROPERTY_SMOKEY:
-					modifier.is_active = entry["is_active"]
-				TileModifier.ModifierType.PROPERTY_SPRINGY:
-					modifier.destination = Vector2i(entry["destination_x"], entry["destination_y"])
-			new_modifier_order.append(modifier)
-		tile.data.modifier_order = new_modifier_order
+#@rpc("authority", "call_remote", "reliable")
+#func _sync_tile_modifiers(modifier_data: Dictionary) -> void:
+	#for tile_index in modifier_data.keys():
+		#var tile: TileObject = data.tile_array[tile_index]
+		#var new_modifier_order: Array[TileModifier] = []
+		#for entry in modifier_data[tile_index]:
+			#var modifier: TileModifier = load(entry["script"]).new()
+			#match modifier.flag:
+				#TileModifier.ModifierType.CONDITION_ICY:
+					#modifier.lifetime = entry["lifetime"]
+				#TileModifier.ModifierType.CONDITION_STICKY:
+					#modifier.lifetime = entry["lifetime"]
+				#TileModifier.ModifierType.PROPERTY_BUTTON:
+					#modifier.radius = entry["radius"]
+				#TileModifier.ModifierType.PROPERTY_COG:
+					#modifier.rotation = entry["rotation"]
+				#TileModifier.ModifierType.PROPERTY_CONVEYER:
+					#modifier.direction = entry["direction"]
+				#TileModifier.ModifierType.PROPERTY_GATE:
+					#modifier.is_active = entry["is_active"]
+				#TileModifier.ModifierType.PROPERTY_LEVER:
+					#modifier.radius = entry["radius"]
+				#TileModifier.ModifierType.PROPERTY_POISON:
+					#modifier.lifetime = entry["lifetime"]
+					#modifier.duration = entry["duration"]
+				#TileModifier.ModifierType.PROPERTY_SMOKEY:
+					#modifier.is_active = entry["is_active"]
+				#TileModifier.ModifierType.PROPERTY_SPRINGY:
+					#modifier.destination = Vector2i(entry["destination_x"], entry["destination_y"])
+			#new_modifier_order.append(modifier)
+		#tile.data.modifier_order = new_modifier_order
 
-@rpc("authority", "call_remote", "reliable")
-func _sync_board_setup(file_count: int, rank_count: int, fen_string: String) -> void:
-	if fen_string.is_empty():
-		return
-	data.file_count = file_count
-	data.rank_count = rank_count
-	data.FEN_board_state = FEN.new(fen_string)
-	generate_board()
-	load_FEN(data.FEN_board_state)
-	_current_game_state = GameState.BoardCustomization
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self, "_on_tile_clicked"))
+#@rpc("authority", "call_remote", "reliable")
+#func _sync_board_setup(file_count: int, rank_count: int, fen_string: String) -> void:
+	#if fen_string.is_empty():
+		#return
+	#data.file_count = file_count
+	#data.rank_count = rank_count
+	#data.FEN_board_state = FEN.new(fen_string)
+	#generate_board()
+	#load_FEN(data.FEN_board_state)
+	#Match.current_game_state = Match.GameState.BOARD_CUSTOMIZATION
+	#for tile in get_tree().get_nodes_in_group("Tile"):
+		#tile.clicked.connect(Callable(self, "_on_tile_clicked"))
 #endregion
 
 func _is_my_turn() -> bool:
-	var current_player_index: int = 0 if Player.current == Match.player_one else 1
+	var current_player_index: int = 0 if Player.current == Match.players.white else 1
 	return NetworkManager.is_my_turn(current_player_index)
 
 func _submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
@@ -483,6 +446,10 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 
 	else:
 		perform_move(Move.new(from_tile, to_tile, flags))
+
+	if Match.is_promotion_occuring:
+		await to_tile.occupant.promoted
+		Match.is_promotion_occuring = false
 
 	next_turn()
 
@@ -552,21 +519,21 @@ func _set_en_passant(clicked_tile: TileObject) -> void:
 	TileObject.en_passant = data.tile_array[data.get_index(en_passant_tile_rank,en_passant_tile_file)]
 	Player.en_passant = Player.current
 
-func _perform_promotion(piece: PieceObject) -> void:
-	if piece == null:
-		return
-	if not piece.data.can_promote:
-		return
-
-	var mouse_pos = get_viewport().get_mouse_position()
-	_game_overlay._show_promotion_menu(mouse_pos)
-	_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
-	get_tree().paused = true
-	await piece.promoted
-	piece.data.movement.set_max_distance(maxi(data.file_count,data.rank_count))
-	_game_overlay._hide_promotion_menu()
-	_game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
-	get_tree().paused = false
+#func _perform_promotion(piece: PieceObject) -> void:
+	#if piece == null:
+		#return
+	#if not piece.data.can_promote:
+		#return
+#
+	#var mouse_pos = get_viewport().get_mouse_position()
+	#_game_overlay._show_promotion_menu(mouse_pos)
+	#_game_overlay.promotion_piecetype_selected.connect(Callable(piece,"promote"))
+	#get_tree().paused = true
+	#await piece.promoted
+	#piece.data.movement.set_max_distance(maxi(data.file_count,data.rank_count))
+	#_game_overlay._hide_promotion_menu()
+	#_game_overlay.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
+	#get_tree().paused = false
 
 # MODIFIER HELPER FUNCTIONS
 func _apply_on_piece_enter(move: Move) -> void:
@@ -624,7 +591,7 @@ func _update_poisoned_pieces() -> void:
 			continue
 		if not piece.data.is_poisoned:
 			continue
-		if _turn_num - piece.data.poison_turn_applied >= piece.data.poison_duration:
+		if Match.turn_num - piece.data.poison_turn_applied >= piece.data.poison_duration:
 			_capture_piece(piece)
 
 func _tile_in_radius(origin_tile, target_tile, radius) -> bool:
@@ -679,12 +646,12 @@ func _get_smokey_tiles(origin_tile: TileObject, smokey: PropertySmokey) -> Array
 	var origin := origin_tile.data.board_position
 
 	var offsets : Array[Vector2i] = []
-	if smokey.activated_by_player == Match.player_one:
+	if smokey.activated_by_player == Match.players.white:
 		offsets = [
 			Vector2i(1, 0),
 			Vector2i(2, 0),
 		]
-	elif smokey.activated_by_player == Match.player_two:
+	elif smokey.activated_by_player == Match.players.black:
 		offsets = [
 			Vector2i(-1, 0),
 			Vector2i(-2, 0),
@@ -746,9 +713,9 @@ func _update_smokey_visuals() -> void:
 
 #region Tile Clicked
 func _on_tile_clicked(clicked_tile: TileObject) -> void:
-	if _current_game_state == GameState.BoardCustomization:
+	if Match.current_game_state == Match.GameState.BOARD_CUSTOMIZATION:
 		_customization_tile_select(clicked_tile)
-	elif _current_game_state == GameState.Gameplay:
+	elif Match.current_game_state == Match.GameState.GAMEPLAY:
 		_gameplay_tile_select(clicked_tile)
 
 func _customization_tile_select(clicked_tile: TileObject) -> void:
@@ -891,11 +858,9 @@ func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
 		return # next_tile does not exist
 
 	return data.tile_array[
-			data.get_index(
-					next_tile_position.x,
-					next_tile_position.y
-					)
+			data.get_index(next_tile_position.x,next_tile_position.y)
 			]
+
 # SAME LOGIC USED IN MoveList RESOURCE.
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
 func _resolve_branching_movement(
@@ -1093,7 +1058,8 @@ func perform_move(move: Move):
 
 	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:
 		move.flags += Move.Type.PROMOTION
-		_perform_promotion(piece)
+		Match.is_promotion_occuring = true
+		promotion_verified.emit(piece)
 
 	if not piece.data.has_moved:
 		piece._moved(true)
@@ -1108,14 +1074,15 @@ func perform_move(move: Move):
 func next_turn() -> void:
 	_apply_turn_end_modifiers()
 	_update_modifier_lifetimes()
-	_game_overlay.horizontal_slider.value = 0
-	_game_overlay.forward_slider.value = 0
+	#_game_overlay.horizontal_slider.value = 0
+	#_game_overlay.forward_slider.value = 0
 
 	# increments the turn number
-	_turn_num += 1
+	Match.turn_num += 1
 
 	Player.previous = Player.current
 	Player.current = Match.get_opponent_of(Player.previous)
+
 	turn_changed.emit()
 
 	if Player.current == Player.en_passant:
@@ -1130,11 +1097,11 @@ func next_turn() -> void:
 	data.legal_moves.generate_legal_moves(Player.current)
 
 	if Match.is_timed and NetworkManager.is_online:
-			_sync_timer_start.rpc(Time.get_unix_time_from_system())
+		NetworkSync.timer_start.rpc(Time.get_unix_time_from_system())
 
 
-@rpc("authority", "call_remote", "reliable")
-func _sync_timer_start(host_timestamp: float) -> void:
-	var latency_sec: float = Time.get_unix_time_from_system() - host_timestamp
-	Player.current.timer.start_timer()
-	Player.current.timer.reduce_by(latency_sec)
+#@rpc("authority", "call_remote", "reliable")
+#func _sync_timer_start(host_timestamp: float) -> void:
+	#var latency_sec: float = Time.get_unix_time_from_system() - host_timestamp
+	#Player.current.timer.start_timer()
+	#Player.current.timer.reduce_by(latency_sec)

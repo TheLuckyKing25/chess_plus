@@ -23,6 +23,12 @@ buses/default_bus_layout="res://assets/default_bus_layout.tres"
 
 ConfigFileHandler="*res://scripts/config_file_handler.gd"
 NetworkManager="*res://scripts/network_manager.gd"
+Match="*res://resources/match.gd"
+NetworkSync="*res://scripts/network_sync.gd"
+
+[debug]
+
+gdscript/warnings/unused_parameter=0
 
 [display]
 
