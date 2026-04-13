@@ -10,12 +10,12 @@ const ALGEBRAIC_NOTATION_PROMOTION = "="
 const ALGEBRAIC_NOTATION_CAPTURE = "x"
 
 static func get_notation(move:Move):
-	if move.flags == Move.Type.IGNORE:
+	if move.flags == Move.Outcome.IGNORE:
 		return ""
-	elif move.flags & Move.Type.CASTLING_QUEENSIDE:
+	elif move.flags & Move.Outcome.CASTLING_QUEENSIDE:
 		return ALGEBRAIC_NOTATION_CASTLING_QUEENSIDE
 
-	elif move.flags & Move.Type.CASTLING_KINGSIDE:
+	elif move.flags & Move.Outcome.CASTLING_KINGSIDE:
 		return ALGEBRAIC_NOTATION_CASTLING_KINGSIDE
 
 	var notation: Dictionary = {
@@ -32,15 +32,15 @@ static func get_notation(move:Move):
 	notation.starting_tile = move.starting_tile
 	notation.destination_tile = move.destination_tile
 
-	if move.flags & Move.Type.CAPTURING:
+	if move.flags & Move.Outcome.CAPTURING:
 		notation.capturing = ALGEBRAIC_NOTATION_CAPTURE
 
-	if move.flags & Move.Type.CHECK:
+	if move.flags & Move.Outcome.CHECK:
 		notation.check_status += ALGEBRAIC_NOTATION_CHECK
-	elif move.flags & Move.Type.CHECKMATE:
+	elif move.flags & Move.Outcome.CHECKMATE:
 		notation.check_status += ALGEBRAIC_NOTATION_CHECKMATE
 
-	if move.flags & Move.Type.EN_PASSANT:
+	if move.flags & Move.Outcome.EN_PASSANT:
 		notation.en_passant += " " + ALGEBRAIC_NOTATION_EN_PASSANT
-	elif move.flags & Move.Type.PROMOTION:
+	elif move.flags & Move.Outcome.PROMOTION:
 		notation.promoted_to += ALGEBRAIC_NOTATION_PROMOTION

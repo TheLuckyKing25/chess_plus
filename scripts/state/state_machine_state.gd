@@ -21,6 +21,10 @@ func enter() -> void:
 func exit() -> void:
 	current_state.exit()
 	#print_debug("exit ", name)
+	for child in get_children():
+		if child is State:
+			states[child.name.to_lower()] = child
+			child.transitioned.disconnect(Callable(self,"on_child_transition"))
 	print_rich("[b][color=red]Exited[/color]: [/b]",name)
 
 func update(_delta: float) -> void:

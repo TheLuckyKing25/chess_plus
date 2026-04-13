@@ -4,32 +4,34 @@ extends TileModifier
 # The conveyer property is similar to cog, with the exception that it automatically moves
 # the player rather than changing their moveset for a turn.
 
-enum ConveyerDirection{
-	NORTH = Movement.Direction.NORTH,
-	NORTHEAST = Movement.Direction.NORTHEAST,
-	EAST = Movement.Direction.EAST,
-	SOUTHEAST = Movement.Direction.SOUTHEAST,
-	SOUTH = Movement.Direction.SOUTH,
-	SOUTHWEST = Movement.Direction.SOUTHWEST,
-	WEST = Movement.Direction.WEST,
-	NORTHWEST = Movement.Direction.NORTHWEST,
-}
-
-
-@export var direction: ConveyerDirection = ConveyerDirection.EAST
-
 func _init():
 	name = "Conveyer"
 	flag = ModifierType.PROPERTY_CONVEYER
 	color = Color(0.5,0.5,0.5)
 	can_force_movement = true
+	components[DirectionComponent.NAME] = DirectionComponent.new()
+
+
+func modifier_strategy(current_move:CustomTreeNode):
+	var possible_next_tile:CustomTreeNode = current_move.get_next_tile(current_move.remaining_movement)
+	if (	possible_next_tile.tile != null
+			and not possible_next_tile.tile.is_occupied
+			):
+		is_forcing_next_tile = true
+		var altered_movement: Movement = Movement.new()
+		altered_movement.direction = components[DirectionComponent.NAME].value
+		altered_movement.branches.append(current_move.remaining_movement)
+		current_move.remaining_movement = altered_movement
+
+	elif not possible_next_tile.tile or possible_next_tile.tile.is_occupied:
+		is_forcing_next_tile = false
 
 
 func on_turn_end(tile) -> void:
 	if tile == null or tile.occupant == null:
 		return
 
-	var offset: Vector2i = Movement.neighboring_tiles[direction]
+	var offset: Vector2i = Movement.neighboring_tiles[components[DirectionComponent.NAME].direction]
 	var next_pos: Vector2i = tile.data.board_position + offset
 
 	if next_pos.x < 0 or next_pos.x >= Match.board.data.rank_count:

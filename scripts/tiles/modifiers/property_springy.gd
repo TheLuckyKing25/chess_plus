@@ -3,23 +3,18 @@ extends TileModifier
 
 # The springy property "springs" the piece that enters it to a given space on the board.
 
-@export var destination: Vector2i = Vector2i(4, 4)
-
 func _init():
 	name = "Springy"
 	flag = ModifierType.PROPERTY_SPRINGY
+	components[DestinationComponent.NAME] = DestinationComponent.new()
+
 
 func on_turn_end(tile) -> void:
 	if tile == null or tile.occupant == null:
 		return
 
-	if destination.x < 0 or destination.x >= Match.board.data.rank_count:
-		return
-	if destination.y < 0 or destination.y >= Match.board.data.file_count:
-		return
-
-	var target_tile = Match.board.data.tile_array[Match.board.data.get_index(destination.x, destination.y)]
-	print("Springy target:", destination, " occupant:", target_tile.occupant)
+	var target_tile = Match.board.data.tile_array[Match.board.data.get_index(components[DestinationComponent.NAME].vector.x, components[DestinationComponent.NAME].vector.y)]
+	print("Springy target:", components[DestinationComponent.NAME].vector, " occupant:", target_tile.occupant)
 	if target_tile == null:
 		return
 	if target_tile == tile:

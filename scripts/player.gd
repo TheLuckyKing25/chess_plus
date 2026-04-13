@@ -62,7 +62,6 @@ var all_pieces: Array[PieceObject]:
 			array.append_array(pieces[piece_type])
 		return array
 
-
 func _ready() -> void:
 	Match.players[name.to_lower()] = self
 

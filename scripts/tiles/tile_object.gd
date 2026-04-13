@@ -22,6 +22,18 @@ var occupant: PieceObject = null:
 
 var is_mouse_on_tile: bool = false
 
+var is_occupied:bool:
+	get():
+		return occupant != null
+
+var is_blocked:bool:
+	get():
+		return is_occupied and occupant.data.player == Player.current
+
+var can_perform_capture: bool:
+	get():
+		return occupant != null and occupant.data.player != Player.current
+
 var data: TileDataChess = TileDataChess.new()
 
 static func new_tile(index: int):

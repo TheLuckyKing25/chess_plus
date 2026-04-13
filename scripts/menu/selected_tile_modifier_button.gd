@@ -9,7 +9,7 @@ signal modifier_pressed()
 # modifier that is associated with this button
 var associated_modifier: TileModifier:
 	set(new_modifier):
-		new_modifier._create_dropdown_ui()
+		new_modifier.create_dropdown_ui()
 		if new_modifier.dropdown_ui:
 			%DropdownOptions.add_child(new_modifier.dropdown_ui)
 		associated_modifier = new_modifier

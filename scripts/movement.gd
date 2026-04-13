@@ -51,11 +51,18 @@ static var neighboring_tiles: Dictionary[Direction, Vector2i] = {
 @export var is_jump := false # Continue through occupied tile
 @export var is_move := false # Tile unoccupied
 @export var is_threaten := false # Tile occupied by opponent
-@export var is_branching := false # Branch from tile, flag set on last moverule of a branch
 @export var is_castling := false # Used for castling movements, flag set on last moverule of a branch
 
-
 @export var branches: Array[Movement]
+
+var is_branching: bool: # Branch from tile, flag set on last moverule of a branch
+	get():
+		if branches.is_empty():
+			return false
+		else:
+			return true
+
+
 
 # Purpose of the movement
 # The same throughout entire moveset

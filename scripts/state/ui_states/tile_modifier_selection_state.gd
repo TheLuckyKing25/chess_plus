@@ -39,6 +39,7 @@ func on_back_pressed():
 		Match.board.board_base.remove_child(child)
 		child.queue_free()
 
+	Match.is_board_generated = false
 	Match.board.data.tile_array.clear()
 	Match.board.data.piece_array.clear()
 	transitioned.emit(self, "MatchCustomizationStateM")

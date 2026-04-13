@@ -42,6 +42,7 @@ enum ModifierType {
 
 @export var flag: ModifierType
 
+@export var components: Dictionary
 
 ## When a modifier is applied.
 var modifier_application_time: TurnState
@@ -54,6 +55,9 @@ var is_blocking: bool = false
 var is_stopping: bool = false
 ## forces movement to next tile, if said tile is not blocked.
 var is_slippery: bool = false
+
+## Modifier forces a piece to a tile, preventing it from landing of the tile with this modifier
+var is_forcing_next_tile: bool = false
 
 
 ## changes the piece's movement
@@ -69,9 +73,16 @@ static func apply_modifiers_to_moveset(context, tile, piece, moveset):
 		result = modifier.modify_movement(context, piece, tile, result)
 	return result
 
-
-func _create_dropdown_ui():
+func modifier_strategy(current_move: CustomTreeNode):
 	pass
+
+func create_dropdown_ui():
+	dropdown_ui = VBoxContainer.new()
+	dropdown_ui.alignment = BoxContainer.ALIGNMENT_CENTER
+	dropdown_ui.add_theme_constant_override("separation", 10)
+	for component in components.values():
+		dropdown_ui.add_child(component.create_setting())
+
 
 
 func modify_moves(piece, tile, moves):

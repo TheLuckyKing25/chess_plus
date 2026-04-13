@@ -29,4 +29,13 @@ func on_resume_pressed():
 	transitioned.emit(self, "GameOverlayState")
 
 func on_leave_pressed():
+	for child in Match.board.board_base.get_children():
+		if child.occupant:
+			child.occupant.data.player.remove_piece(child.occupant)
+		Match.board.board_base.remove_child(child)
+		child.queue_free()
+
+	Match.is_board_generated = false
+	Match.board.data.tile_array.clear()
+	Match.board.data.piece_array.clear()
 	transitioned.emit(self, "StartMenuState")

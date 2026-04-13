@@ -10,7 +10,7 @@ func _init():
 	color = Color(0.5,0.25,0.7)
 
 
-func _create_dropdown_ui():
+func create_dropdown_ui():
 	dropdown_ui = VBoxContainer.new()
 	dropdown_ui.alignment = BoxContainer.ALIGNMENT_CENTER
 	dropdown_ui.add_theme_constant_override("separation", 10)

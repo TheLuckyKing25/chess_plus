@@ -132,15 +132,15 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 		TileObject.en_passant = data.tile_array[ep_tile_index]
 		Player.en_passant = Player.current
 
-	if flags & Move.Type.EN_PASSANT:
+	if flags & Move.Outcome.EN_PASSANT:
 		_capture_piece(PieceObject.en_passant)
 		perform_move(Move.new(from_tile, to_tile, flags))
 
-	elif flags & Move.Type.CAPTURING:
+	elif flags & Move.Outcome.CAPTURING:
 		_capture_piece(to_tile.occupant)
 		perform_move(Move.new(from_tile, to_tile, flags))
 
-	elif flags & (Move.Type.CASTLING_KINGSIDE | Move.Type.CASTLING_QUEENSIDE):
+	elif flags & (Move.Outcome.CASTLING_KINGSIDE | Move.Outcome.CASTLING_QUEENSIDE):
 		_perform_castling_move(to_tile)
 
 	else:
@@ -184,6 +184,8 @@ func load_FEN(FE_notation:FEN) -> void:
 
 	_clear_check()
 	detect_check(Player.current)
+
+
 
 
 func detect_check(player:Player) -> void:
@@ -438,7 +440,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 			elif (	not clicked_tile.occupant.is_in_group(Player.current.name) # occupant piece belongs to opponent
 					and clicked_tile.data.is_threatened
 					):
-				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Type.CAPTURING)
+				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Outcome.CAPTURING)
 
 		elif clicked_tile.occupant == null:
 			# move selected piece to clicked tile
@@ -459,7 +461,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 
 			# perform castling movement
 			elif clicked_tile.data.is_castling:
-				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Type.CASTLING_KINGSIDE | Move.Type.CASTLING_QUEENSIDE)
+				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Outcome.CASTLING_KINGSIDE | Move.Outcome.CASTLING_QUEENSIDE)
 
 			# capture pawn via en passant
 			elif (	clicked_tile.data.is_threatened
@@ -468,7 +470,7 @@ func _gameplay_tile_select(clicked_tile: TileObject) -> void:
 					and not PieceObject.en_passant.is_in_group(Player.current.name)
 					):
 						_capture_piece(PieceObject.en_passant)
-						_submit_move( TileObject.selected.data.index, clicked_tile.data.index, Move.Type.CAPTURING | Move.Type.EN_PASSANT, PieceObject.en_passant.data.index, TileObject.en_passant.data.index)
+						_submit_move( TileObject.selected.data.index, clicked_tile.data.index, Move.Outcome.CAPTURING | Move.Outcome.EN_PASSANT, PieceObject.en_passant.data.index, TileObject.en_passant.data.index)
 #endregion
 
 
@@ -502,7 +504,7 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 				castling_tile.data.rank,
 				castling_tile.data.file-1
 				)
-		perform_move(Move.new(TileObject.selected, castling_tile, Move.Type.CASTLING_KINGSIDE))
+		perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_KINGSIDE))
 
 	# queenside castling
 	elif castling_tile.data.file < middle_file_value:
@@ -511,11 +513,11 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 				castling_tile.data.rank,
 				castling_tile.data.file+1
 				)
-		perform_move(Move.new(TileObject.selected, castling_tile, Move.Type.CASTLING_QUEENSIDE))
+		perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_QUEENSIDE))
 
 	var castling_rook_destination = data.tile_array[destination_index]
 
-	perform_move(Move.new(data.tile_array[castling_rook_index],castling_rook_destination,Move.Type.IGNORE))
+	perform_move(Move.new(data.tile_array[castling_rook_index],castling_rook_destination,Move.Outcome.IGNORE))
 
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
@@ -732,16 +734,16 @@ func perform_move(move: Move):
 	var opponent_moves:= MoveList.new(data)
 	opponent_moves.generate_legal_moves(Match.get_opponent_of(Player.current))
 	if opponent_moves.moves.is_empty():
-		move.flags += Move.Type.CHECKMATE
+		move.flags += Move.Outcome.CHECKMATE
 		_game_overlay.show_checkmate(Player.current)
 
 
 	detect_check(Match.get_opponent_of(Player.current))
 	if not opponent_moves.moves.is_empty() and Match.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
-		move.flags += Move.Type.CHECK
+		move.flags += Move.Outcome.CHECK
 
 	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:
-		move.flags += Move.Type.PROMOTION
+		move.flags += Move.Outcome.PROMOTION
 		Match.is_promotion_occuring = true
 		promotion_verified.emit(piece)
 
@@ -749,7 +751,7 @@ func perform_move(move: Move):
 		piece._moved(true)
 
 	#if move.algebraic_notation != "": # empty string due to castling move
-		#if move.flags & Move.Type.PROMOTION:
+		#if move.flags & Move.Outcome.PROMOTION:
 			#move._notation_suffix += piece.data.algebraic_notation
 		#_game_overlay.add_move(move)
 

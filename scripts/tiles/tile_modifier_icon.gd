@@ -1,11 +1,9 @@
 class_name TileModifierIcon
 extends Control
 
-@onready var Icon = %Icon
-
 @export var icon_image: Texture2D:
 	get:
-		return Icon.texture
+		return %Icon.texture
 
 @export var panel: StyleBoxFlat = preload("uid://b3b8tofmh4om0"):
 	set(new_panel):
@@ -29,4 +27,4 @@ func _on_icon_ready() -> void:
 
 func set_icon(new_icon):
 	icon_image = new_icon
-	Icon.texture = new_icon
+	%Icon.texture = new_icon

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_3q2uy"]
 [ext_resource type="Theme" uid="uid://ppo78g07ivy0" path="res://resources/themes/selected_tile_modifier_button_theme.tres" id="1_blv4a"]
 
-
 [sub_resource type="ButtonGroup" id="ButtonGroup_3q2uy"]
 resource_local_to_scene = false
 resource_name = "AppliedTileModifierListedButtons"
@@ -96,28 +95,8 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="BoxContainer/DropdownOptions"]
-visible = false
 layout_mode = 2
 alignment = 1
-
-[node name="HBoxContainer" type="BoxContainer" parent="BoxContainer/DropdownOptions/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="Label" type="Label" parent="BoxContainer/DropdownOptions/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Rotation Amount"
-
-[node name="RotationAmount" type="SpinBox" parent="BoxContainer/DropdownOptions/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-tooltip_text = "Determines the amount a Piece's movement is rotated. Positive values are clockwise,  negative values are counter-clockwise."
-min_value = -135.0
-max_value = 135.0
-step = 45.0
-suffix = "Degrees"
-custom_arrow_step = 45.0
 
 [connection signal="toggled" from="BoxContainer/ModifierButton" to="." method="_on_modifier_button_toggled"]
 [connection signal="pressed" from="BoxContainer/ModifierButton/RemoveButton" to="." method="_on_remove_button_pressed"]
