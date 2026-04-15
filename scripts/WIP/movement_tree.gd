@@ -1,31 +1,34 @@
-class_name TileTree
-extends Resource
+class_name MovementTree
+extends RefCounted
 
-var root_item: TileTreeItem
+var root_item: MovementTreeItem
 
-func convert_movement_to_tree(starting_tile:TileObject, movement:Movement):
-	root_item = TileTreeItem.new(starting_tile)
+func convert_movement_to_tree(movement:Movement):
+	root_item = MovementTreeItem.new(starting_tile, movement.branch.duplicate())
 	if movement.is_branching and movement.distance == 0:
 		for branch in movement.branches:
 			convert_branch_to_tree(root_item,branch)
 
-func convert_branch_to_tree(root:TileTreeItem, branch:Movement):
-	var item_ptr: TileTreeItem = root
+func convert_branch_to_tree(root:MovementTreeItem, branch:Movement):
+	var item_ptr: MovementTreeItem = root
+
 	while branch.distance > 0:
 		if item_ptr.tile.neighbors[branch.direction] != null:
-			var new_child = TileTreeItem.new(item_ptr.tile.neighbors[branch.direction])
+			var new_child = MovementTreeItem.new(item_ptr.tile.neighbors[branch.direction], branch.duplicate())
 			item_ptr.add_child(new_child)
 			item_ptr = new_child
 			branch.distance -= 1
+
 		else:
 			break
+
 
 	if branch.is_branching and branch.distance == 0:
 		for new_branch in branch.branches:
 			convert_branch_to_tree(root, new_branch)
 
-func extract_movelist_from_tree():
 
+func extract_movelist_from_tree():
 	pass
 
 

@@ -13,7 +13,7 @@ func on_turn_end(tile) -> void:
 	if tile == null or tile.occupant == null:
 		return
 
-	var target_tile = Match.board.data.tile_array[Match.board.data.get_index(components[DestinationComponent.NAME].vector.x, components[DestinationComponent.NAME].vector.y)]
+	var target_tile = Match.board.data.tile_array[Match.get_board_index(components[DestinationComponent.NAME].vector.x, components[DestinationComponent.NAME].vector.y)]
 	print("Springy target:", components[DestinationComponent.NAME].vector, " occupant:", target_tile.occupant)
 	if target_tile == null:
 		return

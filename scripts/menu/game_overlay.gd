@@ -5,6 +5,7 @@ signal promotion_piecetype_selected(piece_name: String)
 
 @onready var horizontal_slider:HSlider = %HorizontalCameraSlider
 @onready var forward_slider:VSlider = %ForwardCameraSlider
+@onready var move_history:ItemList = $Rightside/HBoxContainer/RightsideMenu/Panel/MarginContainer/ItemList
 
 var placement_tree: Dictionary = {
 	"Standard Board": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -24,7 +25,6 @@ var placement_tree: Dictionary = {
 		"Centered layout": "88/88/88/88/4rnbqkbnr4/4pppppppp4/88/88/88/88/4PPPPPPPP4/4RNBQKBNR4/88/88/88/88 w KQkq - 0 1"
 	}
 }
-
 
 var move_num: int = 1
 
@@ -66,7 +66,7 @@ func _on_piece_placement_list_item_selected() -> void:
 
 
 func add_move(move:	Move):
-	$Rightside/HBoxContainer/RightsideMenu/Panel/MarginContainer/ItemList.add_item(str(move_num) + ") " + AlgebraicNotaion.get_notation(move),null,false)
+	move_history.add_item(str(move_num) + ") " + AlgebraicNotaion.get_notation(move),null,false)
 	move_num += 1
 
 

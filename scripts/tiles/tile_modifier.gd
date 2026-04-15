@@ -73,7 +73,7 @@ static func apply_modifiers_to_moveset(context, tile, piece, moveset):
 		result = modifier.modify_movement(context, piece, tile, result)
 	return result
 
-func modifier_strategy(current_move: CustomTreeNode):
+func modifier_strategy():
 	pass
 
 func create_dropdown_ui():

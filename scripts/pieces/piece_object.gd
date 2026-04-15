@@ -80,8 +80,6 @@ func apply_state():
 		_captured()
 	elif data.is_castling:
 		outline_material.albedo_color = PieceData.CASTLING_COLOR
-	elif data.is_checking:
-		outline_material.albedo_color = PieceData.CHECKING_COLOR
 	elif data.is_threatened:
 		outline_material.albedo_color = PieceData.THREATENED_COLOR
 	elif data.is_selected:
@@ -122,7 +120,7 @@ func _captured():
 	translate(Vector3(0,-5,0))
 
 
-func _moved(state:bool):
+func moved(state:bool):
 	data.has_moved = state
 	if state:
 		if data.name == "Pawn":

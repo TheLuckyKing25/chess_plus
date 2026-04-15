@@ -9,6 +9,7 @@ signal promotion_verified(piece: PieceObject)
 
 const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 
+
 var _game_overlay: Node
 
 
@@ -60,8 +61,9 @@ func assign_tile_neighbors():
 				tile.neighbors[direction] = null
 				continue
 
-			tile.neighbors[direction] = data.tile_array[data.get_index(next_tile_position.x,next_tile_position.y)]
+			tile.neighbors[direction] = data.tile_array[Match.get_board_index(next_tile_position.x,next_tile_position.y)]
 
+#region multilplayer
 func _show_loading_screen() -> void:
 	var wait_layer = CanvasLayer.new()
 	wait_layer.layer = 10
@@ -171,6 +173,8 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 		Match.is_promotion_occuring = false
 
 	next_turn()
+#endregion
+
 
 func generate_board() -> void:
 	data.tile_array.resize(data.file_count * data.rank_count)
@@ -207,8 +211,6 @@ func load_FEN(FE_notation:FEN) -> void:
 	detect_check(Player.current)
 
 
-
-
 func detect_check(player:Player) -> void:
 	var player_king: PieceObject = player.pieces["King"][0]
 	var player_king_tile: TileObject = data.tile_array[player_king.data.index]
@@ -238,11 +240,11 @@ func _set_en_passant(clicked_tile: TileObject) -> void:
 			+ (clicked_tile.data.rank - TileObject.selected.data.rank)/2
 			)
 	var en_passant_tile_file = TileObject.selected.data.file
-	TileObject.en_passant = data.tile_array[data.get_index(en_passant_tile_rank,en_passant_tile_file)]
+	TileObject.en_passant = data.tile_array[Match.get_board_index(en_passant_tile_rank,en_passant_tile_file)]
 	Player.en_passant = Player.current
 
 
-# MODIFIER HELPER FUNCTIONS
+#region MODIFIER HELPER FUNCTIONS
 func _apply_on_piece_enter(move: Move) -> void:
 	var destination_tile: TileObject = move.destination_tile
 	var piece: PieceObject = destination_tile.occupant
@@ -340,7 +342,7 @@ func _apply_on_piece_pass(move: Move) -> void:
 			break
 		if current_pos.y < 0 or current_pos.y >= data.file_count:
 			break
-		var tile := data.tile_array[data.get_index(current_pos.x, current_pos.y)]
+		var tile := data.tile_array[Match.get_board_index(current_pos.x, current_pos.y)]
 
 		for modifier in tile.data.modifier_order:
 			if modifier is PropertyLever:
@@ -374,7 +376,7 @@ func _get_smokey_tiles(origin_tile: TileObject, smokey: PropertySmokey) -> Array
 		if pos.y < 0 or pos.y >= data.file_count:
 			continue
 
-		var tile := data.tile_array[data.get_index(pos.x, pos.y)]
+		var tile := data.tile_array[Match.get_board_index(pos.x, pos.y)]
 		if tile != null and not out.has(tile):
 			out.append(tile)
 
@@ -417,6 +419,7 @@ func _update_smokey_visuals() -> void:
 						affected_tile.occupant.visible = false
 						if not smokey_pieces.has(affected_tile.occupant):
 							smokey_pieces.append(affected_tile.occupant)
+#endregion
 
 #region Tile Clicked
 func _on_tile_clicked(clicked_tile: TileObject) -> void:
@@ -516,12 +519,12 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 	# kingside castling
 	if castling_tile.data.file > middle_file_value:
-		castling_rook_index = data.get_index(
+		castling_rook_index = Match.get_board_index(
 				castling_tile.data.rank,
 				data.file_count-1
 				)
 
-		destination_index = data.get_index(
+		destination_index = Match.get_board_index(
 				castling_tile.data.rank,
 				castling_tile.data.file-1
 				)
@@ -529,8 +532,8 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 	# queenside castling
 	elif castling_tile.data.file < middle_file_value:
-		castling_rook_index = data.get_index(castling_tile.data.rank,0)
-		destination_index = data.get_index(
+		castling_rook_index = Match.get_board_index(castling_tile.data.rank,0)
+		destination_index = Match.get_board_index(
 				castling_tile.data.rank,
 				castling_tile.data.file+1
 				)
@@ -539,6 +542,7 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 	var castling_rook_destination = data.tile_array[destination_index]
 
 	perform_move(Move.new(data.tile_array[castling_rook_index],castling_rook_destination,Move.Outcome.IGNORE))
+
 
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
@@ -550,8 +554,10 @@ func show_selected_piece_movement() -> void:
 			TileObject.selected
 			)
 
+
 func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
 	return current_tile.neighbors[direction]
+
 
 # SAME LOGIC USED IN MoveList RESOURCE.
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
@@ -672,9 +678,9 @@ func _resolve_branching_movement(
 				# Get rook tile for current castling side
 				var rook_tile: TileObject
 				if current_tile_ptr.data.board_position > king_tile.data.board_position:
-					rook_tile = data.tile_array[data.get_index(king_tile.data.rank,data.file_count-1)]
+					rook_tile = data.tile_array[Match.get_board_index(king_tile.data.rank,data.file_count-1)]
 				elif current_tile_ptr.data.board_position < king_tile.data.board_position:
-					rook_tile = data.tile_array[data.get_index(king_tile.data.rank,0)]
+					rook_tile = data.tile_array[Match.get_board_index(king_tile.data.rank,0)]
 
 				if (	not rook_tile.occupant # if no occupant
 						or not rook_tile.occupant.is_in_group("Rook") # if occupant is not a rook
@@ -690,7 +696,7 @@ func _resolve_branching_movement(
 
 				var is_empty_between_pieces: bool = true
 				for tile_file in range(king_tile.data.file + range_increment_direction, rook_tile.data.file, range_increment_direction):
-					if data.tile_array[data.get_index(king_tile.data.rank,tile_file)].occupant:
+					if data.tile_array[Match.get_board_index(king_tile.data.rank,tile_file)].occupant:
 						is_empty_between_pieces = false
 
 				if not is_empty_between_pieces: # tiles between rook and king are occupied
@@ -727,7 +733,7 @@ func perform_move(move: Move):
 	piece_move_audio.play()
 
 	if not piece.data.has_moved:
-		piece._moved(true)
+		piece.moved(true)
 
 	_apply_on_piece_enter(move) # used for poison, kings favor, smokey, and button
 	_apply_on_piece_pass(move) # used only for lever
@@ -754,20 +760,18 @@ func perform_move(move: Move):
 		promotion_verified.emit(piece)
 
 	if not piece.data.has_moved:
-		piece._moved(true)
+		piece.moved(true)
 
-	#if move.algebraic_notation != "": # empty string due to castling move
-		#if move.flags & Move.Outcome.PROMOTION:
-			#move._notation_suffix += piece.data.algebraic_notation
-		#_game_overlay.add_move(move)
+	if AlgebraicNotaion.get_notation(move) != "": # empty string due to castling move
+		if move.flags & Move.Outcome.PROMOTION:
+			move._notation_suffix += piece.data.algebraic_notation
+		Match.move_history.append(AlgebraicNotaion.get_notation(move))
 
 
 ## Sets up the next turn
 func next_turn() -> void:
 	_apply_turn_end_modifiers()
 	_update_modifier_lifetimes()
-	#_game_overlay.horizontal_slider.value = 0
-	#_game_overlay.forward_slider.value = 0
 
 	# increments the turn number
 	Match.turn_num += 1

@@ -127,9 +127,9 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 				# Get rook tile for current castling side
 				var rook_tile: TileObject
 				if current_tile_ptr.data.board_position > king_tile.data.board_position:
-					rook_tile = Match.board.data.tile_array[Match.board.data.get_index(king_tile.data.rank,Match.board.data.file_count-1)]
+					rook_tile = Match.board.data.tile_array[Match.get_board_index(king_tile.data.rank,Match.board.data.file_count-1)]
 				elif current_tile_ptr.data.board_position < king_tile.data.board_position:
-					rook_tile = Match.board.data.tile_array[Match.board.data.get_index(king_tile.data.rank,0)]
+					rook_tile = Match.board.data.tile_array[Match.get_board_index(king_tile.data.rank,0)]
 
 				if (	not rook_tile.occupant # if no occupant
 						or not rook_tile.occupant.is_in_group("Rook") # if occupant is not a rook
@@ -145,7 +145,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				var is_empty_between_pieces: bool = true
 				for tile_file in range(king_tile.data.file + range_increment_direction, rook_tile.data.file, range_increment_direction):
-					if Match.board.data.tile_array[Match.board.data.get_index(king_tile.data.rank,tile_file)].occupant:
+					if Match.board.data.tile_array[Match.get_board_index(king_tile.data.rank,tile_file)].occupant:
 						is_empty_between_pieces = false
 
 				if not is_empty_between_pieces: # tiles between rook and king are occupied
@@ -188,12 +188,14 @@ func generate_legal_moves(player:Player):
 
 		virtual_board.unmake_move(move)
 
+
 func contains_move(move:Array[TileObject]) -> bool:
 	for list_move in moves:
 		if [list_move.starting_tile, list_move.destination_tile] == move:
 			return true
 
 	return false
+
 
 func is_legal(move:Move):
 	var is_legal_move:bool = true

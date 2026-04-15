@@ -23,11 +23,3 @@ func _init(
 	Match.players.black.promotion_rank = 0
 	self.rank_count = rank_count
 	self.file_count = file_count
-
-
-func get_index(rank:int,file:int) -> int:
-	return (file) + ((rank) * file_count)
-
-
-func get_board_position(index: int) -> Vector2i:
-	return Vector2i(index/file_count, index%file_count)

@@ -13,6 +13,6 @@ func _init():
 	is_stopping = true
 	components[LifetimeComponent.NAME] = LifetimeComponent.new()
 
-func modifier_strategy(current_move: CustomTreeNode):
-	current_move.remaining_movement.distance = 0
-	current_move.remaining_movement.branches = []
+#func modifier_strategy(current_move):
+	#current_move.remaining_movement.distance = 0
+	#current_move.remaining_movement.branches = []

@@ -34,6 +34,9 @@ var player: Player:
 		if player:
 			movement.set_direction_parity(player.direction_parity)
 
+var piece_object_node: PieceObject
+
+
 # Poison Tile variables
 var is_poisoned: bool = false
 var poison_turn_applied: int = -1
@@ -65,13 +68,6 @@ var is_checked: bool = false:
 	set(new_state):
 		is_checked = new_state
 		emit_changed()
-
-
-var is_checking: bool = false:
-	set(new_state):
-		is_checking = new_state
-		emit_changed()
-
 
 var is_castling: bool = false:
 	set(new_state):

@@ -48,6 +48,7 @@ var can_perform_capture: bool:
 
 var data: TileDataChess = TileDataChess.new()
 
+
 static func new_tile(index: int):
 	var new_tile_data:TileDataChess = TileDataChess.new()
 	new_tile_data.index = index
@@ -104,6 +105,7 @@ func tile_checked_movement():
 	state_material.albedo_color = data.MOVE_CHECKING_COLOR
 	state_material.emission_enabled = false
 
+
 #region States
 func _select():
 	data.is_selected = true
@@ -155,8 +157,6 @@ func _on_stats_changed():
 	elif data.is_castling:
 		state_material.albedo_color = data.CASTLING_COLOR
 		state_material.emission_enabled = true
-	elif data.is_checking:
-		state_material.albedo_color = data.CHECKING_COLOR
 	elif data.is_checked:
 		state_material.albedo_color = data.CHECKED_COLOR
 	elif data.is_threatened:

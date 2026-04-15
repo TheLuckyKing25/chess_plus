@@ -12,10 +12,10 @@ func _init():
 	can_modify_movement = true
 	components[RotationComponent.NAME] = RotationComponent.new()
 
-func modifier_strategy(current_move:CustomTreeNode):
-	if current_move.remaining_movement == null:
-		return
-	current_move.remaining_movement.rotate_movement(components[RotationComponent.NAME].value)
+#func modifier_strategy(current_move):
+	#if current_move.remaining_movement == null:
+		#return
+	#current_move.remaining_movement.rotate_movement(components[RotationComponent.NAME].value)
 
 
 func modify_movement(movement: Movement):
