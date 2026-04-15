@@ -10,6 +10,7 @@ static func generate_moves(board_data: BoardData):
 	for piece in Player.current.all_pieces:
 		move_list.generate_piece_moves(piece)
 
+
 func generate_piece_moves(piece: PieceObject):
 	pass
 
@@ -17,6 +18,7 @@ func generate_piece_moves(piece: PieceObject):
 
 func _init(board_data:BoardData) -> void:
 	self.board_data = board_data
+
 
 # create list of all possible moves
 func generate_pseudo_legal_moves(player: Player):
@@ -28,25 +30,10 @@ func generate_pseudo_legal_moves(player: Player):
 		if moveset.distance == 0 and moveset.is_branching:
 			get_all_moves(piece, moveset, Match.board.data.tile_array[piece.data.index])
 
+
 func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
-	var next_tile_position: Vector2i = (
-			current_tile.data.board_position
-			+ Movement.neighboring_tiles[direction]
-			)
+	return current_tile.neighbors[direction]
 
-	if (	next_tile_position.x > Match.board.data.rank_count-1
-			or next_tile_position.x < 0
-			or next_tile_position.y > Match.board.data.file_count-1
-			or next_tile_position.y < 0
-			):
-		return # next_tile does not exist
-
-	return Match.board.data.tile_array[
-			Match.board.data.get_index(
-					next_tile_position.x,
-					next_tile_position.y
-					)
-			]
 
 func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject):
 
@@ -65,7 +52,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 		var has_slid:bool = false
 
 		while distance > 0:
-			current_tile_ptr = get_next_tile(current_tile_ptr, branch.direction)
+			current_tile_ptr = current_tile_ptr.neighbors[branch.direction]
 
 			if current_tile_ptr == null:
 				break # current_tile_ptr does not exist

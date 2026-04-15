@@ -1,4 +1,3 @@
-class_name PauseMenuState
 extends UIState
 
 func enter():

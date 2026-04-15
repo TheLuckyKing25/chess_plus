@@ -5,7 +5,6 @@ enum Type{
 	MOVING = 0,
 	THREATENING = 1,
 	CASTLING = 2,
-	JUMPING = 3,
 }
 
 enum Outcome{

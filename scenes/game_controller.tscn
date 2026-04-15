@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://c5sp4xfh2lsyp"]
+[gd_scene load_steps=38 format=3 uid="uid://c5sp4xfh2lsyp"]
 
 [ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/state/state_machine.gd" id="1_twqac"]
 [ext_resource type="Script" uid="uid://cojx763b4281c" path="res://scripts/state/ui_states/start_menu_state.gd" id="2_25rj4"]
@@ -13,7 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://b1twmfuyqv1lx" path="res://scenes/menu/tile_modifier_screen.tscn" id="7_13gk1"]
 [ext_resource type="Script" uid="uid://befv64o3i2v02" path="res://scripts/state/turn_states/turn_transition.gd" id="7_d2e6m"]
 [ext_resource type="Script" uid="uid://cm1hbc3n7piww" path="res://scripts/state/ui_states/game_overlay_state.gd" id="8_endrn"]
+[ext_resource type="Script" uid="uid://bse1x1yhvxffe" path="res://scripts/state/ui_states/guidebook_screen_state.gd" id="9_1m60t"]
 [ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/game_overlay.tscn" id="9_shnkw"]
+[ext_resource type="PackedScene" uid="uid://c0md30urlwow5" path="res://scenes/menu/guidebook_screen.tscn" id="10_fpu5w"]
 [ext_resource type="Script" uid="uid://cj0pks1ybadwl" path="res://scripts/state/ui_states/pause_menu_state.gd" id="10_py7vm"]
 [ext_resource type="PackedScene" uid="uid://dh0xqsvmtokbh" path="res://scenes/menu/pause_screen.tscn" id="11_1m60t"]
 [ext_resource type="Script" uid="uid://puhj5bsjchm4" path="res://scripts/state/ui_states/wait_state.gd" id="12_fpu5w"]
@@ -185,6 +187,10 @@ initial_state = NodePath("StartMenuState")
 [node name="StartMenuState" type="Node" parent="ControllerUI"]
 script = ExtResource("2_25rj4")
 scene = ExtResource("3_wksuf")
+
+[node name="GuidebookScreenState" type="Node" parent="ControllerUI"]
+script = ExtResource("9_1m60t")
+scene = ExtResource("10_fpu5w")
 
 [node name="MatchCustomizationStateM" type="Node" parent="ControllerUI" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_25rj4")

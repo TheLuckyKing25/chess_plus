@@ -1,5 +1,7 @@
 extends Control
 
+@onready var join_button = %JoinButton
+
 var ip:   String = ""
 var port: String = ""
 

@@ -78,6 +78,7 @@ theme_override_font_sizes/font_size = 20
 placeholder_text = "Host IP e.g. 127.0.0.1"
 
 [node name="JoinButton" type="Button" parent="Background/BoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 50)
 layout_mode = 2
 mouse_default_cursor_shape = 2

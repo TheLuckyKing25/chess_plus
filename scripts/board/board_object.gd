@@ -21,8 +21,8 @@ var data: BoardData
 
 
 @onready var board_base = $BoardBase
-@onready var _piece_capture_audio = $Piece_capture
-@onready var _piece_move_audio = $Piece_move
+@onready var piece_capture_audio = $Piece_capture
+@onready var piece_move_audio = $Piece_move
 
 
 func _ready() -> void:
@@ -39,9 +39,28 @@ func _ready() -> void:
 	if NetworkManager.is_online and multiplayer.is_server():
 		multiplayer.peer_connected.connect(_on_peer_connected_resync)
 
-
 	if NetworkManager.is_online and not multiplayer.is_server():
 		_show_loading_screen()
+
+
+func assign_tile_neighbors():
+	for tile in data.tile_array:
+		for direction in range(0,8):
+			direction = direction as Movement.Direction
+			var next_tile_position: Vector2i = (
+					tile.data.board_position
+					+ Movement.neighboring_tiles[direction]
+					)
+
+			if (	next_tile_position.x > data.rank_count-1
+					or next_tile_position.x < 0
+					or next_tile_position.y > data.file_count-1
+					or next_tile_position.y < 0
+					):
+				tile.neighbors[direction] = null
+				continue
+
+			tile.neighbors[direction] = data.tile_array[data.get_index(next_tile_position.x,next_tile_position.y)]
 
 func _show_loading_screen() -> void:
 	var wait_layer = CanvasLayer.new()
@@ -50,6 +69,7 @@ func _show_loading_screen() -> void:
 	add_child(wait_layer)
 	var loading = preload("uid://v4i5knax4g12").instantiate()
 	wait_layer.add_child(loading)
+
 
 func _hide_loading_screen() -> void:
 	var loading_layer = get_node_or_null("LoadingLayer")
@@ -172,6 +192,7 @@ func generate_board() -> void:
 			))
 		$BoardBase.add_child(new_tile, true)
 
+	assign_tile_neighbors()
 
 func load_FEN(FE_notation:FEN) -> void:
 	var fen_decoder := FENDecoder.new(FE_notation)
@@ -529,23 +550,8 @@ func show_selected_piece_movement() -> void:
 			TileObject.selected
 			)
 
-
 func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
-	var next_tile_position: Vector2i = (
-			current_tile.data.board_position
-			+ Movement.neighboring_tiles[direction]
-			)
-
-	if (	next_tile_position.x > data.rank_count-1
-			or next_tile_position.x < 0
-			or next_tile_position.y > data.file_count-1
-			or next_tile_position.y < 0
-			):
-		return # next_tile does not exist
-
-	return data.tile_array[
-			data.get_index(next_tile_position.x,next_tile_position.y)
-			]
+	return current_tile.neighbors[direction]
 
 # SAME LOGIC USED IN MoveList RESOURCE.
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
@@ -571,7 +577,7 @@ func _resolve_branching_movement(
 		var has_slid:bool = false
 
 		while distance > 0:
-			current_tile_ptr = get_next_tile(current_tile_ptr, branch.direction)
+			current_tile_ptr = current_tile_ptr.neighbors[branch.direction]
 
 			if current_tile_ptr == null:
 				break # current_tile_ptr does not exist
@@ -704,7 +710,7 @@ func _resolve_branching_movement(
 
 func _capture_piece(piece) -> void:
 	piece._captured()
-	_piece_capture_audio.play()
+	piece_capture_audio.play()
 
 
 func perform_move(move: Move):
@@ -718,7 +724,7 @@ func perform_move(move: Move):
 	piece.global_rotation = move.destination_tile.global_rotation + piece.global_rotation
 	piece.reparent(move.destination_tile)
 	piece.data.index = move.destination_tile.data.index
-	_piece_move_audio.play()
+	piece_move_audio.play()
 
 	if not piece.data.has_moved:
 		piece._moved(true)

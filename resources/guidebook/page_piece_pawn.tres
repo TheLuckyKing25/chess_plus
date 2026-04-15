@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GuidebookPage" load_steps=3 format=3 uid="uid://cexmyxi1pxal5"]
+
+[ext_resource type="Texture2D" uid="uid://lepc2qnq7lph" path="res://resources/pieces/icons/icon_pawn_light.tres" id="1_gnpmt"]
+[ext_resource type="Script" uid="uid://bp3gkpv40iax2" path="res://scripts/guidebook_page.gd" id="1_tyxt5"]
+
+[resource]
+script = ExtResource("1_tyxt5")
+category = "Pieces"
+name = "Pawn"
+icon = ExtResource("1_gnpmt")
+description = ""
+metadata/_custom_type_script = "uid://bp3gkpv40iax2"

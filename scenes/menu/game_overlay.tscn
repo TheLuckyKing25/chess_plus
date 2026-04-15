@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2b5f3ejhqp35"]
+[gd_scene load_steps=7 format=3 uid="uid://b2b5f3ejhqp35"]
 
 [ext_resource type="Theme" uid="uid://dx603rimqml12" path="res://resources/themes/game_overlay_theme.tres" id="1_51kpi"]
 [ext_resource type="Script" uid="uid://btrxdnasph4pi" path="res://scripts/menu/game_overlay.gd" id="1_xagep"]
+[ext_resource type="Texture2D" uid="uid://dwxqdo0clrgtr" path="res://assets/icons/camera_icon.svg" id="3_xagep"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oxcsm"]
 resource_name = "Panel"
@@ -249,9 +250,8 @@ tab_alignment = 1
 clip_tabs = false
 scrolling_enabled = false
 scroll_to_selected = false
-tab_count = 2
+tab_count = 1
 tab_0/title = "Debug"
-tab_1/title = "Rulebook(WIP"
 
 [node name="Panel" type="Panel" parent="Leftside/HBoxContainer/LeftsideMenu"]
 custom_minimum_size = Vector2(250, 0)
@@ -308,12 +308,13 @@ size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 theme_type_variation = &"CameraButton"
 toggle_mode = true
-button_pressed = true
-text = "Cam"
+icon = ExtResource("3_xagep")
 text_overrun_behavior = 1
+expand_icon = true
 
 [node name="HorizontalCameraSlider" type="HSlider" parent="Leftside/HBoxContainer/Container/Control"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 1
 anchors_preset = -1
@@ -332,6 +333,7 @@ tick_count = 3
 
 [node name="ForwardCameraSlider" type="VSlider" parent="Leftside/HBoxContainer/Container/Control"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 1
 anchors_preset = -1

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cvrnro0pwca2y" path="res://scripts/tiles/tile_modifier_icon.gd" id="2_8r5y1"]
 
 [node name="ModifierIcon" type="Panel"]
-custom_minimum_size = Vector2(150, 150)
+custom_minimum_size = Vector2(240, 240)
 tooltip_text = "Test"
 theme_override_styles/panel = ExtResource("1_704u8")
 script = ExtResource("2_8r5y1")

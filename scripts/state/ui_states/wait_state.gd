@@ -1,4 +1,3 @@
-class_name WaitState
 extends UIState
 
 @export var previous_state:State

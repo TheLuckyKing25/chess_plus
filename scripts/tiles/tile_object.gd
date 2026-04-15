@@ -20,6 +20,18 @@ var occupant: PieceObject = null:
 			new_occupant.clicked.connect(Callable(self, "_on_occupant_clicked"))
 		occupant = new_occupant
 
+var neighbors: Dictionary[Movement.Direction, TileObject] = {
+	Movement.Direction.NORTH: null,
+	Movement.Direction.NORTHEAST: null,
+	Movement.Direction.EAST: null,
+	Movement.Direction.SOUTHEAST: null,
+	Movement.Direction.SOUTH: null,
+	Movement.Direction.SOUTHWEST: null,
+	Movement.Direction.WEST: null,
+	Movement.Direction.NORTHWEST: null,
+}
+
+
 var is_mouse_on_tile: bool = false
 
 var is_occupied:bool:
@@ -44,6 +56,8 @@ static func new_tile(index: int):
 	new_tile.data = new_tile_data
 	Match.add_tile(new_tile)
 	return new_tile
+
+
 
 func _ready() -> void:
 	data.changed.connect(Callable(self, "_on_stats_changed"))

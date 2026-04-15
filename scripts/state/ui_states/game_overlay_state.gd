@@ -1,4 +1,3 @@
-class_name GameOverlayState
 extends UIState
 
 func enter():

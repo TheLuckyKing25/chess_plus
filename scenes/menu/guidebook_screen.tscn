@@ -1,0 +1,164 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0md30urlwow5"]
+
+[ext_resource type="Script" uid="uid://cudncmw552xtv" path="res://scripts/menu/guidebook_screen.gd" id="2_pes6k"]
+
+[sub_resource type="Gradient" id="Gradient_6tgmk"]
+offsets = PackedFloat32Array(0, 0.00680274, 1)
+colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_viyhn"]
+gradient = SubResource("Gradient_6tgmk")
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vpd1n"]
+texture = SubResource("GradientTexture2D_viyhn")
+region_rect = Rect2(0, 18, 64, 32)
+
+[node name="Guidebook" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("2_pes6k")
+
+[node name="Background" type="Panel" parent="."]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_vpd1n")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+text = "Guidebook"
+horizontal_alignment = 1
+
+[node name="BackgroundPanel" type="Panel" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"BackgroundPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="List" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer"]
+z_index = 1
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/outline_size = 10
+text = "Contents"
+horizontal_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Search (WIP)"
+placeholder_text = "Search"
+emoji_menu_enabled = false
+
+[node name="ContentTree" type="Tree" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/v_separation = 0
+theme_override_constants/icon_max_width = 30
+theme_override_font_sizes/font_size = 12
+hide_root = true
+auto_tooltip = false
+
+[node name="Description" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Images" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BackBackgroundPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 60)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_type_variation = &"BackgroundPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Panel" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"SettingButtons"
+text = "Back"
+
+[connection signal="ready" from="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer/ContentTree" to="." method="_on_content_tree_ready"]

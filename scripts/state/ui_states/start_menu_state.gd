@@ -1,4 +1,3 @@
-class_name StartMenuState
 extends UIState
 
 func enter():
@@ -41,7 +40,7 @@ func on_join_match_pressed():
 
 
 func on_rulebook_pressed():
-	pass
+	transitioned.emit(self,"GuidebookScreenState")
 
 func on_settings_pressed():
 	pass

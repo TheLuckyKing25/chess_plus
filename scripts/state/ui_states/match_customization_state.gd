@@ -1,4 +1,3 @@
-class_name MatchCustomizationState
 extends UIState
 
 func enter():

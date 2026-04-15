@@ -1,4 +1,3 @@
-class_name TileModifierSelectionState
 extends UIState
 
 func enter():

@@ -34,7 +34,6 @@ var player: Player:
 		if player:
 			movement.set_direction_parity(player.direction_parity)
 
-
 # Poison Tile variables
 var is_poisoned: bool = false
 var poison_turn_applied: int = -1

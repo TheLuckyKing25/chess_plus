@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="GuidebookPage" load_steps=2 format=3 uid="uid://bsrakcwlw3ibs"]
+
+[ext_resource type="Script" uid="uid://bp3gkpv40iax2" path="res://scripts/guidebook_page.gd" id="1_p22oj"]
+
+[resource]
+script = ExtResource("1_p22oj")
+category = "Tile Modifiers"
+name = "Conveyer"
+description = ""
+metadata/_custom_type_script = "uid://bp3gkpv40iax2"

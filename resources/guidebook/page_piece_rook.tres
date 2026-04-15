@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GuidebookPage" load_steps=3 format=3 uid="uid://eou5fk3e6mcf"]
+
+[ext_resource type="Texture2D" uid="uid://bc3lgf0m3b26c" path="res://resources/pieces/icons/icon_rook_light.tres" id="1_kj3vw"]
+[ext_resource type="Script" uid="uid://bp3gkpv40iax2" path="res://scripts/guidebook_page.gd" id="2_aecte"]
+
+[resource]
+script = ExtResource("2_aecte")
+category = "Pieces"
+name = "Rook"
+icon = ExtResource("1_kj3vw")
+description = ""
+metadata/_custom_type_script = "uid://bp3gkpv40iax2"

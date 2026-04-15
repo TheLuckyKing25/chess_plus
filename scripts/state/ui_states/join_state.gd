@@ -1,4 +1,3 @@
-class_name JoinState
 extends UIState
 
 func enter():
@@ -7,14 +6,14 @@ func enter():
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
 
-	#instantiated_scene.connect_to_scene()
+	instantiated_scene.join_button.pressed.connect(Callable(self,"on_join_pressed"))
 
 	add_child(instantiated_scene)
 
 
 func exit():
 
-	#instantiated_scene.disconnect_from_scene()
+	instantiated_scene.join_button.pressed.disconnect(Callable(self,"on_join_pressed"))
 
 	remove_child(instantiated_scene)
 	instantiated_scene.queue_free()
@@ -27,6 +26,11 @@ func input(event) -> void:
 		on_back_pressed()
 
 func on_join_pressed():
+	if instantiated_scene.ip.is_empty() or instantiated_scene.port.length() < 4:
+		return
+
+	NetworkManager.connected_to_game.connect(instantiated_scene._on_connected_to_game)
+	NetworkManager.join_game(instantiated_scene.ip, instantiated_scene.port)
 	transitioned.emit(self, "LoadingState")
 
 
