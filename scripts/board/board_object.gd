@@ -185,7 +185,7 @@ func generate_board() -> void:
 
 	for tile_num in range(data.rank_count * data.file_count):
 		var new_tile:TileObject = TileObject.new_tile(tile_num)
-		new_tile.data.board_position = data.get_board_position(new_tile.data.index)
+		new_tile.data.board_position = Match.get_board_position(new_tile.data.index)
 
 		data.tile_array[tile_num] = new_tile
 		# move tile to its location on the board
