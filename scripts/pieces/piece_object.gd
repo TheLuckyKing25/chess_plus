@@ -9,13 +9,15 @@ const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
 static var selected: PieceObject = null
 static var en_passant: PieceObject = null
 
+static var is_selected: bool:
+	get():
+		return selected != null
+
 var is_mouse_on_piece: bool = false
 
 var piece_material: StandardMaterial3D
 var outline_material: StandardMaterial3D
 var mouseover_material: StandardMaterial3D
-
-var movement_on_board
 
 @export var data: PieceData:
 	set(new_data):
@@ -76,26 +78,34 @@ func promote(piece_name: String):
 
 
 func apply_state():
-	if data.is_captured:
+	if data.flag.is_captured.enabled:
 		_captured()
-	elif data.is_castling:
+	elif data.flag.is_castling.enabled:
 		outline_material.albedo_color = PieceData.CASTLING_COLOR
-	elif data.is_threatened:
+	elif data.flag.is_threatened.enabled:
 		outline_material.albedo_color = PieceData.THREATENED_COLOR
-	elif data.is_selected:
+	elif data.flag.is_selected.enabled:
 		outline_material.albedo_color = PieceData.SELECT_COLOR
-	elif data.is_checked:
+	elif data.flag.is_checked.enabled:
 		outline_material.albedo_color = PieceData.CHECKED_COLOR
 	else:
 		outline_material.albedo_color = Color(0,0,0,0)
-	if data.has_moved:
+
+	if data.flag.has_moved.enabled:
 		add_to_group("has_moved")
 	else:
 		remove_from_group("has_moved")
 
+func move_to(tile: TileObject):
+	tile.occupant = self
+	global_position = (position * Vector3(0,1,0)) + tile.global_position
+	global_rotation = tile.global_rotation + global_rotation
+	reparent(tile)
+	data.index = tile.data.index
+
 
 func _ready() -> void:
-	data.changed.connect(Callable(self,"apply_state"))
+	data.connect_flag_components(Callable(self,"apply_state"))
 	add_to_group(data.name)
 	$Piece_Mesh.mesh = data.object_mesh
 
@@ -121,7 +131,7 @@ func _captured():
 
 
 func moved(state:bool):
-	data.has_moved = state
+	data.flag.has_moved.enabled = state
 	if state:
 		if data.name == "Pawn":
 			data.movement = load("uid://bpexpwlvi0ymy")
@@ -132,12 +142,8 @@ func moved(state:bool):
 		remove_from_group("has_moved")
 
 
-func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if (	event is InputEventMouseButton
-			and event.is_pressed()
-			and event.button_index == MOUSE_BUTTON_LEFT
-			and is_mouse_on_piece
-		):
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("Select") and is_mouse_on_piece:
 		clicked.emit(self)
 
 

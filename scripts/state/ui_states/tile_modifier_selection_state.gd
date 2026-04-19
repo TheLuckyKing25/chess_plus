@@ -1,7 +1,7 @@
 extends UIState
 
 func enter():
-	print_rich("[b][color=green]Entered[/color]: [/b]",name)
+	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
 	#print_debug("enter ", name)
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
@@ -25,7 +25,7 @@ func exit():
 
 	remove_child(instantiated_scene)
 	#print_debug("exit ", name)
-	print_rich("[b][color=red]Exited[/color]: [/b]",name)
+	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
 
 func input(event:InputEvent) -> void:
 	if event.is_action_released("ui_cancel"):
@@ -47,7 +47,7 @@ func on_back_pressed():
 func on_continue_pressed():
 	Match.current_game_state = Match.GameState.GAMEPLAY
 	Match.game_state_changed.emit(Match.current_game_state)
-	get_tree().call_group("Tile","clear_states")
+	get_tree().call_group("Tile","clear_flags")
 	get_tree().call_group("Tile","remove_from_group","Selected")
 
 	if NetworkManager.is_online:

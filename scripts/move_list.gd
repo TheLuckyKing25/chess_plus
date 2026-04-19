@@ -31,10 +31,6 @@ func generate_pseudo_legal_moves(player: Player):
 			get_all_moves(piece, moveset, Match.board.data.tile_array[piece.data.index])
 
 
-func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
-	return current_tile.neighbors[direction]
-
-
 func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject):
 
 	moveset = moveset.get_duplicate()
@@ -72,7 +68,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 					moveset.is_branching = false
 
 				if modifier.is_slippery:
-					var next_tile = get_next_tile(current_tile_ptr, branch.direction)
+					var next_tile = current_tile_ptr.get_next_tile(branch.direction)
 					if not next_tile.occupant:
 						has_slid = true
 						break
@@ -133,7 +129,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				if (	not rook_tile.occupant # if no occupant
 						or not rook_tile.occupant.is_in_group("Rook") # if occupant is not a rook
-						or rook_tile.occupant.data.has_moved # if rook has moved
+						or rook_tile.occupant.data.flag.has_moved.enabled # if rook has moved
 						):
 					break
 

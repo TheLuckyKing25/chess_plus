@@ -9,7 +9,6 @@ resource_local_to_scene = true
 script = ExtResource("1_n5mwn")
 name = "Pawn"
 algebraic_notation = "P"
-description = "PLACEHOLDER"
 object_mesh = ExtResource("2_iqttr")
 can_promote = true
 promotion_option = false

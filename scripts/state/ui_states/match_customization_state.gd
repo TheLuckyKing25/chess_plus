@@ -1,7 +1,7 @@
 extends UIState
 
 func enter():
-	print_rich("[b][color=green]Entered[/color]: [/b]",name)
+	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
 	#print_debug("enter ", name)
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
@@ -33,12 +33,12 @@ func exit():
 		Match.board.generate_board()
 		Match.board.load_FEN(Match.board.data.FEN_board_state)
 		Match.is_board_generated = true
-		for tile in get_tree().get_nodes_in_group("Tile"):
-			tile.clicked.connect(Callable(Match.board,"_on_tile_clicked"))
+		#for tile in get_tree().get_nodes_in_group("Tile"):
+			#tile.clicked.connect(Callable(Match.board,"_on_tile_clicked"))
 
 	remove_child(instantiated_scene)
 	#print_debug("exit ", name)
-	print_rich("[b][color=red]Exited[/color]: [/b]",name)
+	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
 
 func input(event) -> void:
 	if event.is_action_released("ui_cancel"):

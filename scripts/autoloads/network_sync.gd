@@ -18,8 +18,8 @@ func board_setup(file_count: int, rank_count: int, fen_string: String) -> void:
 	Match.board.generate_board()
 	Match.board.load_FEN(Match.board.data.FEN_board_state)
 	Match.current_game_state = Match.GameState.BOARD_CUSTOMIZATION
-	for tile in get_tree().get_nodes_in_group("Tile"):
-		tile.clicked.connect(Callable(self, "_on_tile_clicked"))
+	#for tile in get_tree().get_nodes_in_group("Tile"):
+		#tile.clicked.connect(Callable(tile, "_on_tile_clicked"))
 
 @rpc("authority", "call_remote", "reliable")
 func gameplay_start() -> void:

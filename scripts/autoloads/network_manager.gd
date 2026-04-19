@@ -54,9 +54,9 @@ func host_game() -> Dictionary:
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	print("NetworkManager: Hosting on port %d, waiting for opponent..." % port)
+	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] Hosting on port %d, waiting for opponent..." % port)
 	var result = { "ip": get_local_ip(), "code": port_to_code(port) }
-	print("emitting game_hosted: ", result)
+	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] emitting game_hosted: ", result)
 	game_hosted.emit(result["ip"], result["code"])
 	return result
 
@@ -77,14 +77,14 @@ func join_game(ip: String, code: String) -> void:
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	print("NetworkManager: Connecting to %s:%d..." % [ip, port])
+	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] Connecting to %s:%d..." % [ip, port])
 
 func _on_peer_connected(_id: int) -> void:
-	print("NetworkManager: Peer connected. starting game.")
+	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] Peer connected. starting game.")
 	connected_to_game.emit()
 
 func _on_connected_to_server() -> void:
-	print("NetworkManager: Connected to server. starting game.")
+	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] Connected to server. starting game.")
 	connected_to_game.emit()
 
 func _on_connection_failed() -> void:
@@ -92,7 +92,7 @@ func _on_connection_failed() -> void:
 	is_online = false
 
 func _on_peer_disconnected(_id: int) -> void:
-	print("NetworkManager: Opponent disconnected.")
+	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] Opponent disconnected.")
 	opponent_disconnected.emit()
 
 ## Always true in local/offline mode.

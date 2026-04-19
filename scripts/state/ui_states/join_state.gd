@@ -1,7 +1,7 @@
 extends UIState
 
 func enter():
-	print_rich("[b][color=green]Entered[/color]: [/b]",name)
+	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
 	#print_debug("enter ", name)
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
@@ -18,7 +18,7 @@ func exit():
 	remove_child(instantiated_scene)
 	instantiated_scene.queue_free()
 	#print_debug("exit ", name)
-	print_rich("[b][color=red]Exited[/color]: [/b]",name)
+	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
 
 
 func input(event) -> void:

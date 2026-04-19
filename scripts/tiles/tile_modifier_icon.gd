@@ -25,6 +25,7 @@ func _init(
 func _on_icon_ready() -> void:
 	set_icon(icon_image)
 
+
 func set_icon(new_icon):
 	icon_image = new_icon
 	%Icon.texture = new_icon

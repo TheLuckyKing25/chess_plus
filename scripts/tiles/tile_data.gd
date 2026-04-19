@@ -26,57 +26,45 @@ var modifier_order: Array[TileModifier] = []:
 #region Position
 var board_position: Vector2i
 
+var index: int
+
 var algebraic_notation: String:
-	get():
-		return char(97 + rank) + str((1 + file))
+	get(): return char(97 + rank) + str((1 + file))
 
 var rank: int:
-	get():
-		return board_position.x
+	get(): return board_position.x
 
 var file: int:
-	get():
-		return board_position.y
+	get(): return board_position.y
 
-var index: int
 #endregion
 
-#region States
-var is_selected:bool = false:
-	set(new_state):
-		is_selected = new_state
-		emit_changed()
 
-var is_movement:bool = false:
-	set(new_state):
-		is_movement = new_state
-		emit_changed()
+var flag: Dictionary[String, FlagComponent] = {
+	"is_selected": FlagComponent.new(),
+	"is_movement": FlagComponent.new(),
+	"is_castling": FlagComponent.new(),
+	"is_threatened": FlagComponent.new(),
+	"is_checked": FlagComponent.new(),
+	"is_checked_movement": FlagComponent.new(),
+}
 
-var is_castling:bool = false:
-	set(new_state):
-		is_castling = new_state
-		emit_changed()
 
-var is_threatened:bool = false:
-	set(new_state):
-		is_threatened = new_state
-		emit_changed()
-
-var is_checked:bool = false:
-	set(new_state):
-		is_checked = new_state
-		emit_changed()
-
-var is_checked_movement:bool = false:
-	set(new_state):
-		is_checked_movement = new_state
-		emit_changed()
-#endregion
+func connect_flag_components(function:Callable):
+	for component in flag.keys():
+		flag[component].changed.connect(function)
 
 
 func _init() -> void:
-	#self.index = index
 	resource_local_to_scene = true
+
 
 func clear_modifiers():
 	modifier_order = []
+
+
+func get_tile_color() -> Color:
+	match (file + rank) % 2:
+		0: return LIGHT_COLOR
+		1: return DARK_COLOR
+		_: return Color(0,0,0)

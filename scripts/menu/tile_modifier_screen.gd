@@ -97,7 +97,7 @@ func _on_add_pressed() -> void:
 		var tile_modifier_order = tile.data.modifier_order
 		tile_modifier_order.append_array(tile_modifier_list.duplicate(true))
 		tile.data.modifier_order = tile_modifier_order
-		tile._unselect()
+		tile.change("is_selected",false)
 		tile.remove_from_group("Selected")
 	for child in %AppliedTileModifiers.get_children():
 		%AppliedTileModifiers.remove_child(child)
@@ -109,7 +109,7 @@ func _on_replace_pressed() -> void:
 
 	for tile in tiles:
 		tile.data.modifier_order = tile_modifier_list.duplicate(true)
-		tile._unselect()
+		tile.change("is_selected",false)
 		tile.remove_from_group("Selected")
 	for child in %AppliedTileModifiers.get_children():
 		%AppliedTileModifiers.remove_child(child)

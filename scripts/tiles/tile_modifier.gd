@@ -73,8 +73,22 @@ static func apply_modifiers_to_moveset(context, tile, piece, moveset):
 		result = modifier.modify_movement(context, piece, tile, result)
 	return result
 
+
+static func apply_on_piece_enter(move: Move) -> void:
+	var destination_tile: TileObject = move.destination_tile
+	var piece: PieceObject = destination_tile.occupant
+
+	if destination_tile == null or piece == null:
+		return
+
+	for modifier in destination_tile.data.modifier_order:
+		modifier.on_piece_enter(piece, move.starting_tile, destination_tile)
+
+
+
 func modifier_strategy():
 	pass
+
 
 func create_dropdown_ui():
 	dropdown_ui = VBoxContainer.new()

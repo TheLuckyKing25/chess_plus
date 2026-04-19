@@ -19,14 +19,24 @@ enum Outcome{
 	EN_PASSANT = 128,
 }
 
-var starting_tile: TileObject
+var outcome_flag: Dictionary[String, FlagComponent] = {
+	"move": FlagComponent.new(),
+	"capturing": FlagComponent.new(),
+	"promotion": FlagComponent.new(),
+	"check": FlagComponent.new(),
+	"checkmate": FlagComponent.new(),
+	"castling_queenside": FlagComponent.new(),
+	"castling_kingside": FlagComponent.new(),
+	"en_passant": FlagComponent.new()
+}
 
+var ignore_move: bool = false
+
+var starting_tile: TileObject
 
 var destination_tile: TileObject
 
-
 var type_flags: int
-
 
 var outcome_flags: int
 

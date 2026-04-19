@@ -44,28 +44,9 @@ func _ready() -> void:
 		_show_loading_screen()
 
 
-func assign_tile_neighbors():
-	for tile in data.tile_array:
-		for direction in range(0,8):
-			direction = direction as Movement.Direction
-			var next_tile_position: Vector2i = (
-					tile.data.board_position
-					+ Movement.neighboring_tiles[direction]
-					)
-
-			if (	next_tile_position.x > data.rank_count-1
-					or next_tile_position.x < 0
-					or next_tile_position.y > data.file_count-1
-					or next_tile_position.y < 0
-					):
-				tile.neighbors[direction] = null
-				continue
-
-			tile.neighbors[direction] = data.tile_array[Match.get_board_index(next_tile_position.x,next_tile_position.y)]
-
 #region multilplayer
 func _show_loading_screen() -> void:
-	var wait_layer = CanvasLayer.new()
+	var wait_layer := CanvasLayer.new()
 	wait_layer.layer = 10
 	wait_layer.name = "LoadingLayer"
 	add_child(wait_layer)
@@ -129,11 +110,7 @@ func _serialize_tile_modifiers() -> Dictionary:
 		result[tile.data.index] = modifier_list
 	return result
 
-func _is_my_turn() -> bool:
-	var current_player_index: int = 0 if Player.current == Match.players.white else 1
-	return NetworkManager.is_my_turn(current_player_index)
-
-func _submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
+func submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
 	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
 	if NetworkManager.is_online:
 		_sync_move.rpc(from_index, to_index, flags, ep_piece_index, ep_tile_index)
@@ -196,18 +173,18 @@ func generate_board() -> void:
 			))
 		$BoardBase.add_child(new_tile, true)
 
-	assign_tile_neighbors()
+	data.assign_tile_neighbors()
 
 func load_FEN(FE_notation:FEN) -> void:
 	var fen_decoder := FENDecoder.new(FE_notation)
 	data.FEN_board_state = FE_notation
-	get_tree().call_group("Tile","clear_states")
+	get_tree().call_group("Tile","clear_flags")
 	fen_decoder.apply()
 
 	data.legal_moves = MoveList.new(data)
 	data.legal_moves.generate_legal_moves(Player.current)
 
-	_clear_check()
+	get_tree().call_group("Tile","clear_check_flag")
 	detect_check(Player.current)
 
 
@@ -219,18 +196,12 @@ func detect_check(player:Player) -> void:
 	opponent_moves.generate_pseudo_legal_moves(Match.get_opponent_of(player))
 
 	for move in opponent_moves.moves:
-		if (	move.destination_tile.occupant
+		if (	move.destination_tile.is_occupied
 				and move.destination_tile.occupant.is_in_group("King")
 				and move.destination_tile.occupant.is_in_group(player.name)
 				):
-			player_king_tile._set_check()
+			player_king_tile.change("is_checked",true)
 			break
-
-
-func _clear_check() -> void:
-	for tile in data.tile_array:
-		if tile.data.is_checked:
-			tile._unset_check()
 
 
 func _set_en_passant(clicked_tile: TileObject) -> void:
@@ -245,31 +216,20 @@ func _set_en_passant(clicked_tile: TileObject) -> void:
 
 
 #region MODIFIER HELPER FUNCTIONS
-func _apply_on_piece_enter(move: Move) -> void:
-	var destination_tile: TileObject = move.destination_tile
-	var piece: PieceObject = destination_tile.occupant
-
-	if destination_tile == null or piece == null:
-		return
-
-	for modifier in destination_tile.data.modifier_order:
-		modifier.on_piece_enter(piece, move.starting_tile, destination_tile)
-
-var end_turn_modifier_moved: bool = false
-
 func _apply_turn_end_modifiers() -> void:
 	var max := 16
 	var t := 0
 	while t < max:
-		end_turn_modifier_moved = false
+		Match.end_turn_modifier_moved = false
 		for tile in data.tile_array:
 			for modifier in tile.data.modifier_order:
 				modifier.on_turn_end(tile)
 		for tile in data.tile_array:
 			data.piece_array[tile.data.index] = tile.occupant
-		if not end_turn_modifier_moved:
+		if not Match.end_turn_modifier_moved:
 			break
 		t += 1
+
 
 func _update_modifier_lifetimes() -> void:
 	for tile in data.tile_array:
@@ -277,11 +237,7 @@ func _update_modifier_lifetimes() -> void:
 		for modifier in tile.data.modifier_order:
 			var lifetime = modifier.get("lifetime")
 
-			if lifetime == null:
-				updated_modifiers.append(modifier)
-				continue
-
-			if lifetime == -1:
+			if lifetime == null or lifetime == -1:
 				updated_modifiers.append(modifier)
 				continue
 
@@ -303,9 +259,11 @@ func _update_poisoned_pieces() -> void:
 		if Match.turn_num - piece.data.poison_turn_applied >= piece.data.poison_duration:
 			_capture_piece(piece)
 
+
 func _tile_in_radius(origin_tile, target_tile, radius) -> bool:
 	var delta: Vector2i = target_tile.data.board_position - origin_tile.data.board_position
 	return max(abs(delta.x), abs(delta.y)) <= radius # return true if within specified radius
+
 
 func _toggle_gates_in_radius(origin_tile, radius) -> void:
 	print("Toggling gates from ", origin_tile.data.board_position, " radius=", radius)
@@ -321,6 +279,7 @@ func _toggle_gates_in_radius(origin_tile, radius) -> void:
 
 		if changed:
 			tile.data.emit_changed()
+
 
 func _apply_on_piece_pass(move: Move) -> void:
 	var piece: PieceObject = move.destination_tile.occupant
@@ -421,97 +380,6 @@ func _update_smokey_visuals() -> void:
 							smokey_pieces.append(affected_tile.occupant)
 #endregion
 
-#region Tile Clicked
-func _on_tile_clicked(clicked_tile: TileObject) -> void:
-	if Match.current_game_state == Match.GameState.BOARD_CUSTOMIZATION:
-		_customization_tile_select(clicked_tile)
-	elif Match.current_game_state == Match.GameState.GAMEPLAY:
-		_gameplay_tile_select(clicked_tile)
-
-func _customization_tile_select(clicked_tile: TileObject) -> void:
-	if clicked_tile.data.is_selected == true:
-		clicked_tile.remove_from_group("Selected")
-		clicked_tile._unselect()
-	elif clicked_tile.data.is_selected == false:
-		clicked_tile.add_to_group("Selected")
-		clicked_tile._select()
-
-func _gameplay_tile_select(clicked_tile: TileObject) -> void:
-	if NetworkManager.is_online and not _is_my_turn():
-		return
-	# select clicked tile
-	if (	PieceObject.selected == null # no piece selected
-			and clicked_tile.occupant != null # Clicked Tile is occupied
-			and clicked_tile.occupant.is_in_group(Player.current.name) # occupant piece belongs to current player
-			):
-		_select_tile(clicked_tile)
-
-	elif PieceObject.selected and TileObject.selected: # object already selected
-		if clicked_tile.occupant: # Clicked Tile is occupied
-
-			# Unselect currently selected piece
-			if (	PieceObject.selected == clicked_tile.occupant
-					and TileObject.selected == clicked_tile # Clicked tile and selected tile are the same
-					):
-				_unselect_tile()
-
-			# Select a different piece
-			elif clicked_tile.occupant.is_in_group(Player.current.name): # occupant piece belongs to current player
-				_unselect_tile()
-				_select_tile(clicked_tile)
-
-			# capture opponent piece
-			elif (	not clicked_tile.occupant.is_in_group(Player.current.name) # occupant piece belongs to opponent
-					and clicked_tile.data.is_threatened
-					):
-				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Outcome.CAPTURING)
-
-		elif clicked_tile.occupant == null:
-			# move selected piece to clicked tile
-			if clicked_tile.data.is_movement:
-				var ep_piece_idx: int = -1
-				var ep_tile_idx: int = -1
-
-				# set en passant if conditions are met
-				if (	PieceObject.selected.is_in_group("Pawn")
-						and not PieceObject.selected.data.has_moved
-						and abs(clicked_tile.data.rank - TileObject.selected.data.rank) == 2 # Pawn piece has moved two tiles
-						):
-					_set_en_passant(clicked_tile)
-					ep_piece_idx = PieceObject.en_passant.data.index
-					ep_tile_idx = TileObject.en_passant.data.index
-
-				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, 0, ep_piece_idx, ep_tile_idx)
-
-			# perform castling movement
-			elif clicked_tile.data.is_castling:
-				_submit_move(TileObject.selected.data.index, clicked_tile.data.index, Move.Outcome.CASTLING_KINGSIDE | Move.Outcome.CASTLING_QUEENSIDE)
-
-			# capture pawn via en passant
-			elif (	clicked_tile.data.is_threatened
-					and TileObject.en_passant == clicked_tile
-					and PieceObject.en_passant != null
-					and not PieceObject.en_passant.is_in_group(Player.current.name)
-					):
-						_capture_piece(PieceObject.en_passant)
-						_submit_move( TileObject.selected.data.index, clicked_tile.data.index, Move.Outcome.CAPTURING | Move.Outcome.EN_PASSANT, PieceObject.en_passant.data.index, TileObject.en_passant.data.index)
-#endregion
-
-
-func _select_tile(tile: TileObject) -> void:
-	TileObject.selected = tile
-	PieceObject.selected = tile.occupant
-	TileObject.selected._select()
-	show_selected_piece_movement()
-
-
-func _unselect_tile() -> void:
-	TileObject.selected._unselect()
-	TileObject.selected = null
-	PieceObject.selected = null
-	get_tree().call_group("Tile","clear_states")
-
-
 func _perform_castling_move(castling_tile: TileObject) -> void:
 	var middle_file_value: float = (data.file_count/2) - 1
 	var castling_rook_index: int
@@ -519,28 +387,17 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 	# kingside castling
 	if castling_tile.data.file > middle_file_value:
-		castling_rook_index = Match.get_board_index(
-				castling_tile.data.rank,
-				data.file_count-1
-				)
-
-		destination_index = Match.get_board_index(
-				castling_tile.data.rank,
-				castling_tile.data.file-1
-				)
+		castling_rook_index = Match.get_board_index(castling_tile.data.rank,data.file_count-1)
+		destination_index = castling_tile.neighbors[Movement.Direction.WEST].data.index
 		perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_KINGSIDE))
 
 	# queenside castling
 	elif castling_tile.data.file < middle_file_value:
 		castling_rook_index = Match.get_board_index(castling_tile.data.rank,0)
-		destination_index = Match.get_board_index(
-				castling_tile.data.rank,
-				castling_tile.data.file+1
-				)
+		destination_index = castling_tile.neighbors[Movement.Direction.EAST].data.index
 		perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_QUEENSIDE))
 
 	var castling_rook_destination = data.tile_array[destination_index]
-
 	perform_move(Move.new(data.tile_array[castling_rook_index],castling_rook_destination,Move.Outcome.IGNORE))
 
 
@@ -548,24 +405,12 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 func show_selected_piece_movement() -> void:
 	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
 	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
-	_resolve_branching_movement(
-			PieceObject.selected,
-			moveset,
-			TileObject.selected
-			)
-
-
-func get_next_tile(current_tile: TileObject, direction:Movement.Direction):
-	return current_tile.neighbors[direction]
+	_resolve_branching_movement(PieceObject.selected, moveset, TileObject.selected )
 
 
 # SAME LOGIC USED IN MoveList RESOURCE.
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
-func _resolve_branching_movement(
-		active_piece:PieceObject,
-		moveset: Movement,
-		origin_tile: TileObject
-		) -> void:
+func _resolve_branching_movement(active_piece:PieceObject,moveset: Movement,origin_tile: TileObject) -> void:
 
 	moveset = moveset.get_duplicate()
 
@@ -602,7 +447,7 @@ func _resolve_branching_movement(
 					moveset.is_branching = false
 
 				if modifier.is_slippery:
-					var next_tile = get_next_tile(current_tile_ptr, branch.direction)
+					var next_tile = current_tile_ptr.get_next_tile(branch.direction)
 					if not next_tile.occupant:
 						has_slid = true
 						break
@@ -622,25 +467,25 @@ func _resolve_branching_movement(
 
 			if branch.is_threaten:
 				# NORMAL THREATEN LOGIC
-				if (	current_tile_ptr.occupant # current_tile_ptr is occupied
+				if (	current_tile_ptr.is_occupied
 						and active_piece.data.player != current_tile_ptr.occupant.data.player # current_tile_ptr is occupied by opponent piece
 						):
-					current_tile_ptr._threaten()
+					current_tile_ptr.change("is_threatened",true)
 					break
 
 				# EN PASSANT LOGIC
-				elif ( 	current_tile_ptr.occupant == null	# current_tile_ptr is not occupied
+				elif ( 	not current_tile_ptr.is_occupied
 						and PieceObject.en_passant
 						and active_piece.data.player != PieceObject.en_passant.data.player
 						and current_tile_ptr == TileObject.en_passant
 						):
-					TileObject.en_passant._threaten()
-					PieceObject.en_passant.data.is_threatened = true
+					TileObject.en_passant.change("is_threatened",true)
+					PieceObject.en_passant.data.flag.is_threatened.enabled = true
 
 
 			if not branch.is_jump:
 				# JUMP LOGIC
-				if (	current_tile_ptr.occupant # current_tile_ptr is occupied
+				if (	current_tile_ptr.is_occupied
 						and active_piece != current_tile_ptr.occupant # current_tile_ptr not is occupied by active piece
 						):
 					break
@@ -648,12 +493,12 @@ func _resolve_branching_movement(
 
 			if branch.is_move:
 				#MOVEMENT LOGIC
-				if current_tile_ptr.occupant == null: # current_tile_ptr is not occupied
+				if not current_tile_ptr.is_occupied:
 					var possible_move: Array[TileObject] = [data.tile_array[active_piece.data.index], current_tile_ptr]
 					if data.legal_moves.contains_move(possible_move):
-						current_tile_ptr.data.is_movement = true
+						current_tile_ptr.data.flag.is_movement.enabled = true
 					else:
-						current_tile_ptr.data.is_checked_movement = true
+						current_tile_ptr.data.flag.is_checked_movement.enabled = true
 
 						# King cannot castle through checked tile
 						if active_piece.data.name == "King":
@@ -666,8 +511,8 @@ func _resolve_branching_movement(
 			if branch.is_castling:
 				var king_tile: TileObject = TileObject.selected
 
-				if (	active_piece.data.has_moved # if king has moved
-						or active_piece.data.is_checked # if king is in check
+				if (	active_piece.data.flag.has_moved.enabled # if king has moved
+						or active_piece.data.flag.is_checked.enabled # if king is in check
 						or (	branch.direction == Movement.Direction.EAST
 								and not active_piece.data.get_meta("is_castling_kingside_valid"))	# if east tile is checked
 						or (	branch.direction == Movement.Direction.WEST
@@ -682,9 +527,9 @@ func _resolve_branching_movement(
 				elif current_tile_ptr.data.board_position < king_tile.data.board_position:
 					rook_tile = data.tile_array[Match.get_board_index(king_tile.data.rank,0)]
 
-				if (	not rook_tile.occupant # if no occupant
+				if (	not rook_tile.is_occupied # if no occupant
 						or not rook_tile.occupant.is_in_group("Rook") # if occupant is not a rook
-						or rook_tile.occupant.data.has_moved # if rook has moved
+						or rook_tile.occupant.data.flag.has_moved.enabled # if rook has moved
 						):
 					break
 
@@ -703,8 +548,8 @@ func _resolve_branching_movement(
 					break
 
 				if data.legal_moves.contains_move([data.tile_array[active_piece.data.index], current_tile_ptr]):
-					rook_tile.occupant.data.is_castling = true
-					current_tile_ptr._show_castling()
+					rook_tile.occupant.data.flag.is_castling.enabled = true
+					current_tile_ptr.change("is_castling",true)
 
 
 			distance -= 1
@@ -720,22 +565,18 @@ func _capture_piece(piece) -> void:
 
 
 func perform_move(move: Move):
-	_clear_check()
-	get_tree().call_group("Tile","clear_states")
+	get_tree().call_group("Tile","clear_check_flag")
+	get_tree().call_group("Tile","clear_flags")
 	var piece: PieceObject = move.starting_tile.occupant
 	move.starting_tile.occupant = null
 
-	move.destination_tile.occupant = piece
-	piece.global_position = (piece.position * Vector3(0,1,0)) + move.destination_tile.global_position
-	piece.global_rotation = move.destination_tile.global_rotation + piece.global_rotation
-	piece.reparent(move.destination_tile)
-	piece.data.index = move.destination_tile.data.index
+	piece.move_to(move.destination_tile)
 	piece_move_audio.play()
 
-	if not piece.data.has_moved:
+	if not piece.data.flag.has_moved.enabled:
 		piece.moved(true)
 
-	_apply_on_piece_enter(move) # used for poison, kings favor, smokey, and button
+	TileModifier.apply_on_piece_enter(move) # used for poison, kings favor, smokey, and button
 	_apply_on_piece_pass(move) # used only for lever
 
 	# match occupants in piece_array to their respective tiles in tile_array
@@ -746,26 +587,26 @@ func perform_move(move: Move):
 	var opponent_moves:= MoveList.new(data)
 	opponent_moves.generate_legal_moves(Match.get_opponent_of(Player.current))
 	if opponent_moves.moves.is_empty():
-		move.flags += Move.Outcome.CHECKMATE
+		move.outcome_flag.checkmate.enabled = true
 		_game_overlay.show_checkmate(Player.current)
 
 
 	detect_check(Match.get_opponent_of(Player.current))
-	if not opponent_moves.moves.is_empty() and Match.get_opponent_of(Player.current).pieces["King"][0].data.is_checked:
-		move.flags += Move.Outcome.CHECK
+	if not opponent_moves.moves.is_empty() and Match.get_opponent_of(Player.current).pieces["King"][0].data.flag.is_checked.enabled:
+		move.outcome_flag.check.enabled = true
 
 	if piece.data.can_promote and move.destination_tile.data.rank == piece.data.player.promotion_rank:
-		move.flags += Move.Outcome.PROMOTION
+		move.outcome_flag.promotion.enabled = true
 		Match.is_promotion_occuring = true
 		promotion_verified.emit(piece)
 
-	if not piece.data.has_moved:
+	if not piece.data.flag.has_moved.enabled:
 		piece.moved(true)
 
-	if AlgebraicNotaion.get_notation(move) != "": # empty string due to castling move
-		if move.flags & Move.Outcome.PROMOTION:
-			move._notation_suffix += piece.data.algebraic_notation
-		Match.move_history.append(AlgebraicNotaion.get_notation(move))
+	#if AlgebraicNotaion.get_notation(move) != "": # empty string due to castling move
+		#if move.outcome_flag.promotion.enabled:
+			#move._notation_suffix += piece.data.algebraic_notation
+		#Match.move_history.append(AlgebraicNotaion.get_notation(move))
 
 
 ## Sets up the next turn
@@ -785,7 +626,6 @@ func next_turn() -> void:
 		# clear en passant
 		PieceObject.en_passant = null
 		TileObject.en_passant = null
-
 
 	_update_poisoned_pieces()
 	_update_smokey_visuals()

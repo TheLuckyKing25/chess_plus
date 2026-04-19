@@ -9,7 +9,7 @@ var camera_rotation: float = 0
 var can_proceed = false
 
 func enter():
-	print_rich("[b][color=green]Entered[/color]: [/b]",name)
+	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
 	#print_debug("enter ", name)
 	if NetworkManager.is_online:
 		transitioned.emit(self,next_state.name)
@@ -25,7 +25,7 @@ func exit():
 	Match.time_elapsed_since_turn_ended = 0
 	Match.board.board_base.material_override.albedo_color = Player.current.color
 	#print_debug("exit ", name)
-	print_rich("[b][color=red]Exited[/color]: [/b]",name)
+	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
 
 func update(_delta:float):
 	Match.time_elapsed_since_turn_ended = (

@@ -16,23 +16,30 @@ var	network_invite_info: Dictionary
 
 var board: BoardObject
 
+
 var current_game_state: GameState = GameState.BOARD_CUSTOMIZATION:
 	set(new_game_state):
 		game_state_changed.emit(new_game_state)
 		current_game_state = new_game_state
 
+
 # move history
 var move_history:MoveList
+
 
 var time_turn_ended:int = 0
 var time_elapsed_since_turn_ended:int = 0
 
+
 var turn_num: int = 0
+
 
 var is_board_generated: bool = false
 var is_timed: bool = false
+var end_turn_modifier_moved: bool = false
 
 var is_promotion_occuring: bool = false
+
 
 var promotion_menu_list: Array = [
 	"Bishop",
@@ -41,17 +48,10 @@ var promotion_menu_list: Array = [
 	"Queen"
 	]
 
-var players: Dictionary[String,Player] = {
-}
 
-var tiles:Dictionary[TileObject,TileDataChess] = {
-
-}
-
-
-var pieces: Dictionary[PieceObject, PieceData] = {
-
-}
+var players: Dictionary[String,Player] = {}
+var tiles:Dictionary[TileObject,TileDataChess] = {}
+var pieces: Dictionary[PieceObject, PieceData] = {}
 
 
 func add_tile(tile_object:TileObject):
@@ -85,3 +85,20 @@ func get_board_index(rank:int,file:int) -> int:
 
 func get_board_position(index: int) -> Vector2i:
 	return Vector2i(index/board.data.file_count, index%board.data.file_count)
+
+func select_tile(tile: TileObject) -> void:
+	TileObject.selected = tile
+	PieceObject.selected = tile.occupant
+	TileObject.selected.change("is_selected",true)
+	board.show_selected_piece_movement()
+
+
+func unselect_tile() -> void:
+	TileObject.selected.change("is_selected",false)
+	TileObject.selected = null
+	PieceObject.selected = null
+	get_tree().call_group("Tile","clear_flags")
+
+func is_my_turn() -> bool:
+	var current_player_index: int = 0 if Player.current == Match.players.white else 1
+	return NetworkManager.is_my_turn(current_player_index)

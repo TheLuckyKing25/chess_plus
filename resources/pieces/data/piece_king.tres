@@ -9,7 +9,6 @@ resource_local_to_scene = true
 script = ExtResource("1_vg8f1")
 name = "King"
 algebraic_notation = "K"
-description = "PLACEHOLDER"
 object_mesh = ExtResource("2_ks2un")
 can_promote = false
 promotion_option = false
