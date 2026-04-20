@@ -7,7 +7,6 @@ extends State
 
 func enter():
 	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
-	#print_debug("enter ", name)
 	board.turn_changed.connect(Callable(self,"on_turn_changed"))
 	if Match.is_timed:
 		player.timer.start_timer()
@@ -19,7 +18,6 @@ func exit():
 	if Match.is_timed:
 		player.timer.stop_timer()
 		player.timer.increase_by_increment()
-	#print_debug("exit ", name)
 	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
 
 func update(_delta: float):

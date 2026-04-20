@@ -87,4 +87,3 @@ text = "Join Game
 
 [connection signal="text_changed" from="Background/BoxContainer/VBoxContainer/PortLine" to="." method="_on_port_line_text_changed"]
 [connection signal="text_changed" from="Background/BoxContainer/VBoxContainer/IPLine" to="." method="_on_ip_line_text_changed"]
-[connection signal="pressed" from="Background/BoxContainer/VBoxContainer/JoinButton" to="." method="_on_join__game_button_pressed"]

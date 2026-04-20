@@ -1,0 +1,1 @@
+class_name SlidingMovement extends Movement

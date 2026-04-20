@@ -8,7 +8,6 @@ var states: Dictionary = {}
 
 func enter() -> void:
 	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
-	#print_debug("enter ", name)
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child
@@ -20,7 +19,6 @@ func enter() -> void:
 
 func exit() -> void:
 	current_state.exit()
-	#print_debug("exit ", name)
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child

@@ -1,6 +1,5 @@
 # UNFINISHED
-class_name MovementTreeItem
-extends RefCounted
+class_name MovementTreeItem extends RefCounted
 
 var root: MovementTreeItem
 

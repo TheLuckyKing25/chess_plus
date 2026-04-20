@@ -1,2 +1,1 @@
-class_name Tile
-extends Resource
+class_name Tile extends Resource

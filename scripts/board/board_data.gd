@@ -4,9 +4,6 @@ extends Resource
 var rank_count: int = 8
 var file_count: int = 8
 
-var rank_edge: Array[int] = [0,rank_count-1]
-var file_edge: Array[int] = [0,file_count-1]
-
 
 var tile_array: Array[TileObject] = []
 var piece_array: Array[PieceObject] = []

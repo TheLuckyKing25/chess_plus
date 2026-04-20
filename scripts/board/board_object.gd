@@ -152,13 +152,15 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	next_turn()
 #endregion
 
+func resize_base(size: Vector3):
+	$BoardBase.mesh.size = size
 
 func generate_board() -> void:
 	data.tile_array.resize(data.file_count * data.rank_count)
 	data.piece_array.resize(data.file_count * data.rank_count)
 
 	# Change the size of the board base to match the size of the board
-	$BoardBase.mesh.size = Vector3(data.file_count+1 ,0.2, data.rank_count+1)
+	resize_base(Vector3(data.file_count+1 ,0.2, data.rank_count+1))
 
 	for tile_num in range(data.rank_count * data.file_count):
 		var new_tile:TileObject = TileObject.new_tile(tile_num)
@@ -174,6 +176,7 @@ func generate_board() -> void:
 		$BoardBase.add_child(new_tile, true)
 
 	data.assign_tile_neighbors()
+
 
 func load_FEN(FE_notation:FEN) -> void:
 	var fen_decoder := FENDecoder.new(FE_notation)
@@ -353,6 +356,7 @@ func _clear_smokey_visuals() -> void:
 	smokey_pieces.clear()
 	smokey_tiles.clear()
 
+
 func _create_smokey_overlay(tile: TileObject) -> void:
 	if smokey_overlay.has(tile):
 		return
@@ -361,6 +365,7 @@ func _create_smokey_overlay(tile: TileObject) -> void:
 	add_child(overlay)
 	overlay.global_position = tile.global_position + Vector3(0, 1.2, 0)
 	smokey_overlay[tile] = overlay
+
 
 func _update_smokey_visuals() -> void:
 	_clear_smokey_visuals()
@@ -405,12 +410,12 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 func show_selected_piece_movement() -> void:
 	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
 	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
-	_resolve_branching_movement(PieceObject.selected, moveset, TileObject.selected )
+	resolve_branching_movement(PieceObject.selected, moveset, TileObject.selected )
 
 
 # SAME LOGIC USED IN MoveList RESOURCE.
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
-func _resolve_branching_movement(active_piece:PieceObject,moveset: Movement,origin_tile: TileObject) -> void:
+func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject) -> void:
 
 	moveset = moveset.get_duplicate()
 
@@ -418,11 +423,8 @@ func _resolve_branching_movement(active_piece:PieceObject,moveset: Movement,orig
 		if modifier.can_modify_movement:
 			modifier.modify_movement(moveset)
 
-
 	for branch in moveset.branches:
 		var current_tile_ptr: TileObject = origin_tile
-
-		branch.purpose = moveset.purpose
 		var distance: int = branch.distance
 		var can_proceed_with_branch: bool = true
 		var has_slid:bool = false
@@ -482,14 +484,12 @@ func _resolve_branching_movement(active_piece:PieceObject,moveset: Movement,orig
 					TileObject.en_passant.change("is_threatened",true)
 					PieceObject.en_passant.data.flag.is_threatened.enabled = true
 
-
 			if not branch.is_jump:
 				# JUMP LOGIC
 				if (	current_tile_ptr.is_occupied
 						and active_piece != current_tile_ptr.occupant # current_tile_ptr not is occupied by active piece
 						):
 					break
-
 
 			if branch.is_move:
 				#MOVEMENT LOGIC
@@ -506,7 +506,6 @@ func _resolve_branching_movement(active_piece:PieceObject,moveset: Movement,orig
 								active_piece.data.set_meta("is_castling_kingside_valid", false)
 							elif branch.direction == Movement.Direction.WEST:
 								active_piece.data.set_meta("is_castling_queenside_valid", false)
-
 
 			if branch.is_castling:
 				var king_tile: TileObject = TileObject.selected
@@ -551,12 +550,10 @@ func _resolve_branching_movement(active_piece:PieceObject,moveset: Movement,orig
 					rook_tile.occupant.data.flag.is_castling.enabled = true
 					current_tile_ptr.change("is_castling",true)
 
-
 			distance -= 1
 
-
 		if branch.is_branching and distance == 0:
-			_resolve_branching_movement(active_piece, branch, current_tile_ptr)
+			resolve_branching_movement(active_piece, branch, current_tile_ptr)
 
 
 func _capture_piece(piece) -> void:

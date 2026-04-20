@@ -1,5 +1,4 @@
-class_name MovementTree
-extends RefCounted
+class_name MovementTree extends RefCounted
 
 var root_item: MovementTreeItem
 

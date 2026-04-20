@@ -111,32 +111,32 @@ camera_distance_from_subject = 10.0
 camera_yaw = 180.0
 camera_pitch = -50.0
 
-[node name="GameController3D" type="Node3D" parent="."]
+[node name="Controller3D" type="Node3D" parent="."]
 script = ExtResource("2_py7vm")
 
-[node name="OverheadCamera" type="Camera3D" parent="GameController3D"]
+[node name="OverheadCamera" type="Camera3D" parent="Controller3D"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -5.331, 13.48, 0)
 projection = 1
 current = true
 size = 13.0
 
-[node name="Sky" type="MeshInstance3D" parent="GameController3D"]
+[node name="Sky" type="MeshInstance3D" parent="Controller3D"]
 cast_shadow = 0
 gi_mode = 0
 mesh = SubResource("SphereMesh_noarx")
 surface_material_override/0 = SubResource("StandardMaterial3D_noarx")
 
-[node name="Table" type="MeshInstance3D" parent="GameController3D"]
+[node name="Table" type="MeshInstance3D" parent="Controller3D"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.2754, 0)
 mesh = SubResource("CylinderMesh_hlv2s")
 surface_material_override/0 = SubResource("StandardMaterial3D_hlv2s")
 
-[node name="Board" parent="GameController3D/Table" instance=ExtResource("4_fpu5w")]
+[node name="Board" parent="Controller3D/Table" instance=ExtResource("4_fpu5w")]
 unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.115, 0)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="GameController3D"]
+[node name="SpotLight3D" type="SpotLight3D" parent="Controller3D"]
 transform = Transform3D(1, 0, 0, 0, -0.00268785, 0.999996, 0, -0.999996, -0.00268785, 0, 12.0144, 0)
 light_color = Color(0.99, 0.938025, 0.9009, 1)
 light_energy = 10.0
@@ -147,29 +147,29 @@ shadow_opacity = 0.7
 spot_range = 24.0741
 spot_angle = 72.1925
 
-[node name="TurnStateMachine" type="Node" parent="GameController3D" node_paths=PackedStringArray("initial_state")]
+[node name="TurnStateMachine" type="Node" parent="Controller3D" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("1_twqac")
 initial_state = NodePath("WhiteTurn")
 
-[node name="BlackTurn" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
+[node name="BlackTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
 script = ExtResource("6_3d517")
 player = NodePath("../../../Black")
 board = NodePath("../../Table/Board")
 next_state = NodePath("../BlackToWhite")
 
-[node name="BlackToWhite" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
+[node name="BlackToWhite" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
 script = ExtResource("7_d2e6m")
 previous_state = NodePath("../BlackTurn")
 initial_rotation_degree = 180
 next_state = NodePath("../WhiteTurn")
 
-[node name="WhiteTurn" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
+[node name="WhiteTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
 script = ExtResource("6_3d517")
 player = NodePath("../../../White")
 board = NodePath("../../Table/Board")
 next_state = NodePath("../WhiteToBlack")
 
-[node name="WhiteToBlack" type="Node" parent="GameController3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
+[node name="WhiteToBlack" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
 script = ExtResource("7_d2e6m")
 previous_state = NodePath("../WhiteTurn")
 next_state = NodePath("../BlackTurn")
@@ -234,5 +234,5 @@ scene = ExtResource("15_u8mor")
 script = ExtResource("17_wksuf")
 scene = ExtResource("18_wf0ff")
 
-[connection signal="game_state_changed" from="GameController3D/Table/Board" to="GameController3D" method="_on_board_game_state_changed"]
-[connection signal="ready" from="GameController3D/Table/Board" to="GameController3D" method="_on_board_ready"]
+[connection signal="game_state_changed" from="Controller3D/Table/Board" to="Controller3D" method="_on_board_game_state_changed"]
+[connection signal="ready" from="Controller3D/Table/Board" to="Controller3D" method="_on_board_ready"]
