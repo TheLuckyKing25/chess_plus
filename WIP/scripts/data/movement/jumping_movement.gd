@@ -1,3 +1,4 @@
+@tool
 class_name JumpingMovement extends AbstractMovement
 
 # define several different directions and add their vectors together

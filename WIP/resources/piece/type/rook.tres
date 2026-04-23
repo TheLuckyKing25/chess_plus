@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://csqiux6uupcb2"]
+
+[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://WIP/scripts/data/piece_type.gd" id="1_e6xjk"]
+[ext_resource type="Resource" uid="uid://b2815bqhui6ul" path="res://WIP/resources/piece/movement/rook.tres" id="1_o2w8g"]
+[ext_resource type="ArrayMesh" uid="uid://047i1asw03nw" path="res://assets/mesh/mesh_rook.obj" id="2_1p80k"]
+
+[resource]
+script = ExtResource("1_e6xjk")
+name = "Rook"
+algebraic_notation = "r"
+object_mesh = ExtResource("2_1p80k")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_o2w8g")
+metadata/_custom_type_script = "uid://b8m086r46os2w"

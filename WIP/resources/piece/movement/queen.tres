@@ -1,0 +1,107 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=12 format=3 uid="uid://bi43fijqf2sjl"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_r5ge7"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://WIP/scripts/data/movement/sliding_movement.gd" id="2_eqjlo"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="3_28v6d"]
+
+[sub_resource type="Resource" id="Resource_jfy3e"]
+resource_local_to_scene = true
+resource_name = "North"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 0
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_cm7sm"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_j5jlw"]
+resource_local_to_scene = true
+resource_name = "East"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 2
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_xlylj"]
+resource_local_to_scene = true
+resource_name = "Southeast"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 3
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_fc0ap"]
+resource_local_to_scene = true
+resource_name = "South"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 4
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_as55b"]
+resource_local_to_scene = true
+resource_name = "Southwest"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 5
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_e4v4n"]
+resource_local_to_scene = true
+resource_name = "West"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 6
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_7cas8"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("2_eqjlo")
+use_max_distance = true
+distance = -1
+direction = 7
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("3_28v6d")
+branches = Array[ExtResource("1_r5ge7")]([SubResource("Resource_jfy3e"), SubResource("Resource_cm7sm"), SubResource("Resource_j5jlw"), SubResource("Resource_xlylj"), SubResource("Resource_fc0ap"), SubResource("Resource_as55b"), SubResource("Resource_e4v4n"), SubResource("Resource_7cas8")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

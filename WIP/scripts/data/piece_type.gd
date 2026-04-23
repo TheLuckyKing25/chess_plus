@@ -1,8 +1,12 @@
 ## The basic definition of a piece
+@tool
 class_name PieceType extends Resource
 
 ## The name of the PieceType.
-@export var name:String = "Placeholder"
+@export var name:String = "Placeholder":
+	set(value):
+		name = value
+		resource_name = value + " Data"
 
 ## The character used to identify the PieceType in algebraic chess notation.
 @export var algebraic_notation: String = "_"
@@ -17,4 +21,4 @@ class_name PieceType extends Resource
 @export var promotion_option:= false
 
 ## Movement initially assigned to pieces of this PieceType.
-@export var movement: Movement
+@export var movement: AbstractMovement

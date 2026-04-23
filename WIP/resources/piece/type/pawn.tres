@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=5 format=3 uid="uid://bih6lr0cwxuk"]
+
+[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://WIP/scripts/data/piece_type.gd" id="1_2mlri"]
+[ext_resource type="Resource" uid="uid://v6scgji0vbgg" path="res://WIP/resources/piece/movement/pawn_initial.tres" id="1_bpbml"]
+[ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/mesh/mesh_pawn.obj" id="1_iejq7"]
+[ext_resource type="Resource" uid="uid://bhrm536aemt0f" path="res://WIP/resources/piece/movement/pawn_post_move.tres" id="3_0fpsm"]
+
+[resource]
+resource_name = "Pawn Data"
+script = ExtResource("1_2mlri")
+name = "Pawn"
+algebraic_notation = "p"
+object_mesh = ExtResource("1_iejq7")
+can_promote = true
+promotion_option = false
+movement = ExtResource("1_bpbml")
+metadata/_custom_type_script = "uid://b8m086r46os2w"
+metadata/post_move_movement = ExtResource("3_0fpsm")

@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=8 format=3 uid="uid://b2815bqhui6ul"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_vbtit"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://WIP/scripts/data/movement/sliding_movement.gd" id="2_0rma3"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_42awi"]
+
+[sub_resource type="Resource" id="Resource_i5sem"]
+resource_local_to_scene = true
+resource_name = "North"
+script = ExtResource("2_0rma3")
+use_max_distance = true
+distance = -1
+direction = 0
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_eytd7"]
+resource_local_to_scene = true
+resource_name = "East"
+script = ExtResource("2_0rma3")
+use_max_distance = true
+distance = -1
+direction = 2
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_qivvf"]
+resource_local_to_scene = true
+resource_name = "South"
+script = ExtResource("2_0rma3")
+use_max_distance = true
+distance = -1
+direction = 4
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_waafv"]
+resource_local_to_scene = true
+resource_name = "West"
+script = ExtResource("2_0rma3")
+use_max_distance = true
+distance = -1
+direction = 6
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_42awi")
+branches = Array[ExtResource("1_vbtit")]([SubResource("Resource_i5sem"), SubResource("Resource_eytd7"), SubResource("Resource_qivvf"), SubResource("Resource_waafv")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

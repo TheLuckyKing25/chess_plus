@@ -1,13 +1,18 @@
+@tool
 class_name SlidingMovement extends AbstractMovement
 
+@export var use_max_distance: bool = false:
+	set(value):
+		use_max_distance = value
+		notify_property_list_changed()
+
 ## The distance that this move will extend out to.
-## Setting the value to  [code]-1[/code]  will make the value
-## equal to the largest side length of the board.
-@export_range(-1,8,1,"or_greater") var distance: int = 0
+@export_range(0,8,1,"or_greater") var distance: int = 0
 
 @export var direction: Direction:
 	set(cardinal):
 		direction = (cardinal % 8) as Direction
+		resource_name = Direction.keys()[direction].capitalize()
 	get():
 		return direction as Direction
 
@@ -24,17 +29,25 @@ var is_branching: bool:
 			return false
 		else:
 			return true
+# in editor tool
+func _validate_property(property: Dictionary) -> void:
+	if property.name in ["distance"]:
+		if use_max_distance:
+			property.usage = PROPERTY_USAGE_NO_EDITOR
+
 
 func set_direction_parity(direction_parity: int) -> void:
 	direction = ((direction + direction_parity) % 8) as Direction
 	if next_movement:
 		next_movement.set_direction_parity(direction_parity)
 
+
 func set_max_distance(max_distance:int) -> void:
-	if distance == -1:
+	if use_max_distance:
 		distance = max_distance
 	if next_movement:
 		next_movement.set_max_distance(max_distance)
+
 
 ## direction_units is a positive integer between 1 and 7, including 1 and 7.
 func rotate_movement(direction_units: int) -> void:

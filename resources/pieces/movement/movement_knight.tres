@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dmcenymnmgc5f" path="res://scripts/movement.gd" id="1_10j12"]
 
 [sub_resource type="Resource" id="Resource_10j12"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 2
@@ -14,6 +15,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_c4t7f"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 6
@@ -25,6 +27,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_p2wv4"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 2
 direction = 0
@@ -36,6 +39,7 @@ branches = Array[ExtResource("1_10j12")]([SubResource("Resource_10j12"), SubReso
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_ccej3"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 0
@@ -47,6 +51,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_01d2o"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 4
@@ -58,6 +63,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_7pbxk"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 2
 direction = 2
@@ -69,6 +75,7 @@ branches = Array[ExtResource("1_10j12")]([SubResource("Resource_ccej3"), SubReso
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_1gyax"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 2
@@ -80,6 +87,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_u2t2h"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 6
@@ -91,6 +99,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_lxl25"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 2
 direction = 4
@@ -102,6 +111,7 @@ branches = Array[ExtResource("1_10j12")]([SubResource("Resource_1gyax"), SubReso
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_lm335"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 0
@@ -113,6 +123,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_bib0y"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 1
 direction = 4
@@ -124,6 +135,7 @@ branches = Array[ExtResource("1_10j12")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_8t77s"]
+resource_local_to_scene = true
 script = ExtResource("1_10j12")
 distance = 2
 direction = 6

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PieceType" load_steps=4 format=3 uid="uid://oqdygo3fdmd2"]
+
+[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://WIP/scripts/data/piece_type.gd" id="1_03hyd"]
+[ext_resource type="Resource" uid="uid://bi43fijqf2sjl" path="res://WIP/resources/piece/movement/queen.tres" id="1_ypea2"]
+[ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/mesh/mesh_queen.obj" id="2_ilar6"]
+
+[resource]
+script = ExtResource("1_03hyd")
+name = "Queen"
+algebraic_notation = "q"
+object_mesh = ExtResource("2_ilar6")
+can_promote = false
+promotion_option = true
+movement = ExtResource("1_ypea2")
+change_movement_after_first_move = true
+metadata/_custom_type_script = "uid://b8m086r46os2w"

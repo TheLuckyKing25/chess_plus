@@ -1,0 +1,91 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=12 format=3 uid="uid://8gfafi0lgf6u"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_7ho1e"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_aaecr"]
+[ext_resource type="Script" uid="uid://bwtiwvjb3a3at" path="res://WIP/scripts/data/movement/jumping_movement.gd" id="2_wnk5d"]
+
+[sub_resource type="Resource" id="Resource_eh8qs"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = 2
+file_origin_offset = 1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_7rvqh"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = 2
+file_origin_offset = -1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_ahn6u"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = 1
+file_origin_offset = 2
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_a0cbw"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = -1
+file_origin_offset = 2
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_wceua"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = -2
+file_origin_offset = 1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_jkgv4"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = -2
+file_origin_offset = -1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_5dayx"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = -1
+file_origin_offset = -2
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_2cntf"]
+resource_local_to_scene = true
+script = ExtResource("2_wnk5d")
+row_origin_offset = 1
+file_origin_offset = -2
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_aaecr")
+branches = Array[ExtResource("1_7ho1e")]([SubResource("Resource_eh8qs"), SubResource("Resource_7rvqh"), SubResource("Resource_ahn6u"), SubResource("Resource_a0cbw"), SubResource("Resource_wceua"), SubResource("Resource_jkgv4"), SubResource("Resource_5dayx"), SubResource("Resource_2cntf")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

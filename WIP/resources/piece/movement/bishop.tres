@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=8 format=3 uid="uid://dx2645h4rpx8y"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_3v7em"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_6ihqn"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://WIP/scripts/data/movement/sliding_movement.gd" id="2_t4a1o"]
+
+[sub_resource type="Resource" id="Resource_it45h"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("2_t4a1o")
+use_max_distance = true
+distance = 0
+direction = 1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_2wk54"]
+resource_local_to_scene = true
+resource_name = "Southeast"
+script = ExtResource("2_t4a1o")
+use_max_distance = true
+distance = 0
+direction = 3
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_wadx7"]
+resource_local_to_scene = true
+resource_name = "Southwest"
+script = ExtResource("2_t4a1o")
+use_max_distance = true
+distance = -1
+direction = 5
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_y5aqf"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("2_t4a1o")
+use_max_distance = true
+distance = -1
+direction = 7
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_6ihqn")
+branches = Array[ExtResource("1_3v7em")]([SubResource("Resource_it45h"), SubResource("Resource_2wk54"), SubResource("Resource_wadx7"), SubResource("Resource_y5aqf")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

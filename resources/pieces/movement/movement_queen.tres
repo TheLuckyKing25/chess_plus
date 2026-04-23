@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dmcenymnmgc5f" path="res://scripts/movement.gd" id="1_ylpno"]
 
 [sub_resource type="Resource" id="Resource_5d7a6"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 0
@@ -14,6 +15,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_6epxs"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 1
@@ -25,6 +27,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_p7fyn"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 2
@@ -36,6 +39,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_nm7v2"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 3
@@ -47,6 +51,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_t2u2f"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 4
@@ -58,6 +63,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_wnj15"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 5
@@ -69,6 +75,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_tjdt0"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 6
@@ -80,6 +87,7 @@ branches = Array[ExtResource("1_ylpno")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_p6vt8"]
+resource_local_to_scene = true
 script = ExtResource("1_ylpno")
 distance = -1
 direction = 7

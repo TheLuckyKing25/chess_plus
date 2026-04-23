@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=7 format=3 uid="uid://v6scgji0vbgg"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_1m1pl"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_3dr83"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://WIP/scripts/data/movement/sliding_movement.gd" id="2_bcl5t"]
+
+[sub_resource type="Resource" id="Resource_bt60u"]
+resource_local_to_scene = true
+resource_name = "North"
+script = ExtResource("2_bcl5t")
+use_max_distance = false
+distance = 2
+direction = 0
+is_move = true
+is_threaten = false
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_ralo6"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("2_bcl5t")
+use_max_distance = false
+distance = 1
+direction = 1
+is_move = false
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_ktao3"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("2_bcl5t")
+use_max_distance = false
+distance = 1
+direction = 7
+is_move = false
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_3dr83")
+branches = Array[ExtResource("1_1m1pl")]([SubResource("Resource_bt60u"), SubResource("Resource_ralo6"), SubResource("Resource_ktao3")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

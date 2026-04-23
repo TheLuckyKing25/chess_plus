@@ -1,3 +1,4 @@
+@tool
 class_name AbstractMovement extends Resource
 
 enum Direction{
@@ -29,9 +30,14 @@ func _init() -> void:
 # while this funtion does
 func get_duplicate() -> AbstractMovement:
 	var duplicated_movement:AbstractMovement = duplicate(true)
-	if duplicated_movement.is_branching:
+	return duplicated_movement
+	if duplicated_movement is BranchingMovement:
 		var duplicated_movement_branches:Array[AbstractMovement] = []
+
 		for branch in duplicated_movement.branches:
 			duplicated_movement_branches.append(branch.get_duplicate())
 		duplicated_movement.branches = duplicated_movement_branches
 	return duplicated_movement
+
+func set_max_distance(max_distance:int) -> void:
+	pass

@@ -1,0 +1,133 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=14 format=3 uid="uid://q64kt75k3ajt"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_u3ljr"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_ixvtn"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://WIP/scripts/data/movement/sliding_movement.gd" id="2_qbgc0"]
+
+[sub_resource type="Resource" id="Resource_4jjm7"]
+resource_local_to_scene = true
+resource_name = "North"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 0
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_xqnhb"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 1
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_bqcxg"]
+resource_local_to_scene = true
+resource_name = "East"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 2
+is_move = true
+is_threaten = false
+is_castling = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_3ksqp"]
+resource_local_to_scene = true
+resource_name = "East"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 2
+is_move = true
+is_threaten = true
+is_castling = false
+next_movement = SubResource("Resource_bqcxg")
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_2frh6"]
+resource_local_to_scene = true
+resource_name = "Southeast"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 3
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_aqek0"]
+resource_local_to_scene = true
+resource_name = "South"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 4
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_8st72"]
+resource_local_to_scene = true
+resource_name = "Southwest"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 5
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_2uaxm"]
+resource_local_to_scene = true
+resource_name = "West"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 6
+is_move = true
+is_threaten = false
+is_castling = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_enx8d"]
+resource_local_to_scene = true
+resource_name = "West"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 6
+is_move = true
+is_threaten = true
+is_castling = false
+next_movement = SubResource("Resource_2uaxm")
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_flcmw"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("2_qbgc0")
+use_max_distance = false
+distance = 1
+direction = 7
+is_move = true
+is_threaten = true
+is_castling = false
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_ixvtn")
+branches = Array[ExtResource("1_u3ljr")]([SubResource("Resource_4jjm7"), SubResource("Resource_xqnhb"), SubResource("Resource_3ksqp"), SubResource("Resource_2frh6"), SubResource("Resource_aqek0"), SubResource("Resource_8st72"), SubResource("Resource_enx8d"), SubResource("Resource_flcmw")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

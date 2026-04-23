@@ -16,6 +16,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_vilm8"]
+resource_local_to_scene = true
 resource_name = "Northeast"
 script = ExtResource("1_461e3")
 distance = 1
@@ -28,6 +29,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_mmuj5"]
+resource_local_to_scene = true
 script = ExtResource("1_461e3")
 distance = 1
 direction = 2
@@ -39,6 +41,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_0we4i"]
+resource_local_to_scene = true
 resource_name = "East"
 script = ExtResource("1_461e3")
 distance = 1
@@ -51,6 +54,7 @@ branches = Array[ExtResource("1_461e3")]([SubResource("Resource_mmuj5")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_38ub1"]
+resource_local_to_scene = true
 resource_name = "Southeast"
 script = ExtResource("1_461e3")
 distance = 1
@@ -63,6 +67,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_3deoh"]
+resource_local_to_scene = true
 resource_name = "South"
 script = ExtResource("1_461e3")
 distance = 1
@@ -75,6 +80,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_5qmhb"]
+resource_local_to_scene = true
 resource_name = "Southwest"
 script = ExtResource("1_461e3")
 distance = 1
@@ -87,6 +93,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_151tr"]
+resource_local_to_scene = true
 script = ExtResource("1_461e3")
 distance = 1
 direction = 6
@@ -98,6 +105,7 @@ branches = Array[ExtResource("1_461e3")]([])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_ddfpp"]
+resource_local_to_scene = true
 resource_name = "West"
 script = ExtResource("1_461e3")
 distance = 1
@@ -110,6 +118,7 @@ branches = Array[ExtResource("1_461e3")]([SubResource("Resource_151tr")])
 metadata/_custom_type_script = "uid://dmcenymnmgc5f"
 
 [sub_resource type="Resource" id="Resource_xf5u2"]
+resource_local_to_scene = true
 resource_name = "Northwest"
 script = ExtResource("1_461e3")
 distance = 1
