@@ -9,9 +9,10 @@ var camera_rotation: float = 0
 var can_proceed = false
 
 func enter():
-	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
+	#print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
 	if NetworkManager.is_online:
 		transitioned.emit(self,next_state.name)
+	Match.game_overlay.move_history.add_item(Match.move_history[-1])
 
 func exit():
 	previous_state.player.camera_yaw = 180
@@ -23,7 +24,7 @@ func exit():
 	Match.time_turn_ended = 0
 	Match.time_elapsed_since_turn_ended = 0
 	Match.board.board_base.material_override.albedo_color = Player.current.color
-	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
+	#print_rich("[b][color=brown]Exited[/color]: [/b]",name)
 
 func update(_delta:float):
 	Match.time_elapsed_since_turn_ended = (

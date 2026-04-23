@@ -9,7 +9,7 @@ const ALGEBRAIC_NOTATION_CHECKMATE = "#"
 const ALGEBRAIC_NOTATION_PROMOTION = "="
 const ALGEBRAIC_NOTATION_CAPTURE = "x"
 
-static func get_notation(move:Move):
+static func get_notation(move:Move) -> String:
 	if move.ignore_move:
 		return ""
 	elif move.outcome_flag.castling_queenside.enabled:
@@ -28,9 +28,9 @@ static func get_notation(move:Move):
 		"check_status": "",
 	}
 
-	notation.piece = move.starting_tile.occupant.data.algebraic_notation
-	notation.starting_tile = move.starting_tile
-	notation.destination_tile = move.destination_tile
+	notation.piece = move.destination_tile.occupant.data.algebraic_notation
+	notation.starting_tile = move.starting_tile.data.algebraic_notation
+	notation.destination_tile = move.destination_tile.data.algebraic_notation
 
 	if move.outcome_flag.capturing.enabled:
 		notation.capturing = ALGEBRAIC_NOTATION_CAPTURE
@@ -44,3 +44,13 @@ static func get_notation(move:Move):
 		notation.en_passant += " " + ALGEBRAIC_NOTATION_EN_PASSANT
 	elif move.outcome_flag.promotion.enabled:
 		notation.promoted_to += ALGEBRAIC_NOTATION_PROMOTION
+
+	return (
+		notation.piece
+		+ notation.starting_tile
+		+ notation.capturing
+		+ notation.destination_tile
+		+ notation.promoted_to
+		+ notation.en_passant
+		+ notation.check_status
+	)

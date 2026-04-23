@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ca80534plviow"]
 
 [ext_resource type="Script" uid="uid://ba8af3nv4tl2a" path="res://scripts/menu/selected_tile_modifier_button.gd" id="1_3q2uy"]
-[ext_resource type="Theme" uid="uid://ppo78g07ivy0" path="res://resources/themes/selected_tile_modifier_button_theme.tres" id="1_blv4a"]
+[ext_resource type="Theme" uid="uid://ppo78g07ivy0" path="res://resources/themes/theme_bright/selected_tile_modifier_button_theme.tres" id="1_blv4a"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_3q2uy"]
 resource_local_to_scene = false

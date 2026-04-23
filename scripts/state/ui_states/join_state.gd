@@ -11,7 +11,6 @@ func enter():
 
 
 func exit():
-
 	instantiated_scene.join_button.pressed.disconnect(Callable(self,"on_join_pressed"))
 
 	remove_child(instantiated_scene)

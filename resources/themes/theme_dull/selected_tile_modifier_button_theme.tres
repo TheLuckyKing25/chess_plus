@@ -1,0 +1,220 @@
+[gd_resource type="Theme" load_steps=29 format=3 uid="uid://biqfgsyl6v42f"]
+
+[sub_resource type="Image" id="Image_8jf4d"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 115, 255, 255, 255, 29, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 29, 255, 255, 255, 115, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 95, 255, 255, 255, 255, 255, 255, 255, 229, 255, 255, 255, 48, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 48, 255, 255, 255, 229, 255, 255, 255, 255, 255, 255, 255, 95, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 15, 255, 255, 255, 189, 255, 255, 255, 255, 255, 255, 255, 242, 255, 255, 255, 71, 255, 255, 255, 72, 255, 255, 255, 243, 255, 255, 255, 255, 255, 255, 255, 189, 255, 255, 255, 15, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 5, 255, 255, 255, 162, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 162, 255, 255, 255, 5, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 131, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 131, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 100, 255, 255, 255, 100, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 8,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_r568f"]
+image = SubResource("Image_8jf4d")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l228w"]
+resource_name = "ButtonDisabled"
+bg_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8f8fo"]
+resource_name = "ButtonFocus"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqyfw"]
+resource_name = "ButtonHover"
+bg_color = Color(0.686275, 0.686275, 0.686275, 1)
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uws80"]
+resource_name = "Button"
+bg_color = Color(1, 1, 1, 0)
+border_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_bottom_left = 5
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uq5bc"]
+resource_name = "ButtonPressed"
+bg_color = Color(0.408329, 0.408329, 0.408329, 1)
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vsb2v"]
+bg_color = Color(0.351083, 0.55, 0.209, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lk60f"]
+resource_name = "ButtonPressed"
+bg_color = Color(0.408329, 0.408329, 0.408329, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r568f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ci7n0"]
+resource_name = "ButtonHover"
+bg_color = Color(0.686275, 0.686275, 0.686275, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c2sf1"]
+resource_name = "ButtonHoverPressed"
+bg_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b8cvi"]
+resource_name = "Button"
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xllt0"]
+resource_name = "ButtonPressed"
+bg_color = Color(0.408329, 0.408329, 0.408329, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="Image" id="Image_qo33r"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 191, 255, 255, 255, 191, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 96, 255, 255, 255, 96, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_l228w"]
+image = SubResource("Image_qo33r")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8f8fo"]
+resource_name = "ButtonDisabled"
+bg_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_top_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xqyfw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tctgd"]
+resource_name = "ButtonHover"
+bg_color = Color(0.85, 0.2295, 0.2295, 1)
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yrbnt"]
+resource_name = "Button"
+bg_color = Color(1, 1, 1, 0)
+border_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+anti_aliasing = false
+anti_aliasing_size = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hxiso"]
+resource_name = "ButtonPressed"
+bg_color = Color(0.5, 0.135, 0.135, 1)
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="Image" id="Image_mmvje"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 101, 255, 255, 255, 100, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 132, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 132, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 5, 255, 255, 255, 163, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 162, 255, 255, 255, 5, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 15, 255, 255, 255, 189, 255, 255, 255, 255, 255, 255, 255, 242, 255, 255, 255, 70, 255, 255, 255, 71, 255, 255, 255, 242, 255, 255, 255, 255, 255, 255, 255, 189, 255, 255, 255, 15, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 95, 255, 255, 255, 255, 255, 255, 255, 229, 255, 255, 255, 47, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 48, 255, 255, 255, 229, 255, 255, 255, 255, 255, 255, 255, 95, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 115, 255, 255, 255, 29, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 29, 255, 255, 255, 115, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 8,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_c2sf1"]
+image = SubResource("Image_mmvje")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e55u7"]
+resource_name = "ButtonDisabled"
+bg_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b8cvi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_myqro"]
+resource_name = "ButtonHover"
+bg_color = Color(0.686275, 0.686275, 0.686275, 1)
+corner_radius_top_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sjo3d"]
+resource_name = "Button"
+bg_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 5
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i65xd"]
+resource_name = "ButtonPressed"
+bg_color = Color(0.408329, 0.408329, 0.408329, 1)
+corner_radius_top_left = 5
+
+[resource]
+DownButton/base_type = &"Button"
+DownButton/colors/icon_disabled_color = Color(0, 0, 0, 1)
+DownButton/colors/icon_focus_color = Color(0, 0, 0, 1)
+DownButton/colors/icon_hover_color = Color(0, 0, 0, 1)
+DownButton/colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+DownButton/colors/icon_normal_color = Color(0, 0, 0, 1)
+DownButton/colors/icon_pressed_color = Color(0, 0, 0, 1)
+DownButton/icons/icon = SubResource("ImageTexture_r568f")
+DownButton/styles/disabled = SubResource("StyleBoxFlat_l228w")
+DownButton/styles/focus = SubResource("StyleBoxEmpty_8f8fo")
+DownButton/styles/hover = SubResource("StyleBoxFlat_xqyfw")
+DownButton/styles/normal = SubResource("StyleBoxFlat_uws80")
+DownButton/styles/pressed = SubResource("StyleBoxFlat_uq5bc")
+InsetPanelContainer/base_type = &"PanelContainer"
+InsetPanelContainer/styles/panel = SubResource("StyleBoxFlat_vsb2v")
+ModifierButton/base_type = &"Button"
+ModifierButton/colors/font_color = Color(0, 0, 0, 1)
+ModifierButton/colors/font_focus_color = Color(0, 0, 0, 1)
+ModifierButton/colors/font_hover_color = Color(0, 0, 0, 1)
+ModifierButton/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+ModifierButton/colors/font_pressed_color = Color(0, 0, 0, 1)
+ModifierButton/constants/h_separation = 20
+ModifierButton/styles/disabled = SubResource("StyleBoxFlat_lk60f")
+ModifierButton/styles/focus = SubResource("StyleBoxEmpty_r568f")
+ModifierButton/styles/hover = SubResource("StyleBoxFlat_ci7n0")
+ModifierButton/styles/hover_pressed = SubResource("StyleBoxFlat_c2sf1")
+ModifierButton/styles/normal = SubResource("StyleBoxFlat_b8cvi")
+ModifierButton/styles/pressed = SubResource("StyleBoxFlat_xllt0")
+RemoveButton/base_type = &"Button"
+RemoveButton/colors/icon_disabled_color = Color(0, 0, 0, 1)
+RemoveButton/colors/icon_focus_color = Color(0, 0, 0, 1)
+RemoveButton/colors/icon_hover_color = Color(0, 0, 0, 1)
+RemoveButton/colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+RemoveButton/colors/icon_normal_color = Color(0, 0, 0, 1)
+RemoveButton/colors/icon_pressed_color = Color(0, 0, 0, 1)
+RemoveButton/icons/icon = SubResource("ImageTexture_l228w")
+RemoveButton/styles/disabled = SubResource("StyleBoxFlat_8f8fo")
+RemoveButton/styles/focus = SubResource("StyleBoxEmpty_xqyfw")
+RemoveButton/styles/hover = SubResource("StyleBoxFlat_tctgd")
+RemoveButton/styles/normal = SubResource("StyleBoxFlat_yrbnt")
+RemoveButton/styles/pressed = SubResource("StyleBoxFlat_hxiso")
+UpButton/base_type = &"Button"
+UpButton/colors/icon_disabled_color = Color(0.54099, 0.540991, 0.54099, 1)
+UpButton/colors/icon_focus_color = Color(0, 0, 0, 1)
+UpButton/colors/icon_hover_color = Color(0, 0, 0, 1)
+UpButton/colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+UpButton/colors/icon_normal_color = Color(0, 0, 0, 1)
+UpButton/colors/icon_pressed_color = Color(0, 0, 0, 1)
+UpButton/icons/icon = SubResource("ImageTexture_c2sf1")
+UpButton/styles/disabled = SubResource("StyleBoxFlat_e55u7")
+UpButton/styles/focus = SubResource("StyleBoxEmpty_b8cvi")
+UpButton/styles/hover = SubResource("StyleBoxFlat_myqro")
+UpButton/styles/normal = SubResource("StyleBoxFlat_sjo3d")
+UpButton/styles/pressed = SubResource("StyleBoxFlat_i65xd")

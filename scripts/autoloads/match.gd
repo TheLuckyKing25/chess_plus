@@ -24,7 +24,7 @@ var current_game_state: GameState = GameState.BOARD_CUSTOMIZATION:
 
 
 # move history
-var move_history:MoveList
+var move_history:Array
 
 
 var time_turn_ended:int = 0
@@ -33,6 +33,7 @@ var time_elapsed_since_turn_ended:int = 0
 
 var turn_num: int = 0
 
+var game_overlay: Node
 
 var is_board_generated: bool = false
 var is_timed: bool = false
@@ -85,6 +86,7 @@ func get_board_index(rank:int,file:int) -> int:
 
 func get_board_position(index: int) -> Vector2i:
 	return Vector2i(index/board.data.file_count, index%board.data.file_count)
+
 
 func select_tile(tile: TileObject) -> void:
 	TileObject.selected = tile

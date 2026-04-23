@@ -6,6 +6,7 @@ extends Node
 var current_state: State
 var states: Dictionary = {}
 
+## Prepares the states dictionary and sets the current_state
 func _ready() -> void:
 	for child in get_children():
 		if child is State:
@@ -16,17 +17,22 @@ func _ready() -> void:
 		initial_state.enter()
 		current_state = initial_state
 
+
 func _process(delta: float) -> void:
 	if current_state:
 		current_state.update(delta)
+
 
 func _physics_process(delta: float) -> void:
 	if current_state:
 		current_state.physics_update(delta)
 
+## This function registers an input and passes it to the current state.
+## Prevents other states from trying to process inputs when they are not the current state.
 func _input(event) -> void:
 	if current_state:
 		current_state.input(event)
+
 
 func on_child_transition(state:State, new_state_name:String):
 	if state != current_state:

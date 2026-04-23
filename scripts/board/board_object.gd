@@ -585,7 +585,7 @@ func perform_move(move: Move):
 	opponent_moves.generate_legal_moves(Match.get_opponent_of(Player.current))
 	if opponent_moves.moves.is_empty():
 		move.outcome_flag.checkmate.enabled = true
-		_game_overlay.show_checkmate(Player.current)
+		Match.game_overlay.show_checkmate(Player.current)
 
 
 	detect_check(Match.get_opponent_of(Player.current))
@@ -600,10 +600,10 @@ func perform_move(move: Move):
 	if not piece.data.flag.has_moved.enabled:
 		piece.moved(true)
 
-	#if AlgebraicNotaion.get_notation(move) != "": # empty string due to castling move
-		#if move.outcome_flag.promotion.enabled:
-			#move._notation_suffix += piece.data.algebraic_notation
-		#Match.move_history.append(AlgebraicNotaion.get_notation(move))
+	if AlgebraicNotaion.get_notation(move) != "": # empty string due to castling move
+		if move.outcome_flag.promotion.enabled:
+			move._notation_suffix += piece.data.algebraic_notation
+		Match.move_history.append(AlgebraicNotaion.get_notation(move))
 
 
 ## Sets up the next turn

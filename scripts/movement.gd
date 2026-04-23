@@ -14,13 +14,6 @@ enum Direction{
 	}
 
 
-enum Purpose{
-	UNSET = 0,
-	STANDARD_MOVEMENT = 1,
-	GENERATE_ALL_MOVES = 2,
-	}
-
-
 static var neighboring_tiles: Dictionary[Direction, Vector2i] = {
 	Direction.NORTH: Vector2i(1,0),
 	Direction.NORTHEAST: Vector2i(1,1),
@@ -63,12 +56,6 @@ var is_branching: bool: # Branch from tile, flag set on last moverule of a branc
 			return true
 
 
-
-# Purpose of the movement
-# The same throughout entire moveset
-var purpose: Purpose = Purpose.UNSET
-
-
 func _init() -> void:
 	resource_local_to_scene = true
 
@@ -83,13 +70,6 @@ func get_duplicate() -> Movement:
 		duplicated_movement.branches = duplicated_movement_branches
 
 	return duplicated_movement
-
-
-func set_purpose_type(new_purpose: Purpose) -> void:
-	purpose = new_purpose
-	if is_branching:
-		for branch in branches:
-			branch.set_purpose_type(new_purpose)
 
 func set_direction_parity(direction_parity: int) -> void:
 	if direction != Direction.NONE:

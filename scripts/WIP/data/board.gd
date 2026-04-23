@@ -1,12 +1,14 @@
 class_name Board extends Resource
 
-var tilemap: Array[Tile] = []
-var piece_placement: Array[Piece] = []
+var rank_count: int = 8
+var file_count: int = 8
 
 #region FEN DATA
 var board_representation: Dictionary[Tile,Piece]
 
+
 var player_to_move: Player
+
 
 var castling_rights: Dictionary = {
 	"white": {
@@ -19,17 +21,24 @@ var castling_rights: Dictionary = {
 	},
 }
 
-var en_passant: Dictionary[Tile, Piece] = {}
+# Defines the Tile a pawn must land on to capture Piece.
+# Piece is not on Tile.
+var en_passant: Dictionary = {
+	"tile": null,
+	"piece": null
+}
+
 
 var halfmove_clock: int = 0
+
 
 var fullmove_counter: int = 0
 #endregion
 
-var rank_count: int = 8
-var file_count: int = 8
 
-
-func generate_board_representation():
+func generate_tiles():
 	for index in range(rank_count*file_count):
-		board_representation[tilemap[index]] = piece_placement[index]
+		board_representation[Tile.new()] = null
+
+func generate_pieces():
+	pass

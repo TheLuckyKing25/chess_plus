@@ -5,6 +5,7 @@ func enter():
 
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
+		Match.game_overlay = instantiated_scene
 		if Match.is_timed:
 			instantiated_scene.show_timers()
 			Match.players.white.timer.label = instantiated_scene.get_ui_timer_white()

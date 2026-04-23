@@ -42,7 +42,6 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 	for branch in moveset.branches:
 		var current_tile_ptr: TileObject = origin_tile
 
-		branch.purpose = moveset.purpose
 		var distance: int = branch.distance
 		var can_proceed_with_branch: bool = true
 		var has_slid:bool = false

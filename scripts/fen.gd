@@ -4,7 +4,6 @@ extends RefCounted
 
 var FE_notation: String
 
-
 var piece_placement: String:
 	get(): return FE_notation.split(" ")[0]
 
