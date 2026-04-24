@@ -144,6 +144,6 @@ func _on_tile_modifier_order_changed():
 	var modifier_panel:PackedScene = load("uid://dmyh3g5g0c8ou")
 	for modifier in data.modifier_order:
 		var new_modifier = modifier_panel.instantiate()
+		%FlowContainer.add_child(new_modifier)
 		new_modifier.panel.bg_color = modifier.color
 		new_modifier.set_icon(modifier.icon)
-		%FlowContainer.add_child(new_modifier)

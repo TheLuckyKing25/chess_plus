@@ -360,6 +360,7 @@ func _on_pause_menu_resume_button_pressed():
 	_pause_menu.queue_free()
 
 func _on_pause_menu_leave_button_pressed():
+	
 	get_tree().paused = false
 	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
 

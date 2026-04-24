@@ -92,6 +92,7 @@ func _on_connection_failed() -> void:
 	is_online = false
 
 func _on_peer_disconnected(_id: int) -> void:
+	NetworkManager.is_online = false
 	print("NetworkManager: Opponent disconnected.")
 	opponent_disconnected.emit()
 

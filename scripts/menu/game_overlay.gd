@@ -92,6 +92,7 @@ func _input(event) -> void:
 
 func _on_pause_menu_leave_button_pressed() -> void:
 	get_tree().paused = false
+	NetworkManager._on_peer_disconnected(0)
 	get_tree().change_scene_to_file("uid://2aw5r4ibxl8k")
 	#get_tree().quit()
 
