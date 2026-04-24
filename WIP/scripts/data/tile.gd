@@ -1,26 +1,13 @@
 @tool
 class_name Tile extends Resource
 
-@export var position: Dictionary = {
+@export var position: Dictionary[String,Variant] = {
 	"index": -1,
 	"vector": Vector2i(-1,-1),
 	"algebraic_notation": "__",
 	"rank": -1,
 	"file": -1,
 }
-
-
-var algebraic_notation: String:
-	get(): return char(97 + rank) + str((1 + file))
-
-
-var rank: int:
-	get(): return position.vector.x
-
-
-var file: int:
-	get(): return  position.vector.y
-
 
 var occupant: Piece = null
 
@@ -70,5 +57,5 @@ func set_position_data(index:int, vector: Vector2i):
 	position.vector = vector
 	position.rank = vector.x
 	position.file = vector.y
-	position.algebraic_notaion = char(97 + vector.x) + str((1 + vector.y))
-	resource_name = char(97 + vector.x) + str((1 + vector.y))
+	position.algebraic_notation = char(97 + vector.x) + str((1 + vector.y))
+	resource_name = position.algebraic_notation

@@ -1,11 +1,10 @@
 @tool
 class_name Board extends Resource
 
-var rank_count: int = 8
-var file_count: int = 8
+@export_range(4,16,1) var rank_count: int = 8
+@export_range(4,16,1) var file_count: int = 8
 
 var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-
 
 
 #region FEN DATA

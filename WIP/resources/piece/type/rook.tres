@@ -5,9 +5,10 @@
 [ext_resource type="ArrayMesh" uid="uid://047i1asw03nw" path="res://assets/mesh/mesh_rook.obj" id="2_1p80k"]
 
 [resource]
+resource_name = "Rook Data"
 script = ExtResource("1_e6xjk")
 name = "Rook"
-algebraic_notation = "r"
+algebraic_notation = "R"
 object_mesh = ExtResource("2_1p80k")
 can_promote = false
 promotion_option = true

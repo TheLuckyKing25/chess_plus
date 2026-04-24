@@ -11,16 +11,15 @@
 
 [sub_resource type="Resource" id="Resource_yxl6f"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g2",
 "file": 1,
 "index": 49,
 "rank": 6,
 "vector": Vector2i(6, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -34,16 +33,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_veyfk"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e2",
 "file": 1,
 "index": 33,
 "rank": 4,
 "vector": Vector2i(4, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -57,16 +55,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_o0fue"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d2",
 "file": 1,
 "index": 25,
 "rank": 3,
 "vector": Vector2i(3, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_veyfk"),
 1: null,
@@ -80,16 +77,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_7ddk8"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b2",
 "file": 1,
 "index": 9,
 "rank": 1,
 "vector": Vector2i(1, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -103,16 +99,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_3dstf"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a2",
 "file": 1,
 "index": 1,
 "rank": 0,
 "vector": Vector2i(0, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_7ddk8"),
 1: null,
@@ -126,16 +121,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_pb6ba"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a3",
 "file": 2,
 "index": 2,
 "rank": 0,
 "vector": Vector2i(0, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -149,16 +143,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_1sug3"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a4",
 "file": 3,
 "index": 3,
 "rank": 0,
 "vector": Vector2i(0, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -172,16 +165,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_c5ajh"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b4",
 "file": 3,
 "index": 11,
 "rank": 1,
 "vector": Vector2i(1, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -195,16 +187,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_43ao2"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b3",
 "file": 2,
 "index": 10,
 "rank": 1,
 "vector": Vector2i(1, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -218,16 +209,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_s1ffw"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c2",
 "file": 1,
 "index": 17,
 "rank": 2,
 "vector": Vector2i(2, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_o0fue"),
 1: null,
@@ -241,16 +231,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_2mxwn"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d3",
 "file": 2,
 "index": 26,
 "rank": 3,
 "vector": Vector2i(3, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -264,16 +253,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_i66us"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c3",
 "file": 2,
 "index": 18,
 "rank": 2,
 "vector": Vector2i(2, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_2mxwn"),
 1: null,
@@ -287,16 +275,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_r26pv"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d4",
 "file": 3,
 "index": 27,
 "rank": 3,
 "vector": Vector2i(3, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -310,16 +297,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_wjxr7"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c4",
 "file": 3,
 "index": 19,
 "rank": 2,
 "vector": Vector2i(2, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_r26pv"),
 1: null,
@@ -333,16 +319,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_1dq3x"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d5",
 "file": 4,
 "index": 28,
 "rank": 3,
 "vector": Vector2i(3, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -356,16 +341,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_jdjtv"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c5",
 "file": 4,
 "index": 20,
 "rank": 2,
 "vector": Vector2i(2, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_1dq3x"),
 1: null,
@@ -379,16 +363,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_ljq5i"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b5",
 "file": 4,
 "index": 12,
 "rank": 1,
 "vector": Vector2i(1, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_jdjtv"),
 1: null,
@@ -402,16 +385,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_h1bw6"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a5",
 "file": 4,
 "index": 4,
 "rank": 0,
 "vector": Vector2i(0, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_ljq5i"),
 1: null,
@@ -425,16 +407,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_q7mq3"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a6",
 "file": 5,
 "index": 5,
 "rank": 0,
 "vector": Vector2i(0, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -448,16 +429,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_oogbt"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b6",
 "file": 5,
 "index": 13,
 "rank": 1,
 "vector": Vector2i(1, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -471,16 +451,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_wwyxk"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c6",
 "file": 5,
 "index": 21,
 "rank": 2,
 "vector": Vector2i(2, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -494,16 +473,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_fxvys"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d6",
 "file": 5,
 "index": 29,
 "rank": 3,
 "vector": Vector2i(3, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -517,16 +495,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_i32l2"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e6",
 "file": 5,
 "index": 37,
 "rank": 4,
 "vector": Vector2i(4, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -540,16 +517,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_xblrp"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e5",
 "file": 4,
 "index": 36,
 "rank": 4,
 "vector": Vector2i(4, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -563,16 +539,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_m24tl"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e4",
 "file": 3,
 "index": 35,
 "rank": 4,
 "vector": Vector2i(4, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -586,16 +561,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_tix44"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e3",
 "file": 2,
 "index": 34,
 "rank": 4,
 "vector": Vector2i(4, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -609,16 +583,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_inyqx"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f2",
 "file": 1,
 "index": 41,
 "rank": 5,
 "vector": Vector2i(5, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_yxl6f"),
 1: null,
@@ -632,16 +605,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_xqfuc"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g3",
 "file": 2,
 "index": 50,
 "rank": 6,
 "vector": Vector2i(6, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -655,16 +627,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_d2oim"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f3",
 "file": 2,
 "index": 42,
 "rank": 5,
 "vector": Vector2i(5, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_xqfuc"),
 1: null,
@@ -678,16 +649,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_bvgkv"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g4",
 "file": 3,
 "index": 51,
 "rank": 6,
 "vector": Vector2i(6, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -701,16 +671,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_mlg3i"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f4",
 "file": 3,
 "index": 43,
 "rank": 5,
 "vector": Vector2i(5, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_bvgkv"),
 1: null,
@@ -724,16 +693,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_kdsml"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g5",
 "file": 4,
 "index": 52,
 "rank": 6,
 "vector": Vector2i(6, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -747,16 +715,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_0k5pi"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f5",
 "file": 4,
 "index": 44,
 "rank": 5,
 "vector": Vector2i(5, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_kdsml"),
 1: null,
@@ -770,16 +737,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_bgsp7"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g6",
 "file": 5,
 "index": 53,
 "rank": 6,
 "vector": Vector2i(6, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -793,16 +759,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_u58uw"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f6",
 "file": 5,
 "index": 45,
 "rank": 5,
 "vector": Vector2i(5, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_bgsp7"),
 1: null,
@@ -816,16 +781,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_sgqra"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g7",
 "file": 6,
 "index": 54,
 "rank": 6,
 "vector": Vector2i(6, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -839,16 +803,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_epv4i"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f7",
 "file": 6,
 "index": 46,
 "rank": 5,
 "vector": Vector2i(5, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_sgqra"),
 1: null,
@@ -862,16 +825,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_thv7p"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e7",
 "file": 6,
 "index": 38,
 "rank": 4,
 "vector": Vector2i(4, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_epv4i"),
 1: null,
@@ -885,16 +847,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_l81go"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d7",
 "file": 6,
 "index": 30,
 "rank": 3,
 "vector": Vector2i(3, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_thv7p"),
 1: null,
@@ -908,16 +869,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_haks1"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c7",
 "file": 6,
 "index": 22,
 "rank": 2,
 "vector": Vector2i(2, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_l81go"),
 1: null,
@@ -931,16 +891,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_i1f8j"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b7",
 "file": 6,
 "index": 14,
 "rank": 1,
 "vector": Vector2i(1, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_haks1"),
 1: null,
@@ -954,16 +913,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_de2n2"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a7",
 "file": 6,
 "index": 6,
 "rank": 0,
 "vector": Vector2i(0, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_i1f8j"),
 1: null,
@@ -977,16 +935,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_p1duc"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a8",
 "file": 7,
 "index": 7,
 "rank": 0,
 "vector": Vector2i(0, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1000,16 +957,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_et1k4"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b8",
 "file": 7,
 "index": 15,
 "rank": 1,
 "vector": Vector2i(1, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1023,16 +979,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_mnals"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c8",
 "file": 7,
 "index": 23,
 "rank": 2,
 "vector": Vector2i(2, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1046,16 +1001,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_lodf2"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d8",
 "file": 7,
 "index": 31,
 "rank": 3,
 "vector": Vector2i(3, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1069,16 +1023,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_doy2q"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e8",
 "file": 7,
 "index": 39,
 "rank": 4,
 "vector": Vector2i(4, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1092,16 +1045,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_ssman"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f8",
 "file": 7,
 "index": 47,
 "rank": 5,
 "vector": Vector2i(5, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1115,16 +1067,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_c1exj"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g8",
 "file": 7,
 "index": 55,
 "rank": 6,
 "vector": Vector2i(6, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1138,16 +1089,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_40cgs"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h8"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h8",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h8",
 "file": 7,
 "index": 63,
 "rank": 7,
 "vector": Vector2i(7, 7)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1161,16 +1111,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_23arh"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h7"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h7",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h7",
 "file": 6,
 "index": 62,
 "rank": 7,
 "vector": Vector2i(7, 6)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1184,16 +1133,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_1sndj"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h6"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h6",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h6",
 "file": 5,
 "index": 61,
 "rank": 7,
 "vector": Vector2i(7, 5)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1207,16 +1155,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_yaj37"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h5"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h5",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h5",
 "file": 4,
 "index": 60,
 "rank": 7,
 "vector": Vector2i(7, 4)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1230,16 +1177,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_xy608"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h4"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h4",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h4",
 "file": 3,
 "index": 59,
 "rank": 7,
 "vector": Vector2i(7, 3)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1253,16 +1199,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_nmasy"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h3"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h3",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h3",
 "file": 2,
 "index": 58,
 "rank": 7,
 "vector": Vector2i(7, 2)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1276,16 +1221,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_gjrsr"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h2"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h2",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h2",
 "file": 1,
 "index": 57,
 "rank": 7,
 "vector": Vector2i(7, 1)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1299,16 +1243,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_pp1dj"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "h1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "h1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "h1",
 "file": 0,
 "index": 56,
 "rank": 7,
 "vector": Vector2i(7, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: null,
 1: null,
@@ -1322,16 +1265,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_06p8c"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "g1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "g1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "g1",
 "file": 0,
 "index": 48,
 "rank": 6,
 "vector": Vector2i(6, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_pp1dj"),
 1: SubResource("Resource_gjrsr"),
@@ -1345,16 +1287,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_luald"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "f1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "f1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "f1",
 "file": 0,
 "index": 40,
 "rank": 5,
 "vector": Vector2i(5, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_06p8c"),
 1: SubResource("Resource_yxl6f"),
@@ -1368,16 +1309,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_20a62"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "e1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "e1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "e1",
 "file": 0,
 "index": 32,
 "rank": 4,
 "vector": Vector2i(4, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_luald"),
 1: SubResource("Resource_inyqx"),
@@ -1391,16 +1331,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_ilydv"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "d1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "d1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "d1",
 "file": 0,
 "index": 24,
 "rank": 3,
 "vector": Vector2i(3, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_20a62"),
 1: SubResource("Resource_veyfk"),
@@ -1414,16 +1353,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_oi6jv"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "c1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "c1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "c1",
 "file": 0,
 "index": 16,
 "rank": 2,
 "vector": Vector2i(2, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_ilydv"),
 1: SubResource("Resource_o0fue"),
@@ -1437,16 +1375,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_0xjtg"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "b1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "b1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "b1",
 "file": 0,
 "index": 8,
 "rank": 1,
 "vector": Vector2i(1, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_oi6jv"),
 1: SubResource("Resource_s1ffw"),
@@ -1460,16 +1397,15 @@ neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 
 [sub_resource type="Resource" id="Resource_1f3kv"]
 resource_local_to_scene = true
-resource_name = "__"
+resource_name = "a1"
 script = ExtResource("1_gjw0l")
-position = {
-&"algebraic_notaion": "a1",
-"algebraic_notation": "__",
+position = Dictionary[String, Variant]({
+"algebraic_notation": "a1",
 "file": 0,
 "index": 0,
 "rank": 0,
 "vector": Vector2i(0, 0)
-}
+})
 neighbors = Dictionary[int, ExtResource("1_gjw0l")]({
 0: SubResource("Resource_0xjtg"),
 1: SubResource("Resource_7ddk8"),
@@ -1571,7 +1507,7 @@ shadow_mesh = SubResource("ArrayMesh_by08o")
 resource_name = "Rook Data"
 script = ExtResource("6_7ddk8")
 name = "Rook"
-algebraic_notation = "r"
+algebraic_notation = "R"
 object_mesh = SubResource("ArrayMesh_22e6w")
 can_promote = false
 promotion_option = true
@@ -1705,7 +1641,7 @@ shadow_mesh = SubResource("ArrayMesh_1au0f")
 resource_name = "Knight Data"
 script = ExtResource("6_7ddk8")
 name = "Knight"
-algebraic_notation = "n"
+algebraic_notation = "N"
 object_mesh = SubResource("ArrayMesh_whdk8")
 can_promote = false
 promotion_option = true
@@ -1807,7 +1743,7 @@ shadow_mesh = SubResource("ArrayMesh_q8u8u")
 resource_name = "Bishop Data"
 script = ExtResource("6_7ddk8")
 name = "Bishop"
-algebraic_notation = "b"
+algebraic_notation = "B"
 object_mesh = SubResource("ArrayMesh_of50s")
 can_promote = false
 promotion_option = true
@@ -1957,7 +1893,7 @@ shadow_mesh = SubResource("ArrayMesh_2geb4")
 resource_name = "Queen Data"
 script = ExtResource("6_7ddk8")
 name = "Queen"
-algebraic_notation = "q"
+algebraic_notation = "Q"
 object_mesh = SubResource("ArrayMesh_lg0xj")
 can_promote = false
 promotion_option = true
@@ -2133,7 +2069,7 @@ shadow_mesh = SubResource("ArrayMesh_2xngs")
 resource_name = "King Data"
 script = ExtResource("6_7ddk8")
 name = "King"
-algebraic_notation = "k"
+algebraic_notation = "K"
 object_mesh = SubResource("ArrayMesh_y6e2f")
 can_promote = false
 promotion_option = false
@@ -2187,7 +2123,7 @@ shadow_mesh = SubResource("ArrayMesh_7orfd")
 resource_name = "Bishop Data"
 script = ExtResource("6_7ddk8")
 name = "Bishop"
-algebraic_notation = "b"
+algebraic_notation = "B"
 object_mesh = SubResource("ArrayMesh_xdllp")
 can_promote = false
 promotion_option = true
@@ -2241,7 +2177,7 @@ shadow_mesh = SubResource("ArrayMesh_0kgyd")
 resource_name = "Knight Data"
 script = ExtResource("6_7ddk8")
 name = "Knight"
-algebraic_notation = "n"
+algebraic_notation = "N"
 object_mesh = SubResource("ArrayMesh_le1td")
 can_promote = false
 promotion_option = true
@@ -2295,7 +2231,7 @@ shadow_mesh = SubResource("ArrayMesh_3y8mq")
 resource_name = "Rook Data"
 script = ExtResource("6_7ddk8")
 name = "Rook"
-algebraic_notation = "r"
+algebraic_notation = "R"
 object_mesh = SubResource("ArrayMesh_afdfg")
 can_promote = false
 promotion_option = true
@@ -2427,7 +2363,7 @@ shadow_mesh = SubResource("ArrayMesh_thdmq")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_j3gun")
 can_promote = true
 promotion_option = false
@@ -2488,7 +2424,7 @@ shadow_mesh = SubResource("ArrayMesh_aei2m")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_j3cb0")
 can_promote = true
 promotion_option = false
@@ -2549,7 +2485,7 @@ shadow_mesh = SubResource("ArrayMesh_qf22u")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_2vks4")
 can_promote = true
 promotion_option = false
@@ -2610,7 +2546,7 @@ shadow_mesh = SubResource("ArrayMesh_beevo")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_tm6sm")
 can_promote = true
 promotion_option = false
@@ -2671,7 +2607,7 @@ shadow_mesh = SubResource("ArrayMesh_8xlfe")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_5lwdt")
 can_promote = true
 promotion_option = false
@@ -2732,7 +2668,7 @@ shadow_mesh = SubResource("ArrayMesh_nwtu1")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_bub1c")
 can_promote = true
 promotion_option = false
@@ -2793,7 +2729,7 @@ shadow_mesh = SubResource("ArrayMesh_6nu70")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_7tfux")
 can_promote = true
 promotion_option = false
@@ -2854,7 +2790,7 @@ shadow_mesh = SubResource("ArrayMesh_0upxf")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_fccsl")
 can_promote = true
 promotion_option = false
@@ -2915,7 +2851,7 @@ shadow_mesh = SubResource("ArrayMesh_beumc")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_ef6to")
 can_promote = true
 promotion_option = false
@@ -2976,7 +2912,7 @@ shadow_mesh = SubResource("ArrayMesh_ehxsd")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_li3q3")
 can_promote = true
 promotion_option = false
@@ -3037,7 +2973,7 @@ shadow_mesh = SubResource("ArrayMesh_kbxno")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_k55nj")
 can_promote = true
 promotion_option = false
@@ -3098,7 +3034,7 @@ shadow_mesh = SubResource("ArrayMesh_7qcxs")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_88iu2")
 can_promote = true
 promotion_option = false
@@ -3159,7 +3095,7 @@ shadow_mesh = SubResource("ArrayMesh_ktd01")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_i67xf")
 can_promote = true
 promotion_option = false
@@ -3220,7 +3156,7 @@ shadow_mesh = SubResource("ArrayMesh_0814o")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_lvoxx")
 can_promote = true
 promotion_option = false
@@ -3281,7 +3217,7 @@ shadow_mesh = SubResource("ArrayMesh_iip1x")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_p6fqc")
 can_promote = true
 promotion_option = false
@@ -3342,7 +3278,7 @@ shadow_mesh = SubResource("ArrayMesh_fqaq8")
 resource_name = "Pawn Data"
 script = ExtResource("6_7ddk8")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = SubResource("ArrayMesh_76k7p")
 can_promote = true
 promotion_option = false
@@ -3397,7 +3333,7 @@ shadow_mesh = SubResource("ArrayMesh_dtrec")
 resource_name = "Rook Data"
 script = ExtResource("6_7ddk8")
 name = "Rook"
-algebraic_notation = "r"
+algebraic_notation = "R"
 object_mesh = SubResource("ArrayMesh_x6lfj")
 can_promote = false
 promotion_option = true
@@ -3451,7 +3387,7 @@ shadow_mesh = SubResource("ArrayMesh_tr8si")
 resource_name = "Knight Data"
 script = ExtResource("6_7ddk8")
 name = "Knight"
-algebraic_notation = "n"
+algebraic_notation = "N"
 object_mesh = SubResource("ArrayMesh_fhdyv")
 can_promote = false
 promotion_option = true
@@ -3505,7 +3441,7 @@ shadow_mesh = SubResource("ArrayMesh_fqv1r")
 resource_name = "Bishop Data"
 script = ExtResource("6_7ddk8")
 name = "Bishop"
-algebraic_notation = "b"
+algebraic_notation = "B"
 object_mesh = SubResource("ArrayMesh_uucoq")
 can_promote = false
 promotion_option = true
@@ -3559,7 +3495,7 @@ shadow_mesh = SubResource("ArrayMesh_tqmuk")
 resource_name = "Queen Data"
 script = ExtResource("6_7ddk8")
 name = "Queen"
-algebraic_notation = "q"
+algebraic_notation = "Q"
 object_mesh = SubResource("ArrayMesh_a7yy5")
 can_promote = false
 promotion_option = true
@@ -3613,7 +3549,7 @@ shadow_mesh = SubResource("ArrayMesh_5h1ot")
 resource_name = "King Data"
 script = ExtResource("6_7ddk8")
 name = "King"
-algebraic_notation = "k"
+algebraic_notation = "K"
 object_mesh = SubResource("ArrayMesh_63ogf")
 can_promote = false
 promotion_option = false
@@ -3667,7 +3603,7 @@ shadow_mesh = SubResource("ArrayMesh_7l1pb")
 resource_name = "Bishop Data"
 script = ExtResource("6_7ddk8")
 name = "Bishop"
-algebraic_notation = "b"
+algebraic_notation = "B"
 object_mesh = SubResource("ArrayMesh_bq84q")
 can_promote = false
 promotion_option = true
@@ -3721,7 +3657,7 @@ shadow_mesh = SubResource("ArrayMesh_exmt8")
 resource_name = "Knight Data"
 script = ExtResource("6_7ddk8")
 name = "Knight"
-algebraic_notation = "n"
+algebraic_notation = "N"
 object_mesh = SubResource("ArrayMesh_ivbg6")
 can_promote = false
 promotion_option = true
@@ -3775,7 +3711,7 @@ shadow_mesh = SubResource("ArrayMesh_pfva8")
 resource_name = "Rook Data"
 script = ExtResource("6_7ddk8")
 name = "Rook"
-algebraic_notation = "r"
+algebraic_notation = "R"
 object_mesh = SubResource("ArrayMesh_jwkdi")
 can_promote = false
 promotion_option = true
@@ -3789,6 +3725,8 @@ base_type = SubResource("Resource_5o8ec")
 
 [resource]
 script = ExtResource("3_ve475")
+rank_count = 8
+file_count = 8
 board_representation = Dictionary[ExtResource("1_gjw0l"), ExtResource("2_3s8m5")]({
 SubResource("Resource_20a62"): null,
 SubResource("Resource_veyfk"): null,

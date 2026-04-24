@@ -9,7 +9,7 @@
 resource_name = "Pawn Data"
 script = ExtResource("1_2mlri")
 name = "Pawn"
-algebraic_notation = "p"
+algebraic_notation = "P"
 object_mesh = ExtResource("1_iejq7")
 can_promote = true
 promotion_option = false

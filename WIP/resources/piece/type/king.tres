@@ -5,9 +5,10 @@
 [ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://assets/mesh/mesh_king.obj" id="2_cw7b2"]
 
 [resource]
+resource_name = "King Data"
 script = ExtResource("1_iv14m")
 name = "King"
-algebraic_notation = "k"
+algebraic_notation = "K"
 object_mesh = ExtResource("2_cw7b2")
 can_promote = false
 promotion_option = false

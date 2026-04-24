@@ -1,5 +1,5 @@
 class_name FEN
-extends RefCounted
+extends Resource
 
 
 var FE_notation: String
