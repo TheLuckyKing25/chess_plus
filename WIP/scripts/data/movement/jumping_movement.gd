@@ -2,8 +2,12 @@
 class_name JumpingMovement extends AbstractMovement
 
 # define several different directions and add their vectors together
-@export_range(-16,16,1,"suffix:Rows") var row_origin_offset:int
+@export_range(-16,16,1,"suffix:Ranks") var row_origin_offset:int
 @export_range(-16,16,1,"suffix:Files") var file_origin_offset:int
+
+var offset_vector: Vector2i:
+	get:
+		return Vector2i(row_origin_offset,file_origin_offset)
 
 # Actions performed by the piece on a tile
 @export var is_move := false # Tile unoccupied
@@ -18,3 +22,14 @@ var is_branching: bool:
 			return false
 		else:
 			return true
+
+func set_direction_parity(direction_parity:int):
+	if direction_parity == 4:
+		row_origin_offset *= -1
+		file_origin_offset *= -1
+
+func get_duplicate() -> AbstractMovement:
+	var duplicated_movement: JumpingMovement = duplicate()
+	if next_movement:
+		duplicated_movement.next_movement = next_movement.get_duplicate()
+	return duplicated_movement

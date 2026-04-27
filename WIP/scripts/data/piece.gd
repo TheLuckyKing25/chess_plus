@@ -7,10 +7,35 @@ class_name Piece extends Resource
 		resource_name = value.name
 
 
-var player_owner: Player
+var name: String:
+	get:
+		if base_type != null:
+			return base_type.name
+		else:
+			printerr("Name Not Found")
+			return ""
+
+var base_movement: AbstractMovement:
+	get:
+		if base_type:
+			return base_type.movement
+		else:
+			printerr("Movement Not Found")
+			return
+
+#var player_owner: Player
+@export var player_owner: String:
+	set(value):
+		if base_type:
+			current_movement = base_type.movement.get_duplicate()
+			if value == "black":
+				current_movement.set_direction_parity(4)
+		player_owner = value
 
 
-var current_movement: AbstractMovement
+@export var current_movement: AbstractMovement:
+	get:
+		return current_movement.get_duplicate()
 
 
 var index: int = -1
@@ -41,3 +66,10 @@ static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -
 	new_piece.index = index
 
 	return new_piece
+
+func assign_player(player:String, dictionary: Dictionary):
+	player_owner = player
+	if dictionary.has(name):
+		dictionary[name].append(self)
+	else:
+		dictionary[name] = [self]

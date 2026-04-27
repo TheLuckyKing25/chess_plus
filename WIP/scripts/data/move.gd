@@ -1,7 +1,6 @@
-class_name MoveBasic extends RefCounted
+class_name MoveBasic extends Resource
 
 var move:Dictionary = {
 	"from": null,
 	"to": null,
-	"captured_piece": null,
 }

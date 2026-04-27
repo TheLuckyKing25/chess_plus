@@ -16,7 +16,7 @@ func enter():
 
 func exit():
 	previous_state.player.camera_yaw = 180
-	next_state.player.camera_camera.make_current()
+	next_state.player.camera_object.make_current()
 	if previous_state.player.camera_yaw != initial_rotation_degree:
 		previous_state.player.camera_yaw = initial_rotation_degree
 	camera_rotation = 0

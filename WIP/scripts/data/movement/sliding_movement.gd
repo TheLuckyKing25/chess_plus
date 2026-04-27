@@ -6,8 +6,15 @@ class_name SlidingMovement extends AbstractMovement
 		use_max_distance = value
 		notify_property_list_changed()
 
+
 ## The distance that this move will extend out to.
-@export_range(0,8,1,"or_greater") var distance: int = 0
+@export_range(0,8,1,"or_greater") var distance: int = -1:
+	get:
+		if use_max_distance and distance == -1:
+			return Board.current_board.max_length - 1
+		else:
+			return distance
+
 
 @export var direction: Direction:
 	set(cardinal):
@@ -16,12 +23,15 @@ class_name SlidingMovement extends AbstractMovement
 	get():
 		return direction as Direction
 
+
 # Actions performed by the piece on a tile
 @export var is_move := false # Tile unoccupied
 @export var is_threaten := false # Tile occupied by opponent
 @export var is_castling := false # Used for castling movements, flag set on last moverule of a branch
 
+
 @export var next_movement: AbstractMovement
+
 
 var is_branching: bool:
 	get():
@@ -29,6 +39,7 @@ var is_branching: bool:
 			return false
 		else:
 			return true
+
 # in editor tool
 func _validate_property(property: Dictionary) -> void:
 	if property.name in ["distance"]:
@@ -37,7 +48,7 @@ func _validate_property(property: Dictionary) -> void:
 
 
 func set_direction_parity(direction_parity: int) -> void:
-	direction = ((direction + direction_parity) % 8) as Direction
+	direction = (direction + direction_parity)
 	if next_movement:
 		next_movement.set_direction_parity(direction_parity)
 
@@ -55,8 +66,17 @@ func rotate_movement(direction_units: int) -> void:
 	if next_movement:
 		next_movement.rotate_movement(direction_units)
 
+
 func change_movement_direction() -> void:
 	pass
 
+
 func change_movement_distance() -> void:
 	pass
+
+
+func get_duplicate() -> AbstractMovement:
+	var duplicated_movement: SlidingMovement = duplicate()
+	if next_movement:
+		duplicated_movement.next_movement = next_movement.get_duplicate()
+	return duplicated_movement

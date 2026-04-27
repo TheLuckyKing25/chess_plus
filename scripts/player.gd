@@ -12,12 +12,9 @@ static var previous: Player
 
 static var en_passant: Player
 
-## Unused.
-## Can be used with more than two players where turn order matters.
-#static var turn_order: Array
-
 
 @export var color:Color
+
 
 @export var pieces:Dictionary[String,Array] = {}
 
@@ -29,23 +26,28 @@ static var en_passant: Player
 @export var direction_parity: int
 
 @export_group("Camera", "camera")
-@export var camera_camera: Camera3D
+@export var camera_object: Camera3D
 @export_custom(
 		PROPERTY_HINT_RANGE,
 		"0,20, 0.05, or_less,or_greater, suffix: m"
 		) var camera_distance_from_subject:float = 0
+
+@export var camera_twist_pivot: Node3D
 @export_custom(
 		PROPERTY_HINT_RANGE,
 		"-360,360,0.1, degrees, suffix:°",
 		PROPERTY_USAGE_DEFAULT|PROPERTY_USAGE_SCRIPT_VARIABLE
 		) var camera_yaw: float = 0.0
+
+
+@export var camera_pitch_pivot: Node3D
 @export_custom(
 		PROPERTY_HINT_RANGE,
 		"-90,90,0.1, degrees, suffix:°"
 		) var camera_pitch: float = 0.0
+
 @export var camera_horizonatal_offset: float = 0
 @export var camera_forward_offset: float = 0
-
 
 @export_group("Timer")
 @export var timer: TimeControl
@@ -62,16 +64,17 @@ var all_pieces: Array[PieceObject]:
 			array.append_array(pieces[piece_type])
 		return array
 
+
 func _ready() -> void:
 	Match.players[name.to_lower()] = self
 
 
 func _process(_delta: float) -> void:
-	camera_camera.position.z = camera_distance_from_subject
-	$TwistPivot/PitchPivot.rotation_degrees.x = camera_pitch
-	$TwistPivot.rotation_degrees.y = camera_yaw
-	$TwistPivot.position.x = camera_horizonatal_offset
-	$TwistPivot.position.z = camera_forward_offset
+	camera_object.position.z = camera_distance_from_subject
+	camera_pitch_pivot.rotation_degrees.x = camera_pitch
+	camera_twist_pivot.rotation_degrees.y = camera_yaw
+	camera_twist_pivot.position.x = camera_horizonatal_offset
+	camera_twist_pivot.position.z = camera_forward_offset
 
 
 func add_piece(new_piece: PieceObject) -> void:
