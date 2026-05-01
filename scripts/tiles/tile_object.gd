@@ -72,17 +72,19 @@ func _ready() -> void:
 func set_tile_color(color: Color):
 	tile_material.albedo_color = color
 
+func set_state_color(color: Color, has_emission: bool = false):
+	state_material.albedo_color = color
+	state_material.emission_enabled = has_emission
 
+#region Player Interaction
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Select") and is_mouse_on_tile:
 		clicked.emit(self)
-
 
 func _on_occupant_clicked(piece: PieceObject):
 	clicked.emit(self)
 
 
-#region Mouse Over
 func _on_mouse_entered() -> void:
 	is_mouse_on_tile = true
 	mouseover_material.render_priority = 1
@@ -96,11 +98,6 @@ func _on_mouse_exited() -> void:
 #endregion
 
 
-func tile_checked_movement():
-	state_material.albedo_color = data.MOVE_CHECKING_COLOR
-	state_material.emission_enabled = false
-
-
 func change(flag:String, enabled:bool):
 	data.flag[flag].enabled = enabled
 	if occupant and occupant.data.flag.has(flag):
@@ -112,18 +109,27 @@ func on_flags_changed():
 	state_material.emission_enabled = false
 
 	if data.flag.is_checked_movement.enabled:
-		state_material.albedo_color = data.MOVE_CHECKING_COLOR
+		set_state_color(data.MOVE_CHECKING_COLOR)
+
+
 	elif data.flag.is_castling.enabled:
-		state_material.albedo_color = data.CASTLING_COLOR
-		state_material.emission_enabled = true
+		set_state_color(data.CASTLING_COLOR, true)
+
+
 	elif data.flag.is_checked.enabled:
-		state_material.albedo_color = data.CHECKED_COLOR
+		set_state_color(data.CHECKED_COLOR, true)
+
+
 	elif data.flag.is_threatened.enabled:
-		state_material.albedo_color = data.THREATENED_COLOR
+		set_state_color(data.THREATENED_COLOR)
+
+
 	elif data.flag.is_selected.enabled:
-		state_material.albedo_color = data.SELECT_COLOR
+		set_state_color(data.SELECT_COLOR)
+
+
 	elif data.flag.is_movement.enabled:
-		state_material.albedo_color = data.VALID_COLOR
+		set_state_color(data.VALID_COLOR)
 
 
 func clear_flags():
@@ -153,6 +159,7 @@ func _on_tile_modifier_order_changed():
 
 func get_next_tile(direction: Movement.Direction):
 	return neighbors[direction]
+
 
 #region Tile Clicked
 func _on_tile_clicked(tile: TileObject) -> void:

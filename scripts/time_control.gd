@@ -14,7 +14,6 @@ var label: Label = null:
 			new_label.text = time_string
 
 
-
 func set_timer(time_sec: float) -> void:
 	_set_time_string(time_sec)
 	paused = true

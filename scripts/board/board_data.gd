@@ -41,3 +41,10 @@ func assign_tile_neighbors():
 				continue
 
 			tile.neighbors[direction] = tile_array[Match.get_board_index(next_tile_position.x,next_tile_position.y)]
+
+func find_tile_using_vector(vector: Vector2i) -> TileObject:
+	for tile in tile_array:
+		if tile.data.board_position == vector:
+			return tile
+
+	return null # tile not found

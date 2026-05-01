@@ -19,3 +19,10 @@ func get_duplicate() -> AbstractMovement:
 		duplicated_movement_branches.append(branch.get_duplicate())
 	duplicated_movement.branches = duplicated_movement_branches
 	return duplicated_movement
+
+func apply_movement(current_tile:TileObject):
+	# apply modifiers
+	if branches.is_empty():
+		return
+	for branch in branches:
+		branch.apply_movement(current_tile)

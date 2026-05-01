@@ -24,18 +24,21 @@ var modifier_order: Array[TileModifier] = []:
 		modifier_order_changed.emit()
 
 #region Position
-var board_position: Vector2i
+var rank: int
+
+var file: int
 
 var index: int
 
 var algebraic_notation: String:
 	get(): return char(97 + rank) + str((1 + file))
 
-var rank: int:
-	get(): return board_position.x
-
-var file: int:
-	get(): return board_position.y
+var board_position: Vector2i:
+	set(value):
+		rank = value.x
+		file = value.y
+	get():
+		return Vector2i(rank,file)
 
 #endregion
 
@@ -50,7 +53,7 @@ var flag: Dictionary[String, FlagComponent] = {
 }
 
 
-func connect_flag_components(function:Callable):
+func connect_flag_changed_components(function:Callable):
 	for component in flag.keys():
 		flag[component].changed.connect(function)
 

@@ -24,10 +24,9 @@ class_name SlidingMovement extends AbstractMovement
 		return direction as Direction
 
 
-# Actions performed by the piece on a tile
-@export var is_move := false # Tile unoccupied
-@export var is_threaten := false # Tile occupied by opponent
-@export var is_castling := false # Used for castling movements, flag set on last moverule of a branch
+@export var is_move := false
+@export var is_threaten := false
+@export var is_castling := false
 
 
 @export var next_movement: AbstractMovement
@@ -80,3 +79,16 @@ func get_duplicate() -> AbstractMovement:
 	if next_movement:
 		duplicated_movement.next_movement = next_movement.get_duplicate()
 	return duplicated_movement
+
+func apply_movement(current_tile:TileObject):
+	# on current_tile
+		# apply modifiers of current_tile
+
+	while distance > 0:
+		# find next tile
+		var next_tile: TileObject = current_tile.neighbors[direction]
+		if next_tile == null:
+			return
+
+		distance -= 1
+		apply_movement(next_tile)

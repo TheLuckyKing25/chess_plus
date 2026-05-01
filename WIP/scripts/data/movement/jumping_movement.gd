@@ -9,10 +9,9 @@ var offset_vector: Vector2i:
 	get:
 		return Vector2i(row_origin_offset,file_origin_offset)
 
-# Actions performed by the piece on a tile
-@export var is_move := false # Tile unoccupied
-@export var is_threaten := false # Tile occupied by opponent
-@export var is_castling := false # Used for castling movements, flag set on last moverule of a branch
+@export var is_move := false
+@export var is_threaten := false
+@export var is_castling := false
 
 @export var next_movement: AbstractMovement
 
@@ -33,3 +32,20 @@ func get_duplicate() -> AbstractMovement:
 	if next_movement:
 		duplicated_movement.next_movement = next_movement.get_duplicate()
 	return duplicated_movement
+
+func apply_movement(current_tile:TileObject):
+	# find next_tile
+	var new_position = current_tile.data.board_position + offset_vector
+	var next_tile = Match.board.data.find_tile_using_vector(new_position)
+	if next_tile == null:
+		return
+
+	# enter next_tile
+		# apply modifiers of next_tile
+
+	# apply states to next_tile
+
+	# exit next_tile
+	if next_movement:
+		next_movement.apply_movement(next_tile)
+	pass

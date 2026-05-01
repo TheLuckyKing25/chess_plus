@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://cega76qfg50kj"]
 
-[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tiles/tile_object.gd" id="1_gtpg2"]
+[ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tiles/tile_object.gd" id="1_3dk36"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
 margin = 0.06
@@ -48,7 +48,7 @@ size = Vector3(0.95, 0.1, 0.95)
 viewport_path = NodePath("Tile_Modifiers/Modifier_Grid")
 
 [node name="Tile" type="StaticBody3D" groups=["Tile"]]
-script = ExtResource("1_gtpg2")
+script = ExtResource("1_3dk36")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_iixfe")

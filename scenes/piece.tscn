@@ -17,7 +17,6 @@ shape = SubResource("CapsuleShape3D_s58gp")
 [node name="Piece_Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 material_override = ExtResource("3_ajk4a")
-skeleton = NodePath("../..")
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

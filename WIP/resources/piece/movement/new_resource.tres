@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BranchingMovement" load_steps=3 format=3 uid="uid://c35jsi1shj85q"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_dr53c"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_s11g5"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_s11g5")
+branches = Array[ExtResource("1_dr53c")]([null])
+metadata/_custom_type_script = "uid://by81w35mptra5"

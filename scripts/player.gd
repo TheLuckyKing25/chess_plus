@@ -25,6 +25,10 @@ static var en_passant: Player
 ## Used to rotate the movement of the piece
 @export var direction_parity: int
 
+
+func _validate_property(property: Dictionary) -> void:
+	pass
+
 @export_group("Camera", "camera")
 @export var camera_object: Camera3D
 @export_custom(
