@@ -1,7 +1,5 @@
-@tool
 class_name JumpingMovement extends AbstractMovement
 
-# define several different directions and add their vectors together
 @export_range(-16,16,1,"suffix:Ranks") var row_origin_offset:int
 @export_range(-16,16,1,"suffix:Files") var file_origin_offset:int
 

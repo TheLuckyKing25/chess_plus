@@ -1,4 +1,3 @@
-@tool
 class_name SlidingMovement extends AbstractMovement
 
 @export var use_max_distance: bool = false:
@@ -80,6 +79,7 @@ func get_duplicate() -> AbstractMovement:
 		duplicated_movement.next_movement = next_movement.get_duplicate()
 	return duplicated_movement
 
+
 func apply_movement(current_tile:TileObject):
 	# on current_tile
 		# apply modifiers of current_tile
@@ -89,6 +89,12 @@ func apply_movement(current_tile:TileObject):
 		var next_tile: TileObject = current_tile.neighbors[direction]
 		if next_tile == null:
 			return
+
+		if is_threaten:
+			pass
+		if is_move:
+			pass
+
 
 		distance -= 1
 		apply_movement(next_tile)

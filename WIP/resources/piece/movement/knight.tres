@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="BranchingMovement" load_steps=12 format=3 uid="uid://8gfafi0lgf6u"]
 
-[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/data/movement/abstract_movement.gd" id="1_7ho1e"]
-[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/data/movement/branching_movement.gd" id="2_aaecr"]
-[ext_resource type="Script" uid="uid://bwtiwvjb3a3at" path="res://WIP/scripts/data/movement/jumping_movement.gd" id="2_wnk5d"]
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://WIP/scripts/movement/abstract_movement.gd" id="1_aaecr"]
+[ext_resource type="Script" uid="uid://bwtiwvjb3a3at" path="res://WIP/scripts/movement/jumping_movement.gd" id="2_wnk5d"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://WIP/scripts/movement/branching_movement.gd" id="3_eh8qs"]
 
 [sub_resource type="Resource" id="Resource_eh8qs"]
 resource_local_to_scene = true
@@ -86,6 +86,6 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("2_aaecr")
-branches = Array[ExtResource("1_7ho1e")]([SubResource("Resource_eh8qs"), SubResource("Resource_7rvqh"), SubResource("Resource_ahn6u"), SubResource("Resource_a0cbw"), SubResource("Resource_wceua"), SubResource("Resource_jkgv4"), SubResource("Resource_5dayx"), SubResource("Resource_2cntf")])
+script = ExtResource("3_eh8qs")
+branches = Array[ExtResource("1_aaecr")]([SubResource("Resource_eh8qs"), SubResource("Resource_7rvqh"), SubResource("Resource_ahn6u"), SubResource("Resource_a0cbw"), SubResource("Resource_wceua"), SubResource("Resource_jkgv4"), SubResource("Resource_5dayx"), SubResource("Resource_2cntf")])
 metadata/_custom_type_script = "uid://by81w35mptra5"

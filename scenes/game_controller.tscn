@@ -1,11 +1,12 @@
-[gd_scene load_steps=38 format=3 uid="uid://c5sp4xfh2lsyp"]
+[gd_scene load_steps=39 format=3 uid="uid://c5sp4xfh2lsyp"]
 
+[ext_resource type="Script" uid="uid://dni4d2jilah2x" path="res://scripts/autoloads/game_controller.gd" id="1_fpu5w"]
 [ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/state/state_machine.gd" id="1_twqac"]
 [ext_resource type="Script" uid="uid://cojx763b4281c" path="res://scripts/state/ui_states/start_menu_state.gd" id="2_25rj4"]
-[ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/game_environment.gd" id="2_py7vm"]
+[ext_resource type="Script" uid="uid://c3smjevi02hna" path="res://scripts/controller_3d.gd" id="2_py7vm"]
 [ext_resource type="PackedScene" uid="uid://2aw5r4ibxl8k" path="res://scenes/menu/start_screen.tscn" id="3_wksuf"]
 [ext_resource type="Script" uid="uid://da7na1h6kx0q0" path="res://scripts/state/state_machine_state.gd" id="4_25rj4"]
-[ext_resource type="PackedScene" uid="uid://vqvs470xc1lw" path="res://scenes/board.tscn" id="4_fpu5w"]
+[ext_resource type="PackedScene" uid="uid://b7j70dbu10fa4" path="res://scenes/board.tscn" id="4_fpu5w"]
 [ext_resource type="Script" uid="uid://dtw67qk6xuwgn" path="res://scripts/state/ui_states/match_customization_state.gd" id="4_wf0ff"]
 [ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/match_selection_screen.tscn" id="5_vi7lc"]
 [ext_resource type="Script" uid="uid://b1ssj14vctijh" path="res://scripts/state/turn_states/player_turn.gd" id="6_3d517"]
@@ -95,7 +96,9 @@ normal_enabled = true
 normal_scale = 0.1
 normal_texture = SubResource("NoiseTexture2D_5gvbh")
 
-[node name="GameController" type="Node"]
+[node name="GameController" type="Node" node_paths=PackedStringArray("controller_3D")]
+script = ExtResource("1_fpu5w")
+controller_3D = NodePath("Controller3D")
 
 [node name="White" parent="." instance=ExtResource("20_kea5x")]
 color = Color(0.8, 0.8, 0.8, 1)

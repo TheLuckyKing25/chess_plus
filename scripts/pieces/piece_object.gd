@@ -6,33 +6,45 @@ signal clicked(piece: PieceObject)
 
 const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
 
-static var selected: PieceObject = null
+const THREATENED_COLOR:= Color(0.9, 0, 0, 1)
+const CHECKING_COLOR:= Color(0.9, 0.9, 0)
+const SELECT_COLOR:= Color(0, 0.9, 0.9, 1)
+const CHECKED_COLOR:= Color(0.9, 0, 0, 1)
+const CASTLING_COLOR:= Color(1,1,1,1)
+
 static var en_passant: PieceObject = null
 
 static var is_selected: bool:
 	get():
-		return selected != null
+		return GameController.selected.piece != null
+
 
 var is_mouse_on_piece: bool = false
 
+
 var piece_material: StandardMaterial3D
-var outline_material: StandardMaterial3D
-var mouseover_material: StandardMaterial3D
+
+var mouseover_material: StandardMaterial3D:
+	get():
+		return piece_material.next_pass
+
+var outline_material: StandardMaterial3D:
+	get():
+		return piece_material.next_pass.next_pass
 
 
 @export var data: PieceData:
 	set(new_data):
 		if data:
-			remove_from_group(data.name)
+			remove_from_group(data.type.name)
 			new_data.index = data.index
 			new_data.player = data.player
+			new_data.type = data.type
 
-		add_to_group(new_data.name)
-		$Piece_Mesh.mesh = new_data.object_mesh
+		add_to_group(new_data.type.name)
+		$Piece_Mesh.mesh = new_data.type.object_mesh
 
 		piece_material = $Piece_Mesh.material_override
-		mouseover_material = piece_material.next_pass
-		outline_material = mouseover_material.next_pass
 		outline_material.albedo_color = Color(0,0,0,0)
 		piece_material.albedo_color = new_data.player.color
 		data = new_data
@@ -82,13 +94,13 @@ func apply_state():
 	if data.flag.is_captured.enabled:
 		_captured()
 	elif data.flag.is_castling.enabled:
-		outline_material.albedo_color = PieceData.CASTLING_COLOR
+		outline_material.albedo_color = CASTLING_COLOR
 	elif data.flag.is_threatened.enabled:
-		outline_material.albedo_color = PieceData.THREATENED_COLOR
+		outline_material.albedo_color = THREATENED_COLOR
 	elif data.flag.is_selected.enabled:
-		outline_material.albedo_color = PieceData.SELECT_COLOR
+		outline_material.albedo_color = SELECT_COLOR
 	elif data.flag.is_checked.enabled:
-		outline_material.albedo_color = PieceData.CHECKED_COLOR
+		outline_material.albedo_color = CHECKED_COLOR
 	else:
 		outline_material.albedo_color = Color(0,0,0,0)
 
@@ -96,6 +108,7 @@ func apply_state():
 		add_to_group("has_moved")
 	else:
 		remove_from_group("has_moved")
+
 
 func move_to(tile: TileObject):
 	tile.occupant = self
@@ -107,8 +120,8 @@ func move_to(tile: TileObject):
 
 func _ready() -> void:
 	data.connect_flag_components(Callable(self,"apply_state"))
-	add_to_group(data.name)
-	$Piece_Mesh.mesh = data.object_mesh
+	add_to_group(data.type.name)
+	$Piece_Mesh.mesh = data.type.object_mesh
 
 	piece_material = $Piece_Mesh.material_override
 	mouseover_material = piece_material.next_pass
@@ -134,11 +147,11 @@ func _captured():
 func moved(state:bool):
 	data.flag.has_moved.enabled = state
 	if state:
-		if data.name == "Pawn":
+		if data.type.name == "Pawn":
 			data.movement = load("uid://bpexpwlvi0ymy")
 		add_to_group("has_moved")
 	else:
-		if data.name == "Pawn":
+		if data.type.name == "Pawn":
 			data.movement = load("uid://dl1o3ayyjvnlf")
 		remove_from_group("has_moved")
 

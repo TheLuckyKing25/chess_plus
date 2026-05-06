@@ -4,46 +4,22 @@ class_name TileDataChess
 extends Resource
 
 signal modifier_order_changed()
+signal occupant_changed(occupant: PieceData)
 
-# Standard Tile Colors
-const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
-const LIGHT_COLOR: Color = BASE_COLOR * 4/3
-const DARK_COLOR: Color = BASE_COLOR * 2/3 + Color(0,0,0,1)
+# Lower number means higher priority
+enum {
+	STATE_SELECTED = 5,
+	STATE_MOVEMENT = 4,
+	STATE_CASTLING = 3,
+	STATE_THREATENED = 2,
+	STATE_CHECKED = 1,
+	STATE_CHECKED_MOVEMENT = 0,
+}
 
-# State Colors
-const THREATENED_COLOR: Color = Color(1, 0.2, 0.2, 1)
-const VALID_COLOR: Color = Color(0.6, 1, 0.6, 1)
-const SELECT_COLOR: Color = Color(0.1, 1, 1, 1)
-const CHECKED_COLOR: Color = Color(1, 0.2, 0.2, 1)
-const CASTLING_COLOR: Color = Color(1,1,1,1)
-const MOVE_CHECKING_COLOR: Color = Color(1, 0.392, 0.153)
-
-var modifier_order: Array[TileModifier] = []:
-	set(new_order):
-		modifier_order = new_order
-		modifier_order_changed.emit()
-
-#region Position
-var rank: int
-
-var file: int
-
-var index: int
-
-var algebraic_notation: String:
-	get(): return char(97 + rank) + str((1 + file))
-
-var board_position: Vector2i:
-	set(value):
-		rank = value.x
-		file = value.y
-	get():
-		return Vector2i(rank,file)
-
-#endregion
+var state: TileState = TileState.new()
 
 
-var flag: Dictionary[String, FlagComponent] = {
+var flag: Dictionary = {
 	"is_selected": FlagComponent.new(),
 	"is_movement": FlagComponent.new(),
 	"is_castling": FlagComponent.new(),
@@ -52,22 +28,87 @@ var flag: Dictionary[String, FlagComponent] = {
 	"is_checked_movement": FlagComponent.new(),
 }
 
+var modifier_order: Array[TileModifier] = []:
+	set(new_order):
+		modifier_order = new_order
+		modifier_order_changed.emit()
 
-func connect_flag_changed_components(function:Callable):
-	for component in flag.keys():
-		flag[component].changed.connect(function)
+
+var neighbors: Dictionary[Movement.Direction, TileDataChess] = {
+	Movement.Direction.NORTH: null,
+	Movement.Direction.NORTHEAST: null,
+	Movement.Direction.EAST: null,
+	Movement.Direction.SOUTHEAST: null,
+	Movement.Direction.SOUTH: null,
+	Movement.Direction.SOUTHWEST: null,
+	Movement.Direction.WEST: null,
+	Movement.Direction.NORTHWEST: null,
+}
+
+
+#region Position
+var rank: int
+
+
+var file: int
+
+
+var index: int
+
+
+var algebraic_notation: String:
+	get(): return char(97 + rank) + str((1 + file))
+
+
+var board_position: Vector2i:
+	set(value):
+		rank = value.x
+		file = value.y
+	get():
+		return Vector2i(rank,file)
+#endregion
+
+
+var occupant: PieceObject = null:
+	set(new_occupant):
+		occupant = new_occupant
+		occupant_changed.emit(new_occupant)
+
+
+var assigned_object: TileObject
 
 
 func _init() -> void:
 	resource_local_to_scene = true
 
 
+func connect_flag_changed_components(function:Callable):
+	for component in flag.keys():
+		flag[component].changed.connect(function)
+
+
 func clear_modifiers():
 	modifier_order = []
 
 
-func get_tile_color() -> Color:
-	match (file + rank) % 2:
-		0: return LIGHT_COLOR
-		1: return DARK_COLOR
-		_: return Color(0,0,0)
+func change(flag:String, enabled:bool):
+	self.flag[flag].enabled = enabled
+	if occupant and occupant.data.flag.has(flag):
+		occupant.data.flag[flag].enabled = enabled
+
+
+func clear_flags():
+	change("is_selected",false)
+	change("is_threatened",false)
+	change("is_castling",false)
+	change("is_checked_movement", false)
+	change("is_movement", false)
+
+
+func clear_check_flag():
+	change("is_checked",false)
+
+func set_position_data(index:int, vector: Vector2i):
+	self.index = index
+	rank = vector.x
+	file = vector.y

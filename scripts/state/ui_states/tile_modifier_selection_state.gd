@@ -32,7 +32,7 @@ func input(event:InputEvent) -> void:
 func on_back_pressed():
 	for child in Match.board.board_base.get_children():
 		if child.occupant:
-			child.occupant.data.player.remove_piece(child.occupant)
+			child.occupant_data.player.remove_piece(child.occupant)
 		Match.board.board_base.remove_child(child)
 		child.queue_free()
 
@@ -45,7 +45,7 @@ func on_back_pressed():
 func on_continue_pressed():
 	Match.current_game_state = Match.GameState.GAMEPLAY
 	Match.game_state_changed.emit(Match.current_game_state)
-	get_tree().call_group("Tile","clear_flags")
+	get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
 	get_tree().call_group("Tile","remove_from_group","Selected")
 
 	if NetworkManager.is_online:

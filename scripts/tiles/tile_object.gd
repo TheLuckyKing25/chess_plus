@@ -3,7 +3,25 @@ extends Node3D
 
 signal clicked(tile:TileObject)
 
-const TILE_SCENE:PackedScene = preload("uid://cega76qfg50kj")
+# starts at 32 to prevent overlap with already existing notification constants
+enum {
+	NOTIFICATION_CLEAR_CHECK_STATE = 32,
+	NOTIFICATION_CLEAR_OTHER_STATES = 33,
+}
+
+# Standard Tile Colors
+const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
+const LIGHT_COLOR: Color = BASE_COLOR * 4/3
+const DARK_COLOR: Color = BASE_COLOR * 2/3 + Color(0,0,0,1)
+
+const THREATENED_COLOR: Color = Color(1, 0.2, 0.2, 1)
+const VALID_COLOR: Color = Color(0.6, 1, 0.6, 1)
+const SELECT_COLOR: Color = Color(0.1, 1, 1, 1)
+const CHECKED_COLOR: Color = Color(1, 0.2, 0.2, 1)
+const CASTLING_COLOR: Color = Color(1,1,1,1)
+const MOVE_CHECKING_COLOR: Color = Color(1, 0.392, 0.153)
+
+const TILE_SCENE:PackedScene = preload("uid://clmimmf3c1qpt")
 
 static var selected: TileObject = null
 static var en_passant: TileObject = null
@@ -12,17 +30,39 @@ static var is_selected: bool:
 	get():
 		return selected != null
 
-var tile_material: StandardMaterial3D
-var mouseover_material: StandardMaterial3D
-var state_material: StandardMaterial3D
+var _tile_color: Color:
+	set(value):
+		tile_material.albedo_color = value
+	get:
+		return tile_material.albedo_color
 
-var occupant: PieceObject = null:
-	set(new_occupant):
+
+var tile_material: StandardMaterial3D
+
+var state_material: StandardMaterial3D:
+	get():
+		return tile_material.next_pass
+
+var mouseover_material: StandardMaterial3D:
+	get():
+		return state_material.next_pass
+
+
+var occupant: PieceObject:
+	set(value):
 		if occupant:
 			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
-		if new_occupant:
-			new_occupant.clicked.connect(Callable(self, "_on_occupant_clicked"))
-		occupant = new_occupant
+		if value:
+			value.clicked.connect(Callable(self, "_on_occupant_clicked"))
+		data.occupant = value
+	get():
+		return data.occupant
+
+
+var occupant_data: PieceData:
+	get():
+		return occupant.data
+
 
 var neighbors: Dictionary[Movement.Direction, TileObject] = {
 	Movement.Direction.NORTH: null,
@@ -43,7 +83,10 @@ var is_occupied:bool:
 	get(): return occupant != null
 
 
-var data: TileDataChess = TileDataChess.new()
+var data: TileDataChess = TileDataChess.new():
+	set(value):
+		value.occupant_changed.connect(Callable(self,"_on_occupant_changed"))
+		data = value
 
 
 static func new_tile(index: int):
@@ -55,24 +98,34 @@ static func new_tile(index: int):
 	Match.add_tile(new_tile)
 	return new_tile
 
+func _on_occupant_changed(new_occupant):
+	pass
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_CLEAR_CHECK_STATE:
+		data.clear_check_flag()
+	if what == NOTIFICATION_CLEAR_OTHER_STATES:
+		data.clear_flags()
+
 
 func _ready() -> void:
 	clicked.connect(Callable(self, "_on_tile_clicked"))
-	data.connect_flag_components(Callable(self, "on_flags_changed"))
+	data.connect_flag_changed_components(Callable(self, "on_flags_changed"))
 	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
 
 	tile_material = $Tile_Mesh.material_override
-	state_material = tile_material.next_pass
 	state_material.albedo_color = Color(1,1,1,0)
-	mouseover_material = state_material.next_pass
 
-	set_tile_color(data.get_tile_color())
+	_tile_color = _set_base_tile_color()
+
+func _set_base_tile_color() -> Color:
+	match (data.file + data.rank) % 2:
+		0: return LIGHT_COLOR
+		1: return DARK_COLOR
+		_: return Color(0,0,0)
 
 
-func set_tile_color(color: Color):
-	tile_material.albedo_color = color
-
-func set_state_color(color: Color, has_emission: bool = false):
+func _set_state_color(color: Color, has_emission: bool = false):
 	state_material.albedo_color = color
 	state_material.emission_enabled = has_emission
 
@@ -98,50 +151,27 @@ func _on_mouse_exited() -> void:
 #endregion
 
 
-func change(flag:String, enabled:bool):
-	data.flag[flag].enabled = enabled
-	if occupant and occupant.data.flag.has(flag):
-		occupant.data.flag[flag].enabled = enabled
-
-
 func on_flags_changed():
 	state_material.albedo_color.a = 0
 	state_material.emission_enabled = false
 
 	if data.flag.is_checked_movement.enabled:
-		set_state_color(data.MOVE_CHECKING_COLOR)
-
+		_set_state_color(MOVE_CHECKING_COLOR)
 
 	elif data.flag.is_castling.enabled:
-		set_state_color(data.CASTLING_COLOR, true)
-
+		_set_state_color(CASTLING_COLOR, true)
 
 	elif data.flag.is_checked.enabled:
-		set_state_color(data.CHECKED_COLOR, true)
-
+		_set_state_color(CHECKED_COLOR, true)
 
 	elif data.flag.is_threatened.enabled:
-		set_state_color(data.THREATENED_COLOR)
-
+		_set_state_color(THREATENED_COLOR)
 
 	elif data.flag.is_selected.enabled:
-		set_state_color(data.SELECT_COLOR)
-
+		_set_state_color(SELECT_COLOR)
 
 	elif data.flag.is_movement.enabled:
-		set_state_color(data.VALID_COLOR)
-
-
-func clear_flags():
-	change("is_selected",false)
-	change("is_threatened",false)
-	change("is_castling",false)
-	change("is_checked_movement", false)
-	change("is_movement", false)
-
-
-func clear_check_flag():
-	change("is_checked",false)
+		_set_state_color(VALID_COLOR)
 
 
 func _on_tile_modifier_order_changed():
@@ -164,34 +194,37 @@ func get_next_tile(direction: Movement.Direction):
 #region Tile Clicked
 func _on_tile_clicked(tile: TileObject) -> void:
 	if Match.current_game_state == Match.GameState.BOARD_CUSTOMIZATION:
-		customization_tile_select()
+		_customization_tile_select()
 	elif Match.current_game_state == Match.GameState.GAMEPLAY:
-		gameplay_tile_select()
+		_gameplay_tile_select()
 
-func customization_tile_select() -> void:
+func _customization_tile_select() -> void:
 	if data.flag.is_selected.enabled == true:
 		remove_from_group("Selected")
-		change("is_selected",false)
+		data.change("is_selected",false)
 	elif data.flag.is_selected.enabled == false:
 		add_to_group("Selected")
-		change("is_selected",true)
+		data.change("is_selected",true)
 
-func gameplay_tile_select() -> void:
+func _gameplay_tile_select() -> void:
 	if NetworkManager.is_online and not Match.is_my_turn():
 		return
 	# select clicked tile
-	if (	not PieceObject.is_selected # no piece selected
-			and is_occupied and occupant.is_in_group(Player.current.name) # occupant piece belongs to current player
-			):
+	if (
+			not PieceObject.is_selected # no piece selected
+			and is_occupied
+			and occupant.is_in_group(Player.current.name) # occupant piece belongs to current player
+		):
 		Match.select_tile(self)
 
 	elif PieceObject.is_selected and TileObject.is_selected: # object already selected
 		if is_occupied: # Clicked Tile is occupied
 
 			# Unselect currently selected piece
-			if (	PieceObject.selected == occupant
+			if (
+					GameController.selected.piece == occupant
 					and TileObject.selected == self # Clicked tile and selected tile are the same
-					):
+				):
 				Match.unselect_tile()
 
 			# Select a different piece
@@ -200,9 +233,10 @@ func gameplay_tile_select() -> void:
 				Match.select_tile(self)
 
 			# capture opponent piece
-			elif (	not occupant.is_in_group(Player.current.name) # occupant piece belongs to opponent
+			elif (
+					not occupant.is_in_group(Player.current.name) # occupant piece belongs to opponent
 					and data.flag.is_threatened.enabled
-					):
+				):
 				Match.board.submit_move(TileObject.selected.data.index, data.index, Move.Outcome.CAPTURING)
 
 		elif not is_occupied:
@@ -212,8 +246,9 @@ func gameplay_tile_select() -> void:
 				var ep_tile_idx: int = -1
 
 				# set en passant if conditions are met
-				if (	PieceObject.selected.is_in_group("Pawn")
-						and not PieceObject.selected.data.flag.has_moved.enabled
+				if (
+						GameController.selected.piece.is_in_group("Pawn")
+						and not GameController.selected.piece.data.flag.has_moved.enabled
 						and abs(data.rank - TileObject.selected.data.rank) == 2 # Pawn piece has moved two tiles
 						):
 					Match.board._set_en_passant(self)

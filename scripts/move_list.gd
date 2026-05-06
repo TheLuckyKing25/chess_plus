@@ -92,7 +92,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 			if branch.is_threaten:
 				# NORMAL THREATEN LOGIC
 				if (	current_tile_ptr.occupant # current_tile_ptr is occupied
-						and active_piece.data.player != current_tile_ptr.occupant.data.player # current_tile_ptr is occupied by opponent piece
+						and active_piece.data.player != current_tile_ptr.occupant_data.player # current_tile_ptr is occupied by opponent piece
 						):
 					moves.append(move)
 
@@ -128,7 +128,7 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				if (	not rook_tile.occupant # if no occupant
 						or not rook_tile.occupant.is_in_group("Rook") # if occupant is not a rook
-						or rook_tile.occupant.data.flag.has_moved.enabled # if rook has moved
+						or rook_tile.occupant_data.flag.has_moved.enabled # if rook has moved
 						):
 					break
 

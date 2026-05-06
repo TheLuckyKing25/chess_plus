@@ -25,6 +25,8 @@ ConfigFileHandler="*res://scripts/autoloads/config_file_handler.gd"
 NetworkManager="*res://scripts/autoloads/network_manager.gd"
 Match="*res://scripts/autoloads/match.gd"
 NetworkSync="*res://scripts/autoloads/network_sync.gd"
+GameController="*res://scripts/autoloads/game_controller.gd"
+Reference="*res://scripts/autoloads/reference.gd"
 
 [debug]
 
@@ -38,6 +40,7 @@ window/stretch/mode="canvas_items"
 [file_customization]
 
 folder_colors={
+"res://WIP/": "red",
 "res://assets/": "purple",
 "res://resources/": "orange",
 "res://scenes/": "gray",
@@ -46,8 +49,6 @@ folder_colors={
 
 [global_group]
 
-Player_One=""
-Player_Two=""
 Tile=""
 Piece=""
 

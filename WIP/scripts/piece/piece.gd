@@ -1,4 +1,3 @@
-@tool
 class_name Piece extends Resource
 
 @export var base_type: PieceType:

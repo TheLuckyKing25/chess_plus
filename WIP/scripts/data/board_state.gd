@@ -1,7 +1,4 @@
-@tool
-class_name Board extends Resource
-
-static var current_board: Board
+extends Resource
 
 var white_pieces: Dictionary[String,Array] = {}
 var black_pieces: Dictionary[String,Array] = {}
@@ -49,7 +46,7 @@ var halfmove_clock: int = 0
 var fullmove_counter: int = 0
 #endregion
 
-@export_tool_button("Generate") var call = Callable(self,"new_board")
+#@export_tool_button("Generate") var call = Callable(self,"new_board")
 
 #region TOOLS - DO NOT USE IN ACTUAL FUNCTIONS
 var pieces: Array[String]
@@ -80,14 +77,14 @@ func generate_pieces_array():
 #endregion
 
 
-static func new_board():
-	current_board = Board.new()
-	current_board.generate_tiles()
-	current_board.assign_tile_neighbors()
-	current_board.generate_pieces()
-	current_board.generate_pieces_array() #tool
-	for tile in current_board.board_representation.keys():
-		current_board.tile_vector_dict[tile.position.vector] = tile
+#static func new_board():
+	#current_board = Board.new()
+	#current_board.generate_tiles()
+	#current_board.assign_tile_neighbors()
+	#current_board.generate_pieces()
+	#current_board.generate_pieces_array() #tool
+	#for tile in current_board.board_representation.keys():
+		#current_board.tile_vector_dict[tile.position.vector] = tile
 
 
 func generate_tiles():
@@ -107,17 +104,17 @@ func generate_pieces():
 		var tile_index = tile_num%file_count + (rank_count - (tile_num/file_count)-1)*file_count
 		match character.to_lower():
 			"p":
-				new_piece = Piece.new_piece(preload("uid://bih6lr0cwxuk"), max_length, tile_index)
+				new_piece = Piece.new_piece(load("uid://bih6lr0cwxuk"), max_length, tile_index)
 			"r":
-				new_piece = Piece.new_piece(preload("uid://csqiux6uupcb2"), max_length, tile_index)
+				new_piece = Piece.new_piece(load("uid://csqiux6uupcb2"), max_length, tile_index)
 			"b":
-				new_piece = Piece.new_piece(preload("uid://b7mqdwuvfi3nh"), max_length, tile_index)
+				new_piece = Piece.new_piece(load("uid://b7mqdwuvfi3nh"), max_length, tile_index)
 			"n":
-				new_piece = Piece.new_piece(preload("uid://cgvt2kihfm4em"), max_length, tile_index)
+				new_piece = Piece.new_piece(load("uid://cgvt2kihfm4em"), max_length, tile_index)
 			"q":
-				new_piece = Piece.new_piece(preload("uid://oqdygo3fdmd2"), max_length, tile_index)
+				new_piece = Piece.new_piece(load("uid://oqdygo3fdmd2"), max_length, tile_index)
 			"k":
-				new_piece = Piece.new_piece(preload("uid://bfy5ow4fdbo1l"), max_length, tile_index)
+				new_piece = Piece.new_piece(load("uid://bfy5ow4fdbo1l"), max_length, tile_index)
 			"1","2","3","4","5","6","7","8","9":
 				tile_num += character.to_int()
 				continue

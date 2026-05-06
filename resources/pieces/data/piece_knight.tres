@@ -1,18 +1,12 @@
 [gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://brd0i5dnuyf6l"]
 
-[ext_resource type="Resource" uid="uid://q2y1s24qkute" path="res://resources/pieces/movement/movement_knight.tres" id="1_w5g0k"]
-[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://scripts/pieces/piece_data.gd" id="1_whemv"]
-[ext_resource type="ArrayMesh" uid="uid://co538rh6q5c02" path="res://assets/mesh/mesh_knight.obj" id="2_l5y5a"]
-
+[ext_resource type="Resource" uid="uid://q2y1s24qkute" path="res://resources/pieces/movement/movement_knight.tres" id="1_wa60u"]
+[ext_resource type="Resource" uid="uid://cgvt2kihfm4em" path="res://WIP/resources/piece/type/knight.tres" id="2_wa60u"]
+[ext_resource type="Script" uid="uid://cdgr42xlx8gxd" path="res://scripts/pieces/piece_data.gd" id="3_sou6x"]
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("1_whemv")
-name = "Knight"
-algebraic_notation = "N"
-description = "PLACEHOLDER"
-object_mesh = ExtResource("2_l5y5a")
-can_promote = false
-promotion_option = true
-movement = ExtResource("1_w5g0k")
+script = ExtResource("3_sou6x")
+type = ExtResource("2_wa60u")
+movement = ExtResource("1_wa60u")
 metadata/_custom_type_script = "uid://cdgr42xlx8gxd"

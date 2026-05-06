@@ -8,8 +8,8 @@ func enter():
 		Match.game_overlay = instantiated_scene
 		if Match.is_timed:
 			instantiated_scene.show_timers()
-			Match.players.white.timer.label = instantiated_scene.get_ui_timer_white()
-			Match.players.black.timer.label = instantiated_scene.get_ui_timer_black()
+			GameController.player.white.timer.label = instantiated_scene.get_ui_timer_white()
+			GameController.player.black.timer.label = instantiated_scene.get_ui_timer_black()
 		if NetworkManager.is_online:
 			await get_tree().create_timer(0.5).timeout
 			NetworkSync.board_setup.rpc(Match.board.data.file_count, Match.board.data.rank_count, Match.board.data.FEN_board_state.FE_notation)
@@ -72,7 +72,7 @@ func on_camera_forward_offset_changed(value:float):
 func on_promotion_verified(piece: PieceObject) -> void:
 	if piece == null:
 		return
-	if not piece.data.can_promote:
+	if not piece.data.type.can_promote:
 		return
 
 	var mouse_pos = get_viewport().get_mouse_position()

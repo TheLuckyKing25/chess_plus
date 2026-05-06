@@ -1,4 +1,3 @@
-@tool
 class_name Player
 extends Node
 
@@ -25,9 +24,6 @@ static var en_passant: Player
 ## Used to rotate the movement of the piece
 @export var direction_parity: int
 
-
-func _validate_property(property: Dictionary) -> void:
-	pass
 
 @export_group("Camera", "camera")
 @export var camera_object: Camera3D
@@ -57,20 +53,20 @@ func _validate_property(property: Dictionary) -> void:
 @export var timer: TimeControl
 
 
-# rank that pieces are promoted
+# rank that a piece must reach to be promoted
 var promotion_rank: int
 
 
 var all_pieces: Array[PieceObject]:
 	get():
 		var array: Array[PieceObject] = []
-		for piece_type in pieces.keys():
-			array.append_array(pieces[piece_type])
+		for piece_types in pieces.values():
+			array.append_array(piece_types)
 		return array
 
 
 func _ready() -> void:
-	Match.players[name.to_lower()] = self
+	GameController.player[name.to_lower()] = self
 
 
 func _process(_delta: float) -> void:
@@ -82,16 +78,15 @@ func _process(_delta: float) -> void:
 
 
 func add_piece(new_piece: PieceObject) -> void:
-	if pieces.has(new_piece.data.name):
-		pieces[new_piece.data.name].append(new_piece)
+	if pieces.has(new_piece.data.type.name):
+		pieces[new_piece.data.type.name].append(new_piece)
 	else:
-		pieces[new_piece.data.name] = [new_piece]
+		pieces[new_piece.data.type.name] = [new_piece]
 
 
 func remove_piece(piece:PieceObject) -> void:
-	if pieces.has(piece.data.name):
-		pieces[piece.data.name].erase(piece)
-
+	if pieces.has(piece.data.type.name):
+		pieces[piece.data.type.name].erase(piece)
 
 func change_camera_forward_offset(value:float):
 	camera_forward_offset = value * parity

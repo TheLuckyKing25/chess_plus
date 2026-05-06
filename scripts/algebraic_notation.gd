@@ -28,7 +28,7 @@ static func get_notation(move:Move) -> String:
 		"check_status": "",
 	}
 
-	notation.piece = move.destination_tile.occupant.data.algebraic_notation
+	notation.piece = move.destination_tile.occupant_data.type.algebraic_notation
 	notation.starting_tile = move.starting_tile.data.algebraic_notation
 	notation.destination_tile = move.destination_tile.data.algebraic_notation
 

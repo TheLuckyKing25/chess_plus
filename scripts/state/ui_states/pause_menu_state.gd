@@ -28,7 +28,7 @@ func on_resume_pressed():
 func on_leave_pressed():
 	for child in Match.board.board_base.get_children():
 		if child.occupant:
-			child.occupant.data.player.remove_piece(child.occupant)
+			child.occupant_data.player.remove_piece(child.occupant)
 		Match.board.board_base.remove_child(child)
 		child.queue_free()
 

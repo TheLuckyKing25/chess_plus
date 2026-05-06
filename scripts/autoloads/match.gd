@@ -72,10 +72,10 @@ func remove_piece(piece_object:PieceObject):
 
 
 func get_opponent_of(player: Player) -> Player:
-	if player == Match.players.white:
-		return Match.players.black
-	elif player == Match.players.black:
-		return Match.players.white
+	if player == GameController.player.white:
+		return GameController.player.black
+	elif player == GameController.player.black:
+		return GameController.player.white
 	else:
 		return null
 
@@ -90,17 +90,17 @@ func get_board_position(index: int) -> Vector2i:
 
 func select_tile(tile: TileObject) -> void:
 	TileObject.selected = tile
-	PieceObject.selected = tile.occupant
-	TileObject.selected.change("is_selected",true)
+	GameController.selected.piece = tile.occupant
+	TileObject.selected.data.change("is_selected",true)
 	board.show_selected_piece_movement()
 
 
 func unselect_tile() -> void:
-	TileObject.selected.change("is_selected",false)
+	TileObject.selected.data.change("is_selected",false)
 	TileObject.selected = null
-	PieceObject.selected = null
-	get_tree().call_group("Tile","clear_flags")
+	GameController.selected.piece = null
+	get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
 
 func is_my_turn() -> bool:
-	var current_player_index: int = 0 if Player.current == Match.players.white else 1
+	var current_player_index: int = 0 if Player.current == GameController.player.white else 1
 	return NetworkManager.is_my_turn(current_player_index)
