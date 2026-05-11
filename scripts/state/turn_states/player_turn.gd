@@ -6,7 +6,7 @@ extends State
 @export var next_state: State
 
 func enter():
-	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
+	DebugPrinter.print_state_enter(name)
 	board.turn_changed.connect(Callable(self,"on_turn_changed"))
 	if Match.is_timed:
 		player.timer.start_timer()
@@ -18,7 +18,7 @@ func exit():
 	if Match.is_timed:
 		player.timer.stop_timer()
 		player.timer.increase_by_increment()
-	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
+	DebugPrinter.print_state_exit(name)
 
 func update(_delta: float):
 	if Match.is_timed:

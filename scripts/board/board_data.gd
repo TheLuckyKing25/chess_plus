@@ -3,28 +3,35 @@
 class_name BoardData
 extends Resource
 
+enum {
+	TILE_DATA = 0,
+	PIECE_DATA = 1,
+}
 
-var rank_count: int = 8
-var file_count: int = 8
+
+var rank_count: int = GameController.match_settings.board_size.rank
+var file_count: int = GameController.match_settings.board_size.file
+
 
 var max_length: int:
 	get:
 		return maxi(file_count,rank_count)
 
+
 var assigned_object: BoardObject
 
+
 #region FEN Data
-var board_representation: Dictionary[TileDataChess,PieceData]
+var board_representation: Dictionary[Vector2i, Dictionary] = {
+	# vector: {TILE_DATA: TileData, PIECE_DATA: PieceData},
+}
 
-var tiles: Array[TileDataChess]:
-	get():
-		return board_representation.keys()
 
-var pieces: Array[PieceData]:
-	get():
-		return board_representation.values().filter(
-				func(piece:PieceData): return piece != null
-			)
+var tiles: Array[TileDataChess] = []
+
+
+var pieces: Array[PieceData] = []
+
 
 var player_to_move: Player
 
@@ -56,11 +63,12 @@ var fullmove_counter: int = 0
 #endregion
 
 # This is not run through the _init function because there are some cases where
-# we do not want to generate new tiles.
+# we do not want to generate new tiles when creating a new board.
 static func create_board(ranks:int = 8, files:int = 8) -> BoardData:
 	var board:BoardData = BoardData.new(ranks,files)
 
 	if board.board_representation.is_empty():
+		board._generate_position_vectors()
 		board._generate_tile_data()
 
 	board._assign_tile_neighbors()
@@ -76,11 +84,18 @@ func _init(ranks:int = 8, files:int = 8) -> void:
 	file_count = files
 
 
+func _generate_position_vectors() -> void:
+	for index in range(rank_count*file_count):
+		board_representation.set(Vector2i(index/file_count, index%file_count),{})
+
+
 func _generate_tile_data() -> void:
 	for index in range(rank_count*file_count):
 		var new_tile = TileDataChess.new()
-		new_tile.set_position_data(index,Vector2i(index/file_count, index%file_count))
-		board_representation[new_tile] = null
+		var position_vector = Vector2i(index/file_count, index%file_count)
+		tiles.append(new_tile)
+		new_tile.set_position_data(index,position_vector)
+		board_representation[position_vector][TILE_DATA] = new_tile
 		new_tile.resource_name = "Tile " + new_tile.algebraic_notation
 
 
@@ -93,20 +108,19 @@ func _assign_tile_neighbors() -> void:
 				)
 
 			if (
-					neighbor_position > Vector2i(rank_count-1,file_count-1)
-					or neighbor_position < Vector2i(0,0)
+					neighbor_position.x > rank_count-1
+					or neighbor_position.y > file_count-1
+					or neighbor_position.x < 0
+					or neighbor_position.y < 0
 				):
 				tile.neighbors[direction] = null
 				continue
 
-			tile.neighbors[direction] = _find_tile_using_vector(neighbor_position)
+			tile.neighbors[direction] = board_representation.get(neighbor_position).get(TILE_DATA)
 
 
-func _find_tile_using_vector(vector: Vector2i) -> TileDataChess:
-	for tile:TileDataChess in tiles:
-		if tile.board_position == vector:
-			return tile
-	return null # tile not found
+func _get_from_vector(vector: Vector2i) -> Dictionary:
+	return board_representation.get(vector)
 
 
 func _generate_pieces():
@@ -118,6 +132,7 @@ func _generate_pieces():
 
 	for character:String in fen.piece_placement:
 		var tile_index = tile_num%file_count + (rank_count - (tile_num/file_count)-1)*file_count
+		var position_vector = Vector2i(tile_index/file_count, tile_index%file_count)
 		match character.to_lower():
 			"p":
 				new_piece = PieceData.new_piece(load("uid://bih6lr0cwxuk"), max_length, tile_index)
@@ -136,13 +151,17 @@ func _generate_pieces():
 				continue
 			_:
 				continue
-		piece_placement.set(tile_index,new_piece)
 		#new_piece.base_movement.set_max_distance(max_length)
 		match character:
 			"p","r","b","n","q","k":
 				new_piece.assign_player("black")
 			"P","R","B","N","Q","K":
 				new_piece.assign_player("white")
+
+		# ADD ERROR DETECTION FOR IF POSITION VECTOR DOES NOT EXIST
+		board_representation.get(position_vector,{}).set(PIECE_DATA,new_piece)
+		pieces.append(board_representation.get(position_vector,{}).get(PIECE_DATA))
+
 		tile_num += 1
 
 	for tile in tiles:

@@ -67,6 +67,13 @@ static func new_piece(piece_type: PieceData, player_owner:Player, max_move_dista
 	return new_piece
 
 
+static func new_piece_object() -> PieceObject:
+	var new_piece:PieceObject = PIECE_SCENE.instantiate()
+	return new_piece
+
+
+
+
 func promote(piece_name: String):
 	var new_data: PieceData
 	match piece_name:

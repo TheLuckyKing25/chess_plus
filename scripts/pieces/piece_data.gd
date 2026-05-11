@@ -36,6 +36,9 @@ var poison_duration: int = -1
 var index: int = -1
 
 
+var assigned_object: PieceObject
+
+
 var flag: Dictionary[String, FlagComponent] = {
 	"is_selected": FlagComponent.new(),
 	"is_threatened": FlagComponent.new(),
@@ -55,9 +58,11 @@ static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -
 
 	return new_piece
 
+
 func connect_flag_components(function:Callable):
 	for component in flag.keys():
 		flag[component].changed.connect(function)
+
 
 func assign_player(player:String):
 	self.player = GameController.player[player.to_lower()]

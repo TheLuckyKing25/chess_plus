@@ -14,12 +14,6 @@ const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
 const LIGHT_COLOR: Color = BASE_COLOR * 4/3
 const DARK_COLOR: Color = BASE_COLOR * 2/3 + Color(0,0,0,1)
 
-const THREATENED_COLOR: Color = Color(1, 0.2, 0.2, 1)
-const VALID_COLOR: Color = Color(0.6, 1, 0.6, 1)
-const SELECT_COLOR: Color = Color(0.1, 1, 1, 1)
-const CHECKED_COLOR: Color = Color(1, 0.2, 0.2, 1)
-const CASTLING_COLOR: Color = Color(1,1,1,1)
-const MOVE_CHECKING_COLOR: Color = Color(1, 0.392, 0.153)
 
 const TILE_SCENE:PackedScene = preload("uid://clmimmf3c1qpt")
 
@@ -37,7 +31,9 @@ var _tile_color: Color:
 		return tile_material.albedo_color
 
 
-var tile_material: StandardMaterial3D
+var tile_material: StandardMaterial3D:
+	get():
+		return $Tile_Mesh.material_override
 
 var state_material: StandardMaterial3D:
 	get():
@@ -61,7 +57,10 @@ var occupant: PieceObject:
 
 var occupant_data: PieceData:
 	get():
-		return occupant.data
+		if occupant:
+			return occupant.data
+		else:
+			return null
 
 
 var neighbors: Dictionary[Movement.Direction, TileObject] = {
@@ -85,11 +84,11 @@ var is_occupied:bool:
 
 var data: TileDataChess = TileDataChess.new():
 	set(value):
-		value.occupant_changed.connect(Callable(self,"_on_occupant_changed"))
+		assign_new_data(value)
 		data = value
 
 
-static func new_tile(index: int):
+static func new_tile(index: int) -> TileObject:
 	var new_tile_data:TileDataChess = TileDataChess.new()
 	new_tile_data.index = index
 
@@ -98,8 +97,42 @@ static func new_tile(index: int):
 	Match.add_tile(new_tile)
 	return new_tile
 
+
+static func new_tile_object() -> TileObject:
+	var new_tile:TileObject = TILE_SCENE.instantiate()
+	return new_tile
+
+
+func assign_new_data(new_data:TileDataChess):
+	# move tile to proper location
+	_translate_tile(new_data)
+
+	# set tile color
+	_tile_color =  _set_base_tile_color(new_data)
+
+	# show modifiers
+
+
+func _translate_tile(new_data: TileDataChess):
+	var board_rank_count = GameController.match_settings.board_size.rank
+	var board_file_count = GameController.match_settings.board_size.file
+	position = (Vector3(
+		new_data.file-(float(board_file_count)/2)+0.5,
+		0.1,
+		(float(board_rank_count)/2)-new_data.rank-0.5
+	))
+
+
+
+
+
+
+
+
+
 func _on_occupant_changed(new_occupant):
 	pass
+
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_CLEAR_CHECK_STATE:
@@ -113,13 +146,14 @@ func _ready() -> void:
 	data.connect_flag_changed_components(Callable(self, "on_flags_changed"))
 	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
 
-	tile_material = $Tile_Mesh.material_override
+	#tile_material = $Tile_Mesh.material_override
 	state_material.albedo_color = Color(1,1,1,0)
 
-	_tile_color = _set_base_tile_color()
+	#_tile_color = _set_base_tile_color(data)
 
-func _set_base_tile_color() -> Color:
-	match (data.file + data.rank) % 2:
+
+func _set_base_tile_color(new_data:TileDataChess) -> Color:
+	match (new_data.file + new_data.rank) % 2:
 		0: return LIGHT_COLOR
 		1: return DARK_COLOR
 		_: return Color(0,0,0)
@@ -129,10 +163,12 @@ func _set_state_color(color: Color, has_emission: bool = false):
 	state_material.albedo_color = color
 	state_material.emission_enabled = has_emission
 
+
 #region Player Interaction
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Select") and is_mouse_on_tile:
 		clicked.emit(self)
+
 
 func _on_occupant_clicked(piece: PieceObject):
 	clicked.emit(self)
@@ -156,22 +192,22 @@ func on_flags_changed():
 	state_material.emission_enabled = false
 
 	if data.flag.is_checked_movement.enabled:
-		_set_state_color(MOVE_CHECKING_COLOR)
+		_set_state_color(Constants.tile_color_dict.get(Constants.GameColor.MOVE_CHECKING))
 
 	elif data.flag.is_castling.enabled:
-		_set_state_color(CASTLING_COLOR, true)
+		_set_state_color(Constants.tile_color_dict.get(Constants.GameColor.CASTLING), true)
 
 	elif data.flag.is_checked.enabled:
-		_set_state_color(CHECKED_COLOR, true)
+		_set_state_color(Constants.tile_color_dict.get(Constants.GameColor.CHECKED), true)
 
 	elif data.flag.is_threatened.enabled:
-		_set_state_color(THREATENED_COLOR)
+		_set_state_color(Constants.tile_color_dict.get(Constants.GameColor.THREATENED))
 
 	elif data.flag.is_selected.enabled:
-		_set_state_color(SELECT_COLOR)
+		_set_state_color(Constants.tile_color_dict.get(Constants.GameColor.SELECT))
 
 	elif data.flag.is_movement.enabled:
-		_set_state_color(VALID_COLOR)
+		_set_state_color(Constants.tile_color_dict.get(Constants.GameColor.VALID))
 
 
 func _on_tile_modifier_order_changed():
@@ -198,6 +234,7 @@ func _on_tile_clicked(tile: TileObject) -> void:
 	elif Match.current_game_state == Match.GameState.GAMEPLAY:
 		_gameplay_tile_select()
 
+
 func _customization_tile_select() -> void:
 	if data.flag.is_selected.enabled == true:
 		remove_from_group("Selected")
@@ -205,6 +242,7 @@ func _customization_tile_select() -> void:
 	elif data.flag.is_selected.enabled == false:
 		add_to_group("Selected")
 		data.change("is_selected",true)
+
 
 func _gameplay_tile_select() -> void:
 	if NetworkManager.is_online and not Match.is_my_turn():

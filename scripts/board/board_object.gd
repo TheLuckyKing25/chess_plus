@@ -10,21 +10,28 @@ signal promotion_verified(piece: PieceObject)
 const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 
 
-var smokey_overlay: Dictionary = {}
-var smokey_tiles: Array[TileObject] = []
-var smokey_pieces: Array[PieceObject] = []
-
-
-var data: BoardData
-
-
 @onready var board_base = $BoardBase
 @onready var piece_capture_audio = $Piece_capture
 @onready var piece_move_audio = $Piece_move
 
 
+var smokey_overlay: Dictionary = {}
+var smokey_tiles: Array[TileObject] = []
+var smokey_pieces: Array[PieceObject] = []
+
+var tile_objects: Array[TileObject] = []
+var piece_objects: Array[PieceObject] = []
+
+
+var data: BoardData:
+	set(value):
+		value.assigned_object = self
+		load_board_data(value)
+		data = value
+
+
 func _ready() -> void:
-	data = BoardData.create_board(8,8)
+	data = BoardData.create_board(GameController.match_settings.board_size.rank,GameController.match_settings.board_size.file)
 
 	Match.board = self
 	Match.board.data = data
@@ -40,6 +47,100 @@ func _ready() -> void:
 
 	if NetworkManager.is_online and not multiplayer.is_server():
 		_show_loading_screen()
+
+
+func load_board_data(value: BoardData) -> void:
+	if value == null:
+		return
+
+	# Change the size of the board base to match the size of the board
+	_resize_base(Vector3(value.file_count+1 ,0.2, value.rank_count+1))
+
+	# Create tiles
+	_generate_tile_objects(value)
+
+	# Assign data to tiles
+	_assign_data_to_tiles(value)
+
+	# Create pieces
+	_generate_piece_objects(value)
+
+	# Assign data to pieces
+	_assign_data_to_pieces(value)
+
+	# Assign pieces to tiles
+
+	pass
+
+
+func _resize_base(size: Vector3) -> void:
+	board_base.mesh.size = size
+
+
+func _generate_tile_objects(new_data: BoardData) -> void:
+	var counter:int = tile_objects.size()
+	var number_of_tiles:int = new_data.rank_count * new_data.file_count
+
+	if counter < number_of_tiles:
+		while counter < number_of_tiles:
+			var tile: TileObject = TileObject.new_tile_object()
+			tile_objects.append(tile)
+			counter += 1
+
+	elif counter > number_of_tiles:
+		while counter > number_of_tiles:
+			tile_objects.pop_back().queue_free()
+			counter -= 1
+
+
+func _assign_data_to_tiles(new_data:BoardData) -> void:
+	if new_data.tiles.size() != tile_objects.size():
+		return
+
+	for index:int in range(tile_objects.size()):
+		if not tile_objects[index] in board_base.get_children():
+			board_base.add_child(tile_objects[index])
+		tile_objects[index].data = new_data.tiles[index]
+
+
+func _generate_piece_objects(new_data:BoardData):
+	var counter:int = piece_objects.size()
+	var number_of_pieces:int = new_data.pieces.size()
+
+	if counter < number_of_pieces:
+		while counter < number_of_pieces:
+			var piece: PieceObject = PieceObject.new_piece_object()
+			piece_objects.append(piece)
+			counter += 1
+
+	elif counter > number_of_pieces:
+		while counter > number_of_pieces:
+			piece_objects.pop_back().queue_free()
+			counter -= 1
+
+
+func _assign_data_to_pieces(new_data:BoardData) -> void:
+	if new_data.pieces.size() != piece_objects.size():
+		return
+
+	for index:int in range(piece_objects.size()):
+		piece_objects[index].data = new_data.pieces[index]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #region multilplayer
@@ -150,16 +251,12 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	next_turn()
 #endregion
 
-func resize_base(size: Vector3):
-	$BoardBase.mesh.size = size
-
-
 func generate_board() -> void:
 	data.tile_array.resize(data.file_count * data.rank_count)
 	data.piece_array.resize(data.file_count * data.rank_count)
 
 	# Change the size of the board base to match the size of the board
-	resize_base(Vector3(data.file_count+1 ,0.2, data.rank_count+1))
+	#_resize_base(Vector3(data.file_count+1 ,0.2, data.rank_count+1))
 
 	for tile_num in range(data.rank_count * data.file_count):
 		var new_tile:TileObject = TileObject.new_tile(tile_num)
@@ -168,12 +265,12 @@ func generate_board() -> void:
 		data.tile_array[tile_num] = new_tile
 		# move tile to its location on the board
 
-		new_tile.translate(Vector3(
-				new_tile.data.file-(float(data.file_count)/2)+0.5,
-				0.1,
-				(float(data.rank_count)/2)-new_tile.data.rank-0.5
-			))
-		$BoardBase.add_child(new_tile, true)
+		#new_tile.translate(Vector3(
+				#new_tile.data.file-(float(data.file_count)/2)+0.5,
+				#0.1,
+				#(float(data.rank_count)/2)-new_tile.data.rank-0.5
+			#))
+		#$BoardBase.add_child(new_tile, true)
 
 	data.assign_tile_neighbors()
 

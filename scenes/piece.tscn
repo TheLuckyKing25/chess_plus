@@ -7,7 +7,7 @@
 radius = 1.0
 height = 4.5
 
-[node name="Piece" type="StaticBody3D"]
+[node name="Piece" type="StaticBody3D" groups=["Piece"]]
 script = ExtResource("1_huli3")
 
 [node name="Collision" type="CollisionShape3D" parent="."]

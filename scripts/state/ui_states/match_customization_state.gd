@@ -1,7 +1,7 @@
 extends UIState
 
 func enter():
-	print_rich("[b][color=web_green]Entered[/color]: [/b]",name)
+	DebugPrinter.print_state_enter(name)
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
 
@@ -34,7 +34,7 @@ func exit():
 		Match.is_board_generated = true
 
 	remove_child(instantiated_scene)
-	print_rich("[b][color=brown]Exited[/color]: [/b]",name)
+	DebugPrinter.print_state_exit(name)
 
 
 func input(event) -> void:

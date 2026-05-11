@@ -6,18 +6,6 @@ extends Resource
 signal modifier_order_changed()
 signal occupant_changed(occupant: PieceData)
 
-# Lower number means higher priority
-enum {
-	STATE_SELECTED = 5,
-	STATE_MOVEMENT = 4,
-	STATE_CASTLING = 3,
-	STATE_THREATENED = 2,
-	STATE_CHECKED = 1,
-	STATE_CHECKED_MOVEMENT = 0,
-}
-
-var state: TileState = TileState.new()
-
 
 var flag: Dictionary = {
 	"is_selected": FlagComponent.new(),
@@ -27,6 +15,7 @@ var flag: Dictionary = {
 	"is_checked": FlagComponent.new(),
 	"is_checked_movement": FlagComponent.new(),
 }
+
 
 var modifier_order: Array[TileModifier] = []:
 	set(new_order):
@@ -44,7 +33,6 @@ var neighbors: Dictionary[Movement.Direction, TileDataChess] = {
 	Movement.Direction.WEST: null,
 	Movement.Direction.NORTHWEST: null,
 }
-
 
 #region Position
 var rank: int
