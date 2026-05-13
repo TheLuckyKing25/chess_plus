@@ -5,20 +5,20 @@ extends RefCounted
 @export var _stack: Dictionary[int,String] = {}
 
 
-func add_item(item: GameController.ItemState):
+func add_item(item: GameData.ItemState):
 	if item.priority in _stack.keys():
 		printerr("Priority already exists in stack. No action taken.")
 		return null
 	_stack.set(item.priority,item)
 
 
-func replace_item(item: GameController.ItemState):
+func replace_item(item: GameData.ItemState):
 	if not item.priority in _stack.keys():
 		printerr("Priority does not exist in Stack. Adding item to stack instead.")
 	_stack.set(item.priority,item)
 
 
-func remove_item(item: GameController.ItemState):
+func remove_item(item: GameData.ItemState):
 	if not item.priority in _stack.keys():
 		printerr("Priority does not exist in Stack. No action taken.")
 		return null

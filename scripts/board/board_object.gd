@@ -31,13 +31,12 @@ var data: BoardData:
 
 
 func _ready() -> void:
-	data = BoardData.create_board(GameController.match_settings.board_size.rank,GameController.match_settings.board_size.file)
+	data = BoardData.create_board(GameData.match_settings.board_size.rank,GameData.match_settings.board_size.file)
 
 	Match.board = self
-	Match.board.data = data
 
-	Player.current = GameController.player.white
-	Player.previous = GameController.player.white
+	Player.current = GameData.player.white
+	Player.previous = GameData.player.black
 
 	if NetworkManager.is_online:
 		NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
@@ -49,6 +48,8 @@ func _ready() -> void:
 		_show_loading_screen()
 
 
+
+
 func load_board_data(value: BoardData) -> void:
 	if value == null:
 		return
@@ -56,21 +57,11 @@ func load_board_data(value: BoardData) -> void:
 	# Change the size of the board base to match the size of the board
 	_resize_base(Vector3(value.file_count+1 ,0.2, value.rank_count+1))
 
-	# Create tiles
-	_generate_tile_objects(value)
-
-	# Assign data to tiles
-	_assign_data_to_tiles(value)
-
-	# Create pieces
-	_generate_piece_objects(value)
-
-	# Assign data to pieces
-	_assign_data_to_pieces(value)
-
-	# Assign pieces to tiles
-
-	pass
+	_generate_tile_objects(value) # Create tiles
+	_assign_data_to_tiles(value) # Assign data to tiles
+	_generate_piece_objects(value) # Create pieces
+	_assign_data_to_pieces(value) # Assign data to pieces
+	_place_pieces(value) # Place pieces on tiles
 
 
 func _resize_base(size: Vector3) -> void:
@@ -96,14 +87,13 @@ func _generate_tile_objects(new_data: BoardData) -> void:
 func _assign_data_to_tiles(new_data:BoardData) -> void:
 	if new_data.tiles.size() != tile_objects.size():
 		return
-
 	for index:int in range(tile_objects.size()):
 		if not tile_objects[index] in board_base.get_children():
 			board_base.add_child(tile_objects[index])
 		tile_objects[index].data = new_data.tiles[index]
 
 
-func _generate_piece_objects(new_data:BoardData):
+func _generate_piece_objects(new_data:BoardData) -> void:
 	var counter:int = piece_objects.size()
 	var number_of_pieces:int = new_data.pieces.size()
 
@@ -112,7 +102,6 @@ func _generate_piece_objects(new_data:BoardData):
 			var piece: PieceObject = PieceObject.new_piece_object()
 			piece_objects.append(piece)
 			counter += 1
-
 	elif counter > number_of_pieces:
 		while counter > number_of_pieces:
 			piece_objects.pop_back().queue_free()
@@ -122,12 +111,17 @@ func _generate_piece_objects(new_data:BoardData):
 func _assign_data_to_pieces(new_data:BoardData) -> void:
 	if new_data.pieces.size() != piece_objects.size():
 		return
-
 	for index:int in range(piece_objects.size()):
 		piece_objects[index].data = new_data.pieces[index]
 
 
-
+func _place_pieces(new_data:BoardData)-> void:
+	for piece_object: PieceObject in piece_objects:
+		var position_vector: Vector2i = piece_object.data.board_position
+		if position_vector in new_data.board_representation.keys():
+			var board_location: Dictionary = new_data.board_representation[position_vector]
+			var assigned_tile: TileObject = board_location[new_data.TILE_DATA].assigned_object
+			assigned_tile.add_child(piece_object)
 
 
 
@@ -223,7 +217,7 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	var to_tile: TileObject = data.tile_array[to_index]
 
 	TileObject.selected = from_tile
-	GameController.selected.piece = from_tile.occupant
+	GameData.selected.piece = from_tile.occupant
 
 	if ep_piece_index >= 0 and ep_tile_index >= 0:
 		PieceObject.en_passant = data.piece_array[ep_piece_index]
@@ -306,7 +300,7 @@ func detect_check(player:Player) -> void:
 
 
 func _set_en_passant(clicked_tile: TileObject) -> void:
-	PieceObject.en_passant = GameController.selected.piece
+	PieceObject.en_passant = GameData.selected.piece
 	var en_passant_tile_rank = (
 			TileObject.selected.data.rank
 			+ (clicked_tile.data.rank - TileObject.selected.data.rank)/2
@@ -415,12 +409,12 @@ func _get_smokey_tiles(origin_tile: TileObject, smokey: PropertySmokey) -> Array
 	var origin := origin_tile.data.board_position
 
 	var offsets : Array[Vector2i] = []
-	if smokey.activated_by_player == GameController.player.white:
+	if smokey.activated_by_player == GameData.player.white:
 		offsets = [
 			Vector2i(1, 0),
 			Vector2i(2, 0),
 		]
-	elif smokey.activated_by_player == GameController.player.black:
+	elif smokey.activated_by_player == GameData.player.black:
 		offsets = [
 			Vector2i(-1, 0),
 			Vector2i(-2, 0),
@@ -506,9 +500,9 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
-	var moveset:Movement = GameController.selected.piece.data.movement.get_duplicate()
-	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, GameController.selected.piece, moveset)
-	resolve_branching_movement(GameController.selected.piece, moveset, TileObject.selected )
+	var moveset:Movement = GameData.selected.piece.data.movement.get_duplicate()
+	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, GameData.selected.piece, moveset)
+	resolve_branching_movement(GameData.selected.piece, moveset, TileObject.selected )
 
 
 # SAME LOGIC USED IN MoveList RESOURCE.

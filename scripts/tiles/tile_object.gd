@@ -84,6 +84,8 @@ var is_occupied:bool:
 
 var data: TileDataChess = TileDataChess.new():
 	set(value):
+		data.assigned_object = null
+		value.assigned_object = self
 		assign_new_data(value)
 		data = value
 
@@ -114,8 +116,8 @@ func assign_new_data(new_data:TileDataChess):
 
 
 func _translate_tile(new_data: TileDataChess):
-	var board_rank_count = GameController.match_settings.board_size.rank
-	var board_file_count = GameController.match_settings.board_size.file
+	var board_rank_count = GameData.match_settings.board_size.rank
+	var board_file_count = GameData.match_settings.board_size.file
 	position = (Vector3(
 		new_data.file-(float(board_file_count)/2)+0.5,
 		0.1,
@@ -260,7 +262,7 @@ func _gameplay_tile_select() -> void:
 
 			# Unselect currently selected piece
 			if (
-					GameController.selected.piece == occupant
+					GameData.selected.piece == occupant
 					and TileObject.selected == self # Clicked tile and selected tile are the same
 				):
 				Match.unselect_tile()
@@ -285,8 +287,8 @@ func _gameplay_tile_select() -> void:
 
 				# set en passant if conditions are met
 				if (
-						GameController.selected.piece.is_in_group("Pawn")
-						and not GameController.selected.piece.data.flag.has_moved.enabled
+						GameData.selected.piece.is_in_group("Pawn")
+						and not GameData.selected.piece.data.flag.has_moved.enabled
 						and abs(data.rank - TileObject.selected.data.rank) == 2 # Pawn piece has moved two tiles
 						):
 					Match.board._set_en_passant(self)

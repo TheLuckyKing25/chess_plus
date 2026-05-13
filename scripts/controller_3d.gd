@@ -8,16 +8,11 @@ func on_game_state_changed(game_state: int) -> void:
 		Match.GameState.GAMEPLAY:
 			if NetworkManager.is_online:
 				if NetworkManager.my_player == 0:
-					GameController.player.white.camera_object.make_current()
+					GameData.player.white.camera_object.make_current()
 				else:
-					GameController.player.black.camera_object.make_current()
+					GameData.player.black.camera_object.make_current()
 			else:
-				match Player.current:
-					GameController.player.white:
-						GameController.player.white.camera_object.make_current()
-					GameController.player.black:
-						GameController.player.black.camera_object.make_current()
-
+				Player.current.camera_object.make_current()
 
 
 func _ready() -> void:

@@ -3,8 +3,8 @@
 extends Node
 
 const debug_print_switch: Dictionary = {
-	"state_enter": true,
-	"state_exit": true,
+	"state_enter": false,
+	"state_exit": false,
 }
 
 

@@ -11,7 +11,7 @@ static var previous: Player
 
 static var en_passant: Player
 
-
+@export var player_name:String
 @export var color:Color
 
 
@@ -66,7 +66,8 @@ var all_pieces: Array[PieceObject]:
 
 
 func _ready() -> void:
-	GameController.player[name.to_lower()] = self
+	GameData.player.set(player_name.to_lower(),self)
+
 
 
 func _process(_delta: float) -> void:

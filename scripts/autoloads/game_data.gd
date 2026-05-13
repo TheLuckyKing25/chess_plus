@@ -1,3 +1,6 @@
+# GameData Autoload
+# holds information that must be kept between board states.
+
 extends Node
 
 var match_settings: MatchSettings = MatchSettings.new()

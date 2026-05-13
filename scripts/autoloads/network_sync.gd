@@ -5,8 +5,8 @@ func time_control(time_sec: int, increment_sec: int) -> void:
 	Match.is_timed = true
 	TimeControl.increment_sec = increment_sec
 	TimeControl.max_time_sec = time_sec
-	GameController.player.white.timer.set_timer(time_sec)
-	GameController.player.black.timer.set_timer(time_sec)
+	GameData.player.white.timer.set_timer(time_sec)
+	GameData.player.black.timer.set_timer(time_sec)
 
 @rpc("authority", "call_remote", "reliable")
 func board_setup(file_count: int, rank_count: int, fen_string: String) -> void:

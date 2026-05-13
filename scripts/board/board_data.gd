@@ -9,8 +9,8 @@ enum {
 }
 
 
-var rank_count: int = GameController.match_settings.board_size.rank
-var file_count: int = GameController.match_settings.board_size.file
+var rank_count: int = GameData.match_settings.board_size.rank
+var file_count: int = GameData.match_settings.board_size.file
 
 
 var max_length: int:
@@ -78,8 +78,8 @@ static func create_board(ranks:int = 8, files:int = 8) -> BoardData:
 
 
 func _init(ranks:int = 8, files:int = 8) -> void:
-	GameController.player.white.promotion_rank = rank_count - 1
-	GameController.player.black.promotion_rank = 0
+	GameData.player.white.promotion_rank = rank_count - 1
+	GameData.player.black.promotion_rank = 0
 	rank_count = ranks
 	file_count = files
 
@@ -132,6 +132,7 @@ func _generate_pieces():
 
 	for character:String in fen.piece_placement:
 		var tile_index = tile_num%file_count + (rank_count - (tile_num/file_count)-1)*file_count
+
 		var position_vector = Vector2i(tile_index/file_count, tile_index%file_count)
 		match character.to_lower():
 			"p":
@@ -159,8 +160,11 @@ func _generate_pieces():
 				new_piece.assign_player("white")
 
 		# ADD ERROR DETECTION FOR IF POSITION VECTOR DOES NOT EXIST
-		board_representation.get(position_vector,{}).set(PIECE_DATA,new_piece)
-		pieces.append(board_representation.get(position_vector,{}).get(PIECE_DATA))
+		var board_rep_position = board_representation.get(position_vector,{})
+		board_rep_position.set(PIECE_DATA,new_piece)
+		pieces.append(board_rep_position.get(PIECE_DATA))
+		board_rep_position.get(TILE_DATA,{}).occupant_data = new_piece
+		new_piece.board_position = position_vector
 
 		tile_num += 1
 

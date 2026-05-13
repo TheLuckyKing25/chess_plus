@@ -4,27 +4,31 @@
 class_name PieceData
 extends Resource
 
-signal type_changed(type:PieceType)
-signal player_changed()
+signal type_changed(new_type:PieceType)
+signal player_changed(new_player:Player)
 
 @export var type: PieceType:
 	set(value):
-		type_changed.emit()
+		type_changed.emit(value)
 		type = value
 
 
-@export var movement: Movement:
-	set(new_movement):
-		movement = new_movement.get_duplicate()
-		if player:
-			movement.set_direction_parity(player.direction_parity)
+@export var movement: Movement#:
+	#set(new_movement):
+		#movement = new_movement.get_duplicate()
+		#if player:
+			#movement.set_direction_parity(player.direction_parity)
 
 
 var player: Player:
 	set(new_player):
+		player_changed.emit(new_player)
 		player = new_player
 		if player and movement:
 			movement.set_direction_parity(player.direction_parity)
+
+
+
 
 
 ## Poison Tile variables
@@ -33,10 +37,26 @@ var poison_turn_applied: int = -1
 var poison_duration: int = -1
 
 
-var index: int = -1
+var rank: int
 
 
-var assigned_object: PieceObject
+var file: int
+
+
+var index: int
+
+
+var board_position: Vector2i:
+	set(value):
+		rank = value.x
+		file = value.y
+	get():
+		return Vector2i(rank,file)
+
+
+var assigned_object: PieceObject:
+	set(value):
+		assigned_object = value
 
 
 var flag: Dictionary[String, FlagComponent] = {
@@ -47,6 +67,7 @@ var flag: Dictionary[String, FlagComponent] = {
 	"is_captured":FlagComponent.new(),
 	"has_moved": FlagComponent.new(),
 }
+
 
 static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -> PieceData:
 	var new_piece: PieceData = PieceData.new()
@@ -64,5 +85,11 @@ func connect_flag_components(function:Callable):
 		flag[component].changed.connect(function)
 
 
+func disconnect_flag_components(function:Callable):
+	for component in flag.keys():
+		if flag[component].is_connected("changed",function):
+			flag[component].changed.disconnect(function)
+
+
 func assign_player(player:String):
-	self.player = GameController.player[player.to_lower()]
+	self.player = GameData.player[player.to_lower()]

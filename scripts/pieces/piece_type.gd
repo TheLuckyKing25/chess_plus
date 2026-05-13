@@ -12,7 +12,7 @@ class_name PieceType extends Resource
 @export var algebraic_notation: String = "_"
 
 ## The mesh used for the 3D object of this PieceType.
-@export var object_mesh: Mesh = null
+@export var object_mesh: Mesh
 
 ## Allows this PieceType to be promoted.
 @export var can_promote:= false

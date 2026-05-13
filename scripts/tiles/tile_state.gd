@@ -1,5 +1,5 @@
 class_name TileState
-extends GameController.ItemState
+extends GameData.ItemState
 
 
 const THREATENED_COLOR: Color = Color(1, 0.2, 0.2, 1)

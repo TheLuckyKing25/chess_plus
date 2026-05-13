@@ -30,7 +30,7 @@ func exit():
 	if not Match.is_board_generated and Match.board.data.FEN_board_state:
 		Match.current_game_state = Match.GameState.GAMEPLAY
 		Match.board.generate_board()
-		Match.board.load_FEN(Match.board.data.FEN_board_state)
+		#Match.board.load_FEN(Match.board.data.FEN_board_state)
 		Match.is_board_generated = true
 
 	remove_child(instantiated_scene)
@@ -69,8 +69,8 @@ func on_time_control_selection(time_sec: int, increment_sec: int):
 	TimeControl.increment_sec = increment_sec
 	TimeControl.max_time_sec = time_sec
 
-	GameController.player.white.timer.set_timer(time_sec)
-	GameController.player.black.timer.set_timer(time_sec)
+	GameData.player.white.timer.set_timer(time_sec)
+	GameData.player.black.timer.set_timer(time_sec)
 
 	if NetworkManager.is_online:
 		NetworkSync.time_control.rpc(time_sec, increment_sec)

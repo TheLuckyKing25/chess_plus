@@ -25,9 +25,9 @@ ConfigFileHandler="*res://scripts/autoloads/config_file_handler.gd"
 NetworkManager="*res://scripts/autoloads/network_manager.gd"
 Match="*res://scripts/autoloads/match.gd"
 NetworkSync="*res://scripts/autoloads/network_sync.gd"
-GameController="*res://scripts/autoloads/game_controller.gd"
 Constants="*res://scripts/autoloads/constants.gd"
 DebugPrinter="*res://scripts/autoloads/debug_printer.gd"
+GameData="*res://scripts/autoloads/game_data.gd"
 
 [debug]
 

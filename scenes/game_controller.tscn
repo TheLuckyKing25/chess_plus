@@ -96,26 +96,27 @@ normal_enabled = true
 normal_scale = 0.1
 normal_texture = SubResource("NoiseTexture2D_5gvbh")
 
-[node name="GameController" type="Node" node_paths=PackedStringArray("controller_3D")]
+[node name="GameController" type="Node"]
 script = ExtResource("1_fpu5w")
-controller_3D = NodePath("Controller3D")
 
-[node name="White" parent="." instance=ExtResource("20_kea5x")]
+[node name="Controller3D" type="Node3D" parent="."]
+script = ExtResource("2_py7vm")
+
+[node name="Player1" parent="Controller3D" instance=ExtResource("20_kea5x")]
+player_name = "White"
 color = Color(0.8, 0.8, 0.8, 1)
 parity = 1
 camera_distance_from_subject = 10.0
 camera_pitch = -50.0
 
-[node name="Black" parent="." instance=ExtResource("20_kea5x")]
+[node name="Player2" parent="Controller3D" instance=ExtResource("20_kea5x")]
+player_name = "Black"
 color = Color(0.2, 0.2, 0.2, 1)
 parity = -1
 direction_parity = 4
 camera_distance_from_subject = 10.0
 camera_yaw = 180.0
 camera_pitch = -50.0
-
-[node name="Controller3D" type="Node3D" parent="."]
-script = ExtResource("2_py7vm")
 
 [node name="OverheadCamera" type="Camera3D" parent="Controller3D"]
 unique_name_in_owner = true
@@ -156,7 +157,7 @@ initial_state = NodePath("WhiteTurn")
 
 [node name="BlackTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
 script = ExtResource("6_3d517")
-player = NodePath("../../../Black")
+player = NodePath("../../Player2")
 board = NodePath("../../Table/Board")
 next_state = NodePath("../BlackToWhite")
 
@@ -168,7 +169,7 @@ next_state = NodePath("../WhiteTurn")
 
 [node name="WhiteTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
 script = ExtResource("6_3d517")
-player = NodePath("../../../White")
+player = NodePath("../../Player1")
 board = NodePath("../../Table/Board")
 next_state = NodePath("../WhiteToBlack")
 

@@ -62,6 +62,13 @@ var occupant: PieceObject = null:
 		occupant = new_occupant
 		occupant_changed.emit(new_occupant)
 
+var occupant_data: PieceData = null:
+	set(new_occupant):
+		if assigned_object:
+			print("test")
+			assigned_object.add_child(new_occupant.assigned_object)
+		occupant_data = new_occupant
+		occupant_changed.emit(new_occupant)
 
 var assigned_object: TileObject
 

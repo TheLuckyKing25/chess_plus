@@ -1,14 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnismskxjehm6"]
+[gd_scene load_steps=5 format=3 uid="uid://dnismskxjehm6"]
 
 [ext_resource type="Script" uid="uid://5e06aauin2d1" path="res://scripts/pieces/piece_object.gd" id="1_huli3"]
+[ext_resource type="Resource" uid="uid://brd0i5dnuyf6l" path="res://resources/pieces/data/piece_knight.tres" id="2_h2rng"]
 [ext_resource type="Material" uid="uid://d1vk2u7swdqib" path="res://resources/pieces/piece_material.tres" id="3_ajk4a"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s58gp"]
 radius = 1.0
 height = 4.5
 
-[node name="Piece" type="StaticBody3D" groups=["Piece"]]
+[node name="Piece" type="StaticBody3D" node_paths=PackedStringArray("mesh_instance") groups=["Piece"]]
 script = ExtResource("1_huli3")
+mesh_instance = NodePath("Piece_Mesh")
+data = ExtResource("2_h2rng")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
@@ -17,6 +20,7 @@ shape = SubResource("CapsuleShape3D_s58gp")
 [node name="Piece_Mesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 material_override = ExtResource("3_ajk4a")
+skeleton = NodePath("")
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

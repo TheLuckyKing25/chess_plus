@@ -3,8 +3,14 @@ extends Node3D
 
 signal promoted
 signal clicked(piece: PieceObject)
+signal data_changed(new_data: PieceData)
+
+
+@export var mesh_instance: MeshInstance3D
+
 
 const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
+
 
 const THREATENED_COLOR:= Color(0.9, 0, 0, 1)
 const CHECKING_COLOR:= Color(0.9, 0.9, 0)
@@ -12,42 +18,112 @@ const SELECT_COLOR:= Color(0, 0.9, 0.9, 1)
 const CHECKED_COLOR:= Color(0.9, 0, 0, 1)
 const CASTLING_COLOR:= Color(1,1,1,1)
 
+
 static var en_passant: PieceObject = null
+
 
 static var is_selected: bool:
 	get():
-		return GameController.selected.piece != null
+		return GameData.selected.piece != null
 
 
 var is_mouse_on_piece: bool = false
 
 
-var piece_material: StandardMaterial3D
+@onready var piece_material: StandardMaterial3D:
+	get():
+		return mesh_instance.material_override
 
-var mouseover_material: StandardMaterial3D:
+
+
+@onready var mouseover_material: StandardMaterial3D:
 	get():
 		return piece_material.next_pass
 
-var outline_material: StandardMaterial3D:
+
+@onready var outline_material: StandardMaterial3D:
 	get():
 		return piece_material.next_pass.next_pass
 
 
+
 @export var data: PieceData:
 	set(new_data):
-		if data:
-			remove_from_group(data.type.name)
-			new_data.index = data.index
-			new_data.player = data.player
-			new_data.type = data.type
-
-		add_to_group(new_data.type.name)
-		$Piece_Mesh.mesh = new_data.type.object_mesh
-
-		piece_material = $Piece_Mesh.material_override
-		outline_material.albedo_color = Color(0,0,0,0)
-		piece_material.albedo_color = new_data.player.color
+		data_changed.emit(new_data)
 		data = new_data
+
+
+func _ready() -> void:
+	data_changed.connect(Callable(self,"_on_data_changed"))
+	data_changed.emit(data) # reloads data if assigned when object was not ready
+	#match data.player.name.to_lower():
+		#"white":
+			#remove_from_group("white")
+			#rotate_y(PI)
+		#"black":
+			#remove_from_group("black")
+
+
+func _on_data_changed(new_data:PieceData):
+	_unload_data(data)
+	_load_data(new_data)
+	_on_type_changed(new_data.type)
+	_on_player_changed(new_data.player)
+
+
+func _unload_data(old_data: PieceData):
+	if old_data:
+		# disconnect signals from old data
+		if old_data.is_connected("type_changed",Callable(self,"_on_type_changed")):
+			old_data.type_changed.disconnect(Callable(self,"_on_type_changed"))
+		if old_data.is_connected("player_changed",Callable(self,"_on_type_changed")):
+			old_data.player_changed.disconnect(Callable(self,"_on_player_changed"))
+		old_data.disconnect_flag_components(Callable(self,"apply_state"))
+
+		# clear connection between object and old data
+		old_data.assigned_object = null
+
+
+
+func _load_data(new_data: PieceData):
+	if new_data:
+		# connect signals from new data
+		new_data.type_changed.connect(Callable(self,"_on_type_changed"))
+		new_data.player_changed.connect(Callable(self,"_on_player_changed"))
+		new_data.connect_flag_components(Callable(self,"apply_state"))
+
+		# connect this object and the new data
+		new_data.assigned_object = self
+
+		outline_material.albedo_color = Color(0,0,0,0)
+
+
+func _on_type_changed(new_type:PieceType):
+	if data and data.type:
+		remove_from_group(data.type.name)
+	if new_type and mesh_instance:
+		mesh_instance.mesh = new_type.object_mesh
+		add_to_group(new_type.name)
+
+
+func _on_player_changed(new_player:Player):
+	if data and data.player:
+		remove_from_group(data.player.name)
+	if new_player:
+		piece_material.albedo_color = new_player.color
+		add_to_group(new_player.name)
+
+
+static func new_piece_object() -> PieceObject:
+	var new_piece:PieceObject = PIECE_SCENE.instantiate()
+	return new_piece
+
+
+
+
+
+
+
 
 static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
 	var new_piece:PieceObject = PIECE_SCENE.instantiate()
@@ -65,13 +141,6 @@ static func new_piece(piece_type: PieceData, player_owner:Player, max_move_dista
 	new_piece.data.player.add_piece(new_piece)
 	Match.add_piece(new_piece)
 	return new_piece
-
-
-static func new_piece_object() -> PieceObject:
-	var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	return new_piece
-
-
 
 
 func promote(piece_name: String):
@@ -123,26 +192,6 @@ func move_to(tile: TileObject):
 	global_rotation = tile.global_rotation + global_rotation
 	reparent(tile)
 	data.index = tile.data.index
-
-
-func _ready() -> void:
-	data.connect_flag_components(Callable(self,"apply_state"))
-	add_to_group(data.type.name)
-	$Piece_Mesh.mesh = data.type.object_mesh
-
-	piece_material = $Piece_Mesh.material_override
-	mouseover_material = piece_material.next_pass
-	outline_material = mouseover_material.next_pass
-	outline_material.albedo_color = Color(0,0,0,0)
-
-	piece_material.albedo_color = data.player.color
-	add_to_group(data.player.name)
-	match data.player.name.to_lower():
-		"white":
-			remove_from_group("white")
-			rotate_y(PI)
-		"black":
-			remove_from_group("black")
 
 
 func _captured():

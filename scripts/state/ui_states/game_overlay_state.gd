@@ -8,8 +8,8 @@ func enter():
 		Match.game_overlay = instantiated_scene
 		if Match.is_timed:
 			instantiated_scene.show_timers()
-			GameController.player.white.timer.label = instantiated_scene.get_ui_timer_white()
-			GameController.player.black.timer.label = instantiated_scene.get_ui_timer_black()
+			GameData.player.white.timer.label = instantiated_scene.get_ui_timer_white()
+			GameData.player.black.timer.label = instantiated_scene.get_ui_timer_black()
 		if NetworkManager.is_online:
 			await get_tree().create_timer(0.5).timeout
 			NetworkSync.board_setup.rpc(Match.board.data.file_count, Match.board.data.rank_count, Match.board.data.FEN_board_state.FE_notation)

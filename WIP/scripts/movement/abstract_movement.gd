@@ -41,5 +41,6 @@ func set_direction_parity(direction_parity: int) -> void:
 func get_duplicate() -> AbstractMovement:
 	return null
 
+
 func apply_movement(current_tile:TileObject):
 	pass
