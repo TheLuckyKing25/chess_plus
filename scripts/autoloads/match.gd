@@ -90,7 +90,7 @@ func get_board_position(index: int) -> Vector2i:
 
 func select_tile(tile: TileObject) -> void:
 	TileObject.selected = tile
-	GameData.selected.piece = tile.occupant
+	PieceObject.selected = tile.occupant
 	TileObject.selected.data.change("is_selected",true)
 	board.show_selected_piece_movement()
 
@@ -98,7 +98,7 @@ func select_tile(tile: TileObject) -> void:
 func unselect_tile() -> void:
 	TileObject.selected.data.change("is_selected",false)
 	TileObject.selected = null
-	GameData.selected.piece = null
+	PieceObject.selected = null
 	get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
 
 func is_my_turn() -> bool:

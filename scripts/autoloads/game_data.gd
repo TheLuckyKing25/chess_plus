@@ -7,11 +7,6 @@ var match_settings: MatchSettings = MatchSettings.new()
 
 var player: Dictionary[String, Player] = {}
 
-var selected:Dictionary = {
-	"piece": null,
-	"tile": null,
-	}
-
 
 var active_board_state: BoardData
 

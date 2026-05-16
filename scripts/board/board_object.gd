@@ -3,7 +3,6 @@ extends Node3D
 
 
 signal turn_changed()
-signal game_state_changed(game_state: int)
 signal promotion_verified(piece: PieceObject)
 
 
@@ -54,9 +53,7 @@ func load_board_data(value: BoardData) -> void:
 	if value == null:
 		return
 
-	# Change the size of the board base to match the size of the board
-	_resize_base(Vector3(value.file_count+1 ,0.2, value.rank_count+1))
-
+	_resize_base(value) # Change the size of the board base to match the size of the board
 	_generate_tile_objects(value) # Create tiles
 	_assign_data_to_tiles(value) # Assign data to tiles
 	_generate_piece_objects(value) # Create pieces
@@ -64,7 +61,8 @@ func load_board_data(value: BoardData) -> void:
 	_place_pieces(value) # Place pieces on tiles
 
 
-func _resize_base(size: Vector3) -> void:
+func _resize_base(new_data: BoardData) -> void:
+	var size = Vector3(new_data.file_count+1 ,0.2, new_data.rank_count+1)
 	board_base.mesh.size = size
 
 
@@ -217,7 +215,7 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	var to_tile: TileObject = data.tile_array[to_index]
 
 	TileObject.selected = from_tile
-	GameData.selected.piece = from_tile.occupant
+	PieceObject.selected = from_tile.occupant
 
 	if ep_piece_index >= 0 and ep_tile_index >= 0:
 		PieceObject.en_passant = data.piece_array[ep_piece_index]
@@ -245,28 +243,28 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	next_turn()
 #endregion
 
-func generate_board() -> void:
-	data.tile_array.resize(data.file_count * data.rank_count)
-	data.piece_array.resize(data.file_count * data.rank_count)
-
-	# Change the size of the board base to match the size of the board
-	#_resize_base(Vector3(data.file_count+1 ,0.2, data.rank_count+1))
-
-	for tile_num in range(data.rank_count * data.file_count):
-		var new_tile:TileObject = TileObject.new_tile(tile_num)
-		new_tile.data.board_position = Match.get_board_position(new_tile.data.index)
-
-		data.tile_array[tile_num] = new_tile
-		# move tile to its location on the board
-
-		#new_tile.translate(Vector3(
-				#new_tile.data.file-(float(data.file_count)/2)+0.5,
-				#0.1,
-				#(float(data.rank_count)/2)-new_tile.data.rank-0.5
-			#))
-		#$BoardBase.add_child(new_tile, true)
-
-	data.assign_tile_neighbors()
+#func generate_board() -> void:
+	#data.tile_array.resize(data.file_count * data.rank_count)
+	#data.piece_array.resize(data.file_count * data.rank_count)
+#
+	## Change the size of the board base to match the size of the board
+	##_resize_base(Vector3(data.file_count+1 ,0.2, data.rank_count+1))
+#
+	#for tile_num in range(data.rank_count * data.file_count):
+		#var new_tile:TileObject = TileObject.new_tile(tile_num)
+		#new_tile.data.board_position = Match.get_board_position(new_tile.data.index)
+#
+		#data.tile_array[tile_num] = new_tile
+		## move tile to its location on the board
+#
+		##new_tile.translate(Vector3(
+				##new_tile.data.file-(float(data.file_count)/2)+0.5,
+				##0.1,
+				##(float(data.rank_count)/2)-new_tile.data.rank-0.5
+			##))
+		##$BoardBase.add_child(new_tile, true)
+#
+	#data.assign_tile_neighbors()
 
 
 func load_FEN(FE_notation:FEN) -> void:
@@ -300,7 +298,7 @@ func detect_check(player:Player) -> void:
 
 
 func _set_en_passant(clicked_tile: TileObject) -> void:
-	PieceObject.en_passant = GameData.selected.piece
+	PieceObject.en_passant = PieceObject.selected
 	var en_passant_tile_rank = (
 			TileObject.selected.data.rank
 			+ (clicked_tile.data.rank - TileObject.selected.data.rank)/2
@@ -500,9 +498,9 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
-	var moveset:Movement = GameData.selected.piece.data.movement.get_duplicate()
-	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, GameData.selected.piece, moveset)
-	resolve_branching_movement(GameData.selected.piece, moveset, TileObject.selected )
+	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
+	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
+	resolve_branching_movement(PieceObject.selected, moveset, TileObject.selected )
 
 
 # SAME LOGIC USED IN MoveList RESOURCE.

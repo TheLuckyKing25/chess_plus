@@ -113,7 +113,6 @@ camera_pitch = -50.0
 player_name = "Black"
 color = Color(0.2, 0.2, 0.2, 1)
 parity = -1
-direction_parity = 4
 camera_distance_from_subject = 10.0
 camera_yaw = 180.0
 camera_pitch = -50.0
@@ -238,5 +237,4 @@ scene = ExtResource("15_u8mor")
 script = ExtResource("17_wksuf")
 scene = ExtResource("18_wf0ff")
 
-[connection signal="game_state_changed" from="Controller3D/Table/Board" to="Controller3D" method="_on_board_game_state_changed"]
 [connection signal="ready" from="Controller3D/Table/Board" to="Controller3D" method="_on_board_ready"]

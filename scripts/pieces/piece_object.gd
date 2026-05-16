@@ -1,10 +1,10 @@
 class_name PieceObject
 extends Node3D
 
-signal promoted
 signal clicked(piece: PieceObject)
 signal data_changed(new_data: PieceData)
 
+signal promoted
 
 @export var mesh_instance: MeshInstance3D
 
@@ -20,11 +20,12 @@ const CASTLING_COLOR:= Color(1,1,1,1)
 
 
 static var en_passant: PieceObject = null
+static var selected: PieceObject = null
 
 
 static var is_selected: bool:
 	get():
-		return GameData.selected.piece != null
+		return PieceObject.selected != null
 
 
 var is_mouse_on_piece: bool = false
@@ -33,7 +34,6 @@ var is_mouse_on_piece: bool = false
 @onready var piece_material: StandardMaterial3D:
 	get():
 		return mesh_instance.material_override
-
 
 
 @onready var mouseover_material: StandardMaterial3D:
@@ -46,7 +46,6 @@ var is_mouse_on_piece: bool = false
 		return piece_material.next_pass.next_pass
 
 
-
 @export var data: PieceData:
 	set(new_data):
 		data_changed.emit(new_data)
@@ -55,13 +54,16 @@ var is_mouse_on_piece: bool = false
 
 func _ready() -> void:
 	data_changed.connect(Callable(self,"_on_data_changed"))
-	data_changed.emit(data) # reloads data if assigned when object was not ready
-	#match data.player.name.to_lower():
-		#"white":
-			#remove_from_group("white")
-			#rotate_y(PI)
-		#"black":
-			#remove_from_group("black")
+	clicked.connect(Callable(self,"_on_clicked"))
+
+	# reloads data if data was assigned when the object was not ready
+	data_changed.emit(data)
+
+
+#region Piece Object Generation
+static func new_piece_object() -> PieceObject:
+	var new_piece:PieceObject = PIECE_SCENE.instantiate()
+	return new_piece
 
 
 func _on_data_changed(new_data:PieceData):
@@ -111,12 +113,28 @@ func _on_player_changed(new_player:Player):
 		remove_from_group(data.player.name)
 	if new_player:
 		piece_material.albedo_color = new_player.color
+		rotation.y = new_player.piece_rotation_parity
 		add_to_group(new_player.name)
+#endregion
+
+func _on_mouse_entered() -> void:
+	is_mouse_on_piece = true
+	mouseover_material.render_priority = 2
+	mouseover_material.albedo_color = piece_material.albedo_color * 1.5
 
 
-static func new_piece_object() -> PieceObject:
-	var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	return new_piece
+func _on_mouse_exited() -> void:
+	mouseover_material.albedo_color = Color(0,0,0,0)
+	mouseover_material.render_priority = 0
+	is_mouse_on_piece = false
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("Select") and is_mouse_on_piece:
+		clicked.emit(self)
+
+func _on_clicked(object: PieceObject):
+	pass
 
 
 
@@ -124,23 +142,22 @@ static func new_piece_object() -> PieceObject:
 
 
 
-
-static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
-	var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	var new_piece_data: PieceData = piece_type.duplicate(true)
-
-	piece_type.resource_local_to_scene = true
-
-	new_piece_data.movement = new_piece_data.movement.get_duplicate()
-
-	new_piece_data.player = player_owner
-	new_piece_data.movement.set_max_distance(max_move_distance)
-	new_piece_data.index = index
-
-	new_piece.data = new_piece_data
-	new_piece.data.player.add_piece(new_piece)
-	Match.add_piece(new_piece)
-	return new_piece
+#static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
+	#var new_piece:PieceObject = PIECE_SCENE.instantiate()
+	#var new_piece_data: PieceData = piece_type.duplicate(true)
+#
+	#piece_type.resource_local_to_scene = true
+#
+	#new_piece_data.movement = new_piece_data.movement.get_duplicate()
+#
+	#new_piece_data.player = player_owner
+	#new_piece_data.movement.set_max_distance(max_move_distance)
+	#new_piece_data.index = index
+#
+	#new_piece.data = new_piece_data
+	#new_piece.data.player.add_piece(new_piece)
+	#Match.add_piece(new_piece)
+	#return new_piece
 
 
 func promote(piece_name: String):
@@ -210,20 +227,3 @@ func moved(state:bool):
 		if data.type.name == "Pawn":
 			data.movement = load("uid://dl1o3ayyjvnlf")
 		remove_from_group("has_moved")
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Select") and is_mouse_on_piece:
-		clicked.emit(self)
-
-
-func _on_mouse_entered() -> void:
-	is_mouse_on_piece = true
-	mouseover_material.render_priority = 2
-	mouseover_material.albedo_color = piece_material.albedo_color * 1.5
-
-
-func _on_mouse_exited() -> void:
-	mouseover_material.albedo_color = Color(0,0,0,0)
-	mouseover_material.render_priority = 0
-	is_mouse_on_piece = false

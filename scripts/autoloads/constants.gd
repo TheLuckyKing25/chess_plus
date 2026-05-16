@@ -20,6 +20,7 @@ enum GameColor{
 	MOVE_CHECKING,
 }
 
+
 const piece_type: Dictionary = {
 	TypePiece.PAWN: "uid://bih6lr0cwxuk",
 	TypePiece.BISHOP: "uid://b7mqdwuvfi3nh",

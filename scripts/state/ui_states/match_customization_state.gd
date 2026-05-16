@@ -29,7 +29,7 @@ func exit():
 
 	if not Match.is_board_generated and Match.board.data.FEN_board_state:
 		Match.current_game_state = Match.GameState.GAMEPLAY
-		Match.board.generate_board()
+		#Match.board.generate_board()
 		#Match.board.load_FEN(Match.board.data.FEN_board_state)
 		Match.is_board_generated = true
 
