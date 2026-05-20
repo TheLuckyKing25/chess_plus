@@ -1,6 +1,24 @@
 # Constants Autoload
-# contains values that are considered constants and need to be accessed throughout the game
+# contains values that are constants and need to be accessed in multiple locations
 extends Node
+
+enum SelectionMode{
+	SINGLE = 0,
+	MULTIPLE = 1,
+}
+
+enum Direction{
+	NONE = -1, # TEMP: REMOVE FROM SCRIPT ONCE UNUSED
+	NORTH = 0,
+	NORTHEAST = 1,
+	EAST = 2,
+	SOUTHEAST = 3,
+	SOUTH = 4,
+	SOUTHWEST = 5,
+	WEST = 6,
+	NORTHWEST = 7,
+	}
+
 
 enum TypePiece{
 	PAWN = 0,
@@ -9,15 +27,6 @@ enum TypePiece{
 	QUEEN = 3,
 	KNIGHT = 4,
 	ROOK = 5,
-}
-
-enum GameColor{
-	THREATENED,
-	VALID,
-	SELECT,
-	CHECKED,
-	CASTLING,
-	MOVE_CHECKING,
 }
 
 
@@ -31,11 +40,24 @@ const piece_type: Dictionary = {
 }
 
 
-const tile_color_dict: Dictionary = {
-	GameColor.THREATENED: Color(1, 0.2, 0.2, 1),
-	GameColor.VALID: Color(0.6, 1, 0.6, 1),
-	GameColor.SELECT: Color(0.1, 1, 1, 1),
-	GameColor.CHECKED: Color(1, 0.2, 0.2, 1),
-	GameColor.CASTLING: Color(1,1,1,1),
-	GameColor.MOVE_CHECKING: Color(1, 0.392, 0.153),
+const direction_vector: Dictionary[Constants.Direction, Vector2i] = {
+	Constants.Direction.NORTH: Vector2i(1,0),
+	Constants.Direction.NORTHEAST: Vector2i(1,1),
+	Constants.Direction.EAST: Vector2i(0,1),
+	Constants.Direction.SOUTHEAST: Vector2i(-1,1),
+	Constants.Direction.SOUTH: Vector2i(-1,0),
+	Constants.Direction.SOUTHWEST: Vector2i(-1,-1),
+	Constants.Direction.WEST: Vector2i(0,-1),
+	Constants.Direction.NORTHWEST: Vector2i(1,-1)
 }
+
+
+#static func get_nodes_in_groups(scene_tree: SceneTree, groups: Array[String]) -> Array[Node]:
+	#var nodes: Array[Node]
+	#for group in groups:
+		#if nodes.is_empty():
+			#nodes = scene_tree.get_nodes_in_group(group)
+			#if nodes.is_empty(): return []
+			#else: continue
+		#nodes = nodes.filter(func(node): return node.is_in_group(group))
+	#return nodes

@@ -101,10 +101,10 @@ func _generate_tile_data() -> void:
 
 func _assign_tile_neighbors() -> void:
 	for tile:TileDataChess in tiles:
-		for direction:AbstractMovement.Direction in range(0,8):
+		for direction:Constants.Direction in range(0,8):
 			var neighbor_position: Vector2i = (
 					tile.board_position
-					+ AbstractMovement.direction_vector[direction]
+					+ Constants.direction_vector[direction]
 				)
 
 			if (
@@ -163,7 +163,7 @@ func _generate_pieces():
 		var board_rep_position = board_representation.get(position_vector,{})
 		board_rep_position.set(PIECE_DATA,new_piece)
 		pieces.append(board_rep_position.get(PIECE_DATA))
-		board_rep_position.get(TILE_DATA,{}).occupant_data = new_piece
+		board_rep_position.get(TILE_DATA,{}).occupant = new_piece
 		new_piece.board_position = position_vector
 
 		tile_num += 1
@@ -201,10 +201,10 @@ func find_tile_using_vector(vector: Vector2i) -> TileObject:
 func assign_tile_neighbors():
 	for tile in tile_array:
 		for direction in range(0,8):
-			direction = direction as AbstractMovement.Direction
+			direction = direction as Constants.Direction
 			var next_tile_position: Vector2i = (
 					tile.data.board_position
-					+ AbstractMovement.direction_vector[direction]
+					+ Constants.direction_vector[direction]
 					)
 
 			if (	next_tile_position > Vector2i(rank_count-1,file_count-1)

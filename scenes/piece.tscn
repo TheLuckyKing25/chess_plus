@@ -1,17 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnismskxjehm6"]
+[gd_scene load_steps=6 format=3 uid="uid://dnismskxjehm6"]
 
 [ext_resource type="Script" uid="uid://5e06aauin2d1" path="res://scripts/pieces/piece_object.gd" id="1_huli3"]
 [ext_resource type="Resource" uid="uid://brd0i5dnuyf6l" path="res://resources/pieces/data/piece_knight.tres" id="2_h2rng"]
 [ext_resource type="Material" uid="uid://d1vk2u7swdqib" path="res://resources/pieces/piece_material.tres" id="3_ajk4a"]
+[ext_resource type="Script" uid="uid://bng4r1rdkwdv6" path="res://scripts/pieces/piece_state_component.gd" id="3_m0mde"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s58gp"]
 radius = 1.0
 height = 4.5
 
-[node name="Piece" type="StaticBody3D" node_paths=PackedStringArray("mesh_instance") groups=["Piece"]]
+[node name="Piece" type="StaticBody3D" node_paths=PackedStringArray("mesh_instance", "state") groups=["Piece"]]
 script = ExtResource("1_huli3")
 mesh_instance = NodePath("Piece_Mesh")
 data = ExtResource("2_h2rng")
+state = NodePath("PieceStateComponent")
+
+[node name="PieceStateComponent" type="Node" parent="."]
+script = ExtResource("3_m0mde")
+metadata/_custom_type_script = "uid://bng4r1rdkwdv6"
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
@@ -21,6 +27,14 @@ shape = SubResource("CapsuleShape3D_s58gp")
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 material_override = ExtResource("3_ajk4a")
 skeleton = NodePath("")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(0.755145, 0, 0.655558, 0, 1, 0, -0.655558, 0, 0.755145, 0.623949, 2.19613, 0.254476)
+visible = false
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.755145, -0.33699, 0.562312, 0, 0.85776, 0.51405, -0.655558, -0.388182, 0.647733, 1.98658, 2.19613, 1.8241)
+visible = false
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

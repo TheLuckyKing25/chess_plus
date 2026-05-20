@@ -18,7 +18,7 @@ func construct_children(parent:MoveTreeItem, movement:AbstractMovement):
 
 	if movement is SlidingMovement:
 		if movement.distance > 0:
-			new_item.position_vector = parent.position_vector + AbstractMovement.direction_vector[movement.direction]
+			new_item.position_vector = parent.position_vector + Constants.direction_vector[movement.direction]
 			movement.distance -= 1
 			new_item.add_child(construct_children(new_item,movement))
 			return new_item

@@ -1,31 +1,21 @@
 class_name DirectionComponent
 extends ModifierComponent
 
-enum Direction{
-	NORTH = Movement.Direction.NORTH,
-	NORTHEAST = Movement.Direction.NORTHEAST,
-	EAST = Movement.Direction.EAST,
-	SOUTHEAST = Movement.Direction.SOUTHEAST,
-	SOUTH = Movement.Direction.SOUTH,
-	SOUTHWEST = Movement.Direction.SOUTHWEST,
-	WEST = Movement.Direction.WEST,
-	NORTHWEST = Movement.Direction.NORTHWEST,
-}
 const _DIRECTION_BUTTON_ORDER: Array = [
-	Direction.NORTHWEST,
-	Direction.NORTH,
-	Direction.NORTHEAST,
-	Direction.WEST,
+	Constants.Direction.NORTHWEST,
+	Constants.Direction.NORTH,
+	Constants.Direction.NORTHEAST,
+	Constants.Direction.WEST,
 	null,
-	Direction.EAST,
-	Direction.SOUTHWEST,
-	Direction.SOUTH,
-	Direction.SOUTHEAST,
+	Constants.Direction.EAST,
+	Constants.Direction.SOUTHWEST,
+	Constants.Direction.SOUTH,
+	Constants.Direction.SOUTHEAST,
 ]
 
 const NAME: String = "Direction"
 
-var direction: Direction = Direction.NORTH
+var direction: Constants.Direction = Constants.Direction.NORTH
 
 func create_setting() -> Control:
 	var setting: HBoxContainer = HBoxContainer.new()
@@ -66,4 +56,4 @@ func create_setting() -> Control:
 
 
 func on_direction_pressed(button: BaseButton):
-	direction = button.get_meta("direction") as Direction
+	direction = button.get_meta("direction") as Constants.Direction

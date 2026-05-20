@@ -22,28 +22,25 @@ const CASTLING_COLOR:= Color(1,1,1,1)
 static var en_passant: PieceObject = null
 static var selected: PieceObject = null
 
+static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
 static var is_selected: bool:
-	get():
-		return PieceObject.selected != null
+	get(): return PieceObject.selected != null
 
 
 var is_mouse_on_piece: bool = false
 
 
 @onready var piece_material: StandardMaterial3D:
-	get():
-		return mesh_instance.material_override
+	get(): return mesh_instance.material_override
 
 
 @onready var mouseover_material: StandardMaterial3D:
-	get():
-		return piece_material.next_pass
+	get(): return piece_material.next_pass
 
 
 @onready var outline_material: StandardMaterial3D:
-	get():
-		return piece_material.next_pass.next_pass
+	get(): return piece_material.next_pass.next_pass
 
 
 @export var data: PieceData:
@@ -51,6 +48,7 @@ var is_mouse_on_piece: bool = false
 		data_changed.emit(new_data)
 		data = new_data
 
+@export var state: PieceStateComponent
 
 func _ready() -> void:
 	data_changed.connect(Callable(self,"_on_data_changed"))
@@ -80,11 +78,10 @@ func _unload_data(old_data: PieceData):
 			old_data.type_changed.disconnect(Callable(self,"_on_type_changed"))
 		if old_data.is_connected("player_changed",Callable(self,"_on_type_changed")):
 			old_data.player_changed.disconnect(Callable(self,"_on_player_changed"))
-		old_data.disconnect_flag_components(Callable(self,"apply_state"))
+		#old_data.disconnect_flag_components(Callable(self,"apply_state"))
 
 		# clear connection between object and old data
 		old_data.assigned_object = null
-
 
 
 func _load_data(new_data: PieceData):
@@ -92,7 +89,7 @@ func _load_data(new_data: PieceData):
 		# connect signals from new data
 		new_data.type_changed.connect(Callable(self,"_on_type_changed"))
 		new_data.player_changed.connect(Callable(self,"_on_player_changed"))
-		new_data.connect_flag_components(Callable(self,"apply_state"))
+		#new_data.connect_flag_components(Callable(self,"apply_state"))
 
 		# connect this object and the new data
 		new_data.assigned_object = self
@@ -117,6 +114,7 @@ func _on_player_changed(new_player:Player):
 		add_to_group(new_player.name)
 #endregion
 
+
 func _on_mouse_entered() -> void:
 	is_mouse_on_piece = true
 	mouseover_material.render_priority = 2
@@ -133,10 +131,15 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Select") and is_mouse_on_piece:
 		clicked.emit(self)
 
+
 func _on_clicked(object: PieceObject):
-	pass
+	state.set_state(PieceStateComponent.Type.SELECTED)
 
 
+func set_state_color(color: Color, has_emission: bool = false):
+	outline_material.albedo_color = color
+	outline_material.emission_enabled = has_emission
+	outline_material.emission = color
 
 
 

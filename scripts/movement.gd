@@ -1,43 +1,19 @@
 class_name Movement
 extends Resource
 
-enum Direction{
-	NONE = -1, ## Only to be used when  [param Distance]  equals  [code]0[/code].
-	NORTH = 0,
-	NORTHEAST = 1,
-	EAST = 2,
-	SOUTHEAST = 3,
-	SOUTH = 4,
-	SOUTHWEST = 5,
-	WEST = 6,
-	NORTHWEST = 7,
-	}
-
-
-static var neighboring_tiles: Dictionary[Direction, Vector2i] = {
-	Direction.NORTH: Vector2i(1,0),
-	Direction.NORTHEAST: Vector2i(1,1),
-	Direction.EAST: Vector2i(0,1),
-	Direction.SOUTHEAST: Vector2i(-1,1),
-	Direction.SOUTH: Vector2i(-1,0),
-	Direction.SOUTHWEST: Vector2i(-1,-1),
-	Direction.WEST: Vector2i(0,-1),
-	Direction.NORTHWEST: Vector2i(1,-1)
-}
-
 ## The distance that this move will extend out to.
 ## Setting the value to  [code]-1[/code]  will make the value
 ## equal to the largest side length of the board.
 @export_range(-1,8,1,"or_greater") var distance: int = 0
 
-@export var direction: Direction:
+@export var direction: Constants.Direction:
 	set(cardinal):
-		if cardinal <= Direction.NONE:
-			direction = Direction.NONE
+		if cardinal <= Constants.Direction.NONE:
+			direction = Constants.Direction.NONE
 		else:
-			direction = (cardinal % 8) as Direction
+			direction = (cardinal % 8) as Constants.Direction
 	get():
-		return direction as Direction
+		return direction as Constants.Direction
 
 
 # Actions performed by the piece on a tile
@@ -72,8 +48,8 @@ func get_duplicate() -> Movement:
 	return duplicated_movement
 
 func set_direction_parity(direction_parity: int) -> void:
-	if direction != Direction.NONE:
-		direction = ((direction + direction_parity) % 8) as Direction
+	if direction != Constants.Direction.NONE:
+		direction = ((direction + direction_parity) % 8) as Constants.Direction
 	if is_branching:
 		for branch in branches:
 			branch.set_direction_parity(direction_parity)

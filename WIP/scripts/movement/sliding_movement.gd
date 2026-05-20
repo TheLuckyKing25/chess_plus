@@ -15,12 +15,12 @@ class_name SlidingMovement extends AbstractMovement
 			return distance
 
 
-@export var direction: Direction:
+@export var direction: Constants.Direction:
 	set(cardinal):
-		direction = (cardinal % 8) as Direction
-		resource_name = Direction.keys()[direction].capitalize()
+		direction = (cardinal % 8) as Constants.Direction
+		resource_name = Constants.Direction.keys()[direction].capitalize()
 	get():
-		return direction as Direction
+		return direction as Constants.Direction
 
 
 @export var is_move := false

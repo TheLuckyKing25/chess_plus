@@ -11,6 +11,7 @@ static var previous: Player
 
 static var en_passant: Player
 
+
 @export var player_name:String
 @export var color:Color
 

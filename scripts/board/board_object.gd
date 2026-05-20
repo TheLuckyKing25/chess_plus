@@ -9,14 +9,19 @@ signal promotion_verified(piece: PieceObject)
 const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 
 
-@onready var board_base = $BoardBase
-@onready var piece_capture_audio = $Piece_capture
-@onready var piece_move_audio = $Piece_move
+@export var board_base:MeshInstance3D
+@export var piece_capture_audio:AudioStreamPlayer
+@export var piece_move_audio:AudioStreamPlayer
 
+
+var selected_tile: TileObject:
+	get():
+		return TileStateComponent._state_dict[TileStateComponent.Type.SELECTED].get(0)
 
 var smokey_overlay: Dictionary = {}
 var smokey_tiles: Array[TileObject] = []
 var smokey_pieces: Array[PieceObject] = []
+
 
 var tile_objects: Array[TileObject] = []
 var piece_objects: Array[PieceObject] = []
@@ -48,7 +53,7 @@ func _ready() -> void:
 
 
 
-
+#region Board Generation
 func load_board_data(value: BoardData) -> void:
 	if value == null:
 		return
@@ -120,8 +125,10 @@ func _place_pieces(new_data:BoardData)-> void:
 			var board_location: Dictionary = new_data.board_representation[position_vector]
 			var assigned_tile: TileObject = board_location[new_data.TILE_DATA].assigned_object
 			assigned_tile.add_child(piece_object)
+			assigned_tile.occupant = piece_object
+#endregion
 
-
+# tile clicked
 
 
 
@@ -214,7 +221,7 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	var from_tile: TileObject = data.tile_array[from_index]
 	var to_tile: TileObject = data.tile_array[to_index]
 
-	TileObject.selected = from_tile
+	selected_tile = from_tile
 	PieceObject.selected = from_tile.occupant
 
 	if ep_piece_index >= 0 and ep_tile_index >= 0:
@@ -242,30 +249,6 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 
 	next_turn()
 #endregion
-
-#func generate_board() -> void:
-	#data.tile_array.resize(data.file_count * data.rank_count)
-	#data.piece_array.resize(data.file_count * data.rank_count)
-#
-	## Change the size of the board base to match the size of the board
-	##_resize_base(Vector3(data.file_count+1 ,0.2, data.rank_count+1))
-#
-	#for tile_num in range(data.rank_count * data.file_count):
-		#var new_tile:TileObject = TileObject.new_tile(tile_num)
-		#new_tile.data.board_position = Match.get_board_position(new_tile.data.index)
-#
-		#data.tile_array[tile_num] = new_tile
-		## move tile to its location on the board
-#
-		##new_tile.translate(Vector3(
-				##new_tile.data.file-(float(data.file_count)/2)+0.5,
-				##0.1,
-				##(float(data.rank_count)/2)-new_tile.data.rank-0.5
-			##))
-		##$BoardBase.add_child(new_tile, true)
-#
-	#data.assign_tile_neighbors()
-
 
 func load_FEN(FE_notation:FEN) -> void:
 	var fen_decoder := FENDecoder.new(FE_notation)
@@ -300,10 +283,10 @@ func detect_check(player:Player) -> void:
 func _set_en_passant(clicked_tile: TileObject) -> void:
 	PieceObject.en_passant = PieceObject.selected
 	var en_passant_tile_rank = (
-			TileObject.selected.data.rank
-			+ (clicked_tile.data.rank - TileObject.selected.data.rank)/2
+			selected_tile.data.rank
+			+ (clicked_tile.data.rank - selected_tile.data.rank)/2
 			)
-	var en_passant_tile_file = TileObject.selected.data.file
+	var en_passant_tile_file = selected_tile.data.file
 	TileObject.en_passant = data.tile_array[Match.get_board_index(en_passant_tile_rank,en_passant_tile_file)]
 	Player.en_passant = Player.current
 
@@ -483,14 +466,14 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 	# kingside castling
 	if castling_tile.data.file > middle_file_value:
 		castling_rook_index = Match.get_board_index(castling_tile.data.rank,data.file_count-1)
-		destination_index = castling_tile.neighbors[Movement.Direction.WEST].data.index
-		perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_KINGSIDE))
+		destination_index = castling_tile.neighbors[Constants.Direction.WEST].data.index
+		perform_move(Move.new(selected_tile, castling_tile, Move.Outcome.CASTLING_KINGSIDE))
 
 	# queenside castling
 	elif castling_tile.data.file < middle_file_value:
 		castling_rook_index = Match.get_board_index(castling_tile.data.rank,0)
-		destination_index = castling_tile.neighbors[Movement.Direction.EAST].data.index
-		perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_QUEENSIDE))
+		destination_index = castling_tile.neighbors[Constants.Direction.EAST].data.index
+		perform_move(Move.new(selected_tile, castling_tile, Move.Outcome.CASTLING_QUEENSIDE))
 
 	var castling_rook_destination = data.tile_array[destination_index]
 	perform_move(Move.new(data.tile_array[castling_rook_index],castling_rook_destination,Move.Outcome.IGNORE))
@@ -499,8 +482,8 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 ## Shows the valid tiles the selected piece can move to
 func show_selected_piece_movement() -> void:
 	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
-	#moveset = TileModifier.apply_modifiers_to_moveset(self, TileObject.selected, PieceObject.selected, moveset)
-	resolve_branching_movement(PieceObject.selected, moveset, TileObject.selected )
+	#moveset = TileModifier.apply_modifiers_to_moveset(self, selected_tile, PieceObject.selected, moveset)
+	resolve_branching_movement(PieceObject.selected, moveset, selected_tile )
 
 
 # SAME LOGIC USED IN MoveList RESOURCE.
@@ -592,19 +575,19 @@ func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, ori
 
 						# King cannot castle through checked tile
 						if active_piece.data.type.name == "King":
-							if branch.direction == Movement.Direction.EAST:
+							if branch.direction == Constants.Direction.EAST:
 								active_piece.data.set_meta("is_castling_kingside_valid", false)
-							elif branch.direction == Movement.Direction.WEST:
+							elif branch.direction == Constants.Direction.WEST:
 								active_piece.data.set_meta("is_castling_queenside_valid", false)
 
 			if branch.is_castling:
-				var king_tile: TileObject = TileObject.selected
+				var king_tile: TileObject = selected_tile
 
 				if (	active_piece.data.flag.has_moved.enabled # if king has moved
 						or active_piece.data.flag.is_checked.enabled # if king is in check
-						or (	branch.direction == Movement.Direction.EAST
+						or (	branch.direction == Constants.Direction.EAST
 								and not active_piece.data.get_meta("is_castling_kingside_valid"))	# if east tile is checked
-						or (	branch.direction == Movement.Direction.WEST
+						or (	branch.direction == Constants.Direction.WEST
 								and not active_piece.data.get_meta("is_castling_queenside_valid")) # if west tile is checked
 						):
 					break

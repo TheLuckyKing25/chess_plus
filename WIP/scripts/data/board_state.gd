@@ -141,8 +141,8 @@ func assign_tile_neighbors():
 
 	for tile_pos:Vector2i in tile_position_dict.keys():
 		var tile: Tile = tile_position_dict[tile_pos]
-		for direction:AbstractMovement.Direction in range(8):
-			var next_position: Vector2i = (tile_pos + AbstractMovement.direction_vector[direction as Movement.Direction])
+		for direction:Constants.Direction in range(8):
+			var next_position: Vector2i = (tile_pos + Constants.direction_vector[direction as Constants.Direction])
 
 
 			tile.neighbors[direction] = tile_position_dict.get(next_position, null)

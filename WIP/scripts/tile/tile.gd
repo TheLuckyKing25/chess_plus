@@ -16,15 +16,15 @@ var is_occupied: bool:
 	get(): return occupant != null
 
 
-@export var neighbors: Dictionary[Movement.Direction, Tile] = {
-	Movement.Direction.NORTH: null,
-	Movement.Direction.NORTHEAST: null,
-	Movement.Direction.EAST: null,
-	Movement.Direction.SOUTHEAST: null,
-	Movement.Direction.SOUTH: null,
-	Movement.Direction.SOUTHWEST: null,
-	Movement.Direction.WEST: null,
-	Movement.Direction.NORTHWEST: null,
+@export var neighbors: Dictionary[Constants.Direction, Tile] = {
+	Constants.Direction.NORTH: null,
+	Constants.Direction.NORTHEAST: null,
+	Constants.Direction.EAST: null,
+	Constants.Direction.SOUTHEAST: null,
+	Constants.Direction.SOUTH: null,
+	Constants.Direction.SOUTHWEST: null,
+	Constants.Direction.WEST: null,
+	Constants.Direction.NORTHWEST: null,
 }
 
 var modifiers: Array = []

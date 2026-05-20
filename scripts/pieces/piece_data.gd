@@ -13,7 +13,7 @@ signal player_changed(new_player:Player)
 		type = value
 
 
-@export var movement: Movement#:
+#@export var movement: Movement#:
 	#set(new_movement):
 		#movement = new_movement.get_duplicate()
 		#if player:
@@ -24,17 +24,14 @@ var player: Player:
 	set(new_player):
 		player_changed.emit(new_player)
 		player = new_player
-		if player and movement:
-			movement.set_direction_parity(player.direction_parity)
+		#if player and movement:
+			#movement.set_direction_parity(player.direction_parity)
 
 
 
 
 
-## Poison Tile variables
-var is_poisoned: bool = false
-var poison_turn_applied: int = -1
-var poison_duration: int = -1
+
 
 
 var rank: int
@@ -59,16 +56,6 @@ var assigned_object: PieceObject:
 		assigned_object = value
 
 
-var flag: Dictionary[String, FlagComponent] = {
-	"is_selected": FlagComponent.new(),
-	"is_threatened": FlagComponent.new(),
-	"is_checked": FlagComponent.new(),
-	"is_castling": FlagComponent.new(),
-	"is_captured":FlagComponent.new(),
-	"has_moved": FlagComponent.new(),
-}
-
-
 static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -> PieceData:
 	var new_piece: PieceData = PieceData.new()
 	var new_piece_data: PieceType = piece_type.duplicate(true)
@@ -80,16 +67,13 @@ static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -
 	return new_piece
 
 
-func connect_flag_components(function:Callable):
-	for component in flag.keys():
-		flag[component].changed.connect(function)
-
-
-func disconnect_flag_components(function:Callable):
-	for component in flag.keys():
-		if flag[component].is_connected("changed",function):
-			flag[component].changed.disconnect(function)
-
-
 func assign_player(player:String):
 	self.player = GameData.player[player.to_lower()]
+
+
+
+
+## Poison Tile variables
+var is_poisoned: bool = false
+var poison_turn_applied: int = -1
+var poison_duration: int = -1
