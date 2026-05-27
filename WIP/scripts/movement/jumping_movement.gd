@@ -1,3 +1,4 @@
+@tool
 class_name JumpingMovement extends AbstractMovement
 
 @export_range(-16,16,1,"suffix:Ranks") var row_origin_offset:int

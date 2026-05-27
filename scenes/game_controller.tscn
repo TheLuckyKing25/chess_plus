@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://c5sp4xfh2lsyp"]
+[gd_scene load_steps=41 format=3 uid="uid://c5sp4xfh2lsyp"]
 
 [ext_resource type="Script" uid="uid://dni4d2jilah2x" path="res://scripts/autoloads/game_controller.gd" id="1_fpu5w"]
 [ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/state/state_machine.gd" id="1_twqac"]
@@ -11,8 +11,10 @@
 [ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://scenes/menu/match_selection_screen.tscn" id="5_vi7lc"]
 [ext_resource type="Script" uid="uid://b1ssj14vctijh" path="res://scripts/state/turn_states/player_turn.gd" id="6_3d517"]
 [ext_resource type="Script" uid="uid://dsliyrikprudw" path="res://scripts/state/ui_states/tile_modifier_selection_state.gd" id="6_kea5x"]
+[ext_resource type="Resource" uid="uid://bvuxfffbwaklx" path="res://resources/player/white.tres" id="7_3d517"]
 [ext_resource type="PackedScene" uid="uid://b1twmfuyqv1lx" path="res://scenes/menu/tile_modifier_screen.tscn" id="7_13gk1"]
 [ext_resource type="Script" uid="uid://befv64o3i2v02" path="res://scripts/state/turn_states/turn_transition.gd" id="7_d2e6m"]
+[ext_resource type="Resource" uid="uid://cshfhp8nn8f82" path="res://resources/player/black.tres" id="8_d2e6m"]
 [ext_resource type="Script" uid="uid://cm1hbc3n7piww" path="res://scripts/state/ui_states/game_overlay_state.gd" id="8_endrn"]
 [ext_resource type="Script" uid="uid://bse1x1yhvxffe" path="res://scripts/state/ui_states/guidebook_screen_state.gd" id="9_1m60t"]
 [ext_resource type="PackedScene" uid="uid://b2b5f3ejhqp35" path="res://scenes/menu/game_overlay.tscn" id="9_shnkw"]
@@ -96,23 +98,52 @@ normal_enabled = true
 normal_scale = 0.1
 normal_texture = SubResource("NoiseTexture2D_5gvbh")
 
-[node name="GameController" type="Node"]
+[node name="GameController" type="Node" node_paths=PackedStringArray("controller_3d", "controller_ui")]
 script = ExtResource("1_fpu5w")
+controller_3d = NodePath("Controller3D")
+controller_ui = NodePath("ControllerUI")
 
-[node name="Controller3D" type="Node3D" parent="."]
+[node name="Controller3D" type="Node3D" parent="." node_paths=PackedStringArray("board")]
 script = ExtResource("2_py7vm")
+board = NodePath("Board")
 
-[node name="Player1" parent="Controller3D" instance=ExtResource("20_kea5x")]
-player_name = "White"
-color = Color(0.8, 0.8, 0.8, 1)
-parity = 1
+[node name="Board" parent="Controller3D" instance=ExtResource("4_fpu5w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1604, 0)
+
+[node name="TurnStateMachine" type="Node" parent="Controller3D" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_twqac")
+initial_state = NodePath("WhiteTurn")
+
+[node name="BlackTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
+script = ExtResource("6_3d517")
+player = NodePath("../../Player_Black")
+board = NodePath("../../Board")
+next_state = NodePath("../BlackToWhite")
+
+[node name="BlackToWhite" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
+script = ExtResource("7_d2e6m")
+previous_state = NodePath("../BlackTurn")
+initial_rotation_degree = 180
+next_state = NodePath("../WhiteTurn")
+
+[node name="WhiteTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
+script = ExtResource("6_3d517")
+player = NodePath("../../Player_White")
+board = NodePath("../../Board")
+next_state = NodePath("../WhiteToBlack")
+
+[node name="WhiteToBlack" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
+script = ExtResource("7_d2e6m")
+previous_state = NodePath("../WhiteTurn")
+next_state = NodePath("../BlackTurn")
+
+[node name="Player_White" parent="Controller3D" instance=ExtResource("20_kea5x")]
+data = ExtResource("7_3d517")
 camera_distance_from_subject = 10.0
 camera_pitch = -50.0
 
-[node name="Player2" parent="Controller3D" instance=ExtResource("20_kea5x")]
-player_name = "Black"
-color = Color(0.2, 0.2, 0.2, 1)
-parity = -1
+[node name="Player_Black" parent="Controller3D" instance=ExtResource("20_kea5x")]
+data = ExtResource("8_d2e6m")
 camera_distance_from_subject = 10.0
 camera_yaw = 180.0
 camera_pitch = -50.0
@@ -135,10 +166,6 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -0.
 mesh = SubResource("CylinderMesh_hlv2s")
 surface_material_override/0 = SubResource("StandardMaterial3D_hlv2s")
 
-[node name="Board" parent="Controller3D/Table" instance=ExtResource("4_fpu5w")]
-unique_name_in_owner = true
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.115, 0)
-
 [node name="SpotLight3D" type="SpotLight3D" parent="Controller3D"]
 transform = Transform3D(1, 0, 0, 0, -0.00268785, 0.999996, 0, -0.999996, -0.00268785, 0, 12.0144, 0)
 light_color = Color(0.99, 0.938025, 0.9009, 1)
@@ -149,33 +176,6 @@ shadow_enabled = true
 shadow_opacity = 0.7
 spot_range = 24.0741
 spot_angle = 72.1925
-
-[node name="TurnStateMachine" type="Node" parent="Controller3D" node_paths=PackedStringArray("initial_state")]
-script = ExtResource("1_twqac")
-initial_state = NodePath("WhiteTurn")
-
-[node name="BlackTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
-script = ExtResource("6_3d517")
-player = NodePath("../../Player2")
-board = NodePath("../../Table/Board")
-next_state = NodePath("../BlackToWhite")
-
-[node name="BlackToWhite" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
-script = ExtResource("7_d2e6m")
-previous_state = NodePath("../BlackTurn")
-initial_rotation_degree = 180
-next_state = NodePath("../WhiteTurn")
-
-[node name="WhiteTurn" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("player", "board", "next_state")]
-script = ExtResource("6_3d517")
-player = NodePath("../../Player1")
-board = NodePath("../../Table/Board")
-next_state = NodePath("../WhiteToBlack")
-
-[node name="WhiteToBlack" type="Node" parent="Controller3D/TurnStateMachine" node_paths=PackedStringArray("previous_state", "next_state")]
-script = ExtResource("7_d2e6m")
-previous_state = NodePath("../WhiteTurn")
-next_state = NodePath("../BlackTurn")
 
 [node name="ControllerUI" type="Control" parent="." node_paths=PackedStringArray("initial_state")]
 layout_mode = 3
@@ -237,4 +237,4 @@ scene = ExtResource("15_u8mor")
 script = ExtResource("17_wksuf")
 scene = ExtResource("18_wf0ff")
 
-[connection signal="ready" from="Controller3D/Table/Board" to="Controller3D" method="_on_board_ready"]
+[connection signal="ready" from="Controller3D/Board" to="Controller3D" method="_on_board_ready"]

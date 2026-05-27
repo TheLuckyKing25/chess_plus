@@ -12,6 +12,7 @@ enum {
 	NOTIFICATION_CLEAR_CHECK_STATE = 32,
 	NOTIFICATION_CLEAR_OTHER_STATES = 33,
 }
+
 #endregion
 
 
@@ -48,12 +49,14 @@ static var en_passant: TileObject = null
 
 
 #region Public Variables
+
 var occupant: PieceObject:
 	set(value):
-		if occupant and is_connected("clicked",Callable(self, "_on_occupant_clicked")):
-			occupant.clicked.disconnect(Callable(self, "_on_occupant_clicked"))
+		if occupant:
+			_disconnect_occupant_signals(occupant)
 		if value:
-			value.clicked.connect(Callable(self, "_on_occupant_clicked"))
+			_connect_occupant_signals(value)
+
 		data.occupant = value.data
 	get():
 		if data.occupant and data.occupant.assigned_object:
@@ -64,8 +67,10 @@ var occupant: PieceObject:
 
 var occupant_data: PieceData:
 	get():
-		if occupant: return occupant.data
-		else: return null
+		if occupant:
+			return occupant.data
+		else:
+			return null
 
 
 var is_occupied:bool:
@@ -107,6 +112,20 @@ var _mouseover_material: StandardMaterial3D:
 #endregion
 
 
+func _disconnect_occupant_signals(occupant: PieceObject):
+	if occupant.is_connected("clicked",_on_occupant_clicked):
+		occupant.clicked.disconnect(_on_occupant_clicked)
+	if occupant.state.is_connected("state_changed",Callable(state,"_on_state_change")):
+		occupant.state.state_changed.disconnect(Callable(state,"_on_state_change"))
+		state.state_changed.disconnect(Callable(occupant.state,"_on_state_change"))
+
+
+func _connect_occupant_signals(occupant: PieceObject):
+	occupant.clicked.connect(_on_occupant_clicked)
+	occupant.state.state_changed.connect(Callable(state,"_on_state_change"))
+	state.state_changed.connect(Callable(occupant.state,"_on_state_change"))
+
+
 #region Object Generation
 static func new_tile_object() -> TileObject:
 	var new_tile:TileObject = TILE_SCENE.instantiate()
@@ -145,10 +164,14 @@ func _input(event: InputEvent) -> void:
 			occupant.clicked.emit(occupant)
 		else:
 			clicked.emit(self)
+			if not clicked.has_connections():
+				_on_tile_clicked(self)
 
 
 func _on_occupant_clicked(piece: PieceObject):
 	clicked.emit(self)
+	if not clicked.has_connections():
+		_on_tile_clicked(self)
 
 
 func _on_mouse_entered() -> void:
@@ -175,7 +198,6 @@ func _multiple_tile_select() -> void:
 
 func _single_tile_select() -> void:
 	state.set_state(TileStateComponent.Type.SELECTED)
-
 #endregion
 
 
@@ -267,10 +289,6 @@ func set_state_color(color: Color, has_emission: bool = false) -> void:
 	#return new_tile
 
 
-func _on_occupant_changed(new_occupant):
-	pass
-
-
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_CLEAR_CHECK_STATE:
 		data.clear_check_flag()
@@ -280,7 +298,6 @@ func _notification(what: int) -> void:
 
 func _ready() -> void:
 	assign_new_data(data)
-	clicked.connect(Callable(self, "_on_tile_clicked"))
 	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
 
 	state.current = TileStateComponent.Type.NONE

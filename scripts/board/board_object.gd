@@ -10,8 +10,9 @@ const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 
 
 @export var board_base:MeshInstance3D
-@export var piece_capture_audio:AudioStreamPlayer
-@export var piece_move_audio:AudioStreamPlayer
+@export_group("Audio","audio")
+@export var audio_piece_capture:AudioStreamPlayer
+@export var audio_piece_move:AudioStreamPlayer
 
 
 var selected_tile: TileObject:
@@ -26,10 +27,16 @@ var smokey_pieces: Array[PieceObject] = []
 var tile_objects: Array[TileObject] = []
 var piece_objects: Array[PieceObject] = []
 
+# what to move
+var valid_selections: Array = []
+
+var valid_destinations: Array = []
+
 
 var data: BoardData:
 	set(value):
 		value.assigned_object = self
+		GameData.active_board_state = value
 		load_board_data(value)
 		data = value
 
@@ -78,6 +85,7 @@ func _generate_tile_objects(new_data: BoardData) -> void:
 	if counter < number_of_tiles:
 		while counter < number_of_tiles:
 			var tile: TileObject = TileObject.new_tile_object()
+			tile.clicked.connect(_on_tile_clicked)
 			tile_objects.append(tile)
 			counter += 1
 
@@ -103,6 +111,7 @@ func _generate_piece_objects(new_data:BoardData) -> void:
 	if counter < number_of_pieces:
 		while counter < number_of_pieces:
 			var piece: PieceObject = PieceObject.new_piece_object()
+			piece.clicked.connect(_on_piece_clicked)
 			piece_objects.append(piece)
 			counter += 1
 	elif counter > number_of_pieces:
@@ -122,15 +131,24 @@ func _place_pieces(new_data:BoardData)-> void:
 	for piece_object: PieceObject in piece_objects:
 		var position_vector: Vector2i = piece_object.data.board_position
 		if position_vector in new_data.board_representation.keys():
-			var board_location: Dictionary = new_data.board_representation[position_vector]
+			var board_location: Array = new_data.board_representation[position_vector]
 			var assigned_tile: TileObject = board_location[new_data.TILE_DATA].assigned_object
 			assigned_tile.add_child(piece_object)
 			assigned_tile.occupant = piece_object
 #endregion
 
-# tile clicked
+
+#region Object Selected
+func _on_piece_clicked(piece:PieceObject):
+	if piece.data in data.valid_selections:
+		piece.state.set_state(PieceStateComponent.Type.SELECTED)
 
 
+func _on_tile_clicked(tile:TileObject):
+	if tile.data in data.valid_selections:
+		tile.state.set_state(TileStateComponent.Type.SELECTED)
+
+#endregion
 
 
 
@@ -222,7 +240,7 @@ func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: i
 	var to_tile: TileObject = data.tile_array[to_index]
 
 	selected_tile = from_tile
-	PieceObject.selected = from_tile.occupant
+	#PieceObject.selected = from_tile.occupant
 
 	if ep_piece_index >= 0 and ep_tile_index >= 0:
 		PieceObject.en_passant = data.piece_array[ep_piece_index]
@@ -281,7 +299,7 @@ func detect_check(player:Player) -> void:
 
 
 func _set_en_passant(clicked_tile: TileObject) -> void:
-	PieceObject.en_passant = PieceObject.selected
+	#PieceObject.en_passant = PieceObject.selected
 	var en_passant_tile_rank = (
 			selected_tile.data.rank
 			+ (clicked_tile.data.rank - selected_tile.data.rank)/2
@@ -480,10 +498,10 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 
 
 ## Shows the valid tiles the selected piece can move to
-func show_selected_piece_movement() -> void:
-	var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
+#func show_selected_piece_movement() -> void:
+	#var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
 	#moveset = TileModifier.apply_modifiers_to_moveset(self, selected_tile, PieceObject.selected, moveset)
-	resolve_branching_movement(PieceObject.selected, moveset, selected_tile )
+	#resolve_branching_movement(PieceObject.selected, moveset, selected_tile )
 
 
 # SAME LOGIC USED IN MoveList RESOURCE.
@@ -631,7 +649,7 @@ func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, ori
 
 func _capture_piece(piece) -> void:
 	piece._captured()
-	piece_capture_audio.play()
+	audio_piece_capture.play()
 
 
 func perform_move(move: Move):
@@ -641,7 +659,7 @@ func perform_move(move: Move):
 	move.starting_tile.occupant = null
 
 	piece.move_to(move.destination_tile)
-	piece_move_audio.play()
+	audio_piece_move.play()
 
 	if not piece.data.flag.has_moved.enabled:
 		piece.moved(true)

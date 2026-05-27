@@ -1,3 +1,4 @@
+@tool
 class_name SlidingMovement extends AbstractMovement
 
 @export var use_max_distance: bool = false:
@@ -10,7 +11,7 @@ class_name SlidingMovement extends AbstractMovement
 @export_range(0,8,1,"or_greater") var distance: int = -1:
 	get:
 		if use_max_distance and distance == -1:
-			return Board.current_board.max_length - 1
+			return GameData.active_board_state.max_length - 1
 		else:
 			return distance
 
@@ -18,7 +19,7 @@ class_name SlidingMovement extends AbstractMovement
 @export var direction: Constants.Direction:
 	set(cardinal):
 		direction = (cardinal % 8) as Constants.Direction
-		resource_name = Constants.Direction.keys()[direction].capitalize()
+		resource_name = Constants.Direction.find_key(direction).capitalize()
 	get():
 		return direction as Constants.Direction
 

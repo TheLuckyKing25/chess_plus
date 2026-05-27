@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PlayerData" load_steps=2 format=3 uid="uid://bvuxfffbwaklx"]
+
+[ext_resource type="Script" uid="uid://bnx0qx1jn331n" path="res://scripts/player/player_data.gd" id="1_t3rqa"]
+
+[resource]
+script = ExtResource("1_t3rqa")
+player_name = "White"
+color = Color(0.8, 0.8, 0.8, 1)
+parity = 1
+pieces = Dictionary[String, Array]({})
+metadata/_custom_type_script = "uid://bnx0qx1jn331n"

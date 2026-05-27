@@ -12,20 +12,16 @@ static var previous: Player
 static var en_passant: Player
 
 
-@export var player_name:String
-@export var color:Color
-
-## determines which direction to face the piece
-@export var parity: int:
+@export var data: PlayerData:
 	set(value):
-		direction_parity = remap(value,-1,1,4,0)
-		piece_rotation_parity = remap(value,-1,1,0,PI)
-		parity = value
+		if data:
+			data.assigned_object = null
+			GameData.player.erase(data.player_name.to_lower())
+		if value:
+			value.assigned_object = self
+			GameData.player.set(value.player_name.to_lower(),self)
+		data = value
 
-## Used to rotate the movement of the piece
-var direction_parity: int
-
-var piece_rotation_parity: float
 
 @export_group("Camera", "camera")
 @export var camera_object: Camera3D
@@ -57,24 +53,8 @@ var piece_rotation_parity: float
 @export var timer: TimeControl
 
 
-var pieces:Dictionary[String,Array] = {}
-
-
-# rank that a piece must reach to be promoted
-var promotion_rank: int
-
-
-var all_pieces: Array[PieceObject]:
-	get():
-		var array: Array[PieceObject] = []
-		for piece_types in pieces.values():
-			array.append_array(piece_types)
-		return array
-
-
 func _ready() -> void:
-	GameData.player.set(player_name.to_lower(),self)
-
+	GameData.player.set(data.player_name.to_lower(),self)
 
 
 func _process(_delta: float) -> void:
@@ -85,21 +65,9 @@ func _process(_delta: float) -> void:
 	camera_twist_pivot.position.z = camera_forward_offset
 
 
-func add_piece(new_piece: PieceObject) -> void:
-	if pieces.has(new_piece.data.type.name):
-		pieces[new_piece.data.type.name].append(new_piece)
-	else:
-		pieces[new_piece.data.type.name] = [new_piece]
-
-
-func remove_piece(piece:PieceObject) -> void:
-	if pieces.has(piece.data.type.name):
-		pieces[piece.data.type.name].erase(piece)
-
-
 func change_camera_forward_offset(value:float):
-	camera_forward_offset = value * parity
+	camera_forward_offset = value * data.parity
 
 
 func change_camera_horizontal_offset(value:float):
-	camera_horizonatal_offset = value * parity
+	camera_horizonatal_offset = value * data.parity

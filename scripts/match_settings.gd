@@ -1,16 +1,17 @@
 class_name MatchSettings
 extends Resource
 
-var board_size: Dictionary[String,int] = {
+@export var board_size: Dictionary[String,int] = {
 	"rank": 8,
 	"file": 8,
 	"levels": 1,
 }
 
-var starting_player: Player
+
+@export var starting_player: PlayerData
 
 
-var rules: Dictionary[String,bool] = {
+@export var rules: Dictionary[String,bool] = {
 	"castling": true,
 	"en_passant": true,
 	"promotion": true,
@@ -18,7 +19,7 @@ var rules: Dictionary[String,bool] = {
 }
 
 
-var time_control: Dictionary[String,int] = {
+@export var time_control: Dictionary[String,int] = {
 	"time_per_player_minutes": 120,
 	"increment_seconds": 0,
 }

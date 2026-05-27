@@ -5,7 +5,7 @@ class_name PieceData
 extends Resource
 
 signal type_changed(new_type:PieceType)
-signal player_changed(new_player:Player)
+signal player_changed(new_player:PlayerData)
 
 @export var type: PieceType:
 	set(value):
@@ -13,25 +13,10 @@ signal player_changed(new_player:Player)
 		type = value
 
 
-#@export var movement: Movement#:
-	#set(new_movement):
-		#movement = new_movement.get_duplicate()
-		#if player:
-			#movement.set_direction_parity(player.direction_parity)
-
-
-var player: Player:
+var player: PlayerData:
 	set(new_player):
 		player_changed.emit(new_player)
 		player = new_player
-		#if player and movement:
-			#movement.set_direction_parity(player.direction_parity)
-
-
-
-
-
-
 
 
 var rank: int
@@ -55,6 +40,9 @@ var assigned_object: PieceObject:
 	set(value):
 		assigned_object = value
 
+func _init():
+	player_changed.connect(_on_player_changed)
+
 
 static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -> PieceData:
 	var new_piece: PieceData = PieceData.new()
@@ -68,9 +56,14 @@ static func new_piece(piece_type: PieceType, max_move_distance:int, index:int) -
 
 
 func assign_player(player:String):
-	self.player = GameData.player[player.to_lower()]
+	self.player = GameData.player[player.to_lower()].data
 
 
+func _on_player_changed(player_data: PlayerData):
+	if player:
+		player.pieces.get(type.name.to_lower()).erase(self)
+	if player_data:
+		player_data.pieces.get_or_add(type.name.to_lower(),[]).append(self)
 
 
 ## Poison Tile variables
