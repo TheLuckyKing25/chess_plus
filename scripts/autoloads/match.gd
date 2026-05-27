@@ -87,19 +87,19 @@ func get_board_index(rank:int,file:int) -> int:
 func get_board_position(index: int) -> Vector2i:
 	return Vector2i(index/board.data.file_count, index%board.data.file_count)
 
-
-func select_tile(tile: TileObject) -> void:
+#
+#func select_tile(tile: TileObject) -> void:
 	#TileObject.selected = tile
-	PieceObject.selected = tile.occupant
+	#PieceObject.selected = tile.occupant
 	#TileObject.selected.data.change("is_selected",true)
-	board.show_selected_piece_movement()
+	#board.show_selected_piece_movement()
 
 
-func unselect_tile() -> void:
+#func unselect_tile() -> void:
 	#TileObject.selected.data.change("is_selected",false)
 	#TileObject.selected = null
-	PieceObject.selected = null
-	get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
+	#PieceObject.selected = null
+	#get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
 
 func is_my_turn() -> bool:
 	var current_player_index: int = 0 if Player.current == GameData.player.white else 1

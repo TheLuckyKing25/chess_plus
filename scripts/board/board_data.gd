@@ -3,10 +3,12 @@
 class_name BoardData
 extends Resource
 
+signal player_to_move_changed(new_player_data: PlayerData)
+
 enum {
 	TILE_DATA = 0,
-	PIECE_DATA = 1,
-}
+	PIECE_DATA = 1
+	}
 
 
 var rank_count: int = GameData.match_settings.board_size.rank
@@ -14,26 +16,30 @@ var file_count: int = GameData.match_settings.board_size.file
 
 
 var max_length: int:
-	get:
-		return maxi(file_count,rank_count)
+	get: return maxi(file_count,rank_count)
 
 
 var assigned_object: BoardObject
 
 
-#region FEN Data
-var board_representation: Dictionary[Vector2i, Dictionary] = {
-	# vector: {TILE_DATA: TileData, PIECE_DATA: PieceData},
+var tiles: Array[TileDataChess] = []
+var pieces: Array[PieceData] = []
+
+var valid_selections: Array = []
+var valid_destinations: Array = []
+
+var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+#region Data
+var board_representation: Dictionary[Vector2i, Array] = {
+	# Vector2i: [TileData, PieceData],
 }
 
 
-var tiles: Array[TileDataChess] = []
-
-
-var pieces: Array[PieceData] = []
-
-
-var player_to_move: Player
+var player_to_move: PlayerData:
+	set(value):
+		player_to_move_changed.emit(value)
+		player_to_move = value
 
 
 var castling_rights: Dictionary = {
@@ -73,29 +79,34 @@ static func create_board(ranks:int = 8, files:int = 8) -> BoardData:
 
 	board._assign_tile_neighbors()
 	board._generate_pieces()
+	board._set_player_to_move()
 
 	return board
 
 
 func _init(ranks:int = 8, files:int = 8) -> void:
-	GameData.player.white.promotion_rank = rank_count - 1
-	GameData.player.black.promotion_rank = 0
 	rank_count = ranks
 	file_count = files
 
+	GameData.player.white.data.promotion_rank = rank_count - 1
+	GameData.player.black.data.promotion_rank = 0
+
+	player_to_move_changed.connect(_on_player_to_move_changed)
 
 func _generate_position_vectors() -> void:
 	for index in range(rank_count*file_count):
-		board_representation.set(Vector2i(index/file_count, index%file_count),{})
+		board_representation.set(Vector2i(index/file_count, index%file_count),[])
 
 
 func _generate_tile_data() -> void:
 	for index in range(rank_count*file_count):
 		var new_tile = TileDataChess.new()
-		var position_vector = Vector2i(index/file_count, index%file_count)
 		tiles.append(new_tile)
+
+		var position_vector = Vector2i(index/file_count, index%file_count)
 		new_tile.set_position_data(index,position_vector)
-		board_representation[position_vector][TILE_DATA] = new_tile
+		board_representation[position_vector] = [new_tile,null]
+
 		new_tile.resource_name = "Tile " + new_tile.algebraic_notation
 
 
@@ -116,24 +127,17 @@ func _assign_tile_neighbors() -> void:
 				tile.neighbors[direction] = null
 				continue
 
-			tile.neighbors[direction] = board_representation.get(neighbor_position).get(TILE_DATA)
-
-
-func _get_from_vector(vector: Vector2i) -> Dictionary:
-	return board_representation.get(vector)
+			tile.neighbors[direction] = board_representation.get(neighbor_position)[TILE_DATA]
 
 
 func _generate_pieces():
-	var piece_placement: Dictionary[int,PieceData]
-
-	var tile_num:int = 0
+	var tile_count:int = 0
 	var new_piece: PieceData
-	var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
 	for character:String in fen.piece_placement:
-		var tile_index = tile_num%file_count + (rank_count - (tile_num/file_count)-1)*file_count
+		var tile_index: int = tile_count%file_count + (rank_count - (tile_count/file_count)-1)*file_count
 
-		var position_vector = Vector2i(tile_index/file_count, tile_index%file_count)
+		var position_vector: Vector2i = Vector2i(tile_index/file_count, tile_index%file_count)
 		match character.to_lower():
 			"p":
 				new_piece = PieceData.new_piece(load("uid://bih6lr0cwxuk"), max_length, tile_index)
@@ -148,7 +152,7 @@ func _generate_pieces():
 			"k":
 				new_piece = PieceData.new_piece(load("uid://bfy5ow4fdbo1l"), max_length, tile_index)
 			"1","2","3","4","5","6","7","8","9":
-				tile_num += character.to_int()
+				tile_count += character.to_int()
 				continue
 			_:
 				continue
@@ -160,20 +164,37 @@ func _generate_pieces():
 				new_piece.assign_player("white")
 
 		# ADD ERROR DETECTION FOR IF POSITION VECTOR DOES NOT EXIST
-		var board_rep_position = board_representation.get(position_vector,{})
-		board_rep_position.set(PIECE_DATA,new_piece)
-		pieces.append(board_rep_position.get(PIECE_DATA))
-		board_rep_position.get(TILE_DATA,{}).occupant = new_piece
+		var board_rep_position = board_representation.get(position_vector)
+		board_rep_position[PIECE_DATA] = new_piece
+		pieces.append(new_piece)
+		board_rep_position[TILE_DATA].occupant = new_piece
 		new_piece.board_position = position_vector
 
-		tile_num += 1
-
-	for tile in tiles:
-		if tile.index in piece_placement.keys():
-			board_representation.set(tile,piece_placement[tile.index])
+		tile_count += 1
 
 
+func _set_player_to_move():
+	match fen.active_player:
+		"w": player_to_move = GameData.player.white.data
+		"b": player_to_move = GameData.player.black.data
 
+
+func _on_player_to_move_changed(new_player_data:PlayerData):
+	valid_selections.clear()
+
+	_find_valid_selections(new_player_data)
+	valid_destinations.clear()
+
+
+func _find_valid_selections(new_player_data:PlayerData):
+	var piece_filter = func(piece: PieceData): if piece.player == new_player_data: return piece
+	var selectable_piece_objects:Array[PieceData] = pieces.filter(piece_filter)
+	valid_selections.append_array(selectable_piece_objects)
+
+	var tile_filter = func(tile: TileDataChess): if tile.occupant in selectable_piece_objects: return tile
+	var selectable_tile_object: Array[TileDataChess] = tiles.filter(tile_filter)
+
+	valid_selections.append_array(selectable_tile_object)
 
 
 
@@ -191,26 +212,13 @@ var legal_moves: MoveList
 var FEN_board_state: FEN
 
 
+func _get_from_vector(vector: Vector2i) -> Dictionary:
+	return board_representation.get(vector)
+
+
 func find_tile_using_vector(vector: Vector2i) -> TileObject:
 	for tile in tile_array:
 		if tile.data.board_position == vector:
 			return tile
 
 	return null # tile not found
-
-func assign_tile_neighbors():
-	for tile in tile_array:
-		for direction in range(0,8):
-			direction = direction as Constants.Direction
-			var next_tile_position: Vector2i = (
-					tile.data.board_position
-					+ Constants.direction_vector[direction]
-					)
-
-			if (	next_tile_position > Vector2i(rank_count-1,file_count-1)
-					or next_tile_position < Vector2i(0,0)
-					):
-				tile.neighbors[direction] = null
-				continue
-
-			tile.neighbors[direction] = tile_array[Match.get_board_index(next_tile_position.x,next_tile_position.y)]

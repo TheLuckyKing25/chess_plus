@@ -6,6 +6,9 @@ extends Node
 var match_settings: MatchSettings = MatchSettings.new()
 
 
+var player_data: Dictionary[String, PlayerData] = {}
+
+
 var player: Dictionary[String, Player] = {}
 
 

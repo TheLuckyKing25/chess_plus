@@ -1,11 +1,12 @@
 # Constants Autoload
-# contains values that are constants and need to be accessed in multiple locations
+# contains values that need to be accessed in multiple locations
 extends Node
 
 enum SelectionMode{
 	SINGLE = 0,
 	MULTIPLE = 1,
 }
+
 
 enum Direction{
 	NONE = -1, # TEMP: REMOVE FROM SCRIPT ONCE UNUSED
@@ -19,7 +20,7 @@ enum Direction{
 	NORTHWEST = 7,
 	}
 
-
+# non-constant enum
 enum TypePiece{
 	PAWN = 0,
 	BISHOP = 1,
@@ -29,15 +30,11 @@ enum TypePiece{
 	ROOK = 5,
 }
 
+# generated upon ready
+var piece_type: Dictionary = {}
 
-const piece_type: Dictionary = {
-	TypePiece.PAWN: "uid://bih6lr0cwxuk",
-	TypePiece.BISHOP: "uid://b7mqdwuvfi3nh",
-	TypePiece.KING: "uid://bfy5ow4fdbo1l",
-	TypePiece.QUEEN: "uid://oqdygo3fdmd2",
-	TypePiece.KNIGHT: "uid://cgvt2kihfm4em",
-	TypePiece.ROOK: "uid://csqiux6uupcb2",
-}
+# generated upon ready
+var player_data: Dictionary[String, String] = {}
 
 
 const direction_vector: Dictionary[Constants.Direction, Vector2i] = {
@@ -51,13 +48,38 @@ const direction_vector: Dictionary[Constants.Direction, Vector2i] = {
 	Constants.Direction.NORTHWEST: Vector2i(1,-1)
 }
 
+enum DirectoryIdentifier{
+	PLAYER_DATA = 0,
+	PIECE_TYPE = 1,
+}
 
-#static func get_nodes_in_groups(scene_tree: SceneTree, groups: Array[String]) -> Array[Node]:
-	#var nodes: Array[Node]
-	#for group in groups:
-		#if nodes.is_empty():
-			#nodes = scene_tree.get_nodes_in_group(group)
-			#if nodes.is_empty(): return []
-			#else: continue
-		#nodes = nodes.filter(func(node): return node.is_in_group(group))
-	#return nodes
+
+const file_path: Dictionary = {
+	DirectoryIdentifier.PLAYER_DATA: "res://resources/player/",
+	DirectoryIdentifier.PIECE_TYPE: "res://resources/pieces/type/",
+}
+
+
+func _ready() -> void:
+	_find_player_data()
+	_find_piece_types()
+
+
+func _find_player_data():
+	var data = ResourceLoader.list_directory(file_path.get(DirectoryIdentifier.PLAYER_DATA))
+	for player in data:
+		var file_string:String = file_path.get(DirectoryIdentifier.PLAYER_DATA) + player
+		var loaded_data:PlayerData = load(file_string)
+		var uid:int = ResourceLoader.get_resource_uid(file_string)
+
+		player_data.set(loaded_data.player_name.to_lower(),ResourceUID.id_to_text(uid))
+
+
+func _find_piece_types():
+	var data = ResourceLoader.list_directory(file_path.get(DirectoryIdentifier.PIECE_TYPE))
+	for piece in data:
+		var file_string:String = file_path.get(DirectoryIdentifier.PIECE_TYPE) + piece
+		var loaded_data:PieceType = load(file_string)
+		var uid:int = ResourceLoader.get_resource_uid(file_string)
+		var constant_identifier: TypePiece = TypePiece[loaded_data.name.to_upper()]
+		piece_type.set(constant_identifier,ResourceUID.id_to_text(uid))

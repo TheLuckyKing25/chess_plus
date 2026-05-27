@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://clmimmf3c1qpt"]
+[gd_scene format=3 uid="uid://clmimmf3c1qpt"]
 
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/tiles/tile_object.gd" id="1_3dk36"]
 [ext_resource type="Script" uid="uid://bnikrdhnmt073" path="res://scripts/tiles/tile_data.gd" id="2_ywnoi"]
@@ -53,37 +53,37 @@ size = Vector3(0.95, 0.1, 0.95)
 [sub_resource type="ViewportTexture" id="ViewportTexture_esqu7"]
 viewport_path = NodePath("Tile_Modifiers/Modifier_Grid")
 
-[node name="Tile" type="StaticBody3D" node_paths=PackedStringArray("state") groups=["Tile"]]
+[node name="Tile" type="StaticBody3D" unique_id=1836683037 node_paths=PackedStringArray("state") groups=["Tile"]]
 script = ExtResource("1_3dk36")
 state = NodePath("TileStateComponent")
 data = SubResource("Resource_jy7pm")
 
-[node name="TileStateComponent" type="Node" parent="."]
+[node name="TileStateComponent" type="Node" parent="." unique_id=395610070]
 script = ExtResource("3_jy7pm")
 metadata/_custom_type_script = "uid://dednv8et81qj6"
 
-[node name="Collision" type="CollisionShape3D" parent="."]
+[node name="Collision" type="CollisionShape3D" parent="." unique_id=1660892443]
 shape = SubResource("BoxShape3D_iixfe")
 
-[node name="Tile_Mesh" type="MeshInstance3D" parent="."]
+[node name="Tile_Mesh" type="MeshInstance3D" parent="." unique_id=501872617]
 material_override = SubResource("StandardMaterial3D_vhibn")
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
 
-[node name="Tile_Modifiers" type="Sprite3D" parent="."]
+[node name="Tile_Modifiers" type="Sprite3D" parent="." unique_id=1144003348]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
 axis = 1
 texture = SubResource("ViewportTexture_esqu7")
 region_enabled = true
 region_rect = Rect2(0, 0, 512, 512)
 
-[node name="Modifier_Grid" type="SubViewport" parent="Tile_Modifiers"]
+[node name="Modifier_Grid" type="SubViewport" parent="Tile_Modifiers" unique_id=1910792691]
 transparent_bg = true
 handle_input_locally = false
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
-[node name="CenterContainer" type="CenterContainer" parent="Tile_Modifiers/Modifier_Grid"]
+[node name="CenterContainer" type="CenterContainer" parent="Tile_Modifiers/Modifier_Grid" unique_id=1041070206]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -92,7 +92,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="FlowContainer" type="HFlowContainer" parent="Tile_Modifiers/Modifier_Grid/CenterContainer"]
+[node name="FlowContainer" type="HFlowContainer" parent="Tile_Modifiers/Modifier_Grid/CenterContainer" unique_id=1387363777]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(512, 0)
@@ -103,11 +103,11 @@ theme_override_constants/v_separation = 31
 alignment = 1
 last_wrap_alignment = 2
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=2080544373]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19613, 0)
 visible = false
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1237602613]
 transform = Transform3D(1, 0, 0, 0, 0.85776, 0.51405, 0, -0.51405, 0.85776, 0, 2.19613, 2.07858)
 visible = false
 

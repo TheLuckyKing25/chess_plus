@@ -3,6 +3,7 @@ extends Node3D
 
 signal clicked(piece: PieceObject)
 signal data_changed(new_data: PieceData)
+signal selected(piece: PieceObject)
 
 signal promoted
 
@@ -20,12 +21,12 @@ const CASTLING_COLOR:= Color(1,1,1,1)
 
 
 static var en_passant: PieceObject = null
-static var selected: PieceObject = null
+#static var selected: PieceObject = null
 
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
-static var is_selected: bool:
-	get(): return PieceObject.selected != null
+#static var is_selected: bool:
+	#get(): return PieceObject.selected != null
 
 
 var is_mouse_on_piece: bool = false
@@ -52,7 +53,6 @@ var is_mouse_on_piece: bool = false
 
 func _ready() -> void:
 	data_changed.connect(Callable(self,"_on_data_changed"))
-	clicked.connect(Callable(self,"_on_clicked"))
 
 	# reloads data if data was assigned when the object was not ready
 	data_changed.emit(data)
@@ -105,13 +105,13 @@ func _on_type_changed(new_type:PieceType):
 		add_to_group(new_type.name)
 
 
-func _on_player_changed(new_player:Player):
+func _on_player_changed(new_player:PlayerData):
 	if data and data.player:
-		remove_from_group(data.player.name)
+		remove_from_group(data.player.player_name)
 	if new_player:
 		piece_material.albedo_color = new_player.color
 		rotation.y = new_player.piece_rotation_parity
-		add_to_group(new_player.name)
+		add_to_group(new_player.player_name)
 #endregion
 
 
@@ -130,6 +130,8 @@ func _on_mouse_exited() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Select") and is_mouse_on_piece:
 		clicked.emit(self)
+		if not clicked.has_connections():
+			_on_clicked(self)
 
 
 func _on_clicked(object: PieceObject):
