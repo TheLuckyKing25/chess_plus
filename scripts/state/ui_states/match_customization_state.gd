@@ -69,8 +69,8 @@ func on_time_control_selection(time_sec: int, increment_sec: int):
 	TimeControl.increment_sec = increment_sec
 	TimeControl.max_time_sec = time_sec
 
-	GameData.player.white.timer.set_timer(time_sec)
-	GameData.player.black.timer.set_timer(time_sec)
+	GameData.players.white.timer.set_timer(time_sec)
+	GameData.players.black.timer.set_timer(time_sec)
 
 	if NetworkManager.is_online:
 		NetworkSync.time_control.rpc(time_sec, increment_sec)

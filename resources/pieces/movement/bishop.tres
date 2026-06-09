@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="BranchingMovement" format=3 uid="uid://dx2645h4rpx8y"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://scripts/movement/abstract_movement.gd" id="1_mjvkh"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://scripts/movement/branching_movement.gd" id="2_jv5uf"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://scripts/movement/sliding_movement.gd" id="2_nju4s"]
+
+[sub_resource type="Resource" id="Resource_jv5uf"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("2_nju4s")
+use_max_distance = true
+direction = 1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_nju4s"]
+resource_local_to_scene = true
+resource_name = "Southeast"
+script = ExtResource("2_nju4s")
+use_max_distance = true
+direction = 3
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_cumuf"]
+resource_local_to_scene = true
+resource_name = "Southwest"
+script = ExtResource("2_nju4s")
+use_max_distance = true
+direction = 5
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_e8wy5"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("2_nju4s")
+use_max_distance = true
+direction = 7
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_jv5uf")
+branches = Array[ExtResource("1_mjvkh")]([SubResource("Resource_jv5uf"), SubResource("Resource_nju4s"), SubResource("Resource_cumuf"), SubResource("Resource_e8wy5")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

@@ -16,10 +16,10 @@ static var en_passant: Player
 	set(value):
 		if data:
 			data.assigned_object = null
-			GameData.player.erase(data.player_name.to_lower())
+			GameData.players.erase(data.player_name.to_lower())
 		if value:
 			value.assigned_object = self
-			GameData.player.set(value.player_name.to_lower(),self)
+			GameData.players.set(value.player_name.to_lower(),self)
 		data = value
 
 
@@ -54,7 +54,7 @@ static var en_passant: Player
 
 
 func _ready() -> void:
-	GameData.player.set(data.player_name.to_lower(),self)
+	GameData.players.set(data.player_name.to_lower(),self)
 
 
 func _process(_delta: float) -> void:

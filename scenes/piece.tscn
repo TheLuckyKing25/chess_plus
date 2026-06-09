@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://dnismskxjehm6"]
 
-[ext_resource type="Script" uid="uid://5e06aauin2d1" path="res://scripts/pieces/piece_object.gd" id="1_huli3"]
-[ext_resource type="Resource" uid="uid://brd0i5dnuyf6l" path="res://resources/pieces/data/piece_knight.tres" id="2_h2rng"]
+[ext_resource type="Script" uid="uid://5e06aauin2d1" path="res://scripts/objects/pieces/piece_object.gd" id="1_huli3"]
+[ext_resource type="Resource" uid="uid://brd0i5dnuyf6l" path="res://resources/unused/data/piece_knight.tres" id="2_h2rng"]
 [ext_resource type="Material" uid="uid://d1vk2u7swdqib" path="res://resources/pieces/piece_material.tres" id="3_ajk4a"]
-[ext_resource type="Script" uid="uid://bng4r1rdkwdv6" path="res://scripts/pieces/piece_state_component.gd" id="3_m0mde"]
+[ext_resource type="Script" uid="uid://bng4r1rdkwdv6" path="res://scripts/objects/pieces/piece_state_component.gd" id="3_m0mde"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s58gp"]
 radius = 1.0

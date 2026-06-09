@@ -6,7 +6,7 @@ signal piece_list_changed()
 @export var player_name:String
 @export var color:Color
 
-## determines which direction to face the piece
+## determines which direction to face the piece object
 @export var parity: int:
 	set(value):
 		direction_parity = remap(value,-1,1,4,0)
@@ -31,20 +31,8 @@ var promotion_rank: int
 
 
 var all_pieces: Array[PieceObject]:
-	get():
+	get:
 		var array: Array[PieceObject] = []
 		for piece_types in pieces.values():
 			array.append_array(piece_types)
 		return array
-
-
-#func add_piece(new_piece: PieceObject) -> void:
-	#if pieces.has(new_piece.data.type.name):
-		#pieces[new_piece.data.type.name].append(new_piece)
-	#else:
-		#pieces[new_piece.data.type.name] = [new_piece]
-#
-#
-#func remove_piece(piece:PieceObject) -> void:
-	#if pieces.has(piece.data.type.name):
-		#pieces[piece.data.type.name].erase(piece)

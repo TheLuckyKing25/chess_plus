@@ -1,37 +1,87 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7j70dbu10fa4"]
+[gd_scene format=3 uid="uid://b7j70dbu10fa4"]
 
-[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/board/board_object.gd" id="1_hljw5"]
+[ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/objects/board/board_object.gd" id="1_hljw5"]
 [ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="2_kqf1l"]
 [ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="3_hljw5"]
+[ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/state/state_machine.gd" id="4_n230i"]
+[ext_resource type="Script" uid="uid://b1ssj14vctijh" path="res://scripts/state/turn_states/player_turn.gd" id="5_ar2e0"]
+[ext_resource type="Script" uid="uid://befv64o3i2v02" path="res://scripts/state/turn_states/turn_transition.gd" id="6_pnb36"]
+[ext_resource type="PackedScene" uid="uid://bmes5xsco1bk5" path="res://scenes/player.tscn" id="7_mvl7x"]
+[ext_resource type="Resource" uid="uid://bvuxfffbwaklx" path="res://resources/player/white.tres" id="8_mwcd8"]
+[ext_resource type="Resource" uid="uid://cshfhp8nn8f82" path="res://resources/player/black.tres" id="9_74c1j"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_hljw5"]
 size = Vector3(9, 0.2, 9)
 
-[node name="Board" type="Node3D" node_paths=PackedStringArray("board_base", "audio_piece_capture", "audio_piece_move")]
+[node name="Board" type="Node3D" unique_id=217196909 node_paths=PackedStringArray("board_base", "_audio_piece_capture", "_audio_piece_move")]
 script = ExtResource("1_hljw5")
 board_base = NodePath("BoardBase")
-audio_piece_capture = NodePath("Piece_capture")
-audio_piece_move = NodePath("Piece_move")
+_audio_piece_capture = NodePath("Piece_capture")
+_audio_piece_move = NodePath("Piece_move")
 
-[node name="BoardBase" type="MeshInstance3D" parent="."]
+[node name="BoardBase" type="MeshInstance3D" parent="." unique_id=68991946]
 material_override = SubResource("StandardMaterial3D_wxh2q")
 mesh = SubResource("BoxMesh_hljw5")
 
-[node name="Captured" type="Node3D" parent="."]
+[node name="Captured" type="Node3D" parent="." unique_id=1383967599]
 unique_name_in_owner = true
 
-[node name="Piece_capture" type="AudioStreamPlayer" parent="."]
+[node name="Piece_capture" type="AudioStreamPlayer" parent="." unique_id=1989268249]
 stream = ExtResource("3_hljw5")
 volume_db = -70.0
 pitch_scale = 0.75
 bus = &"Game"
 
-[node name="Piece_move" type="AudioStreamPlayer" parent="."]
+[node name="Piece_move" type="AudioStreamPlayer" parent="." unique_id=1290193223]
 stream = ExtResource("2_kqf1l")
 volume_db = -60.0
 pitch_scale = 0.75
 bus = &"Game"
+
+[node name="TurnStateMachine" type="Node" parent="." unique_id=1430548588 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_n230i")
+initial_state = NodePath("WhiteTurn")
+
+[node name="BlackTurn" type="Node" parent="TurnStateMachine" unique_id=76566148 node_paths=PackedStringArray("player", "board", "next_state")]
+script = ExtResource("5_ar2e0")
+player = NodePath("../../Player_Black")
+board = NodePath("../..")
+next_state = NodePath("../BlackToWhite")
+
+[node name="BlackToWhite" type="Node" parent="TurnStateMachine" unique_id=403639423 node_paths=PackedStringArray("previous_state", "next_state")]
+script = ExtResource("6_pnb36")
+previous_state = NodePath("../BlackTurn")
+initial_rotation_degree = 180
+next_state = NodePath("../WhiteTurn")
+
+[node name="WhiteTurn" type="Node" parent="TurnStateMachine" unique_id=1984101393 node_paths=PackedStringArray("player", "board", "next_state")]
+script = ExtResource("5_ar2e0")
+player = NodePath("../../Player_White")
+board = NodePath("../..")
+next_state = NodePath("../WhiteToBlack")
+
+[node name="WhiteToBlack" type="Node" parent="TurnStateMachine" unique_id=225288839 node_paths=PackedStringArray("previous_state", "next_state")]
+script = ExtResource("6_pnb36")
+previous_state = NodePath("../WhiteTurn")
+next_state = NodePath("../BlackTurn")
+
+[node name="Player_White" parent="." unique_id=2026006641 instance=ExtResource("7_mvl7x")]
+data = ExtResource("8_mwcd8")
+camera_distance_from_subject = 10.0
+camera_pitch = -50.0
+
+[node name="Player_Black" parent="." unique_id=1155921524 instance=ExtResource("7_mvl7x")]
+data = ExtResource("9_74c1j")
+camera_distance_from_subject = 10.0
+camera_yaw = 180.0
+camera_pitch = -50.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1291116983]
+transform = Transform3D(0.755145, 0, 0.655558, 0, 1, 0, -0.655558, 0, 0.755145, 0.623949, 2.19613, 0.254476)
+visible = false
+omni_range = 72.994
+omni_attenuation = 0.669
 
 [connection signal="ready" from="." to="." method="_on_ready"]

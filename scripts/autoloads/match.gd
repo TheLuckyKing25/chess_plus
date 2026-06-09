@@ -72,10 +72,10 @@ func remove_piece(piece_object:PieceObject):
 
 
 func get_opponent_of(player: Player) -> Player:
-	if player == GameData.player.white:
-		return GameData.player.black
-	elif player == GameData.player.black:
-		return GameData.player.white
+	if player == GameData.players.white:
+		return GameData.players.black
+	elif player == GameData.players.black:
+		return GameData.players.white
 	else:
 		return null
 
@@ -102,5 +102,5 @@ func get_board_position(index: int) -> Vector2i:
 	#get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
 
 func is_my_turn() -> bool:
-	var current_player_index: int = 0 if Player.current == GameData.player.white else 1
+	var current_player_index: int = 0 if Player.current == GameData.players.white else 1
 	return NetworkManager.is_my_turn(current_player_index)

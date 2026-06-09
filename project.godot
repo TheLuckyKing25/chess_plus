@@ -36,6 +36,7 @@ GameData="*res://scripts/autoloads/game_data.gd"
 [debug]
 
 gdscript/warnings/unused_parameter=0
+gdscript/warnings/integer_division=0
 
 [display]
 
@@ -45,7 +46,6 @@ window/stretch/mode="canvas_items"
 [file_customization]
 
 folder_colors={
-"res://WIP/": "red",
 "res://assets/": "purple",
 "res://resources/": "orange",
 "res://scenes/": "gray",

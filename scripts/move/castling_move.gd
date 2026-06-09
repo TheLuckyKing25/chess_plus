@@ -17,7 +17,7 @@ func perform_castling_move(castling_tile: TileObject) -> void:
 				castling_tile.data.rank,
 				castling_tile.data.file-1
 				)
-		Match.board.perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_KINGSIDE))
+		Match.board._perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_KINGSIDE))
 
 	# queenside castling
 	elif castling_tile.data.file < middle_file_value:
@@ -26,8 +26,8 @@ func perform_castling_move(castling_tile: TileObject) -> void:
 				castling_tile.data.rank,
 				castling_tile.data.file+1
 				)
-		Match.board.perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_QUEENSIDE))
+		Match.board._perform_move(Move.new(TileObject.selected, castling_tile, Move.Outcome.CASTLING_QUEENSIDE))
 
 	var castling_rook_destination = Match.board.data.tile_array[destination_index]
 
-	Match.board.perform_move(Move.new(Match.board.data.tile_array[castling_rook_index],castling_rook_destination,Move.Outcome.IGNORE))
+	Match.board._perform_move(Move.new(Match.board.data.tile_array[castling_rook_index],castling_rook_destination,Move.Outcome.IGNORE))

@@ -20,7 +20,7 @@ enum Direction{
 	NORTHWEST = 7,
 	}
 
-# non-constant enum
+
 enum TypePiece{
 	PAWN = 0,
 	BISHOP = 1,
@@ -48,6 +48,7 @@ const direction_vector: Dictionary[Constants.Direction, Vector2i] = {
 	Constants.Direction.NORTHWEST: Vector2i(1,-1)
 }
 
+
 enum DirectoryIdentifier{
 	PLAYER_DATA = 0,
 	PIECE_TYPE = 1,
@@ -61,11 +62,11 @@ const file_path: Dictionary = {
 
 
 func _ready() -> void:
-	_find_player_data()
-	_find_piece_types()
+	_retrieve_player_data()
+	_retrieve_piece_types()
 
 
-func _find_player_data():
+func _retrieve_player_data():
 	var data = ResourceLoader.list_directory(file_path.get(DirectoryIdentifier.PLAYER_DATA))
 	for player in data:
 		var file_string:String = file_path.get(DirectoryIdentifier.PLAYER_DATA) + player
@@ -75,7 +76,7 @@ func _find_player_data():
 		player_data.set(loaded_data.player_name.to_lower(),ResourceUID.id_to_text(uid))
 
 
-func _find_piece_types():
+func _retrieve_piece_types():
 	var data = ResourceLoader.list_directory(file_path.get(DirectoryIdentifier.PIECE_TYPE))
 	for piece in data:
 		var file_string:String = file_path.get(DirectoryIdentifier.PIECE_TYPE) + piece
