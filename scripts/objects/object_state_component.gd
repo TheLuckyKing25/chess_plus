@@ -36,6 +36,7 @@ static func clear_intermediate_states():
 	PieceStateComponent.clear_intermediate_states()
 	TileStateComponent.clear_intermediate_states()
 
+
 func _ready() -> void:
 	_on_state_changed(Type.NONE)
 
@@ -45,10 +46,10 @@ func set_state(new_state: Type):
 	state_changed.emit(current)
 
 
+@abstract func _on_state_changed(new_state: Type)
+
+
 func _on_null_function(): pass
 func _on_selected(): pass
 func _on_threatened(): pass
 func _on_movement(): pass
-
-
-@abstract func _on_state_changed(new_state: Type)

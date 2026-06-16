@@ -38,7 +38,7 @@ var algebraic_notation: String:
 	get(): return char(97 + rank) + str((1 + file))
 
 
-var board_position: Vector2i = Vector2i(-1,-1):
+var position_vector: Vector2i = Vector2i(-1,-1):
 	set(value):
 		rank = value.x
 		file = value.y
@@ -49,13 +49,18 @@ var board_position: Vector2i = Vector2i(-1,-1):
 
 var occupant: PieceData = null:
 	set(new_occupant):
-		if assigned_object and assigned_object.get_parent() == self:
-			assigned_object.add_child(new_occupant.assigned_object)
-		occupant = new_occupant
+		if new_occupant:
+			new_occupant.position_vector = position_vector
+
 		occupant_changed.emit(new_occupant)
+		occupant = new_occupant
 
 
-var assigned_object: TileObject
+@export_custom(
+		PROPERTY_HINT_NONE,
+		"",
+		PROPERTY_USAGE_NEVER_DUPLICATE
+	) var assigned_object: TileObject
 
 
 func _init() -> void:
@@ -66,7 +71,7 @@ func clear_modifiers():
 	modifier_order = []
 
 
-func set_position_data(index:int, vector: Vector2i):
+func set_position_data(index:int, vector: Vector2i) -> void:
 	self.index = index
 	rank = vector.x
 	file = vector.y

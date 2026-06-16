@@ -5,46 +5,34 @@ extends State
 @export var initial_rotation_degree: int
 @export var next_state: PlayerTurn
 
+@onready var camera_ending_yaw = previous_state.player.camera_yaw + 180
+
 var camera_rotation: float = 0
 var can_proceed = false
 
 func enter():
-	#DebugPrinter.print_state_enter(name)
-	if NetworkManager.is_online:
-		transitioned.emit(self,next_state.name)
-	Match.game_overlay.move_history.add_item(Match.move_history[-1])
+	DebugPrinter.print_state_enter(name)
+
+	if not GameData.match_settings.skip_transition_animation:
+		await get_tree().create_timer(Constants.TURN_TRANSITION_DELAY_SECONDS).timeout
+		var tween: Tween = create_tween().set_parallel(true)
+		tween.tween_property(
+				previous_state.player,
+				"camera_yaw",
+				camera_ending_yaw,
+				Constants.TURN_TRANSITION_TIME_SECONDS
+			)
+		tween.tween_property(
+				previous_state.board.board_base.material_override,
+				"albedo_color",
+				next_state.player.data.color,
+				 Constants.TURN_TRANSITION_TIME_SECONDS)
+		await tween.finished
+
+	transitioned.emit(self,next_state.name)
 
 func exit():
-	previous_state.player.camera_yaw = 180
 	next_state.player.camera_object.make_current()
-	if previous_state.player.camera_yaw != initial_rotation_degree:
-		previous_state.player.camera_yaw = initial_rotation_degree
-	camera_rotation = 0
-	can_proceed = false
-	Match.time_turn_ended = 0
-	Match.time_elapsed_since_turn_ended = 0
-	Match.board.board_base.material_override.albedo_color = Player.current.color
-	#DebugPrinter.print_state_exit(name)
+	previous_state.player.camera_yaw = initial_rotation_degree
 
-func update(_delta:float):
-	Match.time_elapsed_since_turn_ended = (
-			Time.get_ticks_msec()
-			- Match.time_turn_ended
-			- Match.TURN_TRANSITION_DELAY_MSEC
-			)
-
-	var lerp_weight: float = (
-			Match.time_elapsed_since_turn_ended
-			* Match.TURN_TRANSITION_SPEED
-			)
-
-	if Match.time_elapsed_since_turn_ended > 0:
-		can_proceed = true
-
-	if can_proceed and Match.time_elapsed_since_turn_ended * Match.TURN_TRANSITION_SPEED <= 1:
-		camera_rotation += 180 * Match.TURN_TRANSITION_SPEED * _delta * 1000
-		previous_state.player.camera_yaw = camera_rotation + initial_rotation_degree
-		Match.board.board_base.material_override.albedo_color = Player.previous.color.lerp(Player.current.color,lerp_weight)
-
-	if Match.time_elapsed_since_turn_ended * Match.TURN_TRANSITION_SPEED > 1:
-		transitioned.emit(self,next_state.name)
+	DebugPrinter.print_state_exit(name)

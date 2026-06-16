@@ -89,6 +89,7 @@ func _load_data(new_data: PieceData):
 		# connect signals from new data
 		new_data.type_changed.connect(Callable(self,"_on_type_changed"))
 		new_data.player_changed.connect(Callable(self,"_on_player_changed"))
+		new_data.captured.connect(_on_captured)
 		#new_data.connect_flag_components(Callable(self,"apply_state"))
 
 		# connect this object and the new data
@@ -112,6 +113,11 @@ func _on_player_changed(new_player:PlayerData):
 		piece_material.albedo_color = new_player.color
 		rotation.y = new_player.piece_rotation_parity
 		add_to_group(new_player.player_name)
+
+
+func _on_captured():
+	get_parent().remove_child(self)
+	hide()
 #endregion
 
 

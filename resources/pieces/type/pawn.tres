@@ -12,7 +12,6 @@ name = "Pawn"
 algebraic_notation = "P"
 object_mesh = ExtResource("1_iejq7")
 can_promote = true
-promotion_option = false
 base_movement = ExtResource("1_bpbml")
 metadata/_custom_type_script = "uid://b8m086r46os2w"
 metadata/post_move_movement = ExtResource("3_0fpsm")

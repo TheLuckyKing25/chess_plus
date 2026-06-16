@@ -31,8 +31,8 @@ func on_turn_end(tile) -> void:
 	if tile == null or tile.occupant == null:
 		return
 
-	var offset: Vector2i = Constants.direction_vector[components[DirectionComponent.NAME].direction]
-	var next_pos: Vector2i = tile.data.board_position + offset
+	var offset: Vector2i = Constants.DIRECTION_VECTOR[components[DirectionComponent.NAME].direction]
+	var next_pos: Vector2i = tile.data.position_vector + offset
 
 	if next_pos.x < 0 or next_pos.x >= Match.board.data.rank_count:
 		return

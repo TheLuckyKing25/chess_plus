@@ -15,11 +15,11 @@ func modify_movement(movement: Movement) -> void:
 	if movement.is_branching:
 		return
 
-	var left_branch := movement.get_duplicate()
+	var left_branch := movement.duplicate_deep()
 	left_branch.distance -= 1
 	left_branch.rotate_movement(7)
 
-	var right_branch := movement.get_duplicate()
+	var right_branch := movement.duplicate_deep()
 	right_branch.distance -= 1
 	right_branch.rotate_movement(1)
 

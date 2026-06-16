@@ -80,13 +80,6 @@ func change_movement_distance() -> void:
 	pass
 
 
-func get_duplicate() -> AbstractMovement:
-	var duplicated_movement: SlidingMovement = duplicate()
-	if next_movement:
-		duplicated_movement.next_movement = next_movement.get_duplicate()
-	return duplicated_movement
-
-
 func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
 	var tiles: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
 	# on current_tile
@@ -99,21 +92,20 @@ func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary
 		if next_tile == null:
 			return {}
 
-		if is_move:
-			if not next_tile.occupant:
-				next_tile_state = ObjectStateComponent.Type.MOVEMENT
-				tiles.set(next_tile,next_tile_state)
+		if is_move and not next_tile.occupant:
+			next_tile_state = ObjectStateComponent.Type.MOVEMENT
+			tiles.set(next_tile,next_tile_state)
 
 
-		if is_threaten:
-			if next_tile.occupant and not next_tile in _board.valid_selections:
-				next_tile_state = ObjectStateComponent.Type.THREATENED
-				tiles.set(next_tile,next_tile_state)
-				return tiles
+		if is_threaten and next_tile.occupant and not next_tile in _board.valid_selections:
+			next_tile_state = ObjectStateComponent.Type.THREATENED
+			tiles.set(next_tile,next_tile_state)
+			return tiles
 
 		if next_tile_state == ObjectStateComponent.Type.NONE:
 			return tiles
 
 		distance -= 1
 		tiles.merge(apply_movement(next_tile, _board))
+
 	return tiles

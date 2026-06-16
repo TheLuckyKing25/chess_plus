@@ -10,7 +10,5 @@ script = ExtResource("1_iv14m")
 name = "King"
 algebraic_notation = "K"
 object_mesh = ExtResource("2_cw7b2")
-can_promote = false
-promotion_option = false
 base_movement = ExtResource("1_humum")
 metadata/_custom_type_script = "uid://b8m086r46os2w"

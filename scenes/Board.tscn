@@ -78,7 +78,7 @@ camera_distance_from_subject = 10.0
 camera_yaw = 180.0
 camera_pitch = -50.0
 
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1291116983]
+[node name="TestLight" type="OmniLight3D" parent="." unique_id=1291116983]
 transform = Transform3D(0.755145, 0, 0.655558, 0, 1, 0, -0.655558, 0, 0.755145, 0.623949, 2.19613, 0.254476)
 visible = false
 omni_range = 72.994

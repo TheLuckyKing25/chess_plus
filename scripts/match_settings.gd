@@ -23,3 +23,6 @@ extends Resource
 	"time_per_player_minutes": 120,
 	"increment_seconds": 0,
 }
+
+
+@export var skip_transition_animation: bool = false

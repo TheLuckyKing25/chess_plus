@@ -63,7 +63,7 @@ script = ExtResource("3_jy7pm")
 [node name="Collision" type="CollisionShape3D" parent="." unique_id=1660892443]
 shape = SubResource("BoxShape3D_iixfe")
 
-[node name="Tile_Mesh" type="MeshInstance3D" parent="." unique_id=501872617]
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=501872617]
 material_override = SubResource("StandardMaterial3D_vhibn")
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
@@ -100,14 +100,6 @@ theme_override_constants/h_separation = 31
 theme_override_constants/v_separation = 31
 alignment = 1
 last_wrap_alignment = 2
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=2080544373]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19613, 0)
-visible = false
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1237602613]
-transform = Transform3D(1, 0, 0, 0, 0.85776, 0.51405, 0, -0.51405, 0.85776, 0, 2.19613, 2.07858)
-visible = false
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

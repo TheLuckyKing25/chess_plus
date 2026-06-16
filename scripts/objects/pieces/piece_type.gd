@@ -2,6 +2,8 @@
 ## this does not change throughout the course of a game.
 class_name PieceType extends Resource
 
+signal base_movement_changed
+
 ## The name of the PieceType.
 @export var name:String = "Placeholder":
 	set(value):
@@ -27,5 +29,8 @@ class_name PieceType extends Resource
 
 ## Movement initially assigned to pieces of this PieceType.
 @export var base_movement: AbstractMovement:
+	set(value):
+		base_movement = value
+		base_movement_changed.emit()
 	get:
-		return base_movement.get_duplicate()
+		return base_movement.duplicate(true)

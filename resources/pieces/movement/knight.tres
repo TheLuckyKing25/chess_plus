@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id="Resource_eh8qs"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = 2
+rank_origin_offset = 2
 file_origin_offset = 1
 is_move = true
 is_threaten = true
@@ -16,7 +16,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_7rvqh"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = 2
+rank_origin_offset = 2
 file_origin_offset = -1
 is_move = true
 is_threaten = true
@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_ahn6u"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = 1
+rank_origin_offset = 1
 file_origin_offset = 2
 is_move = true
 is_threaten = true
@@ -34,7 +34,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_a0cbw"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = -1
+rank_origin_offset = -1
 file_origin_offset = 2
 is_move = true
 is_threaten = true
@@ -43,7 +43,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_wceua"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = -2
+rank_origin_offset = -2
 file_origin_offset = 1
 is_move = true
 is_threaten = true
@@ -52,7 +52,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_jkgv4"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = -2
+rank_origin_offset = -2
 file_origin_offset = -1
 is_move = true
 is_threaten = true
@@ -61,7 +61,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_5dayx"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = -1
+rank_origin_offset = -1
 file_origin_offset = -2
 is_move = true
 is_threaten = true
@@ -70,7 +70,7 @@ metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
 [sub_resource type="Resource" id="Resource_2cntf"]
 resource_local_to_scene = true
 script = ExtResource("2_6dfde")
-row_origin_offset = 1
+rank_origin_offset = 1
 file_origin_offset = -2
 is_move = true
 is_threaten = true

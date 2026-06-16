@@ -1,17 +1,16 @@
 # Credit to Bitlytic on Youtube: https://youtu.be/ow_Lum-Agbs?si=6jL0ZSBThzB-BUz7
+@abstract
 class_name State
 extends Node
 
 ## Emitted when state transitions to another state
-signal transitioned()
+signal transitioned
 
 ## When this state is entered
-func enter():
-	pass
+@abstract func enter()
 
 ## When this state is exited
-func exit():
-	pass
+@abstract func exit()
 
 ## Perform updates each frame
 func update(_delta:float):

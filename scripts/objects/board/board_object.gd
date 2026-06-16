@@ -5,10 +5,6 @@ extends Node3D
 signal turn_changed()
 signal promotion_verified(piece: PieceObject)
 
-
-const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
-
-
 @export var board_base:MeshInstance3D
 @export_group("Audio","_audio")
 @export var _audio_piece_capture:AudioStreamPlayer
@@ -17,16 +13,17 @@ const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 
 var selected_tile: TileObject:
 	get():
-		if TileStateComponent._state_dict[ObjectStateComponent.Type.SELECTED].is_empty():
+		var selected_tile_array: Array = TileStateComponent._state_dict[ObjectStateComponent.Type.SELECTED]
+		if selected_tile_array.is_empty():
 			return null
 		else:
-			return TileStateComponent._state_dict[ObjectStateComponent.Type.SELECTED].front()
+			return selected_tile_array.front()
 
 
 var tile_objects: Array[TileObject] = []
 var piece_objects: Array[PieceObject] = []
 
-# what to move
+
 var valid_selections: Array = []
 
 var valid_destinations: Array = []
@@ -36,9 +33,9 @@ var data: BoardData:
 	set(value):
 		value.assigned_object = self
 		GameData.active_board_state = value
-		if data and data.player_to_move_changed.is_connected(_on_player_to_move_changed):
+		if is_instance_valid(data) and data.player_to_move_changed.is_connected(_on_player_to_move_changed):
 			data.player_to_move_changed.disconnect(_on_player_to_move_changed)
-		if value:
+		if is_instance_valid(value):
 			value.player_to_move_changed.connect(_on_player_to_move_changed)
 		load_board_data(value)
 		data = value
@@ -63,10 +60,9 @@ func _ready() -> void:
 		_show_loading_screen()
 
 
-
 #region Board Generation
 func load_board_data(value: BoardData) -> void:
-	if value == null:
+	if not is_instance_valid(value):
 		return
 
 	_resize_base(value) # Change the size of the board base to match the size of the board
@@ -83,20 +79,18 @@ func _resize_base(new_data: BoardData) -> void:
 
 
 func _generate_tile_objects(new_data: BoardData) -> void:
-	var counter:int = tile_objects.size()
-	var number_of_tiles:int = new_data.rank_count * new_data.file_count
+	var current_number_of_tiles:int = tile_objects.size()
+	var total_number_of_tiles:int = new_data.rank_count * new_data.file_count
 
-	if counter < number_of_tiles:
-		while counter < number_of_tiles:
-			var tile: TileObject = TileObject.new_tile_object()
-			tile.clicked.connect(_on_tile_clicked)
-			tile_objects.append(tile)
-			counter += 1
+	while current_number_of_tiles < total_number_of_tiles:
+		var tile: TileObject = TileObject.new_tile_object()
+		tile.clicked.connect(_on_tile_clicked)
+		tile_objects.append(tile)
+		current_number_of_tiles += 1
 
-	elif counter > number_of_tiles:
-		while counter > number_of_tiles:
-			tile_objects.pop_back().queue_free()
-			counter -= 1
+	while current_number_of_tiles > total_number_of_tiles:
+		tile_objects.pop_back().queue_free()
+		current_number_of_tiles -= 1
 
 
 func _assign_data_to_tiles(new_data:BoardData) -> void:
@@ -133,51 +127,50 @@ func _assign_data_to_pieces(new_data:BoardData) -> void:
 
 func _place_pieces(new_data:BoardData)-> void:
 	for piece_object: PieceObject in piece_objects:
-		var position_vector: Vector2i = piece_object.data.board_position
+		var position_vector: Vector2i = piece_object.data.position_vector
 		if position_vector in new_data.board_representation.keys():
 			var board_location: Array = new_data.board_representation[position_vector]
-			var assigned_tile: TileObject = board_location.get(new_data.TILE_DATA).assigned_object
+			var assigned_tile: TileObject = board_location.get(BoardData.TILE_DATA).assigned_object
 			assigned_tile.add_child(piece_object)
 			assigned_tile.occupant = piece_object
 
 
-func _on_player_to_move_changed(player_to_move:PlayerData):
-	player_to_move.assigned_object.camera_object.make_current()
+func _on_player_to_move_changed(player_to_move:PlayerData) -> void:
+	pass
 #endregion
 
 
 #region Object Selected
-func _on_piece_clicked(piece:PieceObject):
+func _on_piece_clicked(piece:PieceObject) -> void:
 	if piece.data in data.valid_selections:
 		piece.state.set_state(ObjectStateComponent.Type.SELECTED)
 
 
-func _on_tile_clicked(tile:TileObject):
+func _on_tile_clicked(tile:TileObject)-> void:
 	if tile.data in data.valid_selections:
 		tile.state.set_state(ObjectStateComponent.Type.SELECTED)
 		_toggle_destination_states(tile)
-	elif selected_tile and tile.data in data.valid_destinations[selected_tile.occupant.data].keys():
+	elif is_instance_valid(selected_tile) and tile.data in data.valid_destinations[selected_tile.occupant.data].keys():
 		data.process_move(selected_tile.data, tile.data)
 
 
-func _toggle_destination_states(tile: TileObject):
+func _toggle_destination_states(tile: TileObject) -> void:
 	var destinations: Dictionary[TileDataChess,ObjectStateComponent.Type] = data.valid_destinations.get(tile.occupant.data)
 	for tile_data:TileDataChess in destinations.keys():
 		tile_data.assigned_object.state.set_state(destinations.get(tile_data))
-		if tile_data.occupant:
+		if is_instance_valid(tile_data.occupant):
 			tile_data.occupant.assigned_object.state.set_state(destinations.get(tile_data))
 #endregion
 
 
 
+# ===============================================================================
+# ============================== [END OF REFACTOR] ==============================
+# ===============================================================================
 
 
 
-
-
-
-
-
+const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 
 var smokey_overlay: Dictionary = {}
 var smokey_tiles: Array[TileObject] = []
@@ -378,12 +371,12 @@ func _update_poisoned_pieces() -> void:
 
 
 func _tile_in_radius(origin_tile, target_tile, radius) -> bool:
-	var delta: Vector2i = target_tile.data.board_position - origin_tile.data.board_position
+	var delta: Vector2i = target_tile.data.position_vector - origin_tile.data.position_vector
 	return max(abs(delta.x), abs(delta.y)) <= radius # return true if within specified radius
 
 
 func _toggle_gates_in_radius(origin_tile, radius) -> void:
-	print("Toggling gates from ", origin_tile.data.board_position, " radius=", radius)
+	print("Toggling gates from ", origin_tile.data.position_vector, " radius=", radius)
 	for tile in data.tile_array:
 		if not _tile_in_radius(origin_tile, tile, radius):
 			continue
@@ -403,8 +396,8 @@ func _apply_on_piece_pass(move: Move) -> void:
 	if piece == null:
 		return
 
-	var start := move.starting_tile.data.board_position
-	var dest := move.destination_tile.data.board_position
+	var start := move.starting_tile.data.position_vector
+	var dest := move.destination_tile.data.position_vector
 	var delta := dest - start
 
 	# Normalize delta or else the movement is strange
@@ -428,7 +421,7 @@ func _apply_on_piece_pass(move: Move) -> void:
 
 func _get_smokey_tiles(origin_tile: TileObject, smokey: PropertySmokey) -> Array[TileObject]:
 	var out: Array[TileObject] = []
-	var origin := origin_tile.data.board_position
+	var origin := origin_tile.data.position_vector
 
 	var offsets : Array[Vector2i] = []
 	if smokey.activated_by_player == GameData.players.white:
@@ -531,7 +524,7 @@ func _perform_castling_move(castling_tile: TileObject) -> void:
 # IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
 func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject) -> void:
 
-	moveset = moveset.get_duplicate()
+	moveset = moveset.duplicate_deep()
 
 	for modifier in origin_tile.data.modifier_order:
 		if modifier.can_modify_movement:
@@ -635,9 +628,9 @@ func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, ori
 
 				# Get rook tile for current castling side
 				var rook_tile: TileObject
-				if current_tile_ptr.data.board_position > king_tile.data.board_position:
+				if current_tile_ptr.data.position_vector > king_tile.data.position_vector:
 					rook_tile = data.tile_array[Match.get_board_index(king_tile.data.rank,data.file_count-1)]
-				elif current_tile_ptr.data.board_position < king_tile.data.board_position:
+				elif current_tile_ptr.data.position_vector < king_tile.data.position_vector:
 					rook_tile = data.tile_array[Match.get_board_index(king_tile.data.rank,0)]
 
 				if (	not rook_tile.is_occupied # if no occupant

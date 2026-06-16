@@ -11,18 +11,9 @@ func set_direction_parity(direction_parity: int) -> void:
 		branch.set_direction_parity(direction_parity)
 
 
-func get_duplicate() -> AbstractMovement:
-	var duplicated_movement: BranchingMovement = duplicate()
-	var duplicated_movement_branches:Array[AbstractMovement] = []
-
-	for branch in branches:
-		duplicated_movement_branches.append(branch.get_duplicate())
-	duplicated_movement.branches = duplicated_movement_branches
-	return duplicated_movement
-
-
 func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
 	var tiles: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
+
 	# apply modifiers
 
 	if branches.is_empty():

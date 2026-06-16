@@ -11,7 +11,7 @@ height = 4.5
 
 [node name="Piece" type="StaticBody3D" unique_id=1071166003 node_paths=PackedStringArray("mesh_instance", "state") groups=["Piece"]]
 script = ExtResource("1_huli3")
-mesh_instance = NodePath("Piece_Mesh")
+mesh_instance = NodePath("Mesh")
 data = ExtResource("2_h2rng")
 state = NodePath("PieceStateComponent")
 
@@ -23,18 +23,10 @@ metadata/_custom_type_script = "uid://bng4r1rdkwdv6"
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.003, 0.677, 0.004)
 shape = SubResource("CapsuleShape3D_s58gp")
 
-[node name="Piece_Mesh" type="MeshInstance3D" parent="." unique_id=584267238]
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=584267238]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 material_override = ExtResource("3_ajk4a")
 skeleton = NodePath("")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1204536800]
-transform = Transform3D(0.755145, 0, 0.655558, 0, 1, 0, -0.655558, 0, 0.755145, 0.623949, 2.19613, 0.254476)
-visible = false
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1601317301]
-transform = Transform3D(0.755145, -0.33699, 0.562312, 0, 0.85776, 0.51405, -0.655558, -0.388182, 0.647733, 1.98658, 2.19613, 1.8241)
-visible = false
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

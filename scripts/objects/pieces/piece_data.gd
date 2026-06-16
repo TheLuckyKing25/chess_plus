@@ -6,11 +6,17 @@ extends Resource
 
 signal type_changed(new_type:PieceType)
 signal player_changed(new_player:PlayerData)
+signal captured
+
 
 @export var type: PieceType:
 	set(value):
+		if is_instance_valid(type):
+			type.base_movement_changed.disconnect(func(): set("_adjusted_movement",type.base_movement))
+		if is_instance_valid(value):
+			value.base_movement_changed.connect(func(): set("_adjusted_movement",value.base_movement))
 		type_changed.emit(value)
-		_adjusted_movement = value.base_movement.get_duplicate()
+		_adjusted_movement = value.base_movement
 		type = value
 
 
@@ -45,7 +51,7 @@ var file: int
 var index: int
 
 
-var board_position: Vector2i:
+var position_vector: Vector2i:
 	set(value):
 		rank = value.x
 		file = value.y
@@ -53,21 +59,38 @@ var board_position: Vector2i:
 		return Vector2i(rank,file)
 
 
-var assigned_object: PieceObject:
+@export_custom(
+		PROPERTY_HINT_NONE,
+		"",
+		PROPERTY_USAGE_NEVER_DUPLICATE
+	) var assigned_object: PieceObject:
 	set(value):
 		assigned_object = value
 
+
+var has_moved: bool = false:
+	set(value):
+		_on_move()
+		has_moved = true
+
+var is_captured: bool = false:
+	set(value):
+		if value:
+			captured.emit()
+		is_captured = value
 
 func _init():
 	player_changed.connect(_on_player_changed)
 
 
-static func new_piece(piece_type: PieceType, max_move_distance:int, new_index:int) -> PieceData:
+static func new_piece(piece_type: PieceType, new_index:int, max_move_distance:int) -> PieceData:
 	var piece: PieceData = PieceData.new()
 	var new_piece_data: PieceType = piece_type.duplicate(true)
 
 	piece.type = new_piece_data
-	piece.type.base_movement.set_max_distance(GameData.max_board_length)
+	var base_movement = piece.type.base_movement
+	base_movement.set_max_distance(GameData.max_board_length)
+	piece.type.base_movement = base_movement
 	piece.index = new_index
 	piece.resource_name = piece.type.name
 
@@ -81,7 +104,7 @@ func assign_player(new_player:String):
 func _apply_direction_parity_to_movement():
 	if player and _adjusted_movement:
 		_adjusted_movement.set_direction_parity(player.direction_parity)
-		current_movement = _adjusted_movement.get_duplicate()
+		current_movement = _adjusted_movement.duplicate_deep()
 
 
 func _on_player_changed(player_data: PlayerData):
@@ -90,10 +113,18 @@ func _on_player_changed(player_data: PlayerData):
 	if player_data:
 		player_data.pieces.get_or_add(type.name.to_lower(),[]).append(self)
 
+
 func reset_current_movement():
-	current_movement = _adjusted_movement.get_duplicate()
+	current_movement = _adjusted_movement.duplicate_deep()
 
 
+func _on_move():
+	var meta_list: Array[StringName] = type.get_meta_list()
+	if meta_list.is_empty():
+		return
+
+	if "post_move_movement" in meta_list:
+		type.base_movement = type.get_meta("post_move_movement")
 
 
 ## Poison Tile variables

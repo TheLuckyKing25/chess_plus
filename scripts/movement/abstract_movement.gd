@@ -15,10 +15,4 @@ func set_direction_parity(direction_parity: int) -> void:
 	pass
 
 
-# Godot's duplicate function does not duplicate this resource completely
-# while this funtion does
-func get_duplicate() -> AbstractMovement:
-	return null
-
-
-@abstract func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]
+@abstract func apply_movement(current_tile:TileDataChess,_board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]

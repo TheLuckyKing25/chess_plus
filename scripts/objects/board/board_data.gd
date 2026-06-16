@@ -22,7 +22,11 @@ var max_length: int:
 	get: return maxi(file_count,rank_count)
 
 
-var assigned_object: BoardObject
+@export_custom(
+		PROPERTY_HINT_NONE,
+		"",
+		PROPERTY_USAGE_NEVER_DUPLICATE
+	) var assigned_object: BoardObject
 
 
 var tiles: Array[TileDataChess] = []
@@ -50,7 +54,6 @@ var board_representation: Dictionary[Vector2i, Array] = {
 var player_to_move: PlayerData:
 	set(value):
 		player_to_move_changed.emit(value)
-		value.assigned_object.camera_object.make_current()
 		player_to_move = value
 
 
@@ -113,12 +116,12 @@ func _generate_position_vectors() -> void:
 
 func _generate_tile_data() -> void:
 	for index in range(rank_count*file_count):
-		var new_tile = TileDataChess.new()
+		var new_tile: TileDataChess = TileDataChess.new()
 		tiles.append(new_tile)
 
-		var position_vector = Vector2i(index/file_count, index%file_count)
+		var position_vector: Vector2i = Vector2i(index/file_count, index%file_count)
 		new_tile.set_position_data(index,position_vector)
-		board_representation[position_vector] = [new_tile,null]
+		board_representation.set(position_vector, [new_tile,null])
 
 		new_tile.resource_name = "Tile " + new_tile.algebraic_notation
 
@@ -127,49 +130,52 @@ func _assign_tile_neighbors() -> void:
 	for tile:TileDataChess in tiles:
 		for direction:Constants.Direction in range(0,8):
 			var neighbor_position: Vector2i = (
-					tile.board_position
-					+ Constants.direction_vector[direction]
+					tile.position_vector
+					+ Constants.DIRECTION_VECTOR.get(direction)
 				)
 
-			if (
-					neighbor_position.x > rank_count-1
-					or neighbor_position.y > file_count-1
-					or neighbor_position.x < 0
-					or neighbor_position.y < 0
-				):
-				tile.neighbors[direction] = null
+			if _is_out_of_bounds(neighbor_position):
+				tile.neighbors.set(direction, null)
 				continue
 
-			tile.neighbors[direction] = board_representation.get(neighbor_position)[TILE_DATA]
+			tile.neighbors.set(direction, board_representation.get(neighbor_position).get(TILE_DATA))
 
 
-func _generate_pieces():
-	var tile_count:int = 0
+func _is_out_of_bounds(postition: Vector2i) -> bool:
+	return (
+			postition.x > rank_count-1
+			or postition.y > file_count-1
+			or postition.x < 0
+			or postition.y < 0
+		)
+
+
+func _generate_pieces() -> void:
+	var tile_count: int = 0
 	var new_piece: PieceData
+	var piece_type_lookup: Dictionary[String, String] = {
+		"p": Constants.piece_type.get(Constants.TypePiece.PAWN),
+		"r": Constants.piece_type.get(Constants.TypePiece.ROOK),
+		"b": Constants.piece_type.get(Constants.TypePiece.BISHOP),
+		"n": Constants.piece_type.get(Constants.TypePiece.KNIGHT),
+		"q": Constants.piece_type.get(Constants.TypePiece.QUEEN),
+		"k": Constants.piece_type.get(Constants.TypePiece.KING),
+	}
 
 	for character:String in fen.piece_placement:
 		var tile_index: int = tile_count%file_count + (rank_count - (tile_count/file_count)-1)*file_count
-
-		var position_vector: Vector2i = Vector2i(tile_index/file_count, tile_index%file_count)
+		var new_piece_func: Callable = PieceData.new_piece.bind(max_length, tile_index)
+		var piece_type_uid: String = ""
 		match character.to_lower():
-			"p":
-				new_piece = PieceData.new_piece(load("uid://bih6lr0cwxuk"), max_length, tile_index)
-			"r":
-				new_piece = PieceData.new_piece(load("uid://csqiux6uupcb2"), max_length, tile_index)
-			"b":
-				new_piece = PieceData.new_piece(load("uid://b7mqdwuvfi3nh"), max_length, tile_index)
-			"n":
-				new_piece = PieceData.new_piece(load("uid://cgvt2kihfm4em"), max_length, tile_index)
-			"q":
-				new_piece = PieceData.new_piece(load("uid://oqdygo3fdmd2"), max_length, tile_index)
-			"k":
-				new_piece = PieceData.new_piece(load("uid://bfy5ow4fdbo1l"), max_length, tile_index)
+			"p","r","b","n","q","k":
+				piece_type_uid = piece_type_lookup.get(character.to_lower())
+				new_piece = new_piece_func.call(load(piece_type_uid))
 			"1","2","3","4","5","6","7","8","9":
 				tile_count += character.to_int()
 				continue
 			_:
 				continue
-		#new_piece.base_movement.set_max_distance(max_length)
+
 		match character:
 			"p","r","b","n","q","k":
 				new_piece.assign_player("black")
@@ -177,23 +183,23 @@ func _generate_pieces():
 				new_piece.assign_player("white")
 
 		# ADD ERROR DETECTION FOR IF POSITION VECTOR DOES NOT EXIST
+		var position_vector: Vector2i = Vector2i(tile_index/file_count, tile_index%file_count)
 		var board_rep_position = board_representation.get(position_vector)
 		board_rep_position[PIECE_DATA] = new_piece
 		pieces.append(new_piece)
 		board_rep_position[TILE_DATA].occupant = new_piece
-		new_piece.board_position = position_vector
+		new_piece.position_vector = position_vector
 
 		tile_count += 1
 
 
-func _set_player_to_move():
+func _set_player_to_move() -> void:
 	match fen.active_player:
 		"w": player_to_move = GameData.players.white.data
 		"b": player_to_move = GameData.players.black.data
 
 
-
-func _on_player_to_move_changed(new_player_data:PlayerData):
+func _on_player_to_move_changed(new_player_data:PlayerData) -> void:
 	valid_selections.clear()
 	_find_all_valid_selections(new_player_data)
 
@@ -201,21 +207,17 @@ func _on_player_to_move_changed(new_player_data:PlayerData):
 	_find_all_valid_destinations()
 
 
-func _find_all_valid_selections(new_player_data:PlayerData):
-	var piece_filter = func(piece: PieceData): if piece.player == new_player_data: return piece
+func _find_all_valid_selections(new_player_data:PlayerData) -> void:
+	var piece_filter:Callable = func(piece: PieceData): if piece.player == new_player_data: return piece
 	var selectable_piece_objects:Array[PieceData] = pieces.filter(piece_filter)
 	valid_selections.append_array(selectable_piece_objects)
 
-	var tile_filter = func(tile: TileDataChess): if tile.occupant in selectable_piece_objects: return tile
+	var tile_filter:Callable = func(tile: TileDataChess): if selectable_piece_objects.has(tile.occupant): return tile
 	var selectable_tile_object: Array[TileDataChess] = tiles.filter(tile_filter)
 	valid_selections.append_array(selectable_tile_object)
 
 
-func _find_all_valid_destinations():
-	# generate a dictionary of all movements of each selectable piece, with the piece as the key.
-	# the value should be another dictionary with the destination tiles as keys,
-	# and the state of those tiles as values
-
+func _find_all_valid_destinations() -> void:
 	var destinations: Dictionary[PieceData,Dictionary] = {}
 
 	var selectable_pieces: Array = valid_selections.filter(
@@ -225,33 +227,39 @@ func _find_all_valid_destinations():
 	for piece in selectable_pieces:
 		destinations.set(piece,_find_movement_of_piece(piece))
 
+	#filter out moves that cause check or checkmate
+
 	#DebugPrinter.print_pretty(destinations)
 	valid_destinations = destinations
 
 
-func _find_movement_of_piece(piece:PieceData) -> Dictionary:
+func _find_movement_of_piece(piece:PieceData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
 	var movement: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
-	var starting_tile: TileDataChess = board_representation.get(piece.board_position).get(TILE_DATA)
+	var starting_tile: TileDataChess = board_representation.get(piece.position_vector).get(TILE_DATA)
 	movement = piece.current_movement.apply_movement(starting_tile, self)
 	piece.reset_current_movement()
-
 	return movement
 
 
-func process_move(from: TileDataChess, to: TileDataChess):
+func process_move(from: TileDataChess, to: TileDataChess) -> void:
 	var new_change: BoardChange = BoardChange.new()
 
 	var move: Dictionary = {
-		to.board_position: [to, from.occupant],
-		from.board_position: [from, null]
+		to.position_vector: [to, from.occupant],
+		from.position_vector: [from, null],
 	}
 
 	new_change.add_change("board_representation", move)
 	new_change.add_change("player_to_move", GameData.opponent(player_to_move))
-	BoardChange.apply(new_change,self)
+	if is_instance_valid(to.occupant):
+		new_change.add_change("captured", [to.occupant])
+	BoardChange.apply_change(new_change,self)
 
 
 
+# ===============================================================================
+# ============================== [END OF REFACTOR] ==============================
+# ===============================================================================
 
 
 
@@ -270,7 +278,7 @@ func _get_from_vector(vector: Vector2i) -> Dictionary:
 
 func find_tile_using_vector(vector: Vector2i) -> TileObject:
 	for tile in tile_array:
-		if tile.data.board_position == vector:
+		if tile.data.position_vector == vector:
 			return tile
 
 	return null # tile not found

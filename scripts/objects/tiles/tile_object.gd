@@ -42,6 +42,10 @@ static var en_passant: TileObject = null
 	set(value):
 		if is_node_ready():
 			data.assigned_object = null
+			if data and data.occupant_changed.is_connected(_on_occupant_changed):
+				data.occupant_changed.disconnect(_on_occupant_changed)
+			if value:
+				value.occupant_changed.connect(_on_occupant_changed)
 			value.assigned_object = self
 			assign_new_data(value)
 		data = value
@@ -51,10 +55,7 @@ static var en_passant: TileObject = null
 #region Public Variables
 var occupant: PieceObject:
 	set(value):
-		if occupant:
-			_disconnect_occupant_signals(occupant)
-		if value:
-			_connect_occupant_signals(value)
+		_on_occupant_changed(value.data)
 
 		data.occupant = value.data
 	get():
@@ -99,7 +100,7 @@ var _tile_color: Color:
 
 
 var _tile_material: StandardMaterial3D:
-	get(): return $Tile_Mesh.material_override
+	get(): return $Mesh.material_override
 
 
 var _state_material: StandardMaterial3D:
@@ -114,6 +115,7 @@ var _mouseover_material: StandardMaterial3D:
 func _disconnect_occupant_signals(occupant: PieceObject):
 	if occupant.is_connected("clicked",_on_occupant_clicked):
 		occupant.clicked.disconnect(_on_occupant_clicked)
+
 	if occupant.state.is_connected("state_changed",Callable(state,"_on_state_change")):
 		occupant.state.state_changed.disconnect(Callable(state,"_on_state_change"))
 		state.state_changed.disconnect(Callable(occupant.state,"_on_state_change"))
@@ -125,6 +127,23 @@ func _connect_occupant_signals(occupant: PieceObject):
 	state.state_changed.connect(Callable(occupant.state,"_on_state_change"))
 
 
+func _ready() -> void:
+	assign_new_data(data)
+	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
+
+	state.current = ObjectStateComponent.Type.NONE
+
+
+func _on_occupant_changed(new_occupant: PieceData):
+	if occupant: _disconnect_occupant_signals(occupant)
+	if new_occupant:
+		var piece: PieceObject = new_occupant.assigned_object
+		if piece:
+			_connect_occupant_signals(piece)
+			piece.reparent(self,false)
+
+
+
 #region Object Generation
 static func new_tile_object() -> TileObject:
 	var new_tile:TileObject = TILE_SCENE.instantiate()
@@ -133,8 +152,8 @@ static func new_tile_object() -> TileObject:
 
 func assign_new_data(new_data:TileDataChess):
 	_translate_tile(new_data) # move tile to proper location in 3D space
-	_tile_color =  _set_base_tile_color(new_data) # set tile color
-
+	_tile_color = _set_base_tile_color(new_data) # set tile color
+	name = "Tile_" + new_data.algebraic_notation
 	# show modifiers
 
 
@@ -274,10 +293,6 @@ func set_state_color(color: Color, has_emission: bool = false) -> void:
 						#Match.board.submit_move(TileObject.selected.data.index, data.index, Move.Outcome.CAPTURING | Move.Outcome.EN_PASSANT, PieceObject.en_passant.data.index, TileObject.en_passant.data.index)
 
 
-
-
-
-
 #static func new_tile(index: int) -> TileObject:
 	#var new_tile_data:TileDataChess = TileDataChess.new()
 	#new_tile_data.index = index
@@ -293,13 +308,6 @@ func _notification(what: int) -> void:
 		data.clear_check_flag()
 	if what == NOTIFICATION_CLEAR_OTHER_STATES:
 		state.current = ObjectStateComponent.Type.NONE
-
-
-func _ready() -> void:
-	assign_new_data(data)
-	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
-
-	state.current = ObjectStateComponent.Type.NONE
 
 
 func _on_tile_modifier_order_changed():

@@ -26,14 +26,14 @@ func generate_pseudo_legal_moves(player: Player):
 		moves.clear()
 
 	for piece in player.all_pieces:
-		var moveset:Movement = piece.data.movement.get_duplicate()
+		var moveset:Movement = piece.data.movement.duplicate_deep()
 		if moveset.distance == 0 and moveset.is_branching:
 			get_all_moves(piece, moveset, Match.board.data.tile_array[piece.data.index])
 
 
 func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject):
 
-	moveset = moveset.get_duplicate()
+	moveset = moveset.duplicate_deep()
 
 	for modifier in origin_tile.data.modifier_order:
 		if modifier.can_modify_movement:
@@ -121,9 +121,9 @@ func get_all_moves(active_piece:PieceObject, moveset: Movement, origin_tile: Til
 
 				# Get rook tile for current castling side
 				var rook_tile: TileObject
-				if current_tile_ptr.data.board_position > king_tile.data.board_position:
+				if current_tile_ptr.data.position_vector > king_tile.data.position_vector:
 					rook_tile = Match.board.data.tile_array[Match.get_board_index(king_tile.data.rank,Match.board.data.file_count-1)]
-				elif current_tile_ptr.data.board_position < king_tile.data.board_position:
+				elif current_tile_ptr.data.position_vector < king_tile.data.position_vector:
 					rook_tile = Match.board.data.tile_array[Match.get_board_index(king_tile.data.rank,0)]
 
 				if (	not rook_tile.occupant # if no occupant

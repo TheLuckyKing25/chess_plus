@@ -9,7 +9,6 @@ enum SelectionMode{
 
 
 enum Direction{
-	NONE = -1, # TEMP: REMOVE FROM SCRIPT ONCE UNUSED
 	NORTH = 0,
 	NORTHEAST = 1,
 	EAST = 2,
@@ -37,7 +36,7 @@ var piece_type: Dictionary = {}
 var player_data: Dictionary[String, String] = {}
 
 
-const direction_vector: Dictionary[Constants.Direction, Vector2i] = {
+const DIRECTION_VECTOR: Dictionary[Constants.Direction, Vector2i] = {
 	Constants.Direction.NORTH: Vector2i(1,0),
 	Constants.Direction.NORTHEAST: Vector2i(1,1),
 	Constants.Direction.EAST: Vector2i(0,1),
@@ -49,16 +48,20 @@ const direction_vector: Dictionary[Constants.Direction, Vector2i] = {
 }
 
 
-enum DirectoryIdentifier{
+enum DirectoryRefNum{
 	PLAYER_DATA = 0,
 	PIECE_TYPE = 1,
 }
 
 
 const file_path: Dictionary = {
-	DirectoryIdentifier.PLAYER_DATA: "res://resources/player/",
-	DirectoryIdentifier.PIECE_TYPE: "res://resources/pieces/type/",
+	DirectoryRefNum.PLAYER_DATA: "res://resources/player/",
+	DirectoryRefNum.PIECE_TYPE: "res://resources/pieces/type/",
 }
+
+
+const TURN_TRANSITION_DELAY_SECONDS:float = 0.25
+const TURN_TRANSITION_TIME_SECONDS:float = 0.5
 
 
 func _ready() -> void:
@@ -67,9 +70,9 @@ func _ready() -> void:
 
 
 func _retrieve_player_data():
-	var data = ResourceLoader.list_directory(file_path.get(DirectoryIdentifier.PLAYER_DATA))
+	var data = ResourceLoader.list_directory(file_path.get(DirectoryRefNum.PLAYER_DATA))
 	for player in data:
-		var file_string:String = file_path.get(DirectoryIdentifier.PLAYER_DATA) + player
+		var file_string:String = file_path.get(DirectoryRefNum.PLAYER_DATA) + player
 		var loaded_data:PlayerData = load(file_string)
 		var uid:int = ResourceLoader.get_resource_uid(file_string)
 
@@ -77,9 +80,9 @@ func _retrieve_player_data():
 
 
 func _retrieve_piece_types():
-	var data = ResourceLoader.list_directory(file_path.get(DirectoryIdentifier.PIECE_TYPE))
+	var data = ResourceLoader.list_directory(file_path.get(DirectoryRefNum.PIECE_TYPE))
 	for piece in data:
-		var file_string:String = file_path.get(DirectoryIdentifier.PIECE_TYPE) + piece
+		var file_string:String = file_path.get(DirectoryRefNum.PIECE_TYPE) + piece
 		var loaded_data:PieceType = load(file_string)
 		var uid:int = ResourceLoader.get_resource_uid(file_string)
 		var constant_identifier: TypePiece = TypePiece[loaded_data.name.to_upper()]
