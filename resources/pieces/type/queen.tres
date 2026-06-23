@@ -1,16 +1,19 @@
-[gd_resource type="Resource" script_class="PieceType" format=3 uid="uid://oqdygo3fdmd2"]
+[gd_resource type="Resource" script_class="PieceConfig" format=3 uid="uid://oqdygo3fdmd2"]
 
-[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://scripts/objects/pieces/piece_type.gd" id="1_03hyd"]
+[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://scripts/objects/pieces/piece_config.gd" id="1_03hyd"]
 [ext_resource type="Resource" uid="uid://bi43fijqf2sjl" path="res://resources/pieces/movement/queen.tres" id="1_ypea2"]
 [ext_resource type="ArrayMesh" uid="uid://caj6438kxk887" path="res://assets/mesh/mesh_queen.obj" id="2_ilar6"]
+[ext_resource type="Texture2D" uid="uid://drs4uq4cklomb" path="res://resources/pieces/icons/icon_queen_dark.tres" id="2_wnssg"]
+[ext_resource type="Texture2D" uid="uid://bml5th0brus6r" path="res://resources/pieces/icons/icon_queen_light.tres.tres" id="3_t71qq"]
+[ext_resource type="Script" uid="uid://h0s26j6tu0dm" path="res://scripts/rules/piece rules/piece_rule.gd" id="5_t71qq"]
 
 [resource]
-resource_name = "Queen Data"
+resource_name = "Queen Config"
 script = ExtResource("1_03hyd")
+object_mesh = ExtResource("2_ilar6")
+icon_light = ExtResource("3_t71qq")
+icon_dark = ExtResource("2_wnssg")
 name = "Queen"
 algebraic_notation = "Q"
-object_mesh = ExtResource("2_ilar6")
-can_promote = false
-promotion_option = true
 base_movement = ExtResource("1_ypea2")
 metadata/_custom_type_script = "uid://b8m086r46os2w"

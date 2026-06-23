@@ -78,9 +78,9 @@ func on_promotion_verified(piece: PieceObject) -> void:
 	var mouse_pos = get_viewport().get_mouse_position()
 	instantiated_scene._show_promotion_menu(mouse_pos)
 	get_tree().paused = true
-	instantiated_scene.promotion_piecetype_selected.connect(Callable(piece,"promote"))
+	instantiated_scene.promotion_PieceConfig_selected.connect(Callable(piece,"promote"))
 	await piece.promoted
 	piece.data.movement.set_max_distance(maxi(Match.board.data.file_count,Match.board.data.rank_count))
 	instantiated_scene._hide_promotion_menu()
-	instantiated_scene.promotion_piecetype_selected.disconnect(Callable(piece,"promote"))
+	instantiated_scene.promotion_PieceConfig_selected.disconnect(Callable(piece,"promote"))
 	get_tree().paused = false

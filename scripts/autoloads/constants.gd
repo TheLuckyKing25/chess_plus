@@ -30,7 +30,8 @@ enum TypePiece{
 }
 
 # generated upon ready
-var piece_type: Dictionary = {}
+var piece_config: Dictionary = {}
+
 
 # generated upon ready
 var player_data: Dictionary[String, String] = {}
@@ -66,7 +67,7 @@ const TURN_TRANSITION_TIME_SECONDS:float = 0.5
 
 func _ready() -> void:
 	_retrieve_player_data()
-	_retrieve_piece_types()
+	_retrieve_piece_configs()
 
 
 func _retrieve_player_data():
@@ -79,11 +80,11 @@ func _retrieve_player_data():
 		player_data.set(loaded_data.player_name.to_lower(),ResourceUID.id_to_text(uid))
 
 
-func _retrieve_piece_types():
+func _retrieve_piece_configs():
 	var data = ResourceLoader.list_directory(file_path.get(DirectoryRefNum.PIECE_TYPE))
 	for piece in data:
 		var file_string:String = file_path.get(DirectoryRefNum.PIECE_TYPE) + piece
-		var loaded_data:PieceType = load(file_string)
+		var loaded_data:PieceConfig = load(file_string)
 		var uid:int = ResourceLoader.get_resource_uid(file_string)
 		var constant_identifier: TypePiece = TypePiece[loaded_data.name.to_upper()]
-		piece_type.set(constant_identifier,ResourceUID.id_to_text(uid))
+		piece_config.set(constant_identifier,ResourceUID.id_to_text(uid))

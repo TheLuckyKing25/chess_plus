@@ -75,5 +75,5 @@ func _on_selected():
 		joint_array.append_array(_state_dict[Type.THREATENED])
 		for selected_tile:TileObject in joint_array:
 			selected_tile.state.set_state(Type.NONE)
-			if selected_tile.occupant:
+			if is_instance_valid(selected_tile.occupant):
 				selected_tile.occupant.state.set_state(ObjectStateComponent.Type.NONE)

@@ -98,7 +98,7 @@ func _load_data(new_data: PieceData):
 		outline_material.albedo_color = Color(0,0,0,0)
 
 
-func _on_type_changed(new_type:PieceType):
+func _on_type_changed(new_type:PieceConfig):
 	if data and data.type:
 		remove_from_group(data.type.name)
 	if new_type and mesh_instance:
@@ -122,12 +122,16 @@ func _on_captured():
 
 
 func _on_mouse_entered() -> void:
+	#var tween:Tween = get_tree().create_tween()
+	#tween.tween_property(self,"scale",Vector3(1.1,1.1,1.1),0.05)
 	is_mouse_on_piece = true
 	mouseover_material.render_priority = 2
 	mouseover_material.albedo_color = piece_material.albedo_color * 1.5
 
 
 func _on_mouse_exited() -> void:
+	#var tween:Tween = get_tree().create_tween()
+	#tween.tween_property(self,"scale",Vector3(1,1,1),0.05)
 	mouseover_material.albedo_color = Color(0,0,0,0)
 	mouseover_material.render_priority = 0
 	is_mouse_on_piece = false
@@ -155,11 +159,11 @@ func move(destination: TileObject):
 	destination.occupant = self
 
 
-#static func new_piece(piece_type: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
+#static func new_piece(piece_config: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
 	#var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	#var new_piece_data: PieceData = piece_type.duplicate(true)
+	#var new_piece_data: PieceData = piece_config.duplicate(true)
 #
-	#piece_type.resource_local_to_scene = true
+	#piece_config.resource_local_to_scene = true
 #
 	#new_piece_data.movement = new_piece_data.movement.get_duplicate()
 #

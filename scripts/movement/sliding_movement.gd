@@ -1,7 +1,7 @@
 @tool
 class_name SlidingMovement extends AbstractMovement
 
-
+## Use the longest side of the board as the move distance
 @export var use_max_distance: bool = false:
 	set(value):
 		use_max_distance = value

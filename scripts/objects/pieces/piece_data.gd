@@ -4,19 +4,19 @@
 class_name PieceData
 extends Resource
 
-signal type_changed(new_type:PieceType)
+signal type_changed(new_type:PieceConfig)
 signal player_changed(new_player:PlayerData)
 signal captured
 
 
-@export var type: PieceType:
+@export var type: PieceConfig:
 	set(value):
 		if is_instance_valid(type):
 			type.base_movement_changed.disconnect(func(): set("_adjusted_movement",type.base_movement))
 		if is_instance_valid(value):
 			value.base_movement_changed.connect(func(): set("_adjusted_movement",value.base_movement))
 		type_changed.emit(value)
-		_adjusted_movement = value.base_movement
+		_adjusted_movement = value.base_movement.duplicate(true)
 		type = value
 
 
@@ -32,7 +32,6 @@ var _adjusted_movement: AbstractMovement:
 
 # movement used by modifiers
 var current_movement: AbstractMovement
-
 
 
 var player: PlayerData:
@@ -70,7 +69,7 @@ var position_vector: Vector2i:
 
 var has_moved: bool = false:
 	set(value):
-		_on_move()
+		#_on_move()
 		has_moved = true
 
 var is_captured: bool = false:
@@ -79,13 +78,14 @@ var is_captured: bool = false:
 			captured.emit()
 		is_captured = value
 
+
 func _init():
 	player_changed.connect(_on_player_changed)
 
 
-static func new_piece(piece_type: PieceType, new_index:int, max_move_distance:int) -> PieceData:
+static func new_piece(piece_config: PieceConfig, new_index:int, max_move_distance:int) -> PieceData:
 	var piece: PieceData = PieceData.new()
-	var new_piece_data: PieceType = piece_type.duplicate(true)
+	var new_piece_data: PieceConfig = piece_config.duplicate(true)
 
 	piece.type = new_piece_data
 	var base_movement = piece.type.base_movement
@@ -118,16 +118,30 @@ func reset_current_movement():
 	current_movement = _adjusted_movement.duplicate_deep()
 
 
-func _on_move():
-	var meta_list: Array[StringName] = type.get_meta_list()
-	if meta_list.is_empty():
+func evaluate_rules() -> BoardChange:
+	var new_change: BoardChange = BoardChange.new()
+	for rule:PieceRule in type.rules:
+		rule.evaluate_rule_application(new_change, self)
+	if not new_change.changed_data.is_empty():
+		return new_change
+	else:
 		return
 
-	if "post_move_movement" in meta_list:
-		type.base_movement = type.get_meta("post_move_movement")
+
+#func _on_move():
+	#var meta_list: Array[StringName] = type.get_meta_list()
+	#if meta_list.is_empty():
+		#return
+#
+	#if "post_move_movement" in meta_list:
+		#type.base_movement = type.get_meta("post_move_movement")
 
 
-## Poison Tile variables
+# ===============================================================================
+# ============================== [END OF REFACTOR] ==============================
+# ===============================================================================
+
+# Poison Tile variables
 var is_poisoned: bool = false
 var poison_turn_applied: int = -1
 var poison_duration: int = -1

@@ -1,4 +1,4 @@
-class_name MatchSettings
+class_name MatchConfig
 extends Resource
 
 @export var board_size: Dictionary[String,int] = {

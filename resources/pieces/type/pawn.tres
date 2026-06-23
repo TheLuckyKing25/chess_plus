@@ -1,17 +1,38 @@
-[gd_resource type="Resource" script_class="PieceType" format=3 uid="uid://bih6lr0cwxuk"]
+[gd_resource type="Resource" script_class="PieceConfig" format=3 uid="uid://bih6lr0cwxuk"]
 
-[ext_resource type="Resource" uid="uid://v6scgji0vbgg" path="res://resources/pieces/movement/pawn_initial.tres" id="1_bpbml"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/mesh/mesh_pawn.obj" id="1_iejq7"]
+[ext_resource type="Resource" uid="uid://v6scgji0vbgg" path="res://resources/pieces/movement/pawn_initial.tres" id="1_pytek"]
+[ext_resource type="Texture2D" uid="uid://dslwjyvgm5j66" path="res://resources/pieces/icons/icon_pawn_dark.tres" id="2_1g1kn"]
 [ext_resource type="Resource" uid="uid://bhrm536aemt0f" path="res://resources/pieces/movement/pawn_post_move.tres" id="3_0fpsm"]
-[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://scripts/objects/pieces/piece_type.gd" id="4_0fpsm"]
+[ext_resource type="Texture2D" uid="uid://lepc2qnq7lph" path="res://resources/pieces/icons/icon_pawn_light.tres" id="3_pytek"]
+[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://scripts/objects/pieces/piece_config.gd" id="4_0fpsm"]
+[ext_resource type="Script" uid="uid://h0s26j6tu0dm" path="res://scripts/rules/piece rules/piece_rule.gd" id="6_pytek"]
+[ext_resource type="Script" uid="uid://c7yfx2bq0evvj" path="res://scripts/rules/piece rules/promotion.gd" id="7_vs6vf"]
+[ext_resource type="Resource" uid="uid://oqdygo3fdmd2" path="res://resources/pieces/type/queen.tres" id="8_lrbk2"]
+[ext_resource type="Resource" uid="uid://b7mqdwuvfi3nh" path="res://resources/pieces/type/bishop.tres" id="9_t833n"]
+[ext_resource type="Resource" uid="uid://csqiux6uupcb2" path="res://resources/pieces/type/rook.tres" id="10_jegqs"]
+[ext_resource type="Resource" uid="uid://cgvt2kihfm4em" path="res://resources/pieces/type/knight.tres" id="11_5i16f"]
+[ext_resource type="Script" uid="uid://dtvtcm6bu70t7" path="res://scripts/rules/piece rules/post_move_movement.gd" id="13_t833n"]
+
+[sub_resource type="Resource" id="Resource_lgpb3"]
+script = ExtResource("7_vs6vf")
+promotion_options = Array[ExtResource("4_0fpsm")]([ExtResource("8_lrbk2"), ExtResource("9_t833n"), ExtResource("10_jegqs"), ExtResource("11_5i16f")])
+metadata/_custom_type_script = "uid://c7yfx2bq0evvj"
+
+[sub_resource type="Resource" id="Resource_jegqs"]
+script = ExtResource("13_t833n")
+new_movement = ExtResource("3_0fpsm")
+metadata/_custom_type_script = "uid://dtvtcm6bu70t7"
 
 [resource]
-resource_name = "Pawn Data"
+resource_name = "Pawn Config"
 script = ExtResource("4_0fpsm")
+object_mesh = ExtResource("1_iejq7")
+icon_light = ExtResource("3_pytek")
+icon_dark = ExtResource("2_1g1kn")
 name = "Pawn"
 algebraic_notation = "P"
-object_mesh = ExtResource("1_iejq7")
-can_promote = true
-base_movement = ExtResource("1_bpbml")
+base_movement = ExtResource("1_pytek")
+rules = Array[ExtResource("6_pytek")]([SubResource("Resource_lgpb3"), SubResource("Resource_jegqs")])
 metadata/_custom_type_script = "uid://b8m086r46os2w"
 metadata/post_move_movement = ExtResource("3_0fpsm")

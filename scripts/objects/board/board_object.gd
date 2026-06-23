@@ -7,8 +7,8 @@ signal promotion_verified(piece: PieceObject)
 
 @export var board_base:MeshInstance3D
 @export_group("Audio","_audio")
-@export var _audio_piece_capture:AudioStreamPlayer
-@export var _audio_piece_move:AudioStreamPlayer
+@export var audio_piece_capture:AudioStreamPlayer
+@export var audio_piece_move:AudioStreamPlayer
 
 
 var selected_tile: TileObject:
@@ -665,7 +665,7 @@ func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, ori
 
 func _capture_piece(piece) -> void:
 	piece._captured()
-	_audio_piece_capture.play()
+	audio_piece_capture.play()
 
 
 func _perform_move(move: Move):
@@ -675,7 +675,7 @@ func _perform_move(move: Move):
 	move.starting_tile.occupant = null
 
 	piece.move_to(move.destination_tile)
-	_audio_piece_move.play()
+	audio_piece_move.play()
 
 	if not piece.data.flag.has_moved.enabled:
 		piece.moved(true)

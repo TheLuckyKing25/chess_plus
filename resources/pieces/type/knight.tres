@@ -1,16 +1,19 @@
-[gd_resource type="Resource" script_class="PieceType" format=3 uid="uid://cgvt2kihfm4em"]
+[gd_resource type="Resource" script_class="PieceConfig" format=3 uid="uid://cgvt2kihfm4em"]
 
 [ext_resource type="Resource" uid="uid://8gfafi0lgf6u" path="res://resources/pieces/movement/knight.tres" id="1_l2dtl"]
-[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://scripts/objects/pieces/piece_type.gd" id="1_t53fc"]
+[ext_resource type="Script" uid="uid://b8m086r46os2w" path="res://scripts/objects/pieces/piece_config.gd" id="1_t53fc"]
 [ext_resource type="ArrayMesh" uid="uid://co538rh6q5c02" path="res://assets/mesh/mesh_knight.obj" id="2_a1o5o"]
+[ext_resource type="Texture2D" uid="uid://ca4ojui5mk85p" path="res://resources/pieces/icons/icon_knight_dark.tres" id="2_jovef"]
+[ext_resource type="Texture2D" uid="uid://d2dnk5daptu4d" path="res://resources/pieces/icons/icon_knight_light.tres" id="3_c61th"]
+[ext_resource type="Script" uid="uid://h0s26j6tu0dm" path="res://scripts/rules/piece rules/piece_rule.gd" id="5_c61th"]
 
 [resource]
-resource_name = "Knight Data"
+resource_name = "Knight Config"
 script = ExtResource("1_t53fc")
+object_mesh = ExtResource("2_a1o5o")
+icon_light = ExtResource("3_c61th")
+icon_dark = ExtResource("2_jovef")
 name = "Knight"
 algebraic_notation = "N"
-object_mesh = ExtResource("2_a1o5o")
-can_promote = false
-promotion_option = true
 base_movement = ExtResource("1_l2dtl")
 metadata/_custom_type_script = "uid://b8m086r46os2w"

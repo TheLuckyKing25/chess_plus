@@ -153,23 +153,23 @@ func _is_out_of_bounds(postition: Vector2i) -> bool:
 func _generate_pieces() -> void:
 	var tile_count: int = 0
 	var new_piece: PieceData
-	var piece_type_lookup: Dictionary[String, String] = {
-		"p": Constants.piece_type.get(Constants.TypePiece.PAWN),
-		"r": Constants.piece_type.get(Constants.TypePiece.ROOK),
-		"b": Constants.piece_type.get(Constants.TypePiece.BISHOP),
-		"n": Constants.piece_type.get(Constants.TypePiece.KNIGHT),
-		"q": Constants.piece_type.get(Constants.TypePiece.QUEEN),
-		"k": Constants.piece_type.get(Constants.TypePiece.KING),
+	var piece_config_lookup: Dictionary[String, String] = {
+		"p": Constants.piece_config.get(Constants.TypePiece.PAWN),
+		"r": Constants.piece_config.get(Constants.TypePiece.ROOK),
+		"b": Constants.piece_config.get(Constants.TypePiece.BISHOP),
+		"n": Constants.piece_config.get(Constants.TypePiece.KNIGHT),
+		"q": Constants.piece_config.get(Constants.TypePiece.QUEEN),
+		"k": Constants.piece_config.get(Constants.TypePiece.KING),
 	}
 
 	for character:String in fen.piece_placement:
 		var tile_index: int = tile_count%file_count + (rank_count - (tile_count/file_count)-1)*file_count
 		var new_piece_func: Callable = PieceData.new_piece.bind(max_length, tile_index)
-		var piece_type_uid: String = ""
+		var piece_config_uid: String = ""
 		match character.to_lower():
 			"p","r","b","n","q","k":
-				piece_type_uid = piece_type_lookup.get(character.to_lower())
-				new_piece = new_piece_func.call(load(piece_type_uid))
+				piece_config_uid = piece_config_lookup.get(character.to_lower())
+				new_piece = new_piece_func.call(load(piece_config_uid))
 			"1","2","3","4","5","6","7","8","9":
 				tile_count += character.to_int()
 				continue
@@ -227,7 +227,7 @@ func _find_all_valid_destinations() -> void:
 	for piece in selectable_pieces:
 		destinations.set(piece,_find_movement_of_piece(piece))
 
-	#filter out moves that cause check or checkmate
+	#filter out moves
 
 	#DebugPrinter.print_pretty(destinations)
 	valid_destinations = destinations
@@ -253,7 +253,22 @@ func process_move(from: TileDataChess, to: TileDataChess) -> void:
 	new_change.add_change("player_to_move", GameData.opponent(player_to_move))
 	if is_instance_valid(to.occupant):
 		new_change.add_change("captured", [to.occupant])
+
+	# check Game Rules and add changes to BoardChange.
+
 	BoardChange.apply_change(new_change,self)
+
+	var new_changes: Array[BoardChange] = []
+	for piece:PieceData in pieces:
+		new_changes.append(piece.evaluate_rules())
+	var new_changes_filtered: Array[BoardChange] = new_changes.filter(
+			func(item): return is_instance_valid(item)
+		)
+	#DebugPrinter.print_pretty(new_changes_filtered)
+	BoardChange.apply_change(BoardChange.merge_changes(new_changes_filtered,true),self)
+
+
+
 
 
 

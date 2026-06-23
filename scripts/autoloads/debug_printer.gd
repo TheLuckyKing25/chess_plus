@@ -27,6 +27,16 @@ func print_class_log(classname:String, text:String, classname_color:String = "de
 		print_rich(string)
 
 
+#region Print Pretty
+var _color_order:Array = [
+	"SALMON",
+	"LIGHT_GREEN",
+	"MEDIUM_PURPLE",
+	"DARK_ORANGE",
+	"DEEP_SKY_BLUE",
+	"GOLDENROD",
+	]
+
 func print_pretty(value, _indent:int = 0):
 	var string: String = ""
 	if value is Array:
@@ -34,10 +44,16 @@ func print_pretty(value, _indent:int = 0):
 	elif value is Dictionary:
 		string += _generate_dict_string(value,_indent)
 	else:
-		string += str(value)
+		var temp_string = str(value).get_slice(":",0)
+		string += "[color=" + _color_order[(_indent- 1) % _color_order.size()] + "]" + temp_string + "[/color]"
+		if temp_string != str(value):
+			var suffix = str(value).split(":",false,1)
+			if suffix.get(1) != "":
+				string += ":" + suffix.get(1)
+
 
 	if _indent == 0:
-		print(string)
+		print_rich(string)
 	else:
 		return string
 
@@ -59,3 +75,4 @@ func _generate_dict_string(value, _indent:int = 0) -> String:
 	string += "\n" + "".lpad(_indent,INDENT) + "}"
 
 	return string
+#endregion

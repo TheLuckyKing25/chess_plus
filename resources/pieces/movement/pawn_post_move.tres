@@ -32,6 +32,7 @@ metadata/_custom_type_script = "uid://cw6dchast1cm6"
 
 [resource]
 resource_local_to_scene = true
+resource_name = "Pawn Post Movement"
 script = ExtResource("3_qfx45")
 branches = Array[ExtResource("1_1ffw6")]([SubResource("Resource_udwdt"), SubResource("Resource_rblh4"), SubResource("Resource_u8yla")])
 metadata/_custom_type_script = "uid://by81w35mptra5"

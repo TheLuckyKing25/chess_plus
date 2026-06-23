@@ -15,11 +15,11 @@
 [sub_resource type="BoxMesh" id="BoxMesh_hljw5"]
 size = Vector3(9, 0.2, 9)
 
-[node name="Board" type="Node3D" unique_id=217196909 node_paths=PackedStringArray("board_base", "_audio_piece_capture", "_audio_piece_move")]
+[node name="Board" type="Node3D" unique_id=217196909 node_paths=PackedStringArray("board_base", "audio_piece_capture", "audio_piece_move")]
 script = ExtResource("1_hljw5")
 board_base = NodePath("BoardBase")
-_audio_piece_capture = NodePath("Piece_capture")
-_audio_piece_move = NodePath("Piece_move")
+audio_piece_capture = NodePath("Piece_capture")
+audio_piece_move = NodePath("Piece_move")
 
 [node name="BoardBase" type="MeshInstance3D" parent="." unique_id=68991946]
 material_override = SubResource("StandardMaterial3D_wxh2q")

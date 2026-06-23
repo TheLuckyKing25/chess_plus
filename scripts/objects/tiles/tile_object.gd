@@ -1,17 +1,13 @@
 class_name TileObject
 extends Node3D
 
+
 #region Signals
 signal clicked(tile:TileObject)
 #endregion
 
 
 #region Enums
-# starts at 32 to prevent overlap with already existing notification constants
-enum {
-	NOTIFICATION_CLEAR_CHECK_STATE = 32,
-	NOTIFICATION_CLEAR_OTHER_STATES = 33,
-}
 
 #endregion
 
@@ -21,7 +17,6 @@ const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
 const LIGHT_COLOR: Color = BASE_COLOR * 4/3
 const DARK_COLOR: Color = BASE_COLOR * 2/3 + Color(0,0,0,1)
 
-
 const TILE_SCENE:PackedScene = preload("uid://clmimmf3c1qpt")
 #endregion
 
@@ -29,14 +24,12 @@ const TILE_SCENE:PackedScene = preload("uid://clmimmf3c1qpt")
 #region Static Variables
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
-
 static var en_passant: TileObject = null
 #endregion
 
 
 #region Exported Variables
 @export var state: TileStateComponent
-
 
 @export var data: TileDataChess = TileDataChess.new():
 	set(value):
@@ -91,8 +84,8 @@ var neighbors: Dictionary[Constants.Direction, TileObject] = {
 
 
 #region Private Variables
+var _original_position_in_space: Vector3
 var _is_mouse_on_tile: bool = false
-
 
 var _tile_color: Color:
 	set(value):	_tile_material.albedo_color = value
@@ -109,6 +102,7 @@ var _state_material: StandardMaterial3D:
 
 var _mouseover_material: StandardMaterial3D:
 	get(): return _state_material.next_pass
+
 #endregion
 
 
@@ -135,12 +129,12 @@ func _ready() -> void:
 
 
 func _on_occupant_changed(new_occupant: PieceData):
-	if occupant: _disconnect_occupant_signals(occupant)
-	if new_occupant:
-		var piece: PieceObject = new_occupant.assigned_object
-		if piece:
-			_connect_occupant_signals(piece)
-			piece.reparent(self,false)
+	if is_instance_valid(occupant): _disconnect_occupant_signals(occupant)
+	if is_instance_valid(new_occupant):
+		var piece_obj: PieceObject = new_occupant.assigned_object
+		if is_instance_valid(piece_obj):
+			_connect_occupant_signals(piece_obj)
+			piece_obj.reparent(self,false)
 
 
 
@@ -165,6 +159,7 @@ func _translate_tile(new_data: TileDataChess):
 		0.1,
 		(float(board_rank_count)/2)-new_data.rank-0.5
 	))
+	_original_position_in_space = position
 
 
 func _set_base_tile_color(new_data:TileDataChess) -> Color:
@@ -193,12 +188,16 @@ func _on_occupant_clicked(piece: PieceObject):
 
 
 func _on_mouse_entered() -> void:
+	#var tween:Tween = get_tree().create_tween()
+	#tween.tween_property(self,"position",_original_position_in_space + Vector3(0,0.1,0),0.05)
 	_is_mouse_on_tile = true
 	_mouseover_material.render_priority = 1
 	_mouseover_material.albedo_color = Color(1,1,1,0.25)
 
 
 func _on_mouse_exited() -> void:
+	#var tween:Tween = get_tree().create_tween()
+	#tween.tween_property(self,"position",_original_position_in_space,0.05)
 	_mouseover_material.albedo_color = Color(1,1,1,0)
 	_mouseover_material.render_priority = 0
 	_is_mouse_on_tile = false
@@ -225,6 +224,9 @@ func set_state_color(color: Color, has_emission: bool = false) -> void:
 	_state_material.emission = color
 
 
+# ===============================================================================
+# ============================== [END OF REFACTOR] ==============================
+# ===============================================================================
 
 
 #func _single_tile_select() -> void:
@@ -302,6 +304,15 @@ func set_state_color(color: Color, has_emission: bool = false) -> void:
 	#Match.add_tile(new_tile)
 	#return new_tile
 
+
+#region Enums
+# starts at 32 to prevent overlap with already existing notification constants
+enum {
+	NOTIFICATION_CLEAR_CHECK_STATE = 32,
+	NOTIFICATION_CLEAR_OTHER_STATES = 33,
+}
+
+#endregion
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_CLEAR_CHECK_STATE:

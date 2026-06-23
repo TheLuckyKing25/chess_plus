@@ -33,6 +33,6 @@ var promotion_rank: int
 var all_pieces: Array[PieceObject]:
 	get:
 		var array: Array[PieceObject] = []
-		for piece_types in pieces.values():
-			array.append_array(piece_types)
+		for piece_configs in pieces.values():
+			array.append_array(piece_configs)
 		return array

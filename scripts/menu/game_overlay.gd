@@ -1,7 +1,7 @@
 extends Control
 
 signal new_placement_selected(placement:FEN)
-signal promotion_piecetype_selected(piece_name: String)
+signal promotion_PieceConfig_selected(piece_name: String)
 
 @onready var horizontal_slider:HSlider = %HorizontalCameraSlider
 @onready var forward_slider:VSlider = %ForwardCameraSlider
@@ -43,8 +43,8 @@ func _ready() -> void:
 			new_item.set_metadata(0, placement_tree[section])
 			new_item.set_selectable(0,true)
 
-	for piecetype in Match.promotion_menu_list:
-		%PromotionList.add_item(piecetype)
+	for PieceConfig in Match.promotion_menu_list:
+		%PromotionList.add_item(PieceConfig)
 
 func add_placements_to_section(item: TreeItem, section:String):
 	for placement in placement_tree[section].keys():
@@ -114,7 +114,7 @@ func get_ui_timer_black():
 
 
 func _on_promotion_list_item_selected(index: int) -> void:
-	promotion_piecetype_selected.emit(Match.promotion_menu_list[index])
+	promotion_PieceConfig_selected.emit(Match.promotion_menu_list[index])
 
 func _show_promotion_menu(mouse_position:Vector2):
 	$PromotionMenu.show()
