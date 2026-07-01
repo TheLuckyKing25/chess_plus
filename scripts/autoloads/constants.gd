@@ -29,25 +29,18 @@ enum TypePiece{
 	ROOK = 5,
 }
 
-# generated upon ready
-var piece_config: Dictionary = {}
 
 
-# generated upon ready
-var player_data: Dictionary[String, String] = {}
-
-
-const DIRECTION_VECTOR: Dictionary[Constants.Direction, Vector2i] = {
-	Constants.Direction.NORTH: Vector2i(1,0),
-	Constants.Direction.NORTHEAST: Vector2i(1,1),
-	Constants.Direction.EAST: Vector2i(0,1),
-	Constants.Direction.SOUTHEAST: Vector2i(-1,1),
-	Constants.Direction.SOUTH: Vector2i(-1,0),
-	Constants.Direction.SOUTHWEST: Vector2i(-1,-1),
-	Constants.Direction.WEST: Vector2i(0,-1),
-	Constants.Direction.NORTHWEST: Vector2i(1,-1)
+const DIRECTION_VECTOR: Dictionary[Direction, Vector2i] = {
+	Direction.NORTH: Vector2i(1,0),
+	Direction.NORTHEAST: Vector2i(1,1),
+	Direction.EAST: Vector2i(0,1),
+	Direction.SOUTHEAST: Vector2i(-1,1),
+	Direction.SOUTH: Vector2i(-1,0),
+	Direction.SOUTHWEST: Vector2i(-1,-1),
+	Direction.WEST: Vector2i(0,-1),
+	Direction.NORTHWEST: Vector2i(1,-1)
 }
-
 
 enum DirectoryRefNum{
 	PLAYER_DATA = 0,
@@ -60,9 +53,14 @@ const file_path: Dictionary = {
 	DirectoryRefNum.PIECE_TYPE: "res://resources/pieces/type/",
 }
 
-
 const TURN_TRANSITION_DELAY_SECONDS:float = 0.25
 const TURN_TRANSITION_TIME_SECONDS:float = 0.5
+
+# generated upon ready
+var piece_config: Dictionary = {}
+var piece_config_lookup: Dictionary[String, String] = {}
+var player_data: Dictionary[String, String] = {}
+
 
 
 func _ready() -> void:
@@ -85,6 +83,9 @@ func _retrieve_piece_configs():
 	for piece in data:
 		var file_string:String = file_path.get(DirectoryRefNum.PIECE_TYPE) + piece
 		var loaded_data:PieceConfig = load(file_string)
+		var piece_name: String = loaded_data.name
+		var piece_algebraic_notation: String = loaded_data.algebraic_notation
 		var uid:int = ResourceLoader.get_resource_uid(file_string)
-		var constant_identifier: TypePiece = TypePiece[loaded_data.name.to_upper()]
+		var constant_identifier: TypePiece = TypePiece[piece_name.to_upper()]
 		piece_config.set(constant_identifier,ResourceUID.id_to_text(uid))
+		piece_config_lookup.set(piece_algebraic_notation.to_lower(),piece_config.get(constant_identifier))

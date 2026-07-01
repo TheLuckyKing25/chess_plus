@@ -1,12 +1,13 @@
 @tool
 class_name JumpingMovement extends AbstractMovement
 
+
 @export_range(-16,16,1,"suffix:Ranks") var rank_origin_offset:int
 @export_range(-16,16,1,"suffix:Files") var file_origin_offset:int
 
+
 var offset_vector: Vector2i:
-	get:
-		return Vector2i(rank_origin_offset,file_origin_offset)
+	get: return Vector2i(rank_origin_offset,file_origin_offset)
 
 @export var is_move := false
 @export var is_threaten := false
@@ -17,11 +18,7 @@ var offset_vector: Vector2i:
 
 
 var is_branching: bool:
-	get():
-		if next_movement is BranchingMovement:
-			return false
-		else:
-			return true
+	get: return not next_movement is BranchingMovement
 
 
 func set_direction_parity(direction_parity:int):
@@ -41,7 +38,7 @@ func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary
 	if _board.board_representation.get(new_position) == null:
 		return {}
 
-	var next_tile:TileDataChess = _board.board_representation.get(new_position).get(BoardData.TILE_DATA)
+	var next_tile:TileDataChess = _board.board_representation.get(new_position).get(BoardData.TILE_DATA_INDEX)
 	var next_tile_state: ObjectStateComponent.Type = ObjectStateComponent.Type.NONE
 	if not is_instance_valid(next_tile):
 		return {}

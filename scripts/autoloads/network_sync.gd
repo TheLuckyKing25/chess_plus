@@ -31,10 +31,10 @@ func gameplay_start() -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func tile_modifiers(modifier_data: Dictionary) -> void:
-	for tile_index in modifier_data.keys():
-		var tile: TileObject = Match.board.data.tile_array[tile_index]
+	for TILE_DATA_INDEX in modifier_data.keys():
+		var tile: TileObject = Match.board.data.tile_array[TILE_DATA_INDEX]
 		var new_modifier_order: Array[TileModifier] = []
-		for entry in modifier_data[tile_index]:
+		for entry in modifier_data[TILE_DATA_INDEX]:
 			var modifier: TileModifier = load(entry["script"]).new()
 			match modifier.flag:
 				TileModifier.ModifierType.CONDITION_ICY:

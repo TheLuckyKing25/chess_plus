@@ -21,12 +21,9 @@ const CASTLING_COLOR:= Color(1,1,1,1)
 
 
 static var en_passant: PieceObject = null
-#static var selected: PieceObject = null
+
 
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
-
-#static var is_selected: bool:
-	#get(): return PieceObject.selected != null
 
 
 var is_mouse_on_piece: bool = false
@@ -50,6 +47,7 @@ var is_mouse_on_piece: bool = false
 		data = new_data
 
 @export var state: PieceStateComponent
+
 
 func _ready() -> void:
 	data_changed.connect(Callable(self,"_on_data_changed"))
@@ -161,17 +159,17 @@ func move(destination: TileObject):
 
 #static func new_piece(piece_config: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
 	#var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	#var new_piece_data: PieceData = piece_config.duplicate(true)
+	#var new_PIECE_DATA_INDEX: PieceData = piece_config.duplicate(true)
 #
 	#piece_config.resource_local_to_scene = true
 #
-	#new_piece_data.movement = new_piece_data.movement.get_duplicate()
+	#new_PIECE_DATA_INDEX.movement = new_PIECE_DATA_INDEX.movement.get_duplicate()
 #
-	#new_piece_data.player = player_owner
-	#new_piece_data.movement.set_max_distance(max_move_distance)
-	#new_piece_data.index = index
+	#new_PIECE_DATA_INDEX.player = player_owner
+	#new_PIECE_DATA_INDEX.movement.set_max_distance(max_move_distance)
+	#new_PIECE_DATA_INDEX.index = index
 #
-	#new_piece.data = new_piece_data
+	#new_piece.data = new_PIECE_DATA_INDEX
 	#new_piece.data.player.add_piece(new_piece)
 	#Match.add_piece(new_piece)
 	#return new_piece

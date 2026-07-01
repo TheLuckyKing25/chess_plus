@@ -101,26 +101,26 @@
 	#var tile_num:int = 0
 	#var new_piece: Piece
 	#for character:String in fen.piece_placement:
-		#var tile_index = tile_num%file_count + (rank_count - (tile_num/file_count)-1)*file_count
+		#var TILE_DATA_INDEX = tile_num%file_count + (rank_count - (tile_num/file_count)-1)*file_count
 		#match character.to_lower():
 			#"p":
-				#new_piece = Piece.new_piece(load("uid://bih6lr0cwxuk"), max_length, tile_index)
+				#new_piece = Piece.new_piece(load("uid://bih6lr0cwxuk"), max_length, TILE_DATA_INDEX)
 			#"r":
-				#new_piece = Piece.new_piece(load("uid://csqiux6uupcb2"), max_length, tile_index)
+				#new_piece = Piece.new_piece(load("uid://csqiux6uupcb2"), max_length, TILE_DATA_INDEX)
 			#"b":
-				#new_piece = Piece.new_piece(load("uid://b7mqdwuvfi3nh"), max_length, tile_index)
+				#new_piece = Piece.new_piece(load("uid://b7mqdwuvfi3nh"), max_length, TILE_DATA_INDEX)
 			#"n":
-				#new_piece = Piece.new_piece(load("uid://cgvt2kihfm4em"), max_length, tile_index)
+				#new_piece = Piece.new_piece(load("uid://cgvt2kihfm4em"), max_length, TILE_DATA_INDEX)
 			#"q":
-				#new_piece = Piece.new_piece(load("uid://oqdygo3fdmd2"), max_length, tile_index)
+				#new_piece = Piece.new_piece(load("uid://oqdygo3fdmd2"), max_length, TILE_DATA_INDEX)
 			#"k":
-				#new_piece = Piece.new_piece(load("uid://bfy5ow4fdbo1l"), max_length, tile_index)
+				#new_piece = Piece.new_piece(load("uid://bfy5ow4fdbo1l"), max_length, TILE_DATA_INDEX)
 			#"1","2","3","4","5","6","7","8","9":
 				#tile_num += character.to_int()
 				#continue
 			#_:
 				#continue
-		#piece_placement.set(tile_index,new_piece)
+		#piece_placement.set(TILE_DATA_INDEX,new_piece)
 		#new_piece.base_movement.set_max_distance(max_length)
 		#match character:
 			#"p","r","b","n","q","k":

@@ -2,6 +2,7 @@
 class_name TileStateComponent
 extends ObjectStateComponent
 
+
 const NONE_COLOR: Color = Color(1, 1, 1, 0)
 const SELECT_COLOR: Color = Color(0.1, 1, 1, 1)
 const VALID_COLOR: Color = Color(0.6, 1, 0.6, 1)
@@ -34,8 +35,8 @@ static var _state_dict: Dictionary[Type,Array] = {
 
 
 var tile: TileObject:
-	get:
-		return get_parent()
+	get: return get_parent()
+
 
 static func clear_intermediate_states():
 	var intermediate_state_tiles: Array[TileObject] = []
@@ -56,8 +57,8 @@ func _on_state_changed(new_state: Type):
 
 	_state_function_lookup.get(new_state).call()
 
-	_state_dict[current].erase(tile)
-	_state_dict[new_state].append(tile)
+	_state_dict.get(current).erase(tile)
+	_state_dict.get(new_state).append(tile)
 
 	current = new_state
 	_apply_state_color()

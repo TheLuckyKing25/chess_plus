@@ -32,8 +32,7 @@ static var _state_dict: Dictionary[Type,Array] = {
 
 
 var piece: PieceObject:
-	get:
-		return get_parent()
+	get: return get_parent()
 
 
 static func clear_intermediate_states():

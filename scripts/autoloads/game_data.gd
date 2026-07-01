@@ -26,6 +26,5 @@ func _ready() -> void:
 
 
 func opponent(player: PlayerData):
-	return players.values().filter(
-			func(value): return value != player.assigned_object
-		)[0]
+	var filter: Callable = func(value): return value != player.assigned_object
+	return players.values().filter(filter)[0]

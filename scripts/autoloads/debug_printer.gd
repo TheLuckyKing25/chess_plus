@@ -37,6 +37,7 @@ var _color_order:Array = [
 	"GOLDENROD",
 	]
 
+
 func print_pretty(value, _indent:int = 0):
 	var string: String = ""
 	if value is Array:
@@ -51,7 +52,6 @@ func print_pretty(value, _indent:int = 0):
 			if suffix.get(1) != "":
 				string += ":" + suffix.get(1)
 
-
 	if _indent == 0:
 		print_rich(string)
 	else:
@@ -63,7 +63,6 @@ func _generate_array_string(value, _indent:int = 0) -> String:
 	for item in value:
 		string += "\n"+ "".lpad(_indent + 1,INDENT) + print_pretty(item, _indent + 1) + ","
 	string += "\n" + "".lpad(_indent,INDENT) + "]"
-
 	return string
 
 
@@ -73,6 +72,5 @@ func _generate_dict_string(value, _indent:int = 0) -> String:
 		string += "\n" + "".lpad(_indent + 1,INDENT) + print_pretty(key, _indent + 1)
 		string += ": " + print_pretty(value.get(key), _indent + 1) + ","
 	string += "\n" + "".lpad(_indent,INDENT) + "}"
-
 	return string
 #endregion

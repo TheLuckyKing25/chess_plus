@@ -35,4 +35,3 @@ algebraic_notation = "P"
 base_movement = ExtResource("1_pytek")
 rules = Array[ExtResource("6_pytek")]([SubResource("Resource_lgpb3"), SubResource("Resource_jegqs")])
 metadata/_custom_type_script = "uid://b8m086r46os2w"
-metadata/post_move_movement = ExtResource("3_0fpsm")

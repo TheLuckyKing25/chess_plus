@@ -9,9 +9,14 @@ signal board_representation_changed()
 
 
 enum {
-	TILE_DATA = 0,
-	PIECE_DATA = 1
+	TILE_DATA_INDEX = 0,
+	PIECE_DATA_INDEX = 1
 	}
+
+
+var rules: Array[GameRule] = [
+	FiftyMoveRule.new()
+]
 
 
 var rank_count: int = GameData.match_settings.board_size.rank
@@ -19,14 +24,10 @@ var file_count: int = GameData.match_settings.board_size.file
 
 
 var max_length: int:
-	get: return maxi(file_count,rank_count)
+	get = _max_length_getter
 
 
-@export_custom(
-		PROPERTY_HINT_NONE,
-		"",
-		PROPERTY_USAGE_NEVER_DUPLICATE
-	) var assigned_object: BoardObject
+@export_custom(PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NEVER_DUPLICATE) var assigned_object: BoardObject
 
 
 var tiles: Array[TileDataChess] = []
@@ -43,18 +44,13 @@ var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
 
 #region Data
-var board_representation: Dictionary[Vector2i, Array] = {
-	# Vector2i: [TileData, PieceData],
-}:
-	set(value):
-		board_representation = value
-		board_representation_changed.emit()
+# Entries of this dictionary are of the format "Vector2i: [TileData, PieceData]"
+var board_representation: Dictionary[Vector2i, Array] = {}:
+	set = _board_representation_setter
 
 
 var player_to_move: PlayerData:
-	set(value):
-		player_to_move_changed.emit(value)
-		player_to_move = value
+	set = _player_to_move_setter
 
 
 var castling_rights: Dictionary = {
@@ -77,10 +73,23 @@ var en_passant: Dictionary = {
 }
 
 
-var halfmove_clock: int = 0
-
-
 var fullmove_counter: int = 0
+#endregion
+
+
+#region Getter/Setters
+func _max_length_getter() -> int:
+	return maxi(file_count,rank_count)
+
+
+func _board_representation_setter(value) -> void:
+	board_representation = value
+	board_representation_changed.emit()
+
+
+func _player_to_move_setter(value:PlayerData) -> void:
+	player_to_move_changed.emit(value)
+	player_to_move = value
 #endregion
 
 # This is not run through the _init function because there are some cases where
@@ -90,7 +99,7 @@ static func create_board(ranks:int = 8, files:int = 8) -> BoardData:
 
 	if board.board_representation.is_empty():
 		board._generate_position_vectors()
-		board._generate_tile_data()
+		board._generate_TILE_DATA_INDEX()
 
 	board._assign_tile_neighbors()
 	board._generate_pieces()
@@ -114,7 +123,7 @@ func _generate_position_vectors() -> void:
 		board_representation.set(Vector2i(index/file_count, index%file_count),[])
 
 
-func _generate_tile_data() -> void:
+func _generate_TILE_DATA_INDEX() -> void:
 	for index in range(rank_count*file_count):
 		var new_tile: TileDataChess = TileDataChess.new()
 		tiles.append(new_tile)
@@ -138,7 +147,7 @@ func _assign_tile_neighbors() -> void:
 				tile.neighbors.set(direction, null)
 				continue
 
-			tile.neighbors.set(direction, board_representation.get(neighbor_position).get(TILE_DATA))
+			tile.neighbors.set(direction, board_representation.get(neighbor_position).get(TILE_DATA_INDEX))
 
 
 func _is_out_of_bounds(postition: Vector2i) -> bool:
@@ -153,14 +162,6 @@ func _is_out_of_bounds(postition: Vector2i) -> bool:
 func _generate_pieces() -> void:
 	var tile_count: int = 0
 	var new_piece: PieceData
-	var piece_config_lookup: Dictionary[String, String] = {
-		"p": Constants.piece_config.get(Constants.TypePiece.PAWN),
-		"r": Constants.piece_config.get(Constants.TypePiece.ROOK),
-		"b": Constants.piece_config.get(Constants.TypePiece.BISHOP),
-		"n": Constants.piece_config.get(Constants.TypePiece.KNIGHT),
-		"q": Constants.piece_config.get(Constants.TypePiece.QUEEN),
-		"k": Constants.piece_config.get(Constants.TypePiece.KING),
-	}
 
 	for character:String in fen.piece_placement:
 		var tile_index: int = tile_count%file_count + (rank_count - (tile_count/file_count)-1)*file_count
@@ -168,7 +169,7 @@ func _generate_pieces() -> void:
 		var piece_config_uid: String = ""
 		match character.to_lower():
 			"p","r","b","n","q","k":
-				piece_config_uid = piece_config_lookup.get(character.to_lower())
+				piece_config_uid = Constants.piece_config_lookup.get(character.to_lower())
 				new_piece = new_piece_func.call(load(piece_config_uid))
 			"1","2","3","4","5","6","7","8","9":
 				tile_count += character.to_int()
@@ -182,12 +183,11 @@ func _generate_pieces() -> void:
 			"P","R","B","N","Q","K":
 				new_piece.assign_player("white")
 
-		# ADD ERROR DETECTION FOR IF POSITION VECTOR DOES NOT EXIST
 		var position_vector: Vector2i = Vector2i(tile_index/file_count, tile_index%file_count)
 		var board_rep_position = board_representation.get(position_vector)
-		board_rep_position[PIECE_DATA] = new_piece
+		board_rep_position[PIECE_DATA_INDEX] = new_piece
 		pieces.append(new_piece)
-		board_rep_position[TILE_DATA].occupant = new_piece
+		board_rep_position[TILE_DATA_INDEX].occupant = new_piece
 		new_piece.position_vector = position_vector
 
 		tile_count += 1
@@ -201,9 +201,8 @@ func _set_player_to_move() -> void:
 
 func _on_player_to_move_changed(new_player_data:PlayerData) -> void:
 	valid_selections.clear()
-	_find_all_valid_selections(new_player_data)
-
 	valid_destinations.clear()
+	_find_all_valid_selections(new_player_data)
 	_find_all_valid_destinations()
 
 
@@ -221,21 +220,19 @@ func _find_all_valid_destinations() -> void:
 	var destinations: Dictionary[PieceData,Dictionary] = {}
 
 	var selectable_pieces: Array = valid_selections.filter(
-			func(item): return true if item is PieceData else false
+			func(item): return (item is PieceData)
 		)
-	#DebugPrinter.print_pretty(selectable_pieces)
 	for piece in selectable_pieces:
 		destinations.set(piece,_find_movement_of_piece(piece))
 
-	#filter out moves
+	# filter out moves
 
-	#DebugPrinter.print_pretty(destinations)
 	valid_destinations = destinations
 
 
 func _find_movement_of_piece(piece:PieceData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
 	var movement: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
-	var starting_tile: TileDataChess = board_representation.get(piece.position_vector).get(TILE_DATA)
+	var starting_tile: TileDataChess = board_representation.get(piece.position_vector).get(TILE_DATA_INDEX)
 	movement = piece.current_movement.apply_movement(starting_tile, self)
 	piece.reset_current_movement()
 	return movement
@@ -249,27 +246,34 @@ func process_move(from: TileDataChess, to: TileDataChess) -> void:
 		from.position_vector: [from, null],
 	}
 
-	new_change.add_change("board_representation", move)
-	new_change.add_change("player_to_move", GameData.opponent(player_to_move))
+	new_change.add_change(BoardChange.BOARD_REP_RULE_NAME, move)
+	new_change.add_change(BoardChange.PLAYER_TO_MOVE_RULE_NAME, GameData.opponent(player_to_move))
 	if is_instance_valid(to.occupant):
-		new_change.add_change("captured", [to.occupant])
-
-	# check Game Rules and add changes to BoardChange.
+		new_change.add_change(BoardChange.CAPTURED_RULE_NAME, [to.occupant])
 
 	BoardChange.apply_change(new_change,self)
+	_evaluate_piece_rules()
+	_evaluate_game_rules()
 
+	DebugPrinter.print_pretty(BoardChange.history[-1].changed_data)
+
+
+func _evaluate_piece_rules():
+	var _validation_filter: Callable = func(item): return is_instance_valid(item)
 	var new_changes: Array[BoardChange] = []
 	for piece:PieceData in pieces:
 		new_changes.append(piece.evaluate_rules())
-	var new_changes_filtered: Array[BoardChange] = new_changes.filter(
-			func(item): return is_instance_valid(item)
-		)
-	#DebugPrinter.print_pretty(new_changes_filtered)
-	BoardChange.apply_change(BoardChange.merge_changes(new_changes_filtered,true),self)
+	var new_changes_filtered: Array[BoardChange] = new_changes.filter(_validation_filter)
+	BoardChange.apply_change(BoardChange.merge_changes(new_changes_filtered),self)
 
 
-
-
+func _evaluate_game_rules():
+	var _validation_filter: Callable = func(item): return is_instance_valid(item)
+	var new_changes: Array[BoardChange] = []
+	var change: BoardChange = BoardChange.new()
+	for rule:GameRule in rules:
+		new_changes.append(rule.evaluate_rule_application(change,self))
+	BoardChange.apply_change(BoardChange.merge_changes([change]),self)
 
 
 # ===============================================================================

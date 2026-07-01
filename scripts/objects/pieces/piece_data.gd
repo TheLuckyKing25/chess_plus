@@ -58,18 +58,13 @@ var position_vector: Vector2i:
 		return Vector2i(rank,file)
 
 
-@export_custom(
-		PROPERTY_HINT_NONE,
-		"",
-		PROPERTY_USAGE_NEVER_DUPLICATE
-	) var assigned_object: PieceObject:
+@export_custom(PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NEVER_DUPLICATE) var assigned_object: PieceObject:
 	set(value):
 		assigned_object = value
 
 
 var has_moved: bool = false:
 	set(value):
-		#_on_move()
 		has_moved = true
 
 var is_captured: bool = false:
@@ -85,9 +80,9 @@ func _init():
 
 static func new_piece(piece_config: PieceConfig, new_index:int, max_move_distance:int) -> PieceData:
 	var piece: PieceData = PieceData.new()
-	var new_piece_data: PieceConfig = piece_config.duplicate(true)
+	var new_PIECE_DATA_INDEX: PieceConfig = piece_config.duplicate(true)
 
-	piece.type = new_piece_data
+	piece.type = new_PIECE_DATA_INDEX
 	var base_movement = piece.type.base_movement
 	base_movement.set_max_distance(GameData.max_board_length)
 	piece.type.base_movement = base_movement
@@ -126,15 +121,6 @@ func evaluate_rules() -> BoardChange:
 		return new_change
 	else:
 		return
-
-
-#func _on_move():
-	#var meta_list: Array[StringName] = type.get_meta_list()
-	#if meta_list.is_empty():
-		#return
-#
-	#if "post_move_movement" in meta_list:
-		#type.base_movement = type.get_meta("post_move_movement")
 
 
 # ===============================================================================

@@ -3,6 +3,7 @@
 class_name TileDataChess
 extends Resource
 
+
 signal modifier_order_changed()
 signal occupant_changed(occupant: PieceData)
 

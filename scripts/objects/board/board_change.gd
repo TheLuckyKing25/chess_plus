@@ -2,12 +2,23 @@
 class_name BoardChange
 extends Resource
 
+const BOARD_REP_RULE_NAME:String = "board_representation"
+const PLAYER_TO_MOVE_RULE_NAME:String = "player_to_move"
+const CAPTURED_RULE_NAME:String = "captured"
+
 # not constant, allowing for additional functions to be
 # added depending on the rules selected at the start of the match
-static var _handler_function_lookup: Dictionary[String, Callable] = {
-	"board_representation": _handle_board_representation,
-	"player_to_move": _handle_player_to_move,
-	"captured": _handle_captures,
+static var _change_handler_function_lookup: Dictionary[String, Callable] = {
+	BOARD_REP_RULE_NAME: _handle_board_representation_change,
+	PLAYER_TO_MOVE_RULE_NAME: _handle_player_to_move_change,
+	CAPTURED_RULE_NAME: _handle_capture_change,
+}
+
+
+static var _merge_handler_function_lookup: Dictionary[String, Callable] = {
+	BOARD_REP_RULE_NAME: _handle_board_representation_merge,
+	PLAYER_TO_MOVE_RULE_NAME: _handle_player_to_move_merge,
+	CAPTURED_RULE_NAME: _handle_capture_merge,
 }
 
 
@@ -19,90 +30,102 @@ var changed_data: Dictionary[String, Variant] = {
 }
 
 
-static func merge_changes(changes: Array[BoardChange], merge_with_previous: bool = false) -> BoardChange:
+static func merge_changes(changes: Array[BoardChange]) -> BoardChange:
 	var merged_change: BoardChange = BoardChange.new()
 	for board_change: BoardChange in changes:
-		_merge_recursive(merged_change.changed_data,board_change.changed_data, true)
-		#merged_change.changed_data.merge(board_change.changed_data,true)
-	if merge_with_previous:
-		history[-1].changed_data.merge(merged_change.changed_data)
+		for key in board_change.changed_data.keys():
+			if not _merge_handler_function_lookup.has(key):
+				continue
+
+			var merging_value: Variant = board_change.changed_data.get(key)
+			var default_value: Variant = (
+					[] if typeof(merging_value) == TYPE_ARRAY
+					else {} if typeof(merging_value) == TYPE_DICTIONARY
+					else null
+				)
+			var accum_value = merged_change.changed_data.get_or_add(key,default_value)
+
+			var merge_function = _merge_handler_function_lookup.get(key)
+			var merged_data = merge_function.call(accum_value, merging_value)
+
+			if merged_data == null:
+				continue
+			merged_change.changed_data.set(key,merged_data)
 	return merged_change
-
-
-static func _merge_recursive(merged_values: Variant, new_values: Variant, overwrite: bool = false):
-	if merged_values is Dictionary and new_values is Dictionary:
-		merged_values.merge(_merge_dictionaries(merged_values,new_values,overwrite))
-		return merged_values
-	elif merged_values is Array and new_values is Array:
-		for item in new_values:
-			if not item in merged_values:
-				merged_values.append(item)
-		return merged_values
-	#else:
-		#merged_values.merge(new_values, overwrite)
-
-
-static func _merge_dictionaries(merged_values: Dictionary, new_values: Dictionary, overwrite: bool = false):
-	for key in new_values.keys():
-		if merged_values.has(key):
-			if merged_values.get(key) is Dictionary and new_values.get(key) is Dictionary:
-				merged_values.set(key, _merge_recursive(merged_values.get(key),new_values.get(key), overwrite))
-			elif merged_values.get(key) is Array and new_values.get(key) is Array:
-				merged_values.set(key, _merge_recursive(merged_values.get(key),new_values.get(key), overwrite))
-			else:
-				merged_values.set(key,new_values.get(key))
-		else:
-			merged_values.set(key,new_values.get(key))
-
-	return merged_values
-
-
-static func add_handler(name: String, function: Callable):
-	if name in _handler_function_lookup.keys() and _handler_function_lookup.get(name) == function:
-		return
-	_handler_function_lookup.set(name,function)
 
 
 static func apply_change(change: BoardChange, board_data: BoardData) -> void:
 	for key in change.changed_data.keys():
-		if _handler_function_lookup.has(key):
-			_handler_function_lookup.get(key).call(board_data, change.changed_data.get(key))
+		if _change_handler_function_lookup.has(key):
+			var change_function = _change_handler_function_lookup.get(key)
+			change_function.call(board_data, change.changed_data.get(key))
 
 	ObjectStateComponent.clear_intermediate_states()
 
 	if is_instance_valid(board_data.assigned_object):
 		board_data.assigned_object.turn_changed.emit()
 
-	if change.changed_data.has("board_representation"):
+	if change.changed_data.has(BOARD_REP_RULE_NAME):
 		change.commit()
 	else:
 		history[-1].changed_data.merge(change.changed_data)
-		DebugPrinter.print_pretty(BoardChange.merge_changes(history).changed_data)
+		#DebugPrinter.print_pretty(BoardChange.merge_changes(history).changed_data)
 
 
-static func _handle_board_representation(board_data: BoardData, value: Variant) -> void:
+#region Change Handlers
+static func add_change_handler(name: String, function: Callable):
+	if name in _change_handler_function_lookup.keys() and _change_handler_function_lookup.get(name) == function:
+		return
+	_change_handler_function_lookup.set(name,function)
+
+
+static func _handle_board_representation_change(board_data: BoardData, value: Variant) -> void:
 	var new_board_representation: Dictionary = Dictionary(board_data.board_representation)
 	new_board_representation.merge(value,true)
 	board_data.board_representation = new_board_representation
 
-	if is_instance_valid(board_data.assigned_object):
-		for move: Array in value.values():
-			move.get(BoardData.TILE_DATA).occupant = move.get(BoardData.PIECE_DATA)
-			if is_instance_valid(move.get(BoardData.PIECE_DATA)):
-				move.get(BoardData.PIECE_DATA).has_moved = true
-				if is_instance_valid(board_data.assigned_object):
-					board_data.assigned_object.audio_piece_move.play()
+	if not is_instance_valid(board_data.assigned_object):
+		return
+
+	for move: Array in value.values():
+		var move_PIECE_DATA_INDEX: PieceData = move.get(BoardData.PIECE_DATA_INDEX)
+		move.get(BoardData.TILE_DATA_INDEX).occupant = move_PIECE_DATA_INDEX
+		if is_instance_valid(move_PIECE_DATA_INDEX):
+			move_PIECE_DATA_INDEX.has_moved = true
+			if is_instance_valid(board_data.assigned_object):
+				board_data.assigned_object.audio_piece_move.play()
 
 
-static func _handle_player_to_move(board_data: BoardData, value: Variant) -> void:
+static func _handle_player_to_move_change(board_data: BoardData, value: Variant) -> void:
 	board_data.player_to_move = value.data
 
 
-static func _handle_captures(board_data: BoardData, value: Variant) -> void:
+static func _handle_capture_change(board_data: BoardData, value: Variant) -> void:
 	for piece in value:
 		piece.is_captured = true
 		if is_instance_valid(board_data.assigned_object):
 			board_data.assigned_object.audio_piece_capture.play()
+#endregion
+
+
+#region Merge Handlers
+static func add_merge_handler(name: String, function: Callable):
+	if name in _merge_handler_function_lookup.keys() and _merge_handler_function_lookup.get(name) == function:
+		return
+	_merge_handler_function_lookup.set(name,function)
+
+
+static func _handle_board_representation_merge(accum_value: Dictionary, merging_value:Dictionary):
+	accum_value.merge(merging_value,true)
+
+
+static func _handle_player_to_move_merge(accum_value: Variant, merging_value:Variant):
+	return merging_value if is_instance_valid(merging_value) else accum_value
+
+
+static func _handle_capture_merge(accum_value: Array, merging_value:Array):
+	accum_value.append_array(merging_value)
+#endregion
 
 
 # adds a change to the dictionary

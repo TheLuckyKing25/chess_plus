@@ -32,42 +32,22 @@ static var en_passant: TileObject = null
 @export var state: TileStateComponent
 
 @export var data: TileDataChess = TileDataChess.new():
-	set(value):
-		if is_node_ready():
-			data.assigned_object = null
-			if data and data.occupant_changed.is_connected(_on_occupant_changed):
-				data.occupant_changed.disconnect(_on_occupant_changed)
-			if value:
-				value.occupant_changed.connect(_on_occupant_changed)
-			value.assigned_object = self
-			assign_new_data(value)
-		data = value
+	set = _data_setter
 #endregion
 
 
 #region Public Variables
 var occupant: PieceObject:
-	set(value):
-		_on_occupant_changed(value.data)
-
-		data.occupant = value.data
-	get():
-		if data.occupant and data.occupant.assigned_object:
-			return data.occupant.assigned_object
-		else:
-			return null
+	set = _occupant_setter,
+	get = _occupant_getter
 
 
 var occupant_data: PieceData:
-	get():
-		if occupant:
-			return occupant.data
-		else:
-			return null
+	get: return null if not is_instance_valid(occupant) else occupant.data
 
 
 var is_occupied:bool:
-	get(): return occupant != null
+	get: return occupant != null
 
 
 var neighbors: Dictionary[Constants.Direction, TileObject] = {
@@ -87,6 +67,7 @@ var neighbors: Dictionary[Constants.Direction, TileObject] = {
 var _original_position_in_space: Vector3
 var _is_mouse_on_tile: bool = false
 
+
 var _tile_color: Color:
 	set(value):	_tile_material.albedo_color = value
 	get: return _tile_material.albedo_color
@@ -102,6 +83,30 @@ var _state_material: StandardMaterial3D:
 
 var _mouseover_material: StandardMaterial3D:
 	get(): return _state_material.next_pass
+#endregion
+
+
+#region Getter/Setters
+func _data_setter(value) -> void:
+	if is_node_ready():
+		data.assigned_object = null
+		if is_instance_valid(data) and data.occupant_changed.is_connected(_on_occupant_changed):
+			data.occupant_changed.disconnect(_on_occupant_changed)
+		if is_instance_valid(value):
+			value.occupant_changed.connect(_on_occupant_changed)
+		value.assigned_object = self
+		assign_new_data(value)
+	data = value
+
+
+func _occupant_setter(value) -> void:
+	_on_occupant_changed(value.data)
+	data.occupant = value.data
+
+
+func _occupant_getter() -> PieceObject:
+	var is_occupant_valid: bool = is_instance_valid(data.occupant) and is_instance_valid(data.occupant.assigned_object)
+	return null if not is_occupant_valid else data.occupant.assigned_object
 
 #endregion
 
@@ -296,11 +301,11 @@ func set_state_color(color: Color, has_emission: bool = false) -> void:
 
 
 #static func new_tile(index: int) -> TileObject:
-	#var new_tile_data:TileDataChess = TileDataChess.new()
-	#new_tile_data.index = index
+	#var new_TILE_DATA_INDEX:TileDataChess = TileDataChess.new()
+	#new_TILE_DATA_INDEX.index = index
 #
 	#var new_tile:TileObject = TILE_SCENE.instantiate()
-	#new_tile.data = new_tile_data
+	#new_tile.data = new_TILE_DATA_INDEX
 	#Match.add_tile(new_tile)
 	#return new_tile
 

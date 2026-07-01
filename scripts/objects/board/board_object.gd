@@ -5,6 +5,7 @@ extends Node3D
 signal turn_changed()
 signal promotion_verified(piece: PieceObject)
 
+
 @export var board_base:MeshInstance3D
 @export_group("Audio","_audio")
 @export var audio_piece_capture:AudioStreamPlayer
@@ -12,12 +13,7 @@ signal promotion_verified(piece: PieceObject)
 
 
 var selected_tile: TileObject:
-	get():
-		var selected_tile_array: Array = TileStateComponent._state_dict[ObjectStateComponent.Type.SELECTED]
-		if selected_tile_array.is_empty():
-			return null
-		else:
-			return selected_tile_array.front()
+	get = _selected_tile_getter
 
 
 var tile_objects: Array[TileObject] = []
@@ -25,25 +21,37 @@ var piece_objects: Array[PieceObject] = []
 
 
 var valid_selections: Array = []
-
 var valid_destinations: Array = []
 
 
 var data: BoardData:
-	set(value):
-		value.assigned_object = self
-		GameData.active_board_state = value
-		if is_instance_valid(data) and data.player_to_move_changed.is_connected(_on_player_to_move_changed):
-			data.player_to_move_changed.disconnect(_on_player_to_move_changed)
-		if is_instance_valid(value):
-			value.player_to_move_changed.connect(_on_player_to_move_changed)
-		load_board_data(value)
-		data = value
+	set = _data_setter
+
+
+#region Getter/Setters
+func _selected_tile_getter() -> TileObject:
+	var selected_tile_array: Array = TileStateComponent._state_dict[ObjectStateComponent.Type.SELECTED]
+	if selected_tile_array.is_empty(): return null
+	else: return selected_tile_array.front()
+
+
+func _data_setter(value:BoardData) -> void:
+	value.assigned_object = self
+	GameData.active_board_state = value
+	if is_instance_valid(data) and data.player_to_move_changed.is_connected(_on_player_to_move_changed):
+		data.player_to_move_changed.disconnect(_on_player_to_move_changed)
+	if is_instance_valid(value):
+		value.player_to_move_changed.connect(_on_player_to_move_changed)
+	load_board_data(value)
+	data = value
+#endregion
 
 
 func _ready() -> void:
-	data = BoardData.create_board(GameData.match_settings.board_size.rank,GameData.match_settings.board_size.file)
-	#data.player_to_move_changed.connect(_on_player_to_move_changed)
+	data = BoardData.create_board(
+			GameData.match_settings.board_size.rank,
+			GameData.match_settings.board_size.file
+		)
 
 	Match.board = self
 
@@ -130,7 +138,7 @@ func _place_pieces(new_data:BoardData)-> void:
 		var position_vector: Vector2i = piece_object.data.position_vector
 		if position_vector in new_data.board_representation.keys():
 			var board_location: Array = new_data.board_representation[position_vector]
-			var assigned_tile: TileObject = board_location.get(BoardData.TILE_DATA).assigned_object
+			var assigned_tile: TileObject = board_location.get(BoardData.TILE_DATA_INDEX).assigned_object
 			assigned_tile.add_child(piece_object)
 			assigned_tile.occupant = piece_object
 
@@ -156,12 +164,11 @@ func _on_tile_clicked(tile:TileObject)-> void:
 
 func _toggle_destination_states(tile: TileObject) -> void:
 	var destinations: Dictionary[TileDataChess,ObjectStateComponent.Type] = data.valid_destinations.get(tile.occupant.data)
-	for tile_data:TileDataChess in destinations.keys():
-		tile_data.assigned_object.state.set_state(destinations.get(tile_data))
-		if is_instance_valid(tile_data.occupant):
-			tile_data.occupant.assigned_object.state.set_state(destinations.get(tile_data))
+	for tile_index:TileDataChess in destinations.keys():
+		tile_index.assigned_object.state.set_state(destinations.get(tile_index))
+		if is_instance_valid(tile_index.occupant):
+			tile_index.occupant.assigned_object.state.set_state(destinations.get(tile_index))
 #endregion
-
 
 
 # ===============================================================================
@@ -190,6 +197,7 @@ func _hide_loading_screen() -> void:
 	var loading_layer = get_node_or_null("LoadingLayer")
 	if loading_layer:
 		loading_layer.queue_free()
+
 
 func _on_peer_connected_resync(_id: int) -> void:
 	if Match.current_game_state == Match.GameState.GAMEPLAY:
@@ -242,25 +250,25 @@ func _serialize_tile_modifiers() -> Dictionary:
 		result[tile.data.index] = modifier_list
 	return result
 
-func submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
-	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
+func submit_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_TILE_DATA_INDEX: int = -1) -> void:
+	_execute_move(from_index, to_index, flags, ep_piece_index, ep_TILE_DATA_INDEX)
 	if NetworkManager.is_online:
-		_sync_move.rpc(from_index, to_index, flags, ep_piece_index, ep_tile_index)
+		_sync_move.rpc(from_index, to_index, flags, ep_piece_index, ep_TILE_DATA_INDEX)
 
 @rpc("any_peer", "call_remote", "reliable")
-func _sync_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
-	_execute_move(from_index, to_index, flags, ep_piece_index, ep_tile_index)
+func _sync_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_TILE_DATA_INDEX: int = -1) -> void:
+	_execute_move(from_index, to_index, flags, ep_piece_index, ep_TILE_DATA_INDEX)
 
-func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_tile_index: int = -1) -> void:
+func _execute_move(from_index: int, to_index: int, flags: int, ep_piece_index: int = -1, ep_TILE_DATA_INDEX: int = -1) -> void:
 	var from_tile: TileObject = data.tile_array[from_index]
 	var to_tile: TileObject = data.tile_array[to_index]
 
 	selected_tile = from_tile
 	#PieceObject.selected = from_tile.occupant
 
-	if ep_piece_index >= 0 and ep_tile_index >= 0:
+	if ep_piece_index >= 0 and ep_TILE_DATA_INDEX >= 0:
 		PieceObject.en_passant = data.piece_array[ep_piece_index]
-		TileObject.en_passant = data.tile_array[ep_tile_index]
+		TileObject.en_passant = data.tile_array[ep_TILE_DATA_INDEX]
 		Player.en_passant = Player.current
 
 	if flags & Move.Outcome.EN_PASSANT:
