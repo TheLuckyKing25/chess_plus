@@ -57,7 +57,7 @@ func _ready() -> void:
 	GameData.players.set(data.player_name.to_lower(),self)
 
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	camera_object.position.z = camera_distance_from_subject
 	camera_pitch_pivot.rotation_degrees.x = camera_pitch
 	camera_twist_pivot.rotation_degrees.y = camera_yaw

@@ -96,7 +96,6 @@ func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary
 			next_tile_state = ObjectStateComponent.Type.MOVEMENT
 			tiles.set(next_tile,next_tile_state)
 
-
 		if is_threaten and next_tile.occupant and not next_tile in _board.valid_selections:
 			next_tile_state = ObjectStateComponent.Type.THREATENED
 			tiles.set(next_tile,next_tile_state)

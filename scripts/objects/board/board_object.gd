@@ -158,8 +158,8 @@ func _on_tile_clicked(tile:TileObject)-> void:
 	if tile.data in data.valid_selections:
 		tile.state.set_state(ObjectStateComponent.Type.SELECTED)
 		_toggle_destination_states(tile)
-	elif is_instance_valid(selected_tile) and tile.data in data.valid_destinations[selected_tile.occupant.data].keys():
-		data.process_move(selected_tile.data, tile.data)
+	elif is_instance_valid(selected_tile) and tile.data in data.valid_destinations.get(selected_tile.occupant.data).keys():
+		data.process_change(selected_tile.data, tile.data)
 
 
 func _toggle_destination_states(tile: TileObject) -> void:

@@ -1,23 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://bmes5xsco1bk5"]
+[gd_scene format=3 uid="uid://bmes5xsco1bk5"]
 
 [ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://scripts/player/player.gd" id="1_qhqgy"]
 [ext_resource type="Script" uid="uid://dk4hgujlft1oj" path="res://scripts/time_control.gd" id="2_qhqgy"]
 
-[node name="Player" type="Node" node_paths=PackedStringArray("camera_object", "camera_twist_pivot", "camera_pitch_pivot", "timer")]
+[node name="Player" type="Node" unique_id=889475949 node_paths=PackedStringArray("camera_object", "camera_twist_pivot", "camera_pitch_pivot", "timer")]
 script = ExtResource("1_qhqgy")
 camera_object = NodePath("TwistPivot/PitchPivot/Camera")
 camera_twist_pivot = NodePath("TwistPivot")
 camera_pitch_pivot = NodePath("TwistPivot/PitchPivot")
 timer = NodePath("TimeControl")
 
-[node name="TwistPivot" type="Node3D" parent="."]
+[node name="TwistPivot" type="Node3D" parent="." unique_id=416733234]
 
-[node name="PitchPivot" type="Node3D" parent="TwistPivot"]
+[node name="PitchPivot" type="Node3D" parent="TwistPivot" unique_id=246521317]
 
-[node name="Camera" type="Camera3D" parent="TwistPivot/PitchPivot"]
+[node name="Camera" type="Camera3D" parent="TwistPivot/PitchPivot" unique_id=1628552018]
 current = true
 fov = 70.0
 
-[node name="TimeControl" type="Timer" parent="."]
+[node name="TimeControl" type="Timer" parent="." unique_id=284527911]
 script = ExtResource("2_qhqgy")
 metadata/_custom_type_script = "uid://dk4hgujlft1oj"

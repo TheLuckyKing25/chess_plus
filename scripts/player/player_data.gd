@@ -20,7 +20,7 @@ var direction_parity: int
 var piece_rotation_parity: float
 
 
-var assigned_object: Player
+@export_custom(PROPERTY_HINT_NONE,"",PROPERTY_USAGE_DEFAULT|PROPERTY_USAGE_NEVER_DUPLICATE) var assigned_object: Player
 
 
 @export var pieces:Dictionary[String,Array] = {}

@@ -22,9 +22,6 @@ static var _merge_handler_function_lookup: Dictionary[String, Callable] = {
 }
 
 
-static var history: Array[BoardChange] = []
-
-
 var changed_data: Dictionary[String, Variant] = {
 	# variable_name: data_changed,
 }
@@ -39,8 +36,8 @@ static func merge_changes(changes: Array[BoardChange]) -> BoardChange:
 
 			var merging_value: Variant = board_change.changed_data.get(key)
 			var default_value: Variant = (
-					[] if typeof(merging_value) == TYPE_ARRAY
-					else {} if typeof(merging_value) == TYPE_DICTIONARY
+					Array() if typeof(merging_value) == TYPE_ARRAY
+					else Dictionary() if typeof(merging_value) == TYPE_DICTIONARY
 					else null
 				)
 			var accum_value = merged_change.changed_data.get_or_add(key,default_value)
@@ -65,11 +62,7 @@ static func apply_change(change: BoardChange, board_data: BoardData) -> void:
 	if is_instance_valid(board_data.assigned_object):
 		board_data.assigned_object.turn_changed.emit()
 
-	if change.changed_data.has(BOARD_REP_RULE_NAME):
-		change.commit()
-	else:
-		history[-1].changed_data.merge(change.changed_data)
-		#DebugPrinter.print_pretty(BoardChange.merge_changes(history).changed_data)
+	board_data.board_history.append(change)
 
 
 #region Change Handlers
@@ -88,10 +81,10 @@ static func _handle_board_representation_change(board_data: BoardData, value: Va
 		return
 
 	for move: Array in value.values():
-		var move_PIECE_DATA_INDEX: PieceData = move.get(BoardData.PIECE_DATA_INDEX)
-		move.get(BoardData.TILE_DATA_INDEX).occupant = move_PIECE_DATA_INDEX
-		if is_instance_valid(move_PIECE_DATA_INDEX):
-			move_PIECE_DATA_INDEX.has_moved = true
+		var move_piece_data: PieceData = move.get(BoardData.PIECE_DATA_INDEX)
+		move.get(BoardData.TILE_DATA_INDEX).occupant = move_piece_data
+		if is_instance_valid(move_piece_data):
+			move_piece_data.has_moved = true
 			if is_instance_valid(board_data.assigned_object):
 				board_data.assigned_object.audio_piece_move.play()
 
@@ -137,7 +130,3 @@ func add_change(variable_name: String, new_data:Variant) -> void:
 		current_data.append(new_data)
 	else:
 		changed_data.set(variable_name,new_data)
-
-
-func commit() -> void:
-	history.append(self)

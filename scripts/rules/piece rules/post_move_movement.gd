@@ -30,8 +30,12 @@ func _init():
 
 
 func evaluate_rule_application(current_change: BoardChange, piece: PieceData):
-	if has_rule_been_applied or not piece.has_moved: return
+	var _piece_filter: Callable = func(accum, array): return accum + [array.get(BoardData.PIECE_DATA_INDEX)]
+	var _validity_filter: Callable = func(item): return is_instance_valid(item)
 
-	var change_info: Dictionary[PieceData, AbstractMovement] = {piece: new_movement.duplicate_deep()}
-	current_change.add_change(RULE_NAME, change_info)
-	has_rule_been_applied = true
+	var changed_board_rep:Dictionary = current_change.changed_data.get(BoardChange.BOARD_REP_RULE_NAME)
+	var moved_pieces = changed_board_rep.values().reduce(_piece_filter,[]).filter(_validity_filter)
+	if not has_rule_been_applied and not piece.has_moved and piece in moved_pieces:
+		var change_info: Dictionary[PieceData, AbstractMovement] = {piece: new_movement.duplicate_deep()}
+		current_change.add_change(RULE_NAME, change_info)
+		has_rule_been_applied = true

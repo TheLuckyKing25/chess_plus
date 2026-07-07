@@ -14,28 +14,28 @@ enum {
 	}
 
 
-var rules: Array[GameRule] = [
+@export var rules: Array[GameRule] = [
 	FiftyMoveRule.new()
 ]
 
 
-var rank_count: int = GameData.match_settings.board_size.rank
-var file_count: int = GameData.match_settings.board_size.file
+@export var rank_count: int = GameData.match_settings.board_size.rank
+@export var file_count: int = GameData.match_settings.board_size.file
 
 
-var max_length: int:
+@export var max_length: int:
 	get = _max_length_getter
 
 
 @export_custom(PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NEVER_DUPLICATE) var assigned_object: BoardObject
 
 
-var tiles: Array[TileDataChess] = []
-var pieces: Array[PieceData] = []
+@export var tiles: Array[TileDataChess] = []
+@export var pieces: Array[PieceData] = []
 
 
-var valid_selections: Array = []
-var valid_destinations: Dictionary[PieceData,Dictionary] = {
+@export var valid_selections: Array = []
+@export var valid_destinations: Dictionary[PieceData,Dictionary] = {
 	#PieceData: {TileData: ObjectStateComponent.Type, ...}
 }
 
@@ -45,15 +45,18 @@ var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
 #region Data
 # Entries of this dictionary are of the format "Vector2i: [TileData, PieceData]"
-var board_representation: Dictionary[Vector2i, Array] = {}:
+@export var board_representation: Dictionary[Vector2i, Array] = {}:
 	set = _board_representation_setter
 
 
-var player_to_move: PlayerData:
+@export var player_to_move: PlayerData:
 	set = _player_to_move_setter
 
 
-var castling_rights: Dictionary = {
+@export var board_history: Array[BoardChange] = []
+
+
+@export var castling_rights: Dictionary = {
 	"white": {
 		"kingside": true,
 		"queenside": true,
@@ -67,14 +70,23 @@ var castling_rights: Dictionary = {
 
 # Defines the Tile a pawn must land on to capture Piece.
 # Piece is not on Tile.
-var en_passant: Dictionary = {
+@export var en_passant: Dictionary = {
 	"tile": null,
 	"piece": null
 }
 
 
-var fullmove_counter: int = 0
+@export var fullmove_counter: int = 0
 #endregion
+
+
+func print_properties():
+	var property_list: Array[Dictionary] = get_property_list()
+	var property_dict: Dictionary[StringName,Variant] = {}
+	for property in property_list:
+		property_dict.set(property.name,get(property.name))
+
+	DebugPrinter.print_pretty(property_dict, false)
 
 
 #region Getter/Setters
@@ -99,11 +111,14 @@ static func create_board(ranks:int = 8, files:int = 8) -> BoardData:
 
 	if board.board_representation.is_empty():
 		board._generate_position_vectors()
-		board._generate_TILE_DATA_INDEX()
+		board._generate_tile_data()
 
 	board._assign_tile_neighbors()
 	board._generate_pieces()
 	board._set_player_to_move()
+
+	var search: BoardSearch = BoardSearch.new()
+	search.search(board,1)
 
 	return board
 
@@ -123,7 +138,7 @@ func _generate_position_vectors() -> void:
 		board_representation.set(Vector2i(index/file_count, index%file_count),[])
 
 
-func _generate_TILE_DATA_INDEX() -> void:
+func _generate_tile_data() -> void:
 	for index in range(rank_count*file_count):
 		var new_tile: TileDataChess = TileDataChess.new()
 		tiles.append(new_tile)
@@ -174,7 +189,10 @@ func _generate_pieces() -> void:
 			"1","2","3","4","5","6","7","8","9":
 				tile_count += character.to_int()
 				continue
-			_:
+			var no_match:
+				if no_match == "/": continue
+				printerr("No match found for " + no_match)
+				print_stack()
 				continue
 
 		match character:
@@ -204,7 +222,6 @@ func _on_player_to_move_changed(new_player_data:PlayerData) -> void:
 	valid_destinations.clear()
 	_find_all_valid_selections(new_player_data)
 	_find_all_valid_destinations()
-
 
 func _find_all_valid_selections(new_player_data:PlayerData) -> void:
 	var piece_filter:Callable = func(piece: PieceData): if piece.player == new_player_data: return piece
@@ -238,7 +255,7 @@ func _find_movement_of_piece(piece:PieceData) -> Dictionary[TileDataChess,Object
 	return movement
 
 
-func process_move(from: TileDataChess, to: TileDataChess) -> void:
+func process_change(from: TileDataChess, to: TileDataChess) -> void:
 	var new_change: BoardChange = BoardChange.new()
 
 	var move: Dictionary = {
@@ -251,29 +268,24 @@ func process_move(from: TileDataChess, to: TileDataChess) -> void:
 	if is_instance_valid(to.occupant):
 		new_change.add_change(BoardChange.CAPTURED_RULE_NAME, [to.occupant])
 
+
+	_evaluate_piece_rules(new_change)
+	_evaluate_game_rules(new_change)
+
 	BoardChange.apply_change(new_change,self)
-	_evaluate_piece_rules()
-	_evaluate_game_rules()
-
-	DebugPrinter.print_pretty(BoardChange.history[-1].changed_data)
+	DebugPrinter.print_pretty(board_history[-1].changed_data,false)
 
 
-func _evaluate_piece_rules():
-	var _validation_filter: Callable = func(item): return is_instance_valid(item)
-	var new_changes: Array[BoardChange] = []
+func _evaluate_piece_rules(current_changes: BoardChange):
 	for piece:PieceData in pieces:
-		new_changes.append(piece.evaluate_rules())
-	var new_changes_filtered: Array[BoardChange] = new_changes.filter(_validation_filter)
-	BoardChange.apply_change(BoardChange.merge_changes(new_changes_filtered),self)
+		piece.evaluate_rules(current_changes)
 
 
-func _evaluate_game_rules():
+func _evaluate_game_rules(current_changes: BoardChange):
 	var _validation_filter: Callable = func(item): return is_instance_valid(item)
 	var new_changes: Array[BoardChange] = []
-	var change: BoardChange = BoardChange.new()
 	for rule:GameRule in rules:
-		new_changes.append(rule.evaluate_rule_application(change,self))
-	BoardChange.apply_change(BoardChange.merge_changes([change]),self)
+		new_changes.append(rule.evaluate_rule_application(current_changes,self))
 
 
 # ===============================================================================

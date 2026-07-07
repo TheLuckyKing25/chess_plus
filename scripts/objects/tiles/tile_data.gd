@@ -39,7 +39,7 @@ var algebraic_notation: String:
 	get(): return char(97 + rank) + str((1 + file))
 
 
-var position_vector: Vector2i = Vector2i(-1,-1):
+@export var position_vector: Vector2i = Vector2i(-1,-1):
 	set(value):
 		rank = value.x
 		file = value.y
@@ -48,7 +48,7 @@ var position_vector: Vector2i = Vector2i(-1,-1):
 #endregion
 
 
-var occupant: PieceData = null:
+@export var occupant: PieceData = null:
 	set(new_occupant):
 		if new_occupant:
 			new_occupant.position_vector = position_vector
@@ -64,13 +64,15 @@ var occupant: PieceData = null:
 	) var assigned_object: TileObject
 
 
+func _init() -> void:
+	resource_local_to_scene = true
+
+
 # ===============================================================================
 # ============================== [END OF REFACTOR] ==============================
 # ===============================================================================
 
 
-func _init() -> void:
-	resource_local_to_scene = true
 
 
 func clear_modifiers():

@@ -28,9 +28,9 @@ func evaluate_rule_application(current_change: BoardChange, piece:PieceData):
 	var _piece_filter: Callable = func(item):return (item is PieceData)
 	var _occupied_tile_filter: Callable = func(array:Array): return array.any(_piece_filter)
 
-	var recent_board_history_data = BoardChange.history.back().changed_data
-	var changed_board_rep: Dictionary = recent_board_history_data.get(BoardChange.BOARD_REP_RULE_NAME)
-	var destination: Array = changed_board_rep.values().filter(_occupied_tile_filter).front()
+	#var recent_board_history_data = BoardChange.history.back().changed_data
+	var changed_board_rep: Dictionary = current_change.changed_data.get(BoardChange.BOARD_REP_RULE_NAME)
+	var destination = changed_board_rep.values().filter(_occupied_tile_filter).front()
 
 	var is_on_promotion_rank: bool = (piece.player.promotion_rank == destination.get(BoardData.TILE_DATA_INDEX).rank)
 	if is_on_promotion_rank and piece == destination.get(BoardData.PIECE_DATA_INDEX):

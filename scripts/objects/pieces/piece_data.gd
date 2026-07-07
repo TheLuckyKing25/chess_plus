@@ -19,10 +19,11 @@ signal captured
 		_adjusted_movement = value.base_movement.duplicate(true)
 		type = value
 
+@export var _has_been_adjusted: bool = false
 
 # movement that accounts for the player the piece belongs to.
 # used to reset current_movement
-var _adjusted_movement: AbstractMovement:
+@export var _adjusted_movement: AbstractMovement:
 	set(value):
 		_adjusted_movement = value
 		_apply_direction_parity_to_movement()
@@ -34,7 +35,7 @@ var _adjusted_movement: AbstractMovement:
 var current_movement: AbstractMovement
 
 
-var player: PlayerData:
+@export var player: PlayerData:
 	set(new_player):
 		player_changed.emit(new_player)
 		player = new_player
@@ -50,7 +51,7 @@ var file: int
 var index: int
 
 
-var position_vector: Vector2i:
+@export var position_vector: Vector2i:
 	set(value):
 		rank = value.x
 		file = value.y
@@ -75,6 +76,7 @@ var is_captured: bool = false:
 
 
 func _init():
+	resource_local_to_scene = true
 	player_changed.connect(_on_player_changed)
 
 
@@ -113,14 +115,9 @@ func reset_current_movement():
 	current_movement = _adjusted_movement.duplicate_deep()
 
 
-func evaluate_rules() -> BoardChange:
-	var new_change: BoardChange = BoardChange.new()
+func evaluate_rules(current_changes: BoardChange) -> void:
 	for rule:PieceRule in type.rules:
-		rule.evaluate_rule_application(new_change, self)
-	if not new_change.changed_data.is_empty():
-		return new_change
-	else:
-		return
+		rule.evaluate_rule_application(current_changes, self)
 
 
 # ===============================================================================
