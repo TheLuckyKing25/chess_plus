@@ -10,6 +10,9 @@ const CHECKED_COLOR: Color = Color(0.9, 0, 0, 1)
 const CASTLING_COLOR: Color = Color(1,1,1,1)
 
 
+@export var mesh_component: MeshComponent
+
+
 const color: Dictionary [Type,Color] = {
 	Type.NONE: NONE_COLOR,
 	Type.SELECTED: SELECT_COLOR,
@@ -61,7 +64,9 @@ func _on_state_changed(new_state: Type):
 
 
 func _apply_state_color():
-	piece.set_state_color(color[current],false)
+	mesh_component.set_outline_color(color[current])
+	mesh_component.outline_material.emission_enabled = false
+	mesh_component.outline_material.emission = color[current]
 
 
 func _on_selected():

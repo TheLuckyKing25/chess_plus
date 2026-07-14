@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://btdvbprakodnv"
-path="res://.godot/imported/GlitchGoblin.ttf-14b22a7f8dfecfc6731a958d66f6d41a.fontdata"
+path="res://.godot/imported/GlitchGoblin.ttf-d4307487cad5504a51cda94798f6508a.fontdata"
 
 [deps]
 
-source_file="res://assets/font/GlitchGoblin.ttf"
-dest_files=["res://.godot/imported/GlitchGoblin.ttf-14b22a7f8dfecfc6731a958d66f6d41a.fontdata"]
+source_file="res://assets/font/GlitchGoblin/GlitchGoblin.ttf"
+dest_files=["res://.godot/imported/GlitchGoblin.ttf-d4307487cad5504a51cda94798f6508a.fontdata"]
 
 [params]
 
@@ -21,6 +21,7 @@ msdf_pixel_range=8
 msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
+modulate_color_glyphs=false
 hinting=1
 subpixel_positioning=4
 keep_rounding_remainders=true

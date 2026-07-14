@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dwrbcnxvnk3jn"]
+
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://scenes/pieces/piece.tscn" id="1_3b14o"]
+[ext_resource type="ArrayMesh" uid="uid://cl7rh34wkwp71" path="res://assets/mesh/mesh_king.obj" id="2_xp56u"]
+[ext_resource type="Resource" uid="uid://q64kt75k3ajt" path="res://resources/pieces/movement/king.tres" id="3_3b14o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xp56u"]
+resource_local_to_scene = true
+resource_name = "Outline"
+transparency = 1
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amwao"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+next_pass = SubResource("StandardMaterial3D_xp56u")
+roughness_texture_channel = 4
+clearcoat_enabled = true
+clearcoat_roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ax8ha"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+render_priority = 1
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(1, 1, 1, 1)
+stencil_flags = 2
+stencil_outline_thickness = 0.1
+
+[node name="King" unique_id=210537964 instance=ExtResource("1_3b14o")]
+
+[node name="MeshComponent" parent="." index="3" unique_id=650561997]
+material_override = SubResource("StandardMaterial3D_amwao")
+material_overlay = SubResource("StandardMaterial3D_ax8ha")
+mesh = ExtResource("2_xp56u")
+
+[node name="MovementComponent" parent="." index="4" unique_id=1074763618]
+base_movement = ExtResource("3_3b14o")

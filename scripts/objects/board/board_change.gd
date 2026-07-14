@@ -51,7 +51,7 @@ static func merge_changes(changes: Array[BoardChange]) -> BoardChange:
 	return merged_change
 
 
-static func apply_change(change: BoardChange, board_data: BoardData) -> void:
+static func apply_change(change: BoardChange, board_data: BoardObject) -> void:
 	for key in change.changed_data.keys():
 		if _change_handler_function_lookup.has(key):
 			var change_function = _change_handler_function_lookup.get(key)
@@ -72,7 +72,7 @@ static func add_change_handler(name: String, function: Callable):
 	_change_handler_function_lookup.set(name,function)
 
 
-static func _handle_board_representation_change(board_data: BoardData, value: Variant) -> void:
+static func _handle_board_representation_change(board_data: BoardObject, value: Variant) -> void:
 	var new_board_representation: Dictionary = Dictionary(board_data.board_representation)
 	new_board_representation.merge(value,true)
 	board_data.board_representation = new_board_representation
@@ -81,19 +81,19 @@ static func _handle_board_representation_change(board_data: BoardData, value: Va
 		return
 
 	for move: Array in value.values():
-		var move_piece_data: PieceData = move.get(BoardData.PIECE_DATA_INDEX)
-		move.get(BoardData.TILE_DATA_INDEX).occupant = move_piece_data
+		var move_piece_data: PieceObject = move.get(BoardObject.PIECE_DATA_INDEX)
+		move.get(BoardObject.TILE_DATA_INDEX).occupant = move_piece_data
 		if is_instance_valid(move_piece_data):
 			move_piece_data.has_moved = true
 			if is_instance_valid(board_data.assigned_object):
 				board_data.assigned_object.audio_piece_move.play()
 
 
-static func _handle_player_to_move_change(board_data: BoardData, value: Variant) -> void:
+static func _handle_player_to_move_change(board_data: BoardObject, value: Variant) -> void:
 	board_data.player_to_move = value.data
 
 
-static func _handle_capture_change(board_data: BoardData, value: Variant) -> void:
+static func _handle_capture_change(board_data: BoardObject, value: Variant) -> void:
 	for piece in value:
 		piece.is_captured = true
 		if is_instance_valid(board_data.assigned_object):

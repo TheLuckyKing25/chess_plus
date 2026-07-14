@@ -1,10 +1,10 @@
 class_name MoveList
 extends RefCounted
 
-var board_data: BoardData
+var board_data: BoardObject
 var moves: Array[Move] = []
 
-static func generate_moves(board_data: BoardData):
+static func generate_moves(board_data: BoardObject):
 	var move_list = MoveList.new(board_data)
 
 	for piece in Player.current.all_pieces:
@@ -16,7 +16,7 @@ func generate_piece_moves(piece: PieceObject):
 
 
 
-func _init(board_data:BoardData) -> void:
+func _init(board_data:BoardObject) -> void:
 	self.board_data = board_data
 
 

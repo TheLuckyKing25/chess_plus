@@ -7,7 +7,7 @@ extends GameRule
 const RULE_NAME: String = "_CLASS_SNAKE_CASE_"
 
 
-static func _handle_change(board_data: BoardData, value: Variant):
+static func _handle_change(board_data: BoardObject, value: Variant):
 	pass
 
 
@@ -22,5 +22,5 @@ func _init():
 	BoardChange.add_merge_handler(RULE_NAME,merge_handler_function)
 
 
-func evaluate_rule_application(current_change: BoardChange, board:BoardData):
+func evaluate_rule_application(current_change: BoardChange, board:BoardObject):
 	pass

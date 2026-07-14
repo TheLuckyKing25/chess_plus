@@ -12,7 +12,7 @@ var max_board_length: int = maxi(match_settings.board_size.rank,match_settings.b
 var players: Dictionary[String, Player] = {}
 
 
-var active_board_state: BoardData
+#var active_board_state: BoardObject
 
 
 var rules: Dictionary = {
@@ -20,11 +20,11 @@ var rules: Dictionary = {
 }
 
 
-func _ready() -> void:
-	if get_child_count() != 0:
-		active_board_state = BoardData.create_board(8,8)
+#func _ready() -> void:
+	#if get_child_count() != 0:
+		#active_board_state = BoardObject.new(8,8)
 
 
-func opponent(player: PlayerData):
+func opponent(player: Player):
 	var filter: Callable = func(value): return value.data != player
 	return players.values().filter(filter)[0]

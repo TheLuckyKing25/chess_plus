@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://7bya4j8tgsf6"]
+
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://scenes/pieces/piece.tscn" id="1_st6gu"]
+[ext_resource type="ArrayMesh" uid="uid://co538rh6q5c02" path="res://assets/mesh/mesh_knight.obj" id="2_o7y2p"]
+[ext_resource type="Resource" uid="uid://8gfafi0lgf6u" path="res://resources/pieces/movement/knight.tres" id="3_q4lw7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xua18"]
+resource_local_to_scene = true
+resource_name = "Outline"
+transparency = 1
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_st6gu"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+next_pass = SubResource("StandardMaterial3D_xua18")
+roughness_texture_channel = 4
+clearcoat_enabled = true
+clearcoat_roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7y2p"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+render_priority = 1
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(1, 1, 1, 1)
+stencil_flags = 2
+stencil_outline_thickness = 0.1
+
+[node name="Knight" unique_id=210537964 instance=ExtResource("1_st6gu")]
+
+[node name="MeshComponent" parent="." index="3" unique_id=650561997]
+material_override = SubResource("StandardMaterial3D_st6gu")
+material_overlay = SubResource("StandardMaterial3D_o7y2p")
+mesh = ExtResource("2_o7y2p")
+
+[node name="MovementComponent" parent="." index="4" unique_id=1074763618]
+base_movement = ExtResource("3_q4lw7")

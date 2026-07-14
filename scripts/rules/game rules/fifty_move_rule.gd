@@ -6,7 +6,7 @@ const TURNS_UNTIL_DRAW: int = 50
 const RULE_NAME: String = "half_move_clock"
 
 
-static func _handle_change(board_data: BoardData, value: Variant):
+static func _handle_change(board_data: BoardObject, value: Variant):
 	#var full_turn_count: int = floor(count/2)
 	#if full_turn_count == TURNS_UNTIL_DRAW:
 		# DRAW
@@ -25,8 +25,8 @@ func _init():
 	resource_name = "FiftyMoveRule"
 
 
-func evaluate_rule_application(current_change: BoardChange, board:BoardData):
-	var _piece_filter: Callable = func(item):return (item is PieceData)
+func evaluate_rule_application(current_change: BoardChange, board:BoardObject):
+	var _piece_filter: Callable = func(item):return (item is PieceObject)
 	var _occupied_tile_filter: Callable = func(array:Array): return array.any(_piece_filter)
 
 	var current_count: int = 0
@@ -35,11 +35,11 @@ func evaluate_rule_application(current_change: BoardChange, board:BoardData):
 	var destination: Array = changed_board_rep.values().filter(_occupied_tile_filter).front()
 
 	var pawn_config: PieceConfig = load(Constants.piece_config.get(Constants.TypePiece.PAWN))
-	var was_pawn_moved: bool = destination.get(BoardData.PIECE_DATA_INDEX).type.name == pawn_config.name
+	var was_pawn_moved: bool = destination.get(BoardObject.PIECE_DATA_INDEX).type.name == pawn_config.name
 	var was_piece_captured:bool = current_change.changed_data.has(BoardChange.CAPTURED_RULE_NAME)
 	if not was_piece_captured and not was_pawn_moved:
 		if not board.board_history.is_empty():
-			var prev_change:Dictionary = board.board_history.back()
+			var prev_change:Dictionary = board.board_history.back().changed_data
 			var prev_count: int = prev_change.get(RULE_NAME)
 			current_count = prev_count + 1
 		else:

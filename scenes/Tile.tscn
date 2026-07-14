@@ -1,15 +1,10 @@
 [gd_scene format=3 uid="uid://clmimmf3c1qpt"]
 
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/objects/tiles/tile_object.gd" id="1_3dk36"]
-[ext_resource type="Script" uid="uid://bnikrdhnmt073" path="res://scripts/objects/tiles/tile_data.gd" id="2_ywnoi"]
+[ext_resource type="Script" uid="uid://pgniqybunxts" path="res://scripts/components/collision_component.gd" id="2_q7utx"]
 [ext_resource type="Script" uid="uid://dednv8et81qj6" path="res://scripts/objects/tiles/tile_state_component.gd" id="3_jy7pm"]
-
-[sub_resource type="Resource" id="Resource_jy7pm"]
-script = ExtResource("2_ywnoi")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
-margin = 0.06
-size = Vector3(1, 0.163, 1)
+[ext_resource type="Script" uid="uid://d02ckgyhn67qc" path="res://scripts/components/mesh_component.gd" id="4_6p3j2"]
+[ext_resource type="Script" uid="uid://doe61vbegg7n" path="res://scenes/occupant_component.gd" id="5_6p3j2"]
 
 [sub_resource type="Gradient" id="Gradient_esqu7"]
 offsets = PackedFloat32Array(0.7, 0.9)
@@ -23,16 +18,8 @@ height = 128
 fill = 2
 fill_from = Vector2(0.5, 0.5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvdvl"]
-resource_local_to_scene = true
-resource_name = "piece_color"
-transparency = 1
-albedo_color = Color(1, 1, 1, 0)
-emission = Color(0.5, 0.5, 0.5, 1)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3gf4"]
 resource_local_to_scene = true
-next_pass = SubResource("StandardMaterial3D_rvdvl")
 transparency = 1
 albedo_texture = SubResource("GradientTexture2D_1g878")
 emission = Color(1, 1, 1, 1)
@@ -43,30 +30,59 @@ resource_local_to_scene = true
 next_pass = SubResource("StandardMaterial3D_r3gf4")
 emission = Color(1, 1, 1, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvdvl"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(0.5, 0.5, 0.5, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_iixfe"]
 lightmap_size_hint = Vector2i(11, 8)
 add_uv2 = true
 uv2_padding = 1.0
 size = Vector3(0.95, 0.1, 0.95)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_iixfe"]
+margin = 0.06
+size = Vector3(1, 0.163, 1)
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_esqu7"]
 viewport_path = NodePath("Tile_Modifiers/Modifier_Grid")
 
-[node name="Tile" type="StaticBody3D" unique_id=1836683037 node_paths=PackedStringArray("state") groups=["Tile"]]
+[node name="Tile" type="Node3D" unique_id=1957496987 node_paths=PackedStringArray("state", "collision_component", "mesh_component", "occupant_component") groups=["Tile"]]
 script = ExtResource("1_3dk36")
 state = NodePath("TileStateComponent")
-data = SubResource("Resource_jy7pm")
+collision_component = NodePath("CollisionComponent")
+mesh_component = NodePath("MeshComponent")
+occupant_component = NodePath("OccupantComponent")
+metadata/_custom_type_script = "uid://c56mrbf2es4ra"
 
-[node name="TileStateComponent" type="Node" parent="." unique_id=395610070]
+[node name="SaverNode" type="Node" parent="." unique_id=100773484]
+
+[node name="OccupantComponent" type="Node" parent="." unique_id=351237597]
+script = ExtResource("5_6p3j2")
+metadata/_custom_type_script = "uid://doe61vbegg7n"
+
+[node name="TileStateComponent" type="Node" parent="." unique_id=1807655134 node_paths=PackedStringArray("mesh_component")]
 script = ExtResource("3_jy7pm")
+mesh_component = NodePath("../MeshComponent")
+metadata/_custom_type_script = "uid://dednv8et81qj6"
 
-[node name="Collision" type="CollisionShape3D" parent="." unique_id=1660892443]
-shape = SubResource("BoxShape3D_iixfe")
-
-[node name="Mesh" type="MeshInstance3D" parent="." unique_id=501872617]
+[node name="MeshComponent" type="MeshInstance3D" parent="." unique_id=137106594]
 material_override = SubResource("StandardMaterial3D_vhibn")
+material_overlay = SubResource("StandardMaterial3D_rvdvl")
 mesh = SubResource("BoxMesh_iixfe")
 skeleton = NodePath("")
+script = ExtResource("4_6p3j2")
+metadata/_custom_type_script = "uid://d02ckgyhn67qc"
+
+[node name="CollisionComponent" type="Area3D" parent="." unique_id=184464248]
+script = ExtResource("2_q7utx")
+metadata/_custom_type_script = "uid://pgniqybunxts"
+
+[node name="Collision" type="CollisionShape3D" parent="CollisionComponent" unique_id=1660892443]
+shape = SubResource("BoxShape3D_iixfe")
 
 [node name="Tile_Modifiers" type="Sprite3D" parent="." unique_id=1144003348]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
@@ -100,6 +116,3 @@ theme_override_constants/h_separation = 31
 theme_override_constants/v_separation = 31
 alignment = 1
 last_wrap_alignment = 2
-
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

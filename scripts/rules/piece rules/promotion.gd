@@ -8,8 +8,8 @@ const RULE_NAME: String = "promote"
 @export var promotion_options: Array[PieceConfig]
 
 
-static func _handle_change(board_data: BoardData, value: Variant):
-	for piece:PieceData in value.keys():
+static func _handle_change(board_data: BoardObject, value: Variant):
+	for piece:PieceObject in value.keys():
 		piece.type = value.get(piece)
 
 
@@ -24,17 +24,17 @@ func _init():
 	BoardChange.add_merge_handler(RULE_NAME,merge_function)
 
 
-func evaluate_rule_application(current_change: BoardChange, piece:PieceData):
-	var _piece_filter: Callable = func(item):return (item is PieceData)
+func evaluate_rule_application(current_change: BoardChange, piece:PieceObject):
+	var _piece_filter: Callable = func(item):return (item is PieceObject)
 	var _occupied_tile_filter: Callable = func(array:Array): return array.any(_piece_filter)
 
 	#var recent_board_history_data = BoardChange.history.back().changed_data
 	var changed_board_rep: Dictionary = current_change.changed_data.get(BoardChange.BOARD_REP_RULE_NAME)
 	var destination = changed_board_rep.values().filter(_occupied_tile_filter).front()
 
-	var is_on_promotion_rank: bool = (piece.player.promotion_rank == destination.get(BoardData.TILE_DATA_INDEX).rank)
-	if is_on_promotion_rank and piece == destination.get(BoardData.PIECE_DATA_INDEX):
+	var is_on_promotion_rank: bool = (piece.player.promotion_rank == destination.get(BoardObject.TILE_DATA_INDEX).rank)
+	if is_on_promotion_rank and piece == destination.get(BoardObject.PIECE_DATA_INDEX):
 		# TEMPORARY: FIRST PROMOTION OPTION IS CHOSEN
 		var first_promotion_option: PieceConfig = promotion_options.front()
-		var change_info: Dictionary[PieceData, PieceConfig] = {piece: first_promotion_option}
+		var change_info: Dictionary[PieceObject, PieceConfig] = {piece: first_promotion_option}
 		current_change.add_change(RULE_NAME, change_info)

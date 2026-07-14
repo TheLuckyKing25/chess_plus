@@ -21,16 +21,16 @@ var is_branching: bool:
 	get: return not next_movement is BranchingMovement
 
 
-func set_direction_parity(direction_parity:int):
-	if direction_parity == 4:
+func set_facing_direction(facing_direction:int):
+	if facing_direction == 4:
 		rank_origin_offset *= -1
 		file_origin_offset *= -1
 	if is_instance_valid(next_movement):
-		next_movement.set_direction_parity(direction_parity)
+		next_movement.set_facing_direction(facing_direction)
 
 
-func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
-	var tiles: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
+func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
+	var tiles: Dictionary[TileObject,ObjectStateComponent.Type] = {}
 
 	# find next_tile
 	var new_position:Vector2i = current_tile.position_vector + offset_vector
@@ -38,7 +38,7 @@ func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary
 	if _board.board_representation.get(new_position) == null:
 		return {}
 
-	var next_tile:TileDataChess = _board.board_representation.get(new_position).get(BoardData.TILE_DATA_INDEX)
+	var next_tile:TileObject = _board.board_representation.get(new_position).get(BoardObject.TILE_DATA_INDEX)
 	var next_tile_state: ObjectStateComponent.Type = ObjectStateComponent.Type.NONE
 	if not is_instance_valid(next_tile):
 		return {}

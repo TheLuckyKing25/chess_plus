@@ -16,8 +16,6 @@ signal clicked(tile:TileObject)
 const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
 const LIGHT_COLOR: Color = BASE_COLOR * 4/3
 const DARK_COLOR: Color = BASE_COLOR * 2/3 + Color(0,0,0,1)
-
-const TILE_SCENE:PackedScene = preload("uid://clmimmf3c1qpt")
 #endregion
 
 
@@ -30,26 +28,13 @@ static var en_passant: TileObject = null
 
 #region Exported Variables
 @export var state: TileStateComponent
-
-@export var data: TileDataChess = TileDataChess.new():
-	set = _data_setter
+@export var collision_component: CollisionComponent
+@export var mesh_component: MeshComponent
+@export var occupant_component: OccupantComponent
 #endregion
 
 
 #region Public Variables
-var occupant: PieceObject:
-	set = _occupant_setter,
-	get = _occupant_getter
-
-
-var occupant_data: PieceData:
-	get: return null if not is_instance_valid(occupant) else occupant.data
-
-
-var is_occupied:bool:
-	get: return occupant != null
-
-
 var neighbors: Dictionary[Constants.Direction, TileObject] = {
 	Constants.Direction.NORTH: null,
 	Constants.Direction.NORTHEAST: null,
@@ -62,153 +47,66 @@ var neighbors: Dictionary[Constants.Direction, TileObject] = {
 }
 #endregion
 
+func set_position_data(index:int, vector: Vector2i) -> void:
+	self.index = index
+	rank = vector.x
+	file = vector.y
+	_set_base_tile_color() # set tile color
+
 
 #region Private Variables
 var _original_position_in_space: Vector3
-var _is_mouse_on_tile: bool = false
-
-
-var _tile_color: Color:
-	set(value):	_tile_material.albedo_color = value
-	get: return _tile_material.albedo_color
-
-
-var _tile_material: StandardMaterial3D:
-	get(): return $Mesh.material_override
-
-
-var _state_material: StandardMaterial3D:
-	get(): return _tile_material.next_pass
-
-
-var _mouseover_material: StandardMaterial3D:
-	get(): return _state_material.next_pass
 #endregion
-
-
-#region Getter/Setters
-func _data_setter(value) -> void:
-	if is_node_ready():
-		data.assigned_object = null
-		if is_instance_valid(data) and data.occupant_changed.is_connected(_on_occupant_changed):
-			data.occupant_changed.disconnect(_on_occupant_changed)
-		if is_instance_valid(value):
-			value.occupant_changed.connect(_on_occupant_changed)
-		value.assigned_object = self
-		assign_new_data(value)
-	data = value
-
-
-func _occupant_setter(value) -> void:
-	_on_occupant_changed(value.data)
-	data.occupant = value.data
-
-
-func _occupant_getter() -> PieceObject:
-	var is_occupant_valid: bool = is_instance_valid(data.occupant) and is_instance_valid(data.occupant.assigned_object)
-	return null if not is_occupant_valid else data.occupant.assigned_object
-
-#endregion
-
-
-func _disconnect_occupant_signals(occupant: PieceObject):
-	if occupant.is_connected("clicked",_on_occupant_clicked):
-		occupant.clicked.disconnect(_on_occupant_clicked)
-
-	if occupant.state.is_connected("state_changed",Callable(state,"_on_state_change")):
-		occupant.state.state_changed.disconnect(Callable(state,"_on_state_change"))
-		state.state_changed.disconnect(Callable(occupant.state,"_on_state_change"))
-
-
-func _connect_occupant_signals(occupant: PieceObject):
-	occupant.clicked.connect(_on_occupant_clicked)
-	occupant.state.state_changed.connect(Callable(state,"_on_state_change"))
-	state.state_changed.connect(Callable(occupant.state,"_on_state_change"))
 
 
 func _ready() -> void:
-	assign_new_data(data)
-	data.modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
+	#assign_new_data(data)
+	collision_component.object_clicked.connect(_on_clicked)
+	collision_component.mouse_entered.connect(Callable(mesh_component,"show_mouse_hover"))
+	collision_component.mouse_exited.connect(Callable(mesh_component,"hide_mouse_hover"))
+
+	modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
 
 	state.current = ObjectStateComponent.Type.NONE
 
 
-func _on_occupant_changed(new_occupant: PieceData):
-	if is_instance_valid(occupant): _disconnect_occupant_signals(occupant)
-	if is_instance_valid(new_occupant):
-		var piece_obj: PieceObject = new_occupant.assigned_object
-		if is_instance_valid(piece_obj):
-			_connect_occupant_signals(piece_obj)
-			piece_obj.reparent(self,false)
-
-
-
 #region Object Generation
-static func new_tile_object() -> TileObject:
-	var new_tile:TileObject = TILE_SCENE.instantiate()
-	return new_tile
 
-
-func assign_new_data(new_data:TileDataChess):
-	_translate_tile(new_data) # move tile to proper location in 3D space
-	_tile_color = _set_base_tile_color(new_data) # set tile color
-	name = "Tile_" + new_data.algebraic_notation
+func assign_new_data(new_data:TileObject):
+	#_translate_tile(new_data) # move tile to proper location in 3D space
+	#_set_base_tile_color(new_data) # set tile color
+	#name = "Tile_" + new_data.algebraic_notation
 	# show modifiers
+	pass
 
 
-func _translate_tile(new_data: TileDataChess):
+func _translate_tile():
 	var board_rank_count = GameData.match_settings.board_size.rank
 	var board_file_count = GameData.match_settings.board_size.file
 	position = (Vector3(
-		new_data.file-(float(board_file_count)/2)+0.5,
+		file-(float(board_file_count)/2)+0.5,
 		0.1,
-		(float(board_rank_count)/2)-new_data.rank-0.5
+		(float(board_rank_count)/2)-rank-0.5
 	))
 	_original_position_in_space = position
 
 
-func _set_base_tile_color(new_data:TileDataChess) -> Color:
-	match (new_data.file + new_data.rank) % 2:
-		0: return LIGHT_COLOR
-		1: return DARK_COLOR
-		_: return Color(0,0,0)
+func _set_base_tile_color() -> void:
+	match (file + rank) % 2:
+		0: mesh_component.set_main_color(LIGHT_COLOR)
+		1: mesh_component.set_main_color(DARK_COLOR)
+		_: mesh_component.set_main_color(Color(0,0,0))
 #endregion
 
 
 #region Player Interaction
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Select") and _is_mouse_on_tile:
-		if occupant:
-			occupant.clicked.emit(occupant)
-		else:
-			clicked.emit(self)
-			if not clicked.has_connections():
-				_on_tile_clicked(self)
-
-
 func _on_occupant_clicked(piece: PieceObject):
 	clicked.emit(self)
 	if not clicked.has_connections():
-		_on_tile_clicked(self)
+		_on_clicked(self)
 
 
-func _on_mouse_entered() -> void:
-	#var tween:Tween = get_tree().create_tween()
-	#tween.tween_property(self,"position",_original_position_in_space + Vector3(0,0.1,0),0.05)
-	_is_mouse_on_tile = true
-	_mouseover_material.render_priority = 1
-	_mouseover_material.albedo_color = Color(1,1,1,0.25)
-
-
-func _on_mouse_exited() -> void:
-	#var tween:Tween = get_tree().create_tween()
-	#tween.tween_property(self,"position",_original_position_in_space,0.05)
-	_mouseover_material.albedo_color = Color(1,1,1,0)
-	_mouseover_material.render_priority = 0
-	_is_mouse_on_tile = false
-
-
-func _on_tile_clicked(tile: TileObject) -> void:
+func _on_clicked(tile: TileObject) -> void:
 	match selection_mode:
 		Constants.SelectionMode.MULTIPLE: _multiple_tile_select()
 		Constants.SelectionMode.SINGLE: _single_tile_select()
@@ -222,12 +120,36 @@ func _single_tile_select() -> void:
 	state.set_state(ObjectStateComponent.Type.SELECTED)
 #endregion
 
+signal modifier_order_changed()
+signal occupant_changed(occupant: PieceObject)
 
-func set_state_color(color: Color, has_emission: bool = false) -> void:
-	_state_material.albedo_color = color
-	_state_material.emission_enabled = has_emission
-	_state_material.emission = color
 
+var modifier_order: Array[TileModifier] = []:
+	set(new_order):
+		modifier_order = new_order
+		modifier_order_changed.emit()
+
+#region Position
+var rank: int
+
+
+var file: int
+
+
+var index: int
+
+
+var algebraic_notation: String:
+	get(): return char(97 + rank) + str((1 + file))
+
+
+@export var position_vector: Vector2i = Vector2i(-1,-1):
+	set(value):
+		rank = value.x
+		file = value.y
+	get():
+		return Vector2i(rank,file)
+#endregion
 
 # ===============================================================================
 # ============================== [END OF REFACTOR] ==============================
@@ -301,7 +223,7 @@ func set_state_color(color: Color, has_emission: bool = false) -> void:
 
 
 #static func new_tile(index: int) -> TileObject:
-	#var new_TILE_DATA_INDEX:TileDataChess = TileDataChess.new()
+	#var new_TILE_DATA_INDEX:TileObject = TileObject.new()
 	#new_TILE_DATA_INDEX.index = index
 #
 	#var new_tile:TileObject = TILE_SCENE.instantiate()
@@ -320,10 +242,11 @@ enum {
 #endregion
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_CLEAR_CHECK_STATE:
-		data.clear_check_flag()
-	if what == NOTIFICATION_CLEAR_OTHER_STATES:
-		state.current = ObjectStateComponent.Type.NONE
+	#if what == NOTIFICATION_CLEAR_CHECK_STATE:
+		#clear_check_flag()
+	#if what == NOTIFICATION_CLEAR_OTHER_STATES:
+		#state.current = ObjectStateComponent.Type.NONE
+	pass
 
 
 func _on_tile_modifier_order_changed():
@@ -332,11 +255,12 @@ func _on_tile_modifier_order_changed():
 		child.queue_free()
 
 	var modifier_panel:PackedScene = load("uid://dmyh3g5g0c8ou")
-	for modifier in data.modifier_order:
-		var new_modifier = modifier_panel.instantiate()
-		new_modifier.panel.bg_color = modifier.color
-		new_modifier.set_icon(modifier.icon)
-		%FlowContainer.add_child(new_modifier)
+	#for modifier in data.modifier_order:
+		#var new_modifier = modifier_panel.instantiate()
+		#new_modifier.panel.bg_color = modifier.color
+		#new_modifier.set_icon(modifier.icon)
+		#%FlowContainer.add_child(new_modifier)
+	pass
 
 
 func get_next_tile(direction: Constants.Direction):

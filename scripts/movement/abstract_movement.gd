@@ -11,5 +11,5 @@ func set_max_distance(max_distance:int) -> void:
 	pass
 
 
-@abstract func set_direction_parity(direction_parity: int) -> void
-@abstract func apply_movement(current_tile:TileDataChess,_board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]
+@abstract func set_facing_direction(facing_direction: int) -> void
+@abstract func apply_movement(current_tile:TileObject,_board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]

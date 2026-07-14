@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cvr8wyhalupas"]
+[gd_scene format=3 uid="uid://cvr8wyhalupas"]
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://resources/themes/theme_bright/base_theme.tres" id="1_nwval"]
 [ext_resource type="Script" uid="uid://psr8yvgsiart" path="res://scripts/menu/join_menu.gd" id="2_bnnsn"]
-[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="3_fg5b3"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin/GlitchGoblin.ttf" id="3_fg5b3"]
 
 [sub_resource type="Gradient" id="Gradient_ohrem"]
 offsets = PackedFloat32Array(0, 0.00680274, 1)

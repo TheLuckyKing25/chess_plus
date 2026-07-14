@@ -27,7 +27,7 @@ func exit():
 	instantiated_scene.board_verified.disconnect(Callable(self,"on_board_verified"))
 	instantiated_scene.time_control_selected.disconnect(Callable(self,"on_time_control_selection"))
 
-	if not Match.is_board_generated and Match.board.data.FEN_board_state:
+	if not Match.is_board_generated:# and Match.board.FEN_board_state:
 		Match.current_game_state = Match.GameState.GAMEPLAY
 		#Match.board.generate_board()
 		#Match.board.load_FEN(Match.board.data.FEN_board_state)
@@ -59,10 +59,10 @@ func on_continue_pressed():
 
 
 func on_board_verified(rank_num:int,file_num:int,FEN_notation: FEN) -> void:
-	Match.board.data.FEN_board_state = FEN_notation
-	Match.board.data.rank_count = rank_num
-	Match.board.data.file_count = file_num
-
+	#Match.board.FEN_board_state = FEN_notation
+	#Match.board.rank_count = rank_num
+	#Match.board.file_count = file_num
+	pass
 
 func on_time_control_selection(time_sec: int, increment_sec: int):
 	Match.is_timed = true

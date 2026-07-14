@@ -12,62 +12,45 @@ static var previous: Player
 static var en_passant: Player
 
 
-@export var data: PlayerData:
+signal piece_list_changed()
+
+
+@export var player_name:String
+@export var color:Color
+
+## determines which direction to face the piece object
+@export var parity: int:
 	set(value):
-		if data:
-			data.assigned_object = null
-			GameData.players.erase(data.player_name.to_lower())
-		if value:
-			value.assigned_object = self
-			GameData.players.set(value.player_name.to_lower(),self)
-		data = value
+		facing_direction = int(remap(value,-1,1,4,0)) as Constants.Direction
+		piece_rotation_parity = remap(value,-1,1,0,PI)
+		parity = value
+
+## Used to rotate the movement of the piece
+var facing_direction: Constants.Direction
 
 
-@export_group("Camera", "camera")
-@export var camera_object: Camera3D
-@export_custom(
-		PROPERTY_HINT_RANGE,
-		"0,20, 0.05, or_less,or_greater, suffix: m"
-	) var camera_distance_from_subject:float = 0
-
-@export var camera_twist_pivot: Node3D
-@export_custom(
-		PROPERTY_HINT_RANGE,
-		"-360,360,0.1, degrees, suffix:°",
-		PROPERTY_USAGE_DEFAULT|PROPERTY_USAGE_SCRIPT_VARIABLE
-	) var camera_yaw: float = 0.0
+var piece_rotation_parity: float
 
 
-@export var camera_pitch_pivot: Node3D
-@export_custom(
-		PROPERTY_HINT_RANGE,
-		"-90,90,0.1, degrees, suffix:°"
-	) var camera_pitch: float = 0.0
+@export var pieces:Dictionary[String,Array] = {}
 
 
-@export var camera_horizonatal_offset: float = 0
-@export var camera_forward_offset: float = 0
+# rank that a piece must reach to be promoted
+var promotion_rank: int
 
 
-@export_group("Timer")
+@export var camera_component: CameraComponent
+
 @export var timer: TimeControl
 
 
+var all_pieces: Array[PieceObject]:
+	get:
+		var array: Array[PieceObject] = []
+		for piece_configs in pieces.values():
+			array.append_array(piece_configs)
+		return array
+
+
 func _ready() -> void:
-	GameData.players.set(data.player_name.to_lower(),self)
-
-
-func _physics_process(_delta: float) -> void:
-	camera_object.position.z = camera_distance_from_subject
-	camera_pitch_pivot.rotation_degrees.x = camera_pitch
-	camera_twist_pivot.rotation_degrees.y = camera_yaw
-	camera_twist_pivot.position.x = camera_horizonatal_offset
-	camera_twist_pivot.position.z = camera_forward_offset
-
-
-func change_camera_forward_offset(value:float):
-	camera_forward_offset = value * data.parity
-
-
-func change_camera_horizontal_offset(value:float):
-	camera_horizonatal_offset = value * data.parity
+	GameData.players.set(player_name.to_lower(),self)

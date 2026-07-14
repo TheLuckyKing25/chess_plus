@@ -8,7 +8,7 @@ extends Resource
 }
 
 
-@export var starting_player: PlayerData
+#@export var starting_player: Player
 
 
 @export var rules: Dictionary[String,bool] = {

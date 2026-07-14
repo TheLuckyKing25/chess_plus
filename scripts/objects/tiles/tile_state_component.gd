@@ -37,6 +37,7 @@ static var _state_dict: Dictionary[Type,Array] = {
 var tile: TileObject:
 	get: return get_parent()
 
+@export var mesh_component: MeshComponent
 
 static func clear_intermediate_states():
 	var intermediate_state_tiles: Array[TileObject] = []
@@ -65,7 +66,9 @@ func _on_state_changed(new_state: Type):
 
 
 func _apply_state_color():
-	tile.set_state_color(color[current],false)
+	mesh_component.set_outline_color(color[current])
+	mesh_component.outline_material.emission_enabled = false
+	mesh_component.outline_material.emission = color[current]
 
 
 func _on_selected():
@@ -76,5 +79,5 @@ func _on_selected():
 		joint_array.append_array(_state_dict[Type.THREATENED])
 		for selected_tile:TileObject in joint_array:
 			selected_tile.state.set_state(Type.NONE)
-			if is_instance_valid(selected_tile.occupant):
-				selected_tile.occupant.state.set_state(ObjectStateComponent.Type.NONE)
+			if is_instance_valid(selected_tile.occupant_component.occupant):
+				selected_tile.occupant_component.occupant.state.set_state(ObjectStateComponent.Type.NONE)

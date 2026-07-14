@@ -52,10 +52,10 @@ func _validate_property(property: Dictionary) -> void:
 			property.usage = PROPERTY_USAGE_NO_EDITOR
 
 
-func set_direction_parity(direction_parity: int) -> void:
-	direction = (direction + direction_parity) as Constants.Direction
+func set_facing_direction(facing_direction: int) -> void:
+	direction = (direction + facing_direction) as Constants.Direction
 	if next_movement:
-		next_movement.set_direction_parity(direction_parity)
+		next_movement.set_facing_direction(facing_direction)
 
 
 func set_max_distance(max_distance:int) -> void:
@@ -80,14 +80,14 @@ func change_movement_distance() -> void:
 	pass
 
 
-func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
-	var tiles: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
+func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
+	var tiles: Dictionary[TileObject,ObjectStateComponent.Type] = {}
 	# on current_tile
 		# apply modifiers of current_tile
 
 	while distance > 0:
 		# find next tile
-		var next_tile: TileDataChess = current_tile.neighbors[direction]
+		var next_tile: TileObject = current_tile.neighbors[direction]
 		var next_tile_state: ObjectStateComponent.Type = ObjectStateComponent.Type.NONE
 		if next_tile == null:
 			return {}

@@ -47,12 +47,12 @@ extends Resource
 #
 	#return duplicated_movement
 #
-#func set_direction_parity(direction_parity: int) -> void:
+#func set_facing_direction(facing_direction: int) -> void:
 	#if direction != Constants.Direction.NONE:
-		#direction = ((direction + direction_parity) % 8) as Constants.Direction
+		#direction = ((direction + facing_direction) % 8) as Constants.Direction
 	#if is_branching:
 		#for branch in branches:
-			#branch.set_direction_parity(direction_parity)
+			#branch.set_facing_direction(facing_direction)
 #
 #func set_max_distance(max_distance:int) -> void:
 	#if distance == -1:

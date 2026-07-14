@@ -2,12 +2,18 @@ class_name PieceObject
 extends Node3D
 
 signal clicked(piece: PieceObject)
-signal data_changed(new_data: PieceData)
+signal state_changed()
 signal selected(piece: PieceObject)
+signal type_changed(new_type:PieceConfig)
+signal player_changed(new_player:Player)
+signal captured
 
-signal promoted
 
-@export var mesh_instance: MeshInstance3D
+@export var collision_component: CollisionComponent
+@export var mesh_component: MeshComponent
+@export var state: PieceStateComponent
+@export var player_ownership: PlayerOwnershipComponent
+@export var movement_component: MovementComponent
 
 
 const PIECE_SCENE:PackedScene = preload("uid://dnismskxjehm6")
@@ -26,91 +32,98 @@ static var en_passant: PieceObject = null
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
 
-var is_mouse_on_piece: bool = false
+@export var type: PieceConfig:
+	set(value):
+		if is_instance_valid(type):
+			type.base_movement_changed.disconnect(func(): set("_adjusted_movement",type.base_movement))
+		if is_instance_valid(value):
+			value.base_movement_changed.connect(func(): set("_adjusted_movement",value.base_movement))
+		type_changed.emit(value)
+		_adjusted_movement = value.base_movement.duplicate(true)
+		type = value
 
 
-@onready var piece_material: StandardMaterial3D:
-	get(): return mesh_instance.material_override
+# movement that accounts for the player the piece belongs to.
+# used to reset current_movement
+var _adjusted_movement: AbstractMovement:
+	set(value):
+		_adjusted_movement = value
+		_apply_facing_direction_to_movement()
+	get:
+		return _adjusted_movement
 
 
-@onready var mouseover_material: StandardMaterial3D:
-	get(): return piece_material.next_pass
+# movement used by modifiers
+var current_movement: AbstractMovement
 
 
-@onready var outline_material: StandardMaterial3D:
-	get(): return piece_material.next_pass.next_pass
+var rank: int
 
 
-@export var data: PieceData:
-	set(new_data):
-		data_changed.emit(new_data)
-		data = new_data
+var file: int
 
-@export var state: PieceStateComponent
+
+var index: int
+
+
+var position_vector: Vector2i:
+	set(value):
+		rank = value.x
+		file = value.y
+	get():
+		return Vector2i(rank,file)
+
+
+var has_moved: bool = false:
+	set(value):
+		has_moved = true
+
+
+var is_captured: bool = false:
+	set(value):
+		if value:
+			captured.emit()
+		is_captured = value
+
+
+static func new_piece(piece_config: PieceConfig, new_index:int, max_move_distance:int) -> PieceObject:
+	var piece: PieceObject = PieceObject.new()
+	var new_PIECE_DATA_INDEX: PieceConfig = piece_config.duplicate(true)
+
+	piece.type = new_PIECE_DATA_INDEX
+	var base_movement = piece.type.base_movement
+	base_movement.set_max_distance(GameData.max_board_length)
+	piece.type.base_movement = base_movement
+	piece.index = new_index
+	piece.name = piece.type.name
+
+	return piece
+
+
+func _apply_facing_direction_to_movement():
+	if player_ownership.player and _adjusted_movement:
+		_adjusted_movement.set_facing_direction(player_ownership.player.facing_direction)
+		current_movement = _adjusted_movement.duplicate_deep()
+
+
+func reset_current_movement():
+	current_movement = _adjusted_movement.duplicate_deep()
 
 
 func _ready() -> void:
-	data_changed.connect(Callable(self,"_on_data_changed"))
-
-	# reloads data if data was assigned when the object was not ready
-	data_changed.emit(data)
+	collision_component.object_clicked.connect(_on_clicked)
+	collision_component.mouse_entered.connect(Callable(mesh_component,"show_mouse_hover"))
+	collision_component.mouse_exited.connect(Callable(mesh_component,"hide_mouse_hover"))
+	player_ownership.player_changed.connect(_on_player_changed)
+	_on_player_changed(player_ownership.player)
 
 
 #region Piece Object Generation
-static func new_piece_object() -> PieceObject:
-	var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	return new_piece
-
-
-func _on_data_changed(new_data:PieceData):
-	_unload_data(data)
-	_load_data(new_data)
-	_on_type_changed(new_data.type)
-	_on_player_changed(new_data.player)
-
-
-func _unload_data(old_data: PieceData):
-	if old_data:
-		# disconnect signals from old data
-		if old_data.is_connected("type_changed",Callable(self,"_on_type_changed")):
-			old_data.type_changed.disconnect(Callable(self,"_on_type_changed"))
-		if old_data.is_connected("player_changed",Callable(self,"_on_type_changed")):
-			old_data.player_changed.disconnect(Callable(self,"_on_player_changed"))
-		#old_data.disconnect_flag_components(Callable(self,"apply_state"))
-
-		# clear connection between object and old data
-		old_data.assigned_object = null
-
-
-func _load_data(new_data: PieceData):
-	if new_data:
-		# connect signals from new data
-		new_data.type_changed.connect(Callable(self,"_on_type_changed"))
-		new_data.player_changed.connect(Callable(self,"_on_player_changed"))
-		new_data.captured.connect(_on_captured)
-		#new_data.connect_flag_components(Callable(self,"apply_state"))
-
-		# connect this object and the new data
-		new_data.assigned_object = self
-
-		outline_material.albedo_color = Color(0,0,0,0)
-
-
-func _on_type_changed(new_type:PieceConfig):
-	if data and data.type:
-		remove_from_group(data.type.name)
-	if new_type and mesh_instance:
-		mesh_instance.mesh = new_type.object_mesh
-		add_to_group(new_type.name)
-
-
-func _on_player_changed(new_player:PlayerData):
-	if data and data.player:
-		remove_from_group(data.player.player_name)
-	if new_player:
-		piece_material.albedo_color = new_player.color
-		rotation.y = new_player.piece_rotation_parity
-		add_to_group(new_player.player_name)
+func _on_player_changed(new_player:Player):
+	mesh_component.set_main_color(new_player.color)
+	rotation.y = new_player.piece_rotation_parity
+	movement_component.base_movement.set_facing_direction(new_player.facing_direction)
+	movement_component.reset_movement()
 
 
 func _on_captured():
@@ -119,37 +132,8 @@ func _on_captured():
 #endregion
 
 
-func _on_mouse_entered() -> void:
-	#var tween:Tween = get_tree().create_tween()
-	#tween.tween_property(self,"scale",Vector3(1.1,1.1,1.1),0.05)
-	is_mouse_on_piece = true
-	mouseover_material.render_priority = 2
-	mouseover_material.albedo_color = piece_material.albedo_color * 1.5
-
-
-func _on_mouse_exited() -> void:
-	#var tween:Tween = get_tree().create_tween()
-	#tween.tween_property(self,"scale",Vector3(1,1,1),0.05)
-	mouseover_material.albedo_color = Color(0,0,0,0)
-	mouseover_material.render_priority = 0
-	is_mouse_on_piece = false
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Select") and is_mouse_on_piece:
-		clicked.emit(self)
-		if not clicked.has_connections():
-			_on_clicked(self)
-
-
-func _on_clicked(object: PieceObject):
+func _on_clicked(object: Node3D):
 	state.set_state(ObjectStateComponent.Type.SELECTED)
-
-
-func set_state_color(color: Color, has_emission: bool = false):
-	outline_material.albedo_color = color
-	outline_material.emission_enabled = has_emission
-	outline_material.emission = color
 
 
 func move(destination: TileObject):
@@ -157,88 +141,59 @@ func move(destination: TileObject):
 	destination.occupant = self
 
 
-#static func new_piece(piece_config: PieceData, player_owner:Player, max_move_distance:int, index:int) -> PieceObject:
-	#var new_piece:PieceObject = PIECE_SCENE.instantiate()
-	#var new_PIECE_DATA_INDEX: PieceData = piece_config.duplicate(true)
+#func assign_player(new_player:String):
+	#player = GameData.players[new_player.to_lower()].data
+
+
+#func _on_player_changed(player_data: PlayerData):
+	#if player:
+		#player.pieces.get(type.name.to_lower()).erase(self)
+	#if player_data:
+		#player_data.pieces.get_or_add(type.name.to_lower(),[]).append(self)
+
+
+#func evaluate_rules(current_changes: BoardChange) -> void:
+	#for rule:PieceRule in type.rules:
+		#rule.evaluate_rule_application(current_changes, self)
+
+
+
+#func _on_data_changed(new_data:PieceObject):
+	#_unload_data(data)
+	#_load_data(new_data)
+	#_on_type_changed(new_data.type)
+	#_on_player_changed(new_data.player)
+
+
+#func _unload_data(old_data: PieceObject):
+	#if old_data:
+		## disconnect signals from old data
+		#if old_data.is_connected("type_changed",Callable(self,"_on_type_changed")):
+			#old_data.type_changed.disconnect(Callable(self,"_on_type_changed"))
+		#if old_data.is_connected("player_changed",Callable(self,"_on_type_changed")):
+			#old_data.player_changed.disconnect(Callable(self,"_on_player_changed"))
+		##old_data.disconnect_flag_components(Callable(self,"apply_state"))
 #
-	#piece_config.resource_local_to_scene = true
+		## clear connection between object and old data
+		#old_data.assigned_object = null
 #
-	#new_PIECE_DATA_INDEX.movement = new_PIECE_DATA_INDEX.movement.get_duplicate()
 #
-	#new_PIECE_DATA_INDEX.player = player_owner
-	#new_PIECE_DATA_INDEX.movement.set_max_distance(max_move_distance)
-	#new_PIECE_DATA_INDEX.index = index
+#func _load_data(new_data: PieceObject):
+	#if new_data:
+		## connect signals from new data
+		#new_data.type_changed.connect(Callable(self,"_on_type_changed"))
+		#new_data.player_changed.connect(Callable(self,"_on_player_changed"))
+		#new_data.captured.connect(_on_captured)
 #
-	#new_piece.data = new_PIECE_DATA_INDEX
-	#new_piece.data.player.add_piece(new_piece)
-	#Match.add_piece(new_piece)
-	#return new_piece
+		## connect this object and the new data
+		#new_data.assigned_object = self
+#
+		#mesh_component.set_outline_color(Color(0,0,0,0))
 
 
-func promote(piece_name: String):
-	var new_data: PieceData
-	match piece_name:
-		"Bishop":
-			new_data = load("uid://b12vykyoafcox")
-		"Knight":
-			new_data = load("uid://brd0i5dnuyf6l")
-		"Rook":
-			new_data = load("uid://b5r63cf4oeak3")
-		"Queen":
-			new_data = load("uid://bccbxx63wac0s")
-
-	Match.remove_piece(self)
-	data.player.remove_piece(self)
-
-	data = new_data
-
-	Match.add_piece(self)
-	data.player.add_piece(self)
-
-	promoted.emit()
-
-
-func apply_state():
-	if data.flag.is_captured.enabled:
-		_captured()
-	elif data.flag.is_castling.enabled:
-		outline_material.albedo_color = CASTLING_COLOR
-	elif data.flag.is_threatened.enabled:
-		outline_material.albedo_color = THREATENED_COLOR
-	elif data.flag.is_selected.enabled:
-		outline_material.albedo_color = SELECT_COLOR
-	elif data.flag.is_checked.enabled:
-		outline_material.albedo_color = CHECKED_COLOR
-	else:
-		outline_material.albedo_color = Color(0,0,0,0)
-
-	if data.flag.has_moved.enabled:
-		add_to_group("has_moved")
-	else:
-		remove_from_group("has_moved")
-
-
-func move_to(tile: TileObject):
-	tile.occupant = self
-	global_position = (position * Vector3(0,1,0)) + tile.global_position
-	global_rotation = tile.global_rotation + global_rotation
-	reparent(tile)
-	data.index = tile.data.index
-
-
-func _captured():
-	visible = false
-	$Collision.disabled = true
-	translate(Vector3(0,-5,0))
-
-
-func moved(state:bool):
-	data.flag.has_moved.enabled = state
-	if state:
-		if data.type.name == "Pawn":
-			data.movement = load("uid://bpexpwlvi0ymy")
-		add_to_group("has_moved")
-	else:
-		if data.type.name == "Pawn":
-			data.movement = load("uid://dl1o3ayyjvnlf")
-		remove_from_group("has_moved")
+#func _on_type_changed(new_type:PieceConfig):
+	#if data and data.type:
+		#remove_from_group(data.type.name)
+	#if new_type and mesh_component:
+		#mesh_component.mesh = new_type.object_mesh
+		#add_to_group(new_type.name)

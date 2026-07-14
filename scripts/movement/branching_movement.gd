@@ -5,15 +5,15 @@ class_name BranchingMovement extends AbstractMovement
 @export var branches: Array[AbstractMovement]
 
 
-func set_direction_parity(direction_parity: int) -> void:
+func set_facing_direction(facing_direction: int) -> void:
 	if branches.is_empty():
 		return
 	for branch in branches:
-		branch.set_direction_parity(direction_parity)
+		branch.set_facing_direction(facing_direction)
 
 
-func apply_movement(current_tile:TileDataChess, _board: BoardData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
-	var tiles: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
+func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
+	var tiles: Dictionary[TileObject,ObjectStateComponent.Type] = {}
 
 	# apply modifiers
 

@@ -46,8 +46,8 @@ var promotion_menu_list: Array = [
 
 
 var players: Dictionary[String,Player] = {}
-var tiles:Dictionary[TileObject,TileDataChess] = {}
-var pieces: Dictionary[PieceObject, PieceData] = {}
+var tiles:Dictionary[TileObject,TileObject] = {}
+var pieces: Dictionary[PieceObject, PieceObject] = {}
 
 
 func add_tile(tile_object:TileObject):

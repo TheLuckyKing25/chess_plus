@@ -3,4 +3,4 @@ class_name PieceRule
 extends Resource
 
 @abstract func _init()
-@abstract func evaluate_rule_application(current_change: BoardChange, piece: PieceData)
+@abstract func evaluate_rule_application(current_change: BoardChange, piece: PieceObject)

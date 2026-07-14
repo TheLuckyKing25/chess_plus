@@ -6,14 +6,14 @@ extends State
 @export var next_state: PlayerTurn
 
 
-@onready var camera_ending_yaw = previous_state.player.camera_yaw + 180
+@onready var camera_ending_yaw = previous_state.player.camera_component.yaw + 180
 
 
 var camera_rotation: float = 0
 var can_proceed = false
 
 
-var transition_tween: Tween = create_tween()
+var transition_tween: Tween
 
 
 func _reset_tween():

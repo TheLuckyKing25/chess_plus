@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://v4i5knax4g12"]
+[gd_scene format=3 uid="uid://v4i5knax4g12"]
 
-[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin.ttf" id="1_4je5t"]
+[ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin/GlitchGoblin.ttf" id="1_4je5t"]
 [ext_resource type="Script" uid="uid://bpi820ub21jx2" path="res://scripts/menu/loading_screen.gd" id="1_76jna"]
 
 [sub_resource type="Gradient" id="Gradient_w2ej8"]

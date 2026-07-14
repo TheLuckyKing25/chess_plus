@@ -20,17 +20,6 @@ enum Direction{
 	}
 
 
-enum TypePiece{
-	PAWN = 0,
-	BISHOP = 1,
-	KING = 2,
-	QUEEN = 3,
-	KNIGHT = 4,
-	ROOK = 5,
-}
-
-
-
 const DIRECTION_VECTOR: Dictionary[Direction, Vector2i] = {
 	Direction.NORTH: Vector2i(1,0),
 	Direction.NORTHEAST: Vector2i(1,1),
@@ -40,6 +29,17 @@ const DIRECTION_VECTOR: Dictionary[Direction, Vector2i] = {
 	Direction.SOUTHWEST: Vector2i(-1,-1),
 	Direction.WEST: Vector2i(0,-1),
 	Direction.NORTHWEST: Vector2i(1,-1)
+}
+
+enum TypePiece {PAWN, BISHOP, KING, QUEEN, KNIGHT, ROOK}
+
+const PIECE_SCENE_UID_DICT: Dictionary[TypePiece,String] = {
+	TypePiece.PAWN: "uid://cjvj8f6rpuk0k",
+	TypePiece.BISHOP: "uid://b7fydri8mw0oj",
+	TypePiece.KING: "uid://dwrbcnxvnk3jn",
+	TypePiece.QUEEN: "uid://y6vdamvltd7x",
+	TypePiece.KNIGHT: "uid://7bya4j8tgsf6",
+	TypePiece.ROOK: "uid://bpaf3sb1uhi38",
 }
 
 enum DirectoryRefNum{
@@ -62,20 +62,8 @@ var piece_config_lookup: Dictionary[String, String] = {}
 var player_data: Dictionary[String, String] = {}
 
 
-
 func _ready() -> void:
-	_retrieve_player_data()
 	_retrieve_piece_configs()
-
-
-func _retrieve_player_data():
-	var data = ResourceLoader.list_directory(file_path.get(DirectoryRefNum.PLAYER_DATA))
-	for player in data:
-		var file_string:String = file_path.get(DirectoryRefNum.PLAYER_DATA) + player
-		var loaded_data:PlayerData = load(file_string)
-		var uid:int = ResourceLoader.get_resource_uid(file_string)
-
-		player_data.set(loaded_data.player_name.to_lower(),ResourceUID.id_to_text(uid))
 
 
 func _retrieve_piece_configs():
