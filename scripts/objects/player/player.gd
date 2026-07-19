@@ -1,13 +1,6 @@
 class_name Player
 extends Node
 
-## The player whose turn it is
-static var current: Player
-
-## The player whose turn it is was
-## Used to determine the start and end of camera animations at turn transitions
-static var previous: Player
-
 
 static var en_passant: Player
 
@@ -52,5 +45,5 @@ var all_pieces: Array[PieceObject]:
 		return array
 
 
-func _ready() -> void:
-	GameData.players.set(player_name.to_lower(),self)
+#func _ready() -> void:
+	#GameData.players.set(player_name.to_lower(),self)

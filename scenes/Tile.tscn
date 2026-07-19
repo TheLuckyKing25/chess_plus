@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://clmimmf3c1qpt"]
 
 [ext_resource type="Script" uid="uid://c56mrbf2es4ra" path="res://scripts/objects/tiles/tile_object.gd" id="1_3dk36"]
-[ext_resource type="Script" uid="uid://pgniqybunxts" path="res://scripts/components/collision_component.gd" id="2_q7utx"]
+[ext_resource type="Script" uid="uid://pgniqybunxts" path="res://scripts/objects/components/collision_component.gd" id="2_q7utx"]
 [ext_resource type="Script" uid="uid://dednv8et81qj6" path="res://scripts/objects/tiles/tile_state_component.gd" id="3_jy7pm"]
-[ext_resource type="Script" uid="uid://d02ckgyhn67qc" path="res://scripts/components/mesh_component.gd" id="4_6p3j2"]
+[ext_resource type="Script" uid="uid://d02ckgyhn67qc" path="res://scripts/objects/components/mesh_component.gd" id="4_6p3j2"]
 [ext_resource type="Script" uid="uid://doe61vbegg7n" path="res://scenes/occupant_component.gd" id="5_6p3j2"]
 
 [sub_resource type="Gradient" id="Gradient_esqu7"]
@@ -20,6 +20,7 @@ fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3gf4"]
 resource_local_to_scene = true
+render_priority = 3
 transparency = 1
 albedo_texture = SubResource("GradientTexture2D_1g878")
 emission = Color(1, 1, 1, 1)
@@ -50,12 +51,12 @@ size = Vector3(1, 0.163, 1)
 [sub_resource type="ViewportTexture" id="ViewportTexture_esqu7"]
 viewport_path = NodePath("Tile_Modifiers/Modifier_Grid")
 
-[node name="Tile" type="Node3D" unique_id=1957496987 node_paths=PackedStringArray("state", "collision_component", "mesh_component", "occupant_component") groups=["Tile"]]
+[node name="Tile" type="Node3D" unique_id=1957496987 node_paths=PackedStringArray("occupant_component", "collision_component", "mesh_component", "state") groups=["Tile"]]
 script = ExtResource("1_3dk36")
-state = NodePath("TileStateComponent")
+occupant_component = NodePath("OccupantComponent")
 collision_component = NodePath("CollisionComponent")
 mesh_component = NodePath("MeshComponent")
-occupant_component = NodePath("OccupantComponent")
+state = NodePath("TileStateComponent")
 metadata/_custom_type_script = "uid://c56mrbf2es4ra"
 
 [node name="SaverNode" type="Node" parent="." unique_id=100773484]

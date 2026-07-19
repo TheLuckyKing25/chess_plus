@@ -9,48 +9,49 @@ const ALGEBRAIC_NOTATION_CHECKMATE = "#"
 const ALGEBRAIC_NOTATION_PROMOTION = "="
 const ALGEBRAIC_NOTATION_CAPTURE = "x"
 
-static func get_notation(move:Move) -> String:
-	if move.ignore_move:
-		return ""
-	elif move.outcome_flag.castling_queenside.enabled:
-		return ALGEBRAIC_NOTATION_CASTLING_QUEENSIDE
-
-	elif move.outcome_flag.castling_kingside.enabled:
-		return ALGEBRAIC_NOTATION_CASTLING_KINGSIDE
-
-	var notation: Dictionary = {
-		"piece": "",
-		"starting_tile": "",
-		"capturing": "",
-		"destination_tile": "",
-		"promoted_to": "",
-		"en_passant": "",
-		"check_status": "",
-	}
-
-	notation.piece = move.destination_tile.occupant_data.type.algebraic_notation
-	notation.starting_tile = move.starting_tile.data.algebraic_notation
-	notation.destination_tile = move.destination_tile.data.algebraic_notation
-
-	if move.outcome_flag.capturing.enabled:
-		notation.capturing = ALGEBRAIC_NOTATION_CAPTURE
-
-	if move.outcome_flag.check.enabled:
-		notation.check_status += ALGEBRAIC_NOTATION_CHECK
-	elif move.outcome_flag.checkmate.enabled:
-		notation.check_status += ALGEBRAIC_NOTATION_CHECKMATE
-
-	if move.outcome_flag.en_passant.enabled:
-		notation.en_passant += " " + ALGEBRAIC_NOTATION_EN_PASSANT
-	elif move.outcome_flag.promotion.enabled:
-		notation.promoted_to += ALGEBRAIC_NOTATION_PROMOTION
-
-	return (
-		notation.piece
-		+ notation.starting_tile
-		+ notation.capturing
-		+ notation.destination_tile
-		+ notation.promoted_to
-		+ notation.en_passant
-		+ notation.check_status
-	)
+static func get_notation(move:Object) -> String:
+	return ""
+	#if move.ignore_move:
+		#return ""
+	#elif move.outcome_flag.castling_queenside.enabled:
+		#return ALGEBRAIC_NOTATION_CASTLING_QUEENSIDE
+#
+	#elif move.outcome_flag.castling_kingside.enabled:
+		#return ALGEBRAIC_NOTATION_CASTLING_KINGSIDE
+#
+	#var notation: Dictionary = {
+		#"piece": "",
+		#"starting_tile": "",
+		#"capturing": "",
+		#"destination_tile": "",
+		#"promoted_to": "",
+		#"en_passant": "",
+		#"check_status": "",
+	#}
+#
+	#notation.piece = move.destination_tile.occupant_data.type.algebraic_notation
+	#notation.starting_tile = move.starting_tile.data.algebraic_notation
+	#notation.destination_tile = move.destination_tile.data.algebraic_notation
+#
+	#if move.outcome_flag.capturing.enabled:
+		#notation.capturing = ALGEBRAIC_NOTATION_CAPTURE
+#
+	#if move.outcome_flag.check.enabled:
+		#notation.check_status += ALGEBRAIC_NOTATION_CHECK
+	#elif move.outcome_flag.checkmate.enabled:
+		#notation.check_status += ALGEBRAIC_NOTATION_CHECKMATE
+#
+	#if move.outcome_flag.en_passant.enabled:
+		#notation.en_passant += " " + ALGEBRAIC_NOTATION_EN_PASSANT
+	#elif move.outcome_flag.promotion.enabled:
+		#notation.promoted_to += ALGEBRAIC_NOTATION_PROMOTION
+#
+	#return (
+		#notation.piece
+		#+ notation.starting_tile
+		#+ notation.capturing
+		#+ notation.destination_tile
+		#+ notation.promoted_to
+		#+ notation.en_passant
+		#+ notation.check_status
+	#)

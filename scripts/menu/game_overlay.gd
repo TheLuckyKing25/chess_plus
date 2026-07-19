@@ -65,9 +65,9 @@ func _on_piece_placement_list_item_selected() -> void:
 	new_placement_selected.emit(placement_key)
 
 
-func add_move(move:	Move):
-	move_history.add_item(str(move_num) + ") " + AlgebraicNotaion.get_notation(move),null,false)
-	move_num += 1
+#func add_move(move:	Move):
+	#move_history.add_item(str(move_num) + ") " + AlgebraicNotaion.get_notation(move),null,false)
+	#move_num += 1
 
 
 func connect_to_pause_button(function: Callable):

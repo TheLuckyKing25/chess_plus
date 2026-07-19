@@ -12,8 +12,8 @@ func set_facing_direction(facing_direction: int) -> void:
 		branch.set_facing_direction(facing_direction)
 
 
-func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
-	var tiles: Dictionary[TileObject,ObjectStateComponent.Type] = {}
+func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,StringName]:
+	var tiles: Dictionary[TileObject,StringName] = {}
 
 	# apply modifiers
 

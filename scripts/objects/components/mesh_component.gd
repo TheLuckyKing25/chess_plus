@@ -15,13 +15,11 @@ extends MeshInstance3D
 
 
 func show_mouse_hover() -> void:
-	mouseover_material.render_priority = 2
 	mouseover_material.albedo_color = main_material.albedo_color * 1.25
 
 
 func hide_mouse_hover() -> void:
 	mouseover_material.albedo_color = Color(0,0,0,0)
-	mouseover_material.render_priority = 0
 
 
 func set_main_color(color: Color) -> void:

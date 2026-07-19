@@ -67,7 +67,7 @@ func set_max_distance(max_distance:int) -> void:
 
 ## direction_units is a positive integer between 1 and 7, including 1 and 7.
 func rotate_movement(direction_units: int) -> void:
-	direction += direction_units
+	direction += direction_units as Constants.Direction
 	if next_movement:
 		next_movement.rotate_movement(direction_units)
 
@@ -80,28 +80,28 @@ func change_movement_distance() -> void:
 	pass
 
 
-func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
-	var tiles: Dictionary[TileObject,ObjectStateComponent.Type] = {}
+func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,StringName]:
+	var tiles: Dictionary[TileObject,StringName] = {}
 	# on current_tile
 		# apply modifiers of current_tile
 
 	while distance > 0:
 		# find next tile
 		var next_tile: TileObject = current_tile.neighbors[direction]
-		var next_tile_state: ObjectStateComponent.Type = ObjectStateComponent.Type.NONE
+		var next_tile_state: StringName = ObjectStateComponent.STATE_NONE
 		if next_tile == null:
 			return {}
 
 		if is_move and not next_tile.occupant:
-			next_tile_state = ObjectStateComponent.Type.MOVEMENT
+			next_tile_state = ObjectStateComponent.STATE_MOVEMENT
 			tiles.set(next_tile,next_tile_state)
 
 		if is_threaten and next_tile.occupant and not next_tile in _board.valid_selections:
-			next_tile_state = ObjectStateComponent.Type.THREATENED
+			next_tile_state = ObjectStateComponent.STATE_THREATENED
 			tiles.set(next_tile,next_tile_state)
 			return tiles
 
-		if next_tile_state == ObjectStateComponent.Type.NONE:
+		if next_tile_state == ObjectStateComponent.STATE_NONE:
 			return tiles
 
 		distance -= 1

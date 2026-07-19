@@ -18,8 +18,8 @@ func _init():
 	#current_move.remaining_movement.rotate_movement(components[RotationComponent.NAME].value)
 
 
-func modify_movement(movement: Movement):
-	if movement == null:
-		return
-	else:
-		movement.rotate_movement(components[RotationComponent.NAME].value)
+#func modify_movement(movement: Movement):
+	#if movement == null:
+		#return
+	#else:
+		#movement.rotate_movement(components[RotationComponent.NAME].value)

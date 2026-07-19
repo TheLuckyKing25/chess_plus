@@ -1,9 +1,9 @@
 class_name TileObject
-extends Node3D
+extends InteractableGameObject
 
 
 #region Signals
-signal clicked(tile:TileObject)
+signal modifier_order_changed()
 #endregion
 
 
@@ -27,10 +27,11 @@ static var en_passant: TileObject = null
 
 
 #region Exported Variables
-@export var state: TileStateComponent
-@export var collision_component: CollisionComponent
-@export var mesh_component: MeshComponent
 @export var occupant_component: OccupantComponent
+
+var occupant: InteractableGameObject:
+	set(value): occupant_component.occupant = value
+	get: return occupant_component.occupant
 #endregion
 
 
@@ -45,7 +46,24 @@ var neighbors: Dictionary[Constants.Direction, TileObject] = {
 	Constants.Direction.WEST: null,
 	Constants.Direction.NORTHWEST: null,
 }
+
+var rank: int
+
+
+var file: int
+
+
+var index: int
+
+
+@export var position_vector: Vector2i:
+	set(value):
+		rank = value.x
+		file = value.y
+	get():
+		return Vector2i(rank,file)
 #endregion
+
 
 func set_position_data(index:int, vector: Vector2i) -> void:
 	self.index = index
@@ -60,26 +78,12 @@ var _original_position_in_space: Vector3
 
 
 func _ready() -> void:
-	#assign_new_data(data)
-	collision_component.object_clicked.connect(_on_clicked)
-	collision_component.mouse_entered.connect(Callable(mesh_component,"show_mouse_hover"))
-	collision_component.mouse_exited.connect(Callable(mesh_component,"hide_mouse_hover"))
-
+	super()
+	occupant_component.occupant_clicked.connect(_on_clicked)
 	modifier_order_changed.connect(Callable(self,"_on_tile_modifier_order_changed"))
-
-	state.current = ObjectStateComponent.Type.NONE
 
 
 #region Object Generation
-
-func assign_new_data(new_data:TileObject):
-	#_translate_tile(new_data) # move tile to proper location in 3D space
-	#_set_base_tile_color(new_data) # set tile color
-	#name = "Tile_" + new_data.algebraic_notation
-	# show modifiers
-	pass
-
-
 func _translate_tile():
 	var board_rank_count = GameData.match_settings.board_size.rank
 	var board_file_count = GameData.match_settings.board_size.file
@@ -100,28 +104,23 @@ func _set_base_tile_color() -> void:
 
 
 #region Player Interaction
-func _on_occupant_clicked(piece: PieceObject):
-	clicked.emit(self)
-	if not clicked.has_connections():
-		_on_clicked(self)
-
-
-func _on_clicked(tile: TileObject) -> void:
+func select_object():
 	match selection_mode:
 		Constants.SelectionMode.MULTIPLE: _multiple_tile_select()
 		Constants.SelectionMode.SINGLE: _single_tile_select()
 
+	if is_instance_valid(occupant):
+		occupant.select_object()
+
 
 func _multiple_tile_select() -> void:
-	state.set_state(ObjectStateComponent.Type.SELECTED)
+	state.set_state(ObjectStateComponent.STATE_SELECTED)
 
 
 func _single_tile_select() -> void:
-	state.set_state(ObjectStateComponent.Type.SELECTED)
-#endregion
+	state.set_state(ObjectStateComponent.STATE_SELECTED)
 
-signal modifier_order_changed()
-signal occupant_changed(occupant: PieceObject)
+#endregion
 
 
 var modifier_order: Array[TileModifier] = []:
@@ -130,26 +129,17 @@ var modifier_order: Array[TileModifier] = []:
 		modifier_order_changed.emit()
 
 #region Position
-var rank: int
-
-
-var file: int
-
-
-var index: int
-
-
 var algebraic_notation: String:
 	get(): return char(97 + rank) + str((1 + file))
-
-
-@export var position_vector: Vector2i = Vector2i(-1,-1):
-	set(value):
-		rank = value.x
-		file = value.y
-	get():
-		return Vector2i(rank,file)
 #endregion
+
+
+func assign_new_data(new_data:TileObject):
+	#_translate_tile(new_data) # move tile to proper location in 3D space
+	#_set_base_tile_color(new_data) # set tile color
+	#name = "Tile_" + new_data.algebraic_notation
+	# show modifiers
+	pass
 
 # ===============================================================================
 # ============================== [END OF REFACTOR] ==============================

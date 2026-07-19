@@ -1,8 +1,8 @@
 ### Contains the data of a piece
 ### this data can change throughout a game.
 ### this is separate from the 3D piece.
-class_name PieceData
-extends Resource
+#class_name PieceData
+#extends Resource
 #
 #signal type_changed(new_type:PieceConfig)
 #signal player_changed(new_player:PlayerData)

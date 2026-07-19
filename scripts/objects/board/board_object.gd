@@ -67,26 +67,30 @@ var selected_tile: TileObject:
 
 var valid_selections: Array = []
 var valid_destinations: Dictionary[PieceObject,Dictionary] = {
-	#PieceObject: {TileData: ObjectStateComponent.Type, ...}
+	#PieceObject: {TileObject: ObjectStateComponent.STATE, ...}
 }
 
 
 #region Getter/Setters
 func _selected_tile_getter() -> TileObject:
-	var selected_tile_array: Array = TileStateComponent._state_dict[ObjectStateComponent.Type.SELECTED]
+	var selected_tile_array: Array = ObjectStateComponent._state_dict[ObjectStateComponent.STATE_SELECTED]
 	if selected_tile_array.is_empty(): return null
 	else: return selected_tile_array.front()
 #endregion
 
 
 func _ready() -> void:
-	Match.board = self
-
-	Player.current = GameData.players.white
-	Player.previous = GameData.players.black
+	tile_grid.object_clicked.connect(_on_object_clicked)
+	player_component.player_to_move_changed.connect(_on_player_to_move_changed)
 
 	tile_grid.generate_tile_grid(8,8)
+	_resize_base(tile_grid.rank_count,tile_grid.file_count)
+	_on_player_to_move_changed(player_component.player_to_move)
 
+	Match.board = self
+	#Player.current = GameData.players.white
+	#Player.previous = GameData.players.black
+#
 	#if NetworkManager.is_online:
 		#NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
 #
@@ -97,40 +101,33 @@ func _ready() -> void:
 		#_show_loading_screen()
 
 
+func _on_object_clicked(tile: InteractableGameObject) -> void:
+	if tile in valid_selections:
+		tile.select_object()
+		_toggle_destination_states(tile)
+	elif is_instance_valid(selected_tile) and tile in valid_destinations.get(selected_tile.occupant).keys():
+		process_change(selected_tile, tile)
+
+
 #region Board Generation
 # This is not run through the _init function because there are some cases where
 # we do not want to generate new tiles when creating a new board.
-func generate_board(ranks:int = 8, files:int = 8) -> void:
-
-	_resize_base(ranks,files) # Change the size of the board base to match the size of the board
-
-	if board_representation.is_empty():
-		_generate_position_vectors()
+#func generate_board(ranks:int = 8, files:int = 8) -> void:
+#
+	#_resize_base(ranks,files) # Change the size of the board base to match the size of the board
+#
+	#if board_representation.is_empty():
+		#_generate_position_vectors()
 		#_generate_tile_data()
-
+#
 	#_assign_tile_neighbors()
 	#_generate_pieces()
-	_set_player_to_move()
-
-
-func load_board_data(value: BoardObject) -> void:
-	if not is_instance_valid(value):
-		return
-
-	#_generate_tile_objects(value) # Create tiles
-	#_assign_data_to_tiles(value) # Assign data to tiles
-	#_generate_piece_objects(value) # Create pieces
-	#_assign_data_to_pieces(value) # Assign data to pieces
-	_place_pieces(value) # Place pieces on tiles
+	#_set_player_to_move()
 
 
 func _resize_base(ranks: int,files:int) -> void:
 	const BASE_WIDTH: float = 0.2
 	board_base.mesh.size = Vector3(files+1,BASE_WIDTH,ranks+1)
-
-
-#func _generate_tile_objects(new_data: BoardObject) -> void:
-	#pass
 
 
 #func _assign_data_to_tiles(new_data:BoardObject) -> void:
@@ -165,41 +162,41 @@ func _resize_base(ranks: int,files:int) -> void:
 		#tile_grid.piece_list[index].data = new_data.pieces[index]
 
 
-func _place_pieces(new_data:BoardObject)-> void:
-	for piece_object: PieceObject in tile_grid.piece_list:
-		var position_vector: Vector2i = piece_object.data.position_vector
-		if position_vector in new_data.board_representation.keys():
-			var board_location: Array = new_data.board_representation[position_vector]
-			var assigned_tile: TileObject = board_location.get(BoardObject.TILE_DATA_INDEX).assigned_object
-			assigned_tile.add_child(piece_object)
-			assigned_tile.occupant = piece_object
+#func _place_pieces(new_data:BoardObject)-> void:
+	#for piece_object: PieceObject in tile_grid.piece_list:
+		#var position_vector: Vector2i = piece_object.data.position_vector
+		#if position_vector in new_data.board_representation.keys():
+			#var board_location: Array = new_data.board_representation[position_vector]
+			#var assigned_tile: TileObject = board_location.get(BoardObject.TILE_DATA_INDEX).assigned_object
+			#assigned_tile.add_child(piece_object)
+			#assigned_tile.occupant = piece_object
 #endregion
 
 
 #region Object Selected
-func _on_piece_clicked(piece:PieceObject) -> void:
-	if piece in valid_selections:
-		piece.state.set_state(ObjectStateComponent.Type.SELECTED)
-
-
-func _on_tile_clicked(tile:TileObject)-> void:
-	if tile in valid_selections:
-		tile.state.set_state(ObjectStateComponent.Type.SELECTED)
-		_toggle_destination_states(tile)
-	elif is_instance_valid(selected_tile) and tile in valid_destinations.get(selected_tile.occupant).keys():
-		process_change(selected_tile, tile)
+#func _on_piece_clicked(piece:PieceObject) -> void:
+	#if piece in valid_selections:
+		#piece.state.set_state(ObjectStateComponent.STATE_SELECTED)
+#
+#
+#func _on_tile_clicked(tile:TileObject)-> void:
+	#if tile in valid_selections:
+		#tile.state.set_state(ObjectStateComponent.STATE_SELECTED)
+		#_toggle_destination_states(tile)
+	#elif is_instance_valid(selected_tile) and tile in valid_destinations.get(selected_tile.occupant).keys():
+		#process_change(selected_tile, tile)
 
 
 func _toggle_destination_states(tile: TileObject) -> void:
-	var destinations: Dictionary[TileObject,ObjectStateComponent.Type] = valid_destinations.get(tile.occupant.data)
+	var destinations: Dictionary[TileObject,StringName] = valid_destinations.get(tile.occupant)
 	for tile_index:TileObject in destinations.keys():
-		tile_index.assigned_object.state.set_state(destinations.get(tile_index))
+		tile_index.state.set_state(destinations.get(tile_index))
 		if is_instance_valid(tile_index.occupant):
-			tile_index.occupant.assigned_object.state.set_state(destinations.get(tile_index))
+			tile_index.occupant.state.set_state(destinations.get(tile_index))
 #endregion
 
 
-func print_properties():
+func print_properties() -> void:
 	var property_list: Array[Dictionary] = get_property_list()
 	var property_dict: Dictionary[StringName,Variant] = {}
 	for property in property_list:
@@ -209,7 +206,7 @@ func print_properties():
 
 
 #region Getter/Setters
-func _board_representation_setter(value) -> void:
+func _board_representation_setter(value:Dictionary) -> void:
 	board_representation = value
 	board_representation_changed.emit()
 
@@ -233,60 +230,44 @@ func _generate_position_vectors() -> void:
 		board_representation.set(Vector2i(index/tile_grid.file_count, index%tile_grid.file_count),[])
 
 
-#func _generate_tile_data() -> void:
-	#pass
-
-
-#func _assign_tile_neighbors() -> void:
-	#pass
-
-
-#func _generate_pieces() -> void:
-	#pass
-
-
-func _set_player_to_move() -> void:
-	match fen.active_player:
-		"w": player_to_move = GameData.players.white.data
-		"b": player_to_move = GameData.players.black.data
-
-
-func _on_player_to_move_changed(new_player_data:Player) -> void:
+func _on_player_to_move_changed(new_player:Player) -> void:
 	valid_selections.clear()
 	valid_destinations.clear()
-	_find_all_valid_selections(new_player_data)
+	_find_all_valid_selections(new_player)
 	_find_all_valid_destinations()
 
 
-func _find_all_valid_selections(new_player_data:Player) -> void:
-	var piece_filter:Callable = func(piece: PieceObject): if piece.player == new_player_data: return piece
+func _find_all_valid_selections(new_player:Player) -> void:
+	var piece_filter:Callable = func(piece: PieceObject) -> bool: return piece.player_ownership.player == new_player
 	var selectable_piece_objects:Array[PieceObject] = tile_grid.piece_list.filter(piece_filter)
 	valid_selections.append_array(selectable_piece_objects)
 
-	var tile_filter:Callable = func(tile: TileObject): if selectable_piece_objects.has(tile.occupant): return tile
+	var tile_filter:Callable = func(tile: TileObject) -> bool: return selectable_piece_objects.has(tile.occupant)
 	var selectable_tile_object: Array[TileObject] = tile_grid.tile_list.filter(tile_filter)
 	valid_selections.append_array(selectable_tile_object)
+	print(valid_selections)
 
 
 func _find_all_valid_destinations() -> void:
 	var destinations: Dictionary[PieceObject,Dictionary] = {}
 
 	var selectable_pieces: Array = valid_selections.filter(
-			func(item): return (item is PieceObject)
+			func(item:Object) -> bool: return (item is PieceObject)
 		)
-	for piece in selectable_pieces:
+	for piece:PieceObject in selectable_pieces:
 		destinations.set(piece,_find_movement_of_piece(piece))
 
 	# filter out moves
 
 	valid_destinations = destinations
+	DebugPrinter.print_pretty(valid_destinations)
 
 
-func _find_movement_of_piece(piece:PieceObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
-	var movement: Dictionary[TileObject,ObjectStateComponent.Type] = {}
-	var starting_tile: TileObject = board_representation.get(piece.position_vector).get(TILE_DATA_INDEX)
-	movement = piece.current_movement.apply_movement(starting_tile, self)
-	piece.reset_current_movement()
+func _find_movement_of_piece(piece:PieceObject) -> Dictionary[TileObject,StringName]:
+	var movement: Dictionary[TileObject,StringName] = {}
+	var starting_tile: TileObject = tile_grid.get_tile_at_position(piece.position_vector)
+	movement = piece.movement_component.movement.apply_movement(starting_tile, self)
+	piece.movement_component.reset_movement()
 	return movement
 
 
@@ -303,21 +284,20 @@ func process_change(from: TileObject, to: TileObject) -> void:
 	if is_instance_valid(to.occupant):
 		new_change.add_change(BoardChange.CAPTURED_RULE_NAME, [to.occupant])
 
-
-	_evaluate_piece_rules(new_change)
-	_evaluate_game_rules(new_change)
+	#_evaluate_piece_rules(new_change)
+	#_evaluate_game_rules(new_change)
 
 	BoardChange.apply_change(new_change,self)
 	DebugPrinter.print_pretty(board_history[-1].changed_data,false)
 
 
-func _evaluate_piece_rules(current_changes: BoardChange):
+func _evaluate_piece_rules(current_changes: BoardChange) -> void:
 	for piece:PieceObject in tile_grid.piece_list:
 		piece.evaluate_rules(current_changes)
 
 
-func _evaluate_game_rules(current_changes: BoardChange):
-	var _validation_filter: Callable = func(item): return is_instance_valid(item)
+func _evaluate_game_rules(current_changes: BoardChange) -> void:
+	#var _validation_filter: Callable = func(item:Node3D): return is_instance_valid(item)
 	var new_changes: Array[BoardChange] = []
 	for rule:GameRule in rules:
 		new_changes.append(rule.evaluate_rule_application(current_changes,self))

@@ -1,17 +1,11 @@
 class_name PieceObject
-extends Node3D
+extends InteractableGameObject
 
-signal clicked(piece: PieceObject)
-signal state_changed()
-signal selected(piece: PieceObject)
 signal type_changed(new_type:PieceConfig)
 signal player_changed(new_player:Player)
 signal captured
 
 
-@export var collision_component: CollisionComponent
-@export var mesh_component: MeshComponent
-@export var state: PieceStateComponent
 @export var player_ownership: PlayerOwnershipComponent
 @export var movement_component: MovementComponent
 
@@ -32,7 +26,7 @@ static var en_passant: PieceObject = null
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
 
-@export var type: PieceConfig:
+var type: PieceConfig:
 	set(value):
 		if is_instance_valid(type):
 			type.base_movement_changed.disconnect(func(): set("_adjusted_movement",type.base_movement))
@@ -56,7 +50,6 @@ var _adjusted_movement: AbstractMovement:
 # movement used by modifiers
 var current_movement: AbstractMovement
 
-
 var rank: int
 
 
@@ -73,7 +66,6 @@ var position_vector: Vector2i:
 	get():
 		return Vector2i(rank,file)
 
-
 var has_moved: bool = false:
 	set(value):
 		has_moved = true
@@ -84,20 +76,6 @@ var is_captured: bool = false:
 		if value:
 			captured.emit()
 		is_captured = value
-
-
-static func new_piece(piece_config: PieceConfig, new_index:int, max_move_distance:int) -> PieceObject:
-	var piece: PieceObject = PieceObject.new()
-	var new_PIECE_DATA_INDEX: PieceConfig = piece_config.duplicate(true)
-
-	piece.type = new_PIECE_DATA_INDEX
-	var base_movement = piece.type.base_movement
-	base_movement.set_max_distance(GameData.max_board_length)
-	piece.type.base_movement = base_movement
-	piece.index = new_index
-	piece.name = piece.type.name
-
-	return piece
 
 
 func _apply_facing_direction_to_movement():
@@ -111,15 +89,15 @@ func reset_current_movement():
 
 
 func _ready() -> void:
-	collision_component.object_clicked.connect(_on_clicked)
-	collision_component.mouse_entered.connect(Callable(mesh_component,"show_mouse_hover"))
-	collision_component.mouse_exited.connect(Callable(mesh_component,"hide_mouse_hover"))
+	super()
 	player_ownership.player_changed.connect(_on_player_changed)
 	_on_player_changed(player_ownership.player)
 
 
 #region Piece Object Generation
 func _on_player_changed(new_player:Player):
+	if not is_instance_valid(new_player):
+		return
 	mesh_component.set_main_color(new_player.color)
 	rotation.y = new_player.piece_rotation_parity
 	movement_component.base_movement.set_facing_direction(new_player.facing_direction)
@@ -130,10 +108,8 @@ func _on_captured():
 	get_parent().remove_child(self)
 	hide()
 #endregion
-
-
-func _on_clicked(object: Node3D):
-	state.set_state(ObjectStateComponent.Type.SELECTED)
+func select_object():
+	state.set_state(ObjectStateComponent.STATE_SELECTED)
 
 
 func move(destination: TileObject):

@@ -1,13 +1,16 @@
 class_name TileGridComponent
 extends Node
 
+
 signal generation_finished
+signal object_clicked(tile: Node3D)
 
 const TILE_SCENE:PackedScene = preload("uid://clmimmf3c1qpt")
 
 
-@export var rank_count: int = GameData.match_settings.board_size.rank
-@export var file_count: int = GameData.match_settings.board_size.file
+@export var rank_count: int
+@export var file_count: int
+
 
 var max_length: int:
 	get = _max_length_getter
@@ -18,27 +21,38 @@ var vector_position_tile_dict: Dictionary[Vector2i,TileObject] = {
 	# Vector2i: TileObject
 }
 
+
 func _max_length_getter() -> int:
 	return maxi(file_count,rank_count)
+
+
+func get_tile_at_position(position_vector: Vector2i) -> TileObject:
+	var position_getter: Callable = func(item:TileObject): return item.position_vector
+	var position_array: Array = tile_list.map(position_getter)
+	var index: int = position_array.find(position_vector)
+	return tile_list.get(index) if index >= 0 else null
+
 
 func generate_tile_grid(ranks: int, files: int) -> void:
 	rank_count = ranks
 	file_count = files
 
-	_generate_tiles()
+	_instantiate_tiles()
 	_set_tile_data()
 	_assign_tile_neighbors()
-	_generate_pieces()
+	_instantiate_pieces()
 
 	generation_finished.emit()
 
 
-func _generate_tiles() -> void:
+func _instantiate_tiles() -> void:
+	var tile_clicked_func: Callable = func(tile:Node3D): object_clicked.emit(tile)
 	var current_number_of_tiles:int = tile_list.size()
 	var total_number_of_tiles:int = rank_count * file_count
 
 	while current_number_of_tiles < total_number_of_tiles:
 		var tile: TileObject = TILE_SCENE.instantiate()
+		tile.clicked.connect(tile_clicked_func)
 		#tile.clicked.connect(_on_tile_clicked)
 		tile_list.append(tile)
 		current_number_of_tiles += 1
@@ -61,6 +75,7 @@ func _set_tile_data() -> void:
 			0.1,
 			(float(rank_count)/2)-position_vector.x-0.5
 		))
+
 
 func _assign_tile_neighbors() -> void:
 	for tile:TileObject in tile_list:
@@ -87,7 +102,7 @@ func _is_out_of_bounds(postition: Vector2i) -> bool:
 		)
 
 
-func _generate_pieces() -> void:
+func _instantiate_pieces() -> void:
 	const PIECE_UID_DICT:Dictionary = Constants.PIECE_SCENE_UID_DICT
 	const TYPE_PIECE: Dictionary = Constants.TypePiece
 	var fen: FEN = get_parent().fen
@@ -126,7 +141,7 @@ func _generate_pieces() -> void:
 		var position_vector: Vector2i = Vector2i(tile_index/file_count, tile_index%file_count)
 		var tile = tile_list.get(tile_index)
 		piece_list.append(new_piece)
-		tile.occupant_component.occupant = new_piece
+		tile.occupant = new_piece
 		new_piece.position_vector = position_vector
 
 		tile_count += 1

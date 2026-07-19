@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://7bya4j8tgsf6"]
 
-[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://scenes/pieces/piece.tscn" id="1_st6gu"]
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://scenes/pieces/_piece.tscn" id="1_st6gu"]
 [ext_resource type="ArrayMesh" uid="uid://co538rh6q5c02" path="res://assets/mesh/mesh_knight.obj" id="2_o7y2p"]
-[ext_resource type="Resource" uid="uid://8gfafi0lgf6u" path="res://resources/pieces/movement/knight.tres" id="3_q4lw7"]
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://scripts/movement/abstract_movement.gd" id="3_st6gu"]
+[ext_resource type="Script" uid="uid://bwtiwvjb3a3at" path="res://scripts/movement/jumping_movement.gd" id="4_o7y2p"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://scripts/movement/branching_movement.gd" id="5_gcj0m"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xua18"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_st6gu"]
 resource_local_to_scene = true
 resource_name = "Outline"
 transparency = 1
@@ -14,15 +16,15 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_st6gu"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7y2p"]
 resource_local_to_scene = true
 resource_name = "piece_color"
-next_pass = SubResource("StandardMaterial3D_xua18")
+next_pass = SubResource("StandardMaterial3D_st6gu")
 roughness_texture_channel = 4
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7y2p"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gcj0m"]
 resource_local_to_scene = true
 resource_name = "piece_color"
 render_priority = 1
@@ -32,12 +34,90 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
+[sub_resource type="Resource" id="Resource_ilq5a"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = 2
+file_origin_offset = 1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_g4r5h"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = 2
+file_origin_offset = -1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_7onn0"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = 1
+file_origin_offset = 2
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_q8seq"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = -1
+file_origin_offset = 2
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_p8ggy"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = -2
+file_origin_offset = 1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_dvs7q"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = -2
+file_origin_offset = -1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_yk4pf"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = -1
+file_origin_offset = -2
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_3qk6p"]
+resource_local_to_scene = true
+script = ExtResource("4_o7y2p")
+rank_origin_offset = 1
+file_origin_offset = -2
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://bwtiwvjb3a3at"
+
+[sub_resource type="Resource" id="Resource_q0etd"]
+resource_local_to_scene = true
+script = ExtResource("5_gcj0m")
+branches = Array[ExtResource("3_st6gu")]([SubResource("Resource_ilq5a"), SubResource("Resource_g4r5h"), SubResource("Resource_7onn0"), SubResource("Resource_q8seq"), SubResource("Resource_p8ggy"), SubResource("Resource_dvs7q"), SubResource("Resource_yk4pf"), SubResource("Resource_3qk6p")])
+metadata/_custom_type_script = "uid://by81w35mptra5"
+
 [node name="Knight" unique_id=210537964 instance=ExtResource("1_st6gu")]
 
 [node name="MeshComponent" parent="." index="3" unique_id=650561997]
-material_override = SubResource("StandardMaterial3D_st6gu")
-material_overlay = SubResource("StandardMaterial3D_o7y2p")
+material_override = SubResource("StandardMaterial3D_o7y2p")
+material_overlay = SubResource("StandardMaterial3D_gcj0m")
 mesh = ExtResource("2_o7y2p")
 
 [node name="MovementComponent" parent="." index="4" unique_id=1074763618]
-base_movement = ExtResource("3_q4lw7")
+base_movement = SubResource("Resource_q0etd")

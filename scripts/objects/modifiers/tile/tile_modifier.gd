@@ -74,15 +74,15 @@ static func apply_modifiers_to_moveset(context, tile, piece, moveset):
 	return result
 
 
-static func apply_on_piece_enter(move: Move) -> void:
-	var destination_tile: TileObject = move.destination_tile
-	var piece: PieceObject = destination_tile.occupant
-
-	if destination_tile == null or piece == null:
-		return
-
-	for modifier in destination_tile.data.modifier_order:
-		modifier.on_piece_enter(piece, move.starting_tile, destination_tile)
+#static func apply_on_piece_enter(move: Move) -> void:
+	#var destination_tile: TileObject = move.destination_tile
+	#var piece: PieceObject = destination_tile.occupant
+#
+	#if destination_tile == null or piece == null:
+		#return
+#
+	#for modifier in destination_tile.data.modifier_order:
+		#modifier.on_piece_enter(piece, move.starting_tile, destination_tile)
 
 
 
@@ -103,8 +103,8 @@ func modify_moves(piece, tile, moves):
 	return moves
 
 
-func modify_movement(movement: Movement):
-	return
+#func modify_movement(movement: Movement):
+	#return
 
 
 func modify_threats(piece, tile, threats):

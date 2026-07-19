@@ -66,7 +66,7 @@ static func apply_change(change: BoardChange, board_data: BoardObject) -> void:
 
 
 #region Change Handlers
-static func add_change_handler(name: String, function: Callable):
+static func add_change_handler(name: String, function: Callable) -> void:
 	if name in _change_handler_function_lookup.keys() and _change_handler_function_lookup.get(name) == function:
 		return
 	_change_handler_function_lookup.set(name,function)

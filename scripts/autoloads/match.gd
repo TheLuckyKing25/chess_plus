@@ -84,5 +84,5 @@ func get_board_position(index: int) -> Vector2i:
 
 
 func is_my_turn() -> bool:
-	var current_player_index: int = 0 if Player.current == GameData.players.white else 1
-	return NetworkManager.is_my_turn(current_player_index)
+	#var current_player_index: int = 0 if Player.current == GameData.players.white else 1
+	return 1 #NetworkManager.is_my_turn(current_player_index)

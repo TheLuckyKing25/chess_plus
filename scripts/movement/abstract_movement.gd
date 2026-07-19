@@ -12,4 +12,4 @@ func set_max_distance(max_distance:int) -> void:
 
 
 @abstract func set_facing_direction(facing_direction: int) -> void
-@abstract func apply_movement(current_tile:TileObject,_board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]
+@abstract func apply_movement(current_tile:TileObject,_board: BoardObject) -> Dictionary[TileObject,StringName]

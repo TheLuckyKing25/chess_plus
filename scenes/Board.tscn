@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bmn0vseig0kxr" path="res://scripts/objects/board/board_object.gd" id="1_hljw5"]
 [ext_resource type="AudioStream" uid="uid://cwg8vavv5ju0u" path="res://assets/audio/Piece_move.wav" id="2_kqf1l"]
-[ext_resource type="Script" uid="uid://bfkuh7yylblkf" path="res://scripts/components/tile_grid_component.gd" id="2_n230i"]
+[ext_resource type="Script" uid="uid://bfkuh7yylblkf" path="res://scripts/objects/components/tile_grid_component.gd" id="2_n230i"]
 [ext_resource type="AudioStream" uid="uid://bssm6wm638gkl" path="res://assets/audio/Piece_capture.wav" id="3_hljw5"]
 [ext_resource type="Script" uid="uid://eglj4v7ucced" path="res://scripts/state/state_machine.gd" id="4_n230i"]
 [ext_resource type="Script" uid="uid://b1ssj14vctijh" path="res://scripts/state/turn_states/player_turn.gd" id="5_ar2e0"]
 [ext_resource type="Script" uid="uid://befv64o3i2v02" path="res://scripts/state/turn_states/turn_transition.gd" id="6_pnb36"]
 [ext_resource type="PackedScene" uid="uid://bmes5xsco1bk5" path="res://scenes/player.tscn" id="7_mvl7x"]
-[ext_resource type="Script" uid="uid://crbpah1rpqph3" path="res://scripts/components/player_component.gd" id="7_wmvsh"]
+[ext_resource type="Script" uid="uid://crbpah1rpqph3" path="res://scripts/objects/components/player_component.gd" id="7_wmvsh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
@@ -30,6 +30,8 @@ mesh = SubResource("BoxMesh_hljw5")
 
 [node name="TileGridComponent" type="Node" parent="." unique_id=34405764]
 script = ExtResource("2_n230i")
+rank_count = 8
+file_count = 8
 metadata/_custom_type_script = "uid://bfkuh7yylblkf"
 
 [node name="Captured" type="Node" parent="." unique_id=778847314]
@@ -74,8 +76,9 @@ script = ExtResource("6_pnb36")
 previous_state = NodePath("../WhiteTurn")
 next_state = NodePath("../BlackTurn")
 
-[node name="PlayerComponent" type="Node" parent="." unique_id=778507162]
+[node name="PlayerComponent" type="Node" parent="." unique_id=778507162 node_paths=PackedStringArray("player_to_move")]
 script = ExtResource("7_wmvsh")
+player_to_move = NodePath("White")
 metadata/_custom_type_script = "uid://crbpah1rpqph3"
 
 [node name="White" parent="PlayerComponent" unique_id=2026006641 instance=ExtResource("7_mvl7x")]
@@ -99,6 +102,8 @@ parity = -1
 distance_from_subject = 10.0
 yaw = 180.0
 pitch = -50.0
+
+[node name="RulesComponent" type="Node" parent="." unique_id=1497995931]
 
 [editable path="PlayerComponent/White"]
 [editable path="PlayerComponent/Black"]

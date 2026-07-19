@@ -50,6 +50,7 @@ func input(event) -> void:
 func on_pause_pressed():
 	transitioned.emit(self, "PauseMenuState")
 
+
 func on_new_placement_selected(placement: FEN) -> void:
 	Match.board.data.piece_array.clear()
 	for tile in Match.board.data.tile_array:
@@ -64,10 +65,14 @@ func on_new_placement_selected(placement: FEN) -> void:
 	Match.board.load_FEN(placement)
 
 func on_camera_horizontal_offset_changed(value:float):
-	Player.current.change_camera_horizontal_offset(value)
+	#Player.current.change_camera_horizontal_offset(value)
+	printerr("FUNC NOT UPDATED")
+	pass
 
 func on_camera_forward_offset_changed(value:float):
-	Player.current.change_camera_forward_offset(value)
+	#Player.current.change_camera_forward_offset(value)
+	printerr("FUNC NOT UPDATED")
+	pass
 
 func on_promotion_verified(piece: PieceObject) -> void:
 	if piece == null:

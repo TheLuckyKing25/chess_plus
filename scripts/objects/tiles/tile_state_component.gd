@@ -3,81 +3,42 @@ class_name TileStateComponent
 extends ObjectStateComponent
 
 
-const NONE_COLOR: Color = Color(1, 1, 1, 0)
-const SELECT_COLOR: Color = Color(0.1, 1, 1, 1)
-const VALID_COLOR: Color = Color(0.6, 1, 0.6, 1)
-const CASTLING_COLOR: Color = Color(1, 1, 1, 1)
-const THREATENED_COLOR: Color = Color(1, 0.2, 0.2, 1)
-const CHECKED_COLOR: Color = Color(1, 0.2, 0.2, 1)
-const MOVE_CHECKING_COLOR: Color = Color(1, 0.392, 0.153)
-
-
-const color: Dictionary [Type,Color] = {
-	Type.NONE: NONE_COLOR,
-	Type.SELECTED: SELECT_COLOR,
-	Type.MOVEMENT: VALID_COLOR,
-	Type.CASTLING: CASTLING_COLOR,
-	Type.THREATENED: THREATENED_COLOR,
-	Type.CHECKED: CHECKED_COLOR,
-	Type.CHECKED_MOVEMENT: MOVE_CHECKING_COLOR,
-}
-
-static var _state_dict: Dictionary[Type,Array] = {
-	# Type : [TileObject, ... ]
-	Type.NONE: [],
-	Type.CHECKED_MOVEMENT: [],
-	Type.CHECKED: [],
-	Type.THREATENED: [],
-	Type.CASTLING: [],
-	Type.MOVEMENT: [],
-	Type.SELECTED: [],
+const state_color: Dictionary [StringName,Color] = {
+	STATE_NONE: Color(1, 1, 1, 0),
+	STATE_SELECTED: Color(0.1, 1, 1, 1),
+	STATE_MOVEMENT: Color(0.6, 1, 0.6, 1),
+	STATE_CASTLING: Color(1, 1, 1, 1),
+	STATE_THREATENED: Color(1, 0.2, 0.2, 1),
+	STATE_CHECKED: Color(1, 0.2, 0.2, 1),
+	STATE_CHECKED_MOVEMENT: Color(1, 0.392, 0.153),
 }
 
 
-var tile: TileObject:
-	get: return get_parent()
-
-@export var mesh_component: MeshComponent
-
-static func clear_intermediate_states():
-	var intermediate_state_tiles: Array[TileObject] = []
-	intermediate_state_tiles.append_array(_state_dict.get(Type.THREATENED))
-	intermediate_state_tiles.append_array(_state_dict.get(Type.CASTLING))
-	intermediate_state_tiles.append_array(_state_dict.get(Type.SELECTED))
-	intermediate_state_tiles.append_array(_state_dict.get(Type.MOVEMENT))
-
-	for tile_object in intermediate_state_tiles:
-		tile_object.state.set_state(Type.NONE)
+static func get_tiles_on_states(...state_names:Array) -> Array[TileObject]:
+	var unfiltered_array: Array = get_objects_on_states.callv(state_names)
+	var filtered_array: Array = unfiltered_array.filter(
+			func(item) -> bool: return item is TileObject
+		)
+	return filtered_array
 
 
-func _on_state_changed(new_state: Type):
-	new_state = clamp(new_state,0,Type.keys().size()-1) as Type
-
+func _on_state_changed(new_state: StringName):
 	if new_state == current:
-		new_state = Type.NONE
+		new_state = STATE_NONE
 
-	_state_function_lookup.get(new_state).call()
+	super(new_state)
 
-	_state_dict.get(current).erase(tile)
-	_state_dict.get(new_state).append(tile)
-
-	current = new_state
-	_apply_state_color()
-
-
-func _apply_state_color():
-	mesh_component.set_outline_color(color[current])
-	mesh_component.outline_material.emission_enabled = false
-	mesh_component.outline_material.emission = color[current]
+	if state_color.has(new_state):
+		_apply_state_color(state_color.get(new_state))
+	else:
+		printerr("Attempting to set ",get_parent().name," to an invalid state of ",new_state)
 
 
 func _on_selected():
 	if TileObject.selection_mode == Constants.SelectionMode.SINGLE:
-		var joint_array: Array[TileObject] = []
-		joint_array.append_array(_state_dict[Type.SELECTED])
-		joint_array.append_array(_state_dict[Type.MOVEMENT])
-		joint_array.append_array(_state_dict[Type.THREATENED])
+		var joint_array: Array = []
+		joint_array = get_tiles_on_states(STATE_THREATENED,STATE_SELECTED,STATE_MOVEMENT)
 		for selected_tile:TileObject in joint_array:
-			selected_tile.state.set_state(Type.NONE)
-			if is_instance_valid(selected_tile.occupant_component.occupant):
-				selected_tile.occupant_component.occupant.state.set_state(ObjectStateComponent.Type.NONE)
+			selected_tile.state.set_state(STATE_NONE)
+			if is_instance_valid(selected_tile.occupant):
+				selected_tile.occupant.state.set_state(ObjectStateComponent.STATE_NONE)

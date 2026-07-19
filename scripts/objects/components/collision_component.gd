@@ -1,7 +1,7 @@
 class_name CollisionComponent
 extends Area3D
 
-signal object_clicked(object:Node3D)
+signal object_clicked(object:InteractableGameObject)
 
 
 var _is_mouse_on_object:bool = false

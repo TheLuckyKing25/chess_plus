@@ -22,5 +22,5 @@ func on_turn_end(tile) -> void:
 	if target_tile.occupant != null:
 		return
 
-	Match.board._perform_move(Move.new(tile, target_tile))
+	#Match.board._perform_move(Move.new(tile, target_tile))
 	Match.end_turn_modifier_moved = true

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bmes5xsco1bk5"]
 
-[ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://scripts/player/player.gd" id="1_qhqgy"]
-[ext_resource type="Script" uid="uid://bqqc457mnn1wj" path="res://scripts/components/camera_component.gd" id="2_dqkch"]
+[ext_resource type="Script" uid="uid://bxhpvevuigen3" path="res://scripts/objects/player/player.gd" id="1_qhqgy"]
+[ext_resource type="Script" uid="uid://bqqc457mnn1wj" path="res://scripts/objects/components/camera_component.gd" id="2_dqkch"]
 [ext_resource type="Script" uid="uid://dk4hgujlft1oj" path="res://scripts/time_control.gd" id="2_qhqgy"]
 
 [node name="Player" type="Node" unique_id=408447826 node_paths=PackedStringArray("camera_component", "timer")]

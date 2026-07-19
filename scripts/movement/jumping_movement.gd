@@ -29,17 +29,17 @@ func set_facing_direction(facing_direction:int):
 		next_movement.set_facing_direction(facing_direction)
 
 
-func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,ObjectStateComponent.Type]:
-	var tiles: Dictionary[TileObject,ObjectStateComponent.Type] = {}
+func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,StringName]:
+	var tiles: Dictionary[TileObject,StringName] = {}
 
 	# find next_tile
 	var new_position:Vector2i = current_tile.position_vector + offset_vector
 
-	if _board.board_representation.get(new_position) == null:
+	if _board.tile_grid.get_tile_at_position(new_position) == null:
 		return {}
 
-	var next_tile:TileObject = _board.board_representation.get(new_position).get(BoardObject.TILE_DATA_INDEX)
-	var next_tile_state: ObjectStateComponent.Type = ObjectStateComponent.Type.NONE
+	var next_tile:TileObject = _board.tile_grid.get_tile_at_position(new_position)
+	var next_tile_state: StringName = ObjectStateComponent.STATE_NONE
 	if not is_instance_valid(next_tile):
 		return {}
 
@@ -48,15 +48,15 @@ func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[
 
 	if is_move:
 		if next_tile.occupant == null:
-			next_tile_state = ObjectStateComponent.Type.MOVEMENT
+			next_tile_state = ObjectStateComponent.STATE_MOVEMENT
 			tiles.set(next_tile,next_tile_state)
 
 	if is_threaten:
 		if is_instance_valid(next_tile.occupant) and not next_tile in _board.valid_selections:
-			next_tile_state = ObjectStateComponent.Type.THREATENED
+			next_tile_state = ObjectStateComponent.STATE_THREATENED
 			tiles.set(next_tile,next_tile_state)
 
-	if next_tile_state == ObjectStateComponent.Type.NONE:
+	if next_tile_state == ObjectStateComponent.STATE_NONE:
 		return {}
 
 	# exit next_tile
