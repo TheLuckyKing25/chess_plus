@@ -30,15 +30,15 @@ func enter():
 		_reset_tween()
 		transition_tween.set_parallel(true)
 		transition_tween.tween_property(
-				previous_state.player,
-				"camera_yaw",
+				previous_state.player.camera_component,
+				"yaw",
 				camera_ending_yaw,
 				Constants.TURN_TRANSITION_TIME_SECONDS
 			)
 		transition_tween.tween_property(
 				previous_state.board.board_base.material_override,
 				"albedo_color",
-				next_state.player.data.color,
+				next_state.player.color,
 				 Constants.TURN_TRANSITION_TIME_SECONDS)
 		await transition_tween.finished
 
@@ -46,7 +46,7 @@ func enter():
 
 
 func exit():
-	next_state.player.camera_object.make_current()
-	previous_state.player.camera_yaw = initial_rotation_degree
+	next_state.player.camera_component.camera.make_current()
+	previous_state.player.camera_component.yaw = initial_rotation_degree
 
 	DebugPrinter.print_state_exit(name)

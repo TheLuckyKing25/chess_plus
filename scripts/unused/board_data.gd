@@ -263,7 +263,7 @@ extends Resource
 		#from.position_vector: [from, null],
 	#}
 #
-	#new_change.add_change(BoardChange.BOARD_REP_RULE_NAME, move)
+	#new_change.add_change(BoardChange.MOVE_RULE_NAME, move)
 	#new_change.add_change(BoardChange.PLAYER_TO_MOVE_RULE_NAME, GameData.opponent(player_to_move))
 	#if is_instance_valid(to.occupant):
 		#new_change.add_change(BoardChange.CAPTURED_RULE_NAME, [to.occupant])

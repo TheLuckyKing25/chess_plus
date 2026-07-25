@@ -15,9 +15,8 @@ enum {
 @export var player_component: PlayerComponent
 @export var tile_grid: TileGridComponent
 @export var board_base: MeshInstance3D
-@export var rules: Array[GameRule] = [
-	FiftyMoveRule.new()
-]
+@export var rules_component: RulesComponent
+
 @export_group("Audio","audio_")
 @export var audio_piece_capture:AudioStreamPlayer
 @export var audio_piece_move:AudioStreamPlayer
@@ -26,16 +25,10 @@ enum {
 var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
 
-# Entries of this dictionary are of the format "Vector2i: [TileData, PieceObject]"
-var board_representation: Dictionary[Vector2i, Array] = {}:
-	set = _board_representation_setter
-
-
-var player_to_move: Player:
-	set = _player_to_move_setter
-
-
 var board_history: Array[BoardChange] = []
+
+
+var current_changes: BoardChange
 
 
 var castling_rights: Dictionary = {
@@ -73,7 +66,7 @@ var valid_destinations: Dictionary[PieceObject,Dictionary] = {
 
 #region Getter/Setters
 func _selected_tile_getter() -> TileObject:
-	var selected_tile_array: Array = ObjectStateComponent._state_dict[ObjectStateComponent.STATE_SELECTED]
+	var selected_tile_array: Array = TileStateComponent.get_tiles_on_states(ObjectStateComponent.STATE_SELECTED)
 	if selected_tile_array.is_empty(): return null
 	else: return selected_tile_array.front()
 #endregion
@@ -88,8 +81,6 @@ func _ready() -> void:
 	_on_player_to_move_changed(player_component.player_to_move)
 
 	Match.board = self
-	#Player.current = GameData.players.white
-	#Player.previous = GameData.players.black
 #
 	#if NetworkManager.is_online:
 		#NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
@@ -106,7 +97,7 @@ func _on_object_clicked(tile: InteractableGameObject) -> void:
 		tile.select_object()
 		_toggle_destination_states(tile)
 	elif is_instance_valid(selected_tile) and tile in valid_destinations.get(selected_tile.occupant).keys():
-		process_change(selected_tile, tile)
+		process_move(selected_tile, tile)
 
 
 #region Board Generation
@@ -137,8 +128,8 @@ func _resize_base(ranks: int,files:int) -> void:
 		#if not tile_grid.tile_list[index] in board_base.get_children():
 			#board_base.add_child(tile_grid.tile_list[index])
 		#tile_grid.tile_list[index].data = new_data.tiles[index]
-
-
+#
+#
 #func _generate_piece_objects(new_data:BoardObject) -> void:
 	#var counter:int = tile_grid.piece_list.size()
 	#var number_of_pieces:int = new_data.pieces.size()
@@ -153,15 +144,15 @@ func _resize_base(ranks: int,files:int) -> void:
 		#while counter > number_of_pieces:
 			#tile_grid.piece_list.pop_back().queue_free()
 			#counter -= 1
-
-
+#
+#
 #func _assign_data_to_pieces(new_data:BoardObject) -> void:
 	#if new_data.pieces.size() != tile_grid.piece_list.size():
 		#return
 	#for index:int in range(tile_grid.piece_list.size()):
 		#tile_grid.piece_list[index].data = new_data.pieces[index]
-
-
+#
+#
 #func _place_pieces(new_data:BoardObject)-> void:
 	#for piece_object: PieceObject in tile_grid.piece_list:
 		#var position_vector: Vector2i = piece_object.data.position_vector
@@ -205,29 +196,17 @@ func print_properties() -> void:
 	DebugPrinter.print_pretty(property_dict, false)
 
 
-#region Getter/Setters
-func _board_representation_setter(value:Dictionary) -> void:
-	board_representation = value
-	board_representation_changed.emit()
-
-
-func _player_to_move_setter(value:Player) -> void:
-	player_to_move_changed.emit(value)
-	player_to_move = value
-#endregion
-
-
 #func _ready(ranks:int = 8, files:int = 8) -> void:
 #
 	#GameData.players.white.promotion_rank = rank_count - 1
 	#GameData.players.black.promotion_rank = 0
 #
 	#player_to_move_changed.connect(_on_player_to_move_changed)
-
-
-func _generate_position_vectors() -> void:
-	for index in range(tile_grid.rank_count*tile_grid.file_count):
-		board_representation.set(Vector2i(index/tile_grid.file_count, index%tile_grid.file_count),[])
+#
+#
+#func _generate_position_vectors() -> void:
+	#for index in range(tile_grid.rank_count*tile_grid.file_count):
+		#board_representation.set(Vector2i(index/tile_grid.file_count, index%tile_grid.file_count),[])
 
 
 func _on_player_to_move_changed(new_player:Player) -> void:
@@ -245,7 +224,6 @@ func _find_all_valid_selections(new_player:Player) -> void:
 	var tile_filter:Callable = func(tile: TileObject) -> bool: return selectable_piece_objects.has(tile.occupant)
 	var selectable_tile_object: Array[TileObject] = tile_grid.tile_list.filter(tile_filter)
 	valid_selections.append_array(selectable_tile_object)
-	print(valid_selections)
 
 
 func _find_all_valid_destinations() -> void:
@@ -260,7 +238,6 @@ func _find_all_valid_destinations() -> void:
 	# filter out moves
 
 	valid_destinations = destinations
-	DebugPrinter.print_pretty(valid_destinations)
 
 
 func _find_movement_of_piece(piece:PieceObject) -> Dictionary[TileObject,StringName]:
@@ -271,43 +248,36 @@ func _find_movement_of_piece(piece:PieceObject) -> Dictionary[TileObject,StringN
 	return movement
 
 
-func process_change(from: TileObject, to: TileObject) -> void:
-	var new_change: BoardChange = BoardChange.new()
+func process_move(from: TileObject, to: TileObject) -> void:
+	current_changes = BoardChange.new()
 
 	var move: Dictionary = {
-		to.position_vector: [to, from.occupant],
-		from.position_vector: [from, null],
+		"moving_player": player_component.player_to_move,
+		"occupant": from.occupant,
+		"from": from,
+		"to": to,
 	}
 
-	new_change.add_change(BoardChange.BOARD_REP_RULE_NAME, move)
-	new_change.add_change(BoardChange.PLAYER_TO_MOVE_RULE_NAME, GameData.opponent(player_to_move))
+	current_changes.add_change(BoardChange.MOVE_RULE_NAME, move)
 	if is_instance_valid(to.occupant):
-		new_change.add_change(BoardChange.CAPTURED_RULE_NAME, [to.occupant])
+		current_changes.add_change(BoardChange.CAPTURED_RULE_NAME,[to.occupant])
+	current_changes.add_change(BoardChange.PLAYER_TO_MOVE_RULE_NAME, player_component.opponent(player_component.player_to_move))
 
 	#_evaluate_piece_rules(new_change)
-	#_evaluate_game_rules(new_change)
+	rules_component.evaluate_rules()
 
-	BoardChange.apply_change(new_change,self)
-	DebugPrinter.print_pretty(board_history[-1].changed_data,false)
+	DebugPrinter.print_pretty(current_changes.changed_data)
+	BoardChange.apply_change(current_changes,self)
+	tile_grid.update_lists()
 
 
 func _evaluate_piece_rules(current_changes: BoardChange) -> void:
 	for piece:PieceObject in tile_grid.piece_list:
 		piece.evaluate_rules(current_changes)
 
-
-func _evaluate_game_rules(current_changes: BoardChange) -> void:
-	#var _validation_filter: Callable = func(item:Node3D): return is_instance_valid(item)
-	var new_changes: Array[BoardChange] = []
-	for rule:GameRule in rules:
-		new_changes.append(rule.evaluate_rule_application(current_changes,self))
-
-
 # ===============================================================================
 # ============================== [END OF REFACTOR] ==============================
 # ===============================================================================
-
-
 
 #const SMOKE: PackedScene = preload("uid://6mhxpvgl814g")
 #
@@ -343,7 +313,7 @@ func _evaluate_game_rules(current_changes: BoardChange) -> void:
 #func _on_opponent_disconnected() -> void:
 	#get_tree().paused = true
 	#print("Opponent disconnected. Game paused.")
-
+#
 #
 #func _serialize_tile_modifiers() -> Dictionary:
 	#var result: Dictionary = {}

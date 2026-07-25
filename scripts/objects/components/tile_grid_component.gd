@@ -145,3 +145,39 @@ func _instantiate_pieces() -> void:
 		new_piece.position_vector = position_vector
 
 		tile_count += 1
+
+
+func _can_object_be_occupied(object: InteractableGameObject) -> bool:
+	return is_instance_valid(object) and is_instance_valid(object.occupant_component)
+
+
+func move_occupant(from: InteractableGameObject, to: InteractableGameObject):
+	if not _can_object_be_occupied(from) and _can_object_be_occupied(to):
+		return
+
+	var moving_occupant: InteractableGameObject = from.occupant
+	to.occupant = moving_occupant
+	moving_occupant.add_to_group("Moved")
+	from.occupant = null
+	get_parent().audio_piece_move.play()
+
+
+func capture(object:InteractableGameObject):
+	if is_instance_valid(object):
+		ObjectStateComponent.remove_object_from_state_dict(object)
+		object.visible = false
+		object.get_parent().remove_child(object)
+		%Captured.add_child(object)
+		object.position += Vector3(0,-5,0)
+		get_parent().audio_piece_capture.play()
+
+
+func update_lists():
+	tile_list.clear()
+	piece_list.clear()
+	var children: Array = get_children()
+	for object in children:
+		tile_list.append(object)
+		if not _can_object_be_occupied(object) or not is_instance_valid(object.occupant):
+			continue
+		piece_list.append(object.occupant)

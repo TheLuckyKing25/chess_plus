@@ -3,7 +3,7 @@ extends InteractableGameObject
 
 signal type_changed(new_type:PieceConfig)
 signal player_changed(new_player:Player)
-signal captured
+#signal captured
 
 
 @export var player_ownership: PlayerOwnershipComponent
@@ -26,25 +26,25 @@ static var en_passant: PieceObject = null
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
 
-var type: PieceConfig:
-	set(value):
-		if is_instance_valid(type):
-			type.base_movement_changed.disconnect(func(): set("_adjusted_movement",type.base_movement))
-		if is_instance_valid(value):
-			value.base_movement_changed.connect(func(): set("_adjusted_movement",value.base_movement))
-		type_changed.emit(value)
-		_adjusted_movement = value.base_movement.duplicate(true)
-		type = value
-
-
-# movement that accounts for the player the piece belongs to.
-# used to reset current_movement
-var _adjusted_movement: AbstractMovement:
-	set(value):
-		_adjusted_movement = value
-		_apply_facing_direction_to_movement()
-	get:
-		return _adjusted_movement
+#var type: PieceConfig:
+	#set(value):
+		#if is_instance_valid(type):
+			#type.base_movement_changed.disconnect(func(): set("_adjusted_movement",type.base_movement))
+		#if is_instance_valid(value):
+			#value.base_movement_changed.connect(func(): set("_adjusted_movement",value.base_movement))
+		#type_changed.emit(value)
+		#_adjusted_movement = value.base_movement.duplicate(true)
+		#type = value
+#
+#
+## movement that accounts for the player the piece belongs to.
+## used to reset current_movement
+#var _adjusted_movement: AbstractMovement:
+	#set(value):
+		#_adjusted_movement = value
+		#_apply_facing_direction_to_movement()
+	#get:
+		#return _adjusted_movement
 
 
 # movement used by modifiers
@@ -66,26 +66,21 @@ var position_vector: Vector2i:
 	get():
 		return Vector2i(rank,file)
 
-var has_moved: bool = false:
-	set(value):
-		has_moved = true
+var has_moved: bool:
+	get: return is_in_group("Moved")
 
 
-var is_captured: bool = false:
-	set(value):
-		if value:
-			captured.emit()
-		is_captured = value
+#var is_captured: bool = false:
+	#set(value):
+		#if value:
+			#captured.emit()
+		#is_captured = value
 
 
-func _apply_facing_direction_to_movement():
-	if player_ownership.player and _adjusted_movement:
-		_adjusted_movement.set_facing_direction(player_ownership.player.facing_direction)
-		current_movement = _adjusted_movement.duplicate_deep()
-
-
-func reset_current_movement():
-	current_movement = _adjusted_movement.duplicate_deep()
+#func _apply_facing_direction_to_movement():
+	#if player_ownership.player and _adjusted_movement:
+		#_adjusted_movement.set_facing_direction(player_ownership.player.facing_direction)
+		#current_movement = _adjusted_movement.duplicate_deep()
 
 
 func _ready() -> void:
@@ -102,19 +97,17 @@ func _on_player_changed(new_player:Player):
 	rotation.y = new_player.piece_rotation_parity
 	movement_component.base_movement.set_facing_direction(new_player.facing_direction)
 	movement_component.reset_movement()
+	name = name.get_slice("_",0)
+	name += "_" + new_player.name.left(1)
 
 
-func _on_captured():
-	get_parent().remove_child(self)
-	hide()
+#func _on_captured():
+	#get_parent().remove_child(self)
+	#hide()
 #endregion
+
 func select_object():
 	state.set_state(ObjectStateComponent.STATE_SELECTED)
-
-
-func move(destination: TileObject):
-	reparent(destination,false)
-	destination.occupant = self
 
 
 #func assign_player(new_player:String):

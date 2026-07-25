@@ -31,7 +31,7 @@ const DIRECTION_VECTOR: Dictionary[Direction, Vector2i] = {
 	Direction.NORTHWEST: Vector2i(1,-1)
 }
 
-enum TypePiece {PAWN, BISHOP, KING, QUEEN, KNIGHT, ROOK}
+enum TypePiece{PAWN, BISHOP, KING, QUEEN, KNIGHT, ROOK}
 
 const PIECE_SCENE_UID_DICT: Dictionary[TypePiece,String] = {
 	TypePiece.PAWN: "uid://cjvj8f6rpuk0k",

@@ -33,8 +33,11 @@ func _on_occupant_changed(new_occupant: InteractableGameObject):
 			new_occupant.reparent(self,false)
 		else:
 			add_child(new_occupant)
-			var tile_position:Vector3 = get_parent().position
-			new_occupant.position = Vector3(tile_position.x,0.2,tile_position.z)
+		var tile_position:Vector3 = get_parent().position
+		new_occupant.position = Vector3(tile_position.x,0.2,tile_position.z)
+
+		if new_occupant.get_property_list().map(func(item): return item.name).has("position_vector"):
+			new_occupant.position_vector = get_parent().position_vector
 
 
 func _on_occupant_clicked(object:InteractableGameObject):

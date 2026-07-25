@@ -20,8 +20,8 @@ static func _handle_merge(accum_value: Dictionary, merging_value:Dictionary):
 func _init():
 	var change_function:Callable = Callable(Promotion,"_handle_change")
 	BoardChange.add_change_handler(RULE_NAME,change_function)
-	var merge_function:Callable = Callable(Promotion,"_handle_merge")
-	BoardChange.add_merge_handler(RULE_NAME,merge_function)
+	#var merge_function:Callable = Callable(Promotion,"_handle_merge")
+	#BoardChange.add_merge_handler(RULE_NAME,merge_function)
 
 
 func evaluate_rule_application(current_change: BoardChange, piece:PieceObject):
@@ -29,7 +29,7 @@ func evaluate_rule_application(current_change: BoardChange, piece:PieceObject):
 	var _occupied_tile_filter: Callable = func(array:Array): return array.any(_piece_filter)
 
 	#var recent_board_history_data = BoardChange.history.back().changed_data
-	var changed_board_rep: Dictionary = current_change.changed_data.get(BoardChange.BOARD_REP_RULE_NAME)
+	var changed_board_rep: Dictionary = current_change.changed_data.get(BoardChange.MOVE_RULE_NAME)
 	var destination = changed_board_rep.values().filter(_occupied_tile_filter).front()
 
 	var is_on_promotion_rank: bool = (piece.player.promotion_rank == destination.get(BoardObject.TILE_DATA_INDEX).rank)

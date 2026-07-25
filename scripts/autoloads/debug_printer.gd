@@ -1,5 +1,6 @@
 # Debug Printer Autoload
 # contains all debug print functions and enable/disable switches
+@tool
 extends Node
 
 const INDENT: String = "  "

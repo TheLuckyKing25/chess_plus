@@ -51,11 +51,17 @@ func _on_null_function(): pass
 func _on_threatened(): pass
 func _on_movement(): pass
 
+static func remove_object_from_state_dict(object: InteractableGameObject):
+	for key in _state_dict.keys():
+		var list: Array = _state_dict.get(key)
+		if object in list:
+			list.erase(object)
 
-static func get_objects_on_states(...state_names:Array) -> Array:
-	var joint_array: Array = []
+
+static func get_objects_on_states(...state_names:Array) -> Array[InteractableGameObject]:
+	var joint_array: Array[InteractableGameObject] = []
 	for state_name:StringName in state_names:
-		joint_array.append_array(_state_dict.get(state_name))
+		joint_array.append_array(_state_dict.get(state_name).filter(func(item): return is_instance_valid(item)))
 	return joint_array
 
 
@@ -89,3 +95,11 @@ func _apply_state_color(color: Color, enable_emission: bool = false):
 	mesh_component.set_outline_color(color)
 	mesh_component.outline_material.emission_enabled = enable_emission
 	mesh_component.outline_material.emission = color
+
+
+static func update_state_dict():
+	for key in _state_dict.keys():
+		var values: Array = _state_dict.get(key)
+		var validity_checker_func: Callable = func(item) -> bool: return is_instance_valid(item)
+		var new_values: Array = values.filter(validity_checker_func)
+		_state_dict.set(key,new_values)

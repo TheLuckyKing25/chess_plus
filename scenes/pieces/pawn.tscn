@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://scripts/movement/sliding_movement.gd" id="4_gxxlc"]
 [ext_resource type="Script" uid="uid://by81w35mptra5" path="res://scripts/movement/branching_movement.gd" id="5_6ox4o"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k8lot"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lgqek"]
 resource_local_to_scene = true
 resource_name = "Outline"
 transparency = 1
@@ -16,15 +16,15 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2m3xw"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gxxlc"]
 resource_local_to_scene = true
 resource_name = "piece_color"
-next_pass = SubResource("StandardMaterial3D_k8lot")
+next_pass = SubResource("StandardMaterial3D_lgqek")
 roughness_texture_channel = 4
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sbkk4"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ox4o"]
 resource_local_to_scene = true
 resource_name = "piece_color"
 render_priority = 1
@@ -34,7 +34,7 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
-[sub_resource type="Resource" id="Resource_10xiu"]
+[sub_resource type="Resource" id="Resource_k8lot"]
 resource_local_to_scene = true
 resource_name = "North"
 script = ExtResource("4_gxxlc")
@@ -42,7 +42,7 @@ distance = 2
 is_move = true
 metadata/_custom_type_script = "uid://cw6dchast1cm6"
 
-[sub_resource type="Resource" id="Resource_nrti5"]
+[sub_resource type="Resource" id="Resource_2m3xw"]
 resource_local_to_scene = true
 resource_name = "Northeast"
 script = ExtResource("4_gxxlc")
@@ -51,7 +51,7 @@ direction = 1
 is_threaten = true
 metadata/_custom_type_script = "uid://cw6dchast1cm6"
 
-[sub_resource type="Resource" id="Resource_hd6uy"]
+[sub_resource type="Resource" id="Resource_sbkk4"]
 resource_local_to_scene = true
 resource_name = "Northwest"
 script = ExtResource("4_gxxlc")
@@ -60,19 +60,19 @@ direction = 7
 is_threaten = true
 metadata/_custom_type_script = "uid://cw6dchast1cm6"
 
-[sub_resource type="Resource" id="Resource_ckysw"]
+[sub_resource type="Resource" id="Resource_10xiu"]
 resource_local_to_scene = true
 resource_name = "Pawn Initial Movement"
 script = ExtResource("5_6ox4o")
-branches = Array[ExtResource("3_lgqek")]([SubResource("Resource_10xiu"), SubResource("Resource_nrti5"), SubResource("Resource_hd6uy")])
+branches = Array[ExtResource("3_lgqek")]([SubResource("Resource_k8lot"), SubResource("Resource_2m3xw"), SubResource("Resource_sbkk4")])
 metadata/_custom_type_script = "uid://by81w35mptra5"
 
 [node name="Pawn" unique_id=210537964 instance=ExtResource("1_6s360")]
 
 [node name="MeshComponent" parent="." index="3" unique_id=650561997]
-material_override = SubResource("StandardMaterial3D_2m3xw")
-material_overlay = SubResource("StandardMaterial3D_sbkk4")
+material_override = SubResource("StandardMaterial3D_gxxlc")
+material_overlay = SubResource("StandardMaterial3D_6ox4o")
 mesh = ExtResource("2_cr15y")
 
 [node name="MovementComponent" parent="." index="4" unique_id=1074763618]
-base_movement = SubResource("Resource_ckysw")
+base_movement = SubResource("Resource_10xiu")

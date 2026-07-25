@@ -17,7 +17,7 @@ const state_color: Dictionary [StringName,Color] = {
 static func get_tiles_on_states(...state_names:Array) -> Array[TileObject]:
 	var unfiltered_array: Array = get_objects_on_states.callv(state_names)
 	var filtered_array: Array = unfiltered_array.filter(
-			func(item) -> bool: return item is TileObject
+			func(item) -> bool: return is_instance_valid(item) and item is TileObject
 		)
 	return filtered_array
 

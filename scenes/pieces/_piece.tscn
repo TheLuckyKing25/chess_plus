@@ -22,13 +22,13 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
-[node name="Piece" type="Node3D" unique_id=210537964 node_paths=PackedStringArray("collision_component", "mesh_component", "state", "player_ownership", "movement_component") groups=["Piece"]]
+[node name="Piece" type="Node3D" unique_id=210537964 node_paths=PackedStringArray("player_ownership", "movement_component", "collision_component", "mesh_component", "state") groups=["Piece"]]
 script = ExtResource("1_huli3")
+player_ownership = NodePath("PlayerOwnershipComponent")
+movement_component = NodePath("MovementComponent")
 collision_component = NodePath("CollisionComponent")
 mesh_component = NodePath("MeshComponent")
 state = NodePath("PieceStateComponent")
-player_ownership = NodePath("PlayerOwnershipComponent")
-movement_component = NodePath("MovementComponent")
 metadata/_custom_type_script = "uid://5e06aauin2d1"
 
 [node name="SaverNode" type="Node" parent="." unique_id=1341998366]
