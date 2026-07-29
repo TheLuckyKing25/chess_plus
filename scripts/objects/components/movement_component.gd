@@ -2,10 +2,14 @@ class_name MovementComponent
 extends Node
 
 
-@export var base_movement: AbstractMovement
+@export var base_movement: Movement
 
 
-var movement: AbstractMovement
+var movement: Movement
+
+
+func _ready():
+	pass
 
 
 func reset_movement():

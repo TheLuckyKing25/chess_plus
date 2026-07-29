@@ -25,12 +25,12 @@ signal base_movement_changed
 @export var algebraic_notation: String = "_"
 
 
-## Movement initially assigned to pieces of this PieceConfig.
-@export var base_movement: AbstractMovement:
+## OLD_MOVEMENT_CLASS initially assigned to pieces of this PieceConfig.
+@export var base_movement: Movement:
 	set = _base_movement_setter
 
 
-@export var rules: Array[PieceRule]
+@export var rules: Array[Resource]
 
 
 #region Getter/Setters
@@ -39,7 +39,7 @@ func _name_setter(value: String) -> void:
 	resource_name = value + " Type"
 
 
-func _base_movement_setter(value:AbstractMovement) -> void:
+func _base_movement_setter(value:Movement) -> void:
 	base_movement = value.duplicate(true)
 	base_movement_changed.emit()
 #endregion

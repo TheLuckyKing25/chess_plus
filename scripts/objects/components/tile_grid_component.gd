@@ -144,7 +144,38 @@ func _instantiate_pieces() -> void:
 		tile.occupant = new_piece
 		new_piece.position_vector = position_vector
 
+		new_piece.piece_type_changed.connect(_on_piece_type_changed)
 		tile_count += 1
+
+
+func _on_piece_type_changed(old_piece: PieceObject, new_piece: PieceObject):
+	_transfer_signal_connections(old_piece,new_piece)
+
+	var player: Player = old_piece.player_ownership.player
+	new_piece.player_ownership.player = player
+	piece_list.set(piece_list.find(old_piece),new_piece)
+
+	var tile = old_piece.get_parent().owner # TEMPORARY: MIGHT NOT WORK WITH STACKED OCCUPANCY
+	tile.occupant = new_piece
+
+	var position_vector: Vector2i = old_piece.position_vector
+	new_piece.position_vector = position_vector
+	new_piece.position = old_piece.position
+	old_piece.reparent(%Captured)
+	old_piece.hide()
+
+
+func _transfer_signal_connections(old_piece: PieceObject, new_piece: PieceObject):
+	var signal_list = old_piece.get_signal_list()
+	for given_signal in signal_list:
+		#DebugPrinter.print_pretty(old_piece.get_signal_connection_list(given_signal.name))
+		if has_signal(given_signal.name) and not has_connections(given_signal.name):
+			continue
+		for connection in old_piece.get_signal_connection_list(given_signal.name):
+			var old_signal: Signal = Signal(old_piece,given_signal.name)
+			var new_signal: Signal = Signal(new_piece,given_signal.name)
+			old_signal.disconnect(connection.callable)
+			new_signal.connect(connection.callable)
 
 
 func _can_object_be_occupied(object: InteractableGameObject) -> bool:

@@ -50,5 +50,5 @@ func _disconnect_occupant_signals(occupant: InteractableGameObject):
 
 
 func _connect_occupant_signals(occupant: InteractableGameObject):
-	if occupant.has_signal("clicked"):
+	if occupant.has_signal("clicked") and not occupant.clicked.is_connected(_on_occupant_clicked):
 		occupant.clicked.connect(_on_occupant_clicked)

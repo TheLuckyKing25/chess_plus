@@ -7,7 +7,7 @@ func _init():
 	color = Color(0.7,0.8,0.9)
 	can_modify_movement = true
 
-#func modify_movement(movement: Movement) -> void:
+#func modify_movement(movement: OLD_MOVEMENT_CLASS) -> void:
 	#if movement == null:
 		#return
 	#if movement.distance <= 1:

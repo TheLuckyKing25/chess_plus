@@ -2,11 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://scenes/pieces/_piece.tscn" id="1_6s360"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://assets/mesh/mesh_pawn.obj" id="2_cr15y"]
-[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://scripts/movement/abstract_movement.gd" id="3_lgqek"]
-[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://scripts/movement/sliding_movement.gd" id="4_gxxlc"]
-[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://scripts/movement/branching_movement.gd" id="5_6ox4o"]
+[ext_resource type="Resource" uid="uid://bhrm536aemt0f" path="res://resources/pieces/movement/pawn.tres" id="3_lgqek"]
+[ext_resource type="Resource" uid="uid://v6scgji0vbgg" path="res://resources/pieces/movement/pawn_double_step.tres" id="6_6ox4o"]
+[ext_resource type="Script" uid="uid://c7yfx2bq0evvj" path="res://scripts/rules/piece rules/promotion.gd" id="6_gxxlc"]
+[ext_resource type="Script" uid="uid://dtvtcm6bu70t7" path="res://scripts/rules/piece rules/post_move_movement.gd" id="7_6ox4o"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lgqek"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gxxlc"]
 resource_local_to_scene = true
 resource_name = "Outline"
 transparency = 1
@@ -16,15 +17,15 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gxxlc"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ox4o"]
 resource_local_to_scene = true
 resource_name = "piece_color"
-next_pass = SubResource("StandardMaterial3D_lgqek")
+next_pass = SubResource("StandardMaterial3D_gxxlc")
 roughness_texture_channel = 4
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ox4o"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k8lot"]
 resource_local_to_scene = true
 resource_name = "piece_color"
 render_priority = 1
@@ -34,45 +35,23 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
-[sub_resource type="Resource" id="Resource_k8lot"]
-resource_local_to_scene = true
-resource_name = "North"
-script = ExtResource("4_gxxlc")
-distance = 2
-is_move = true
-metadata/_custom_type_script = "uid://cw6dchast1cm6"
-
-[sub_resource type="Resource" id="Resource_2m3xw"]
-resource_local_to_scene = true
-resource_name = "Northeast"
-script = ExtResource("4_gxxlc")
-distance = 1
-direction = 1
-is_threaten = true
-metadata/_custom_type_script = "uid://cw6dchast1cm6"
-
-[sub_resource type="Resource" id="Resource_sbkk4"]
-resource_local_to_scene = true
-resource_name = "Northwest"
-script = ExtResource("4_gxxlc")
-distance = 1
-direction = 7
-is_threaten = true
-metadata/_custom_type_script = "uid://cw6dchast1cm6"
-
-[sub_resource type="Resource" id="Resource_10xiu"]
-resource_local_to_scene = true
-resource_name = "Pawn Initial Movement"
-script = ExtResource("5_6ox4o")
-branches = Array[ExtResource("3_lgqek")]([SubResource("Resource_k8lot"), SubResource("Resource_2m3xw"), SubResource("Resource_sbkk4")])
-metadata/_custom_type_script = "uid://by81w35mptra5"
-
 [node name="Pawn" unique_id=210537964 instance=ExtResource("1_6s360")]
 
 [node name="MeshComponent" parent="." index="3" unique_id=650561997]
-material_override = SubResource("StandardMaterial3D_gxxlc")
-material_overlay = SubResource("StandardMaterial3D_6ox4o")
+material_override = SubResource("StandardMaterial3D_6ox4o")
+material_overlay = SubResource("StandardMaterial3D_k8lot")
 mesh = ExtResource("2_cr15y")
 
 [node name="MovementComponent" parent="." index="4" unique_id=1074763618]
-base_movement = SubResource("Resource_10xiu")
+base_movement = ExtResource("3_lgqek")
+
+[node name="Promotion" type="Node" parent="RulesComponent" parent_id_path=PackedInt32Array(1399148645) index="0" unique_id=443723091]
+script = ExtResource("6_gxxlc")
+promotion_options = Array[int]([3, 1, 4, 5])
+metadata/_custom_type_script = "uid://c7yfx2bq0evvj"
+
+[node name="AlternateFirstMovement" type="Node" parent="RulesComponent" parent_id_path=PackedInt32Array(1399148645) index="1" unique_id=1682279263 node_paths=PackedStringArray("movement_component")]
+script = ExtResource("7_6ox4o")
+movement_component = NodePath("../../MovementComponent")
+alternate_movement = ExtResource("6_6ox4o")
+metadata/_custom_type_script = "uid://dtvtcm6bu70t7"

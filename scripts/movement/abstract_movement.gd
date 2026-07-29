@@ -1,6 +1,7 @@
 @tool
 @abstract
-class_name AbstractMovement extends Resource
+class_name Movement
+extends Resource
 
 
 func _init() -> void:

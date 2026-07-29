@@ -32,7 +32,7 @@ metadata/_custom_type_script = "uid://cw6dchast1cm6"
 
 [resource]
 resource_local_to_scene = true
-resource_name = "Pawn Initial Movement"
+resource_name = "Pawn Double Step"
 script = ExtResource("3_bscss")
 branches = Array[ExtResource("1_k66ys")]([SubResource("Resource_k66ys"), SubResource("Resource_8pay8"), SubResource("Resource_bscss")])
 metadata/_custom_type_script = "uid://by81w35mptra5"

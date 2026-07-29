@@ -18,9 +18,7 @@ static func _handle_merge(accum_value: Variant, merging_value:Variant):
 func _init():
 	var change_handler_function: Callable = Callable(_CLASS_,"_handle_change")
 	BoardChange.add_change_handler(RULE_NAME,change_handler_function)
-	var merge_handler_function: Callable = Callable(_CLASS_,"_handle_merge")
-	BoardChange.add_merge_handler(RULE_NAME,merge_handler_function)
 
 
-func evaluate_rule_application(current_change: BoardChange, piece: PieceObject):
+func evaluate_rule(current_change: BoardChange, piece: PieceObject):
 	pass

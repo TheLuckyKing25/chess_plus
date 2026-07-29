@@ -1,40 +1,32 @@
 class_name Promotion
-extends PieceRule
+extends Rule
 
 
-const RULE_NAME: String = "promote"
+const RULE_NAME: StringName = "promote"
 
 
-@export var promotion_options: Array[PieceConfig]
+@export var promotion_options: Array[Constants.TypePiece]
 
 
-static func _handle_change(board_data: BoardObject, value: Variant):
-	for piece:PieceObject in value.keys():
-		piece.type = value.get(piece)
+static func _handle_change(board: BoardObject, value: Variant):
+	var promoting_piece: PieceObject = value.keys().front()
+	var promoting_to: StringName = Constants.PIECE_SCENE_UID_DICT.get(value.get(promoting_piece))
+	promoting_piece.change_piece_type(promoting_to)
 
 
-static func _handle_merge(accum_value: Dictionary, merging_value:Dictionary):
-	accum_value.merge(merging_value,true)
-
-
-func _init():
-	var change_function:Callable = Callable(Promotion,"_handle_change")
+func _ready():
+	var change_function:Callable = Callable(_handle_change)
 	BoardChange.add_change_handler(RULE_NAME,change_function)
-	#var merge_function:Callable = Callable(Promotion,"_handle_merge")
-	#BoardChange.add_merge_handler(RULE_NAME,merge_function)
 
 
-func evaluate_rule_application(current_change: BoardChange, piece:PieceObject):
-	var _piece_filter: Callable = func(item):return (item is PieceObject)
-	var _occupied_tile_filter: Callable = func(array:Array): return array.any(_piece_filter)
+func evaluate_rule(board: BoardObject):
+	var piece: PieceObject = owner
 
-	#var recent_board_history_data = BoardChange.history.back().changed_data
-	var changed_board_rep: Dictionary = current_change.changed_data.get(BoardChange.MOVE_RULE_NAME)
-	var destination = changed_board_rep.values().filter(_occupied_tile_filter).front()
-
-	var is_on_promotion_rank: bool = (piece.player.promotion_rank == destination.get(BoardObject.TILE_DATA_INDEX).rank)
-	if is_on_promotion_rank and piece == destination.get(BoardObject.PIECE_DATA_INDEX):
+	var changed_data: Dictionary = board.current_changes.changed_data
+	var is_piece_moving: bool = piece == changed_data.move.occupant
+	var is_on_promotion_rank: bool = piece.player_ownership.player.promotion_rank == changed_data.move.to.rank
+	if is_on_promotion_rank and is_piece_moving:
 		# TEMPORARY: FIRST PROMOTION OPTION IS CHOSEN
-		var first_promotion_option: PieceConfig = promotion_options.front()
-		var change_info: Dictionary[PieceObject, PieceConfig] = {piece: first_promotion_option}
-		current_change.add_change(RULE_NAME, change_info)
+		var first_promotion_option: Constants.TypePiece = promotion_options.front()
+		var change_info: Dictionary[PieceObject, Constants.TypePiece] = {piece: first_promotion_option}
+		board.current_changes.add_change(RULE_NAME, change_info)

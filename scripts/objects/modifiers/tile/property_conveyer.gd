@@ -18,7 +18,7 @@ func _init():
 			#and not possible_next_tile.tile.is_occupied
 			#):
 		#is_forcing_next_tile = true
-		#var altered_movement: Movement = Movement.new()
+		#var altered_movement: OLD_MOVEMENT_CLASS = OLD_MOVEMENT_CLASS.new()
 		#altered_movement.direction = components[DirectionComponent.NAME].value
 		#altered_movement.branches.append(current_move.remaining_movement)
 		#current_move.remaining_movement = altered_movement

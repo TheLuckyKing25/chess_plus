@@ -1,8 +1,8 @@
 @tool
-class_name BranchingMovement extends AbstractMovement
+class_name BranchingMovement extends Movement
 
 
-@export var branches: Array[AbstractMovement]
+@export var branches: Array[Movement]
 
 
 func set_facing_direction(facing_direction: int) -> void:

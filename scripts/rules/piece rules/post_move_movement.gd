@@ -1,41 +1,34 @@
-class_name PostMoveMovement
-extends PieceRule
+class_name AlternateFirstMovement
+extends Rule
 
 
-const RULE_NAME: String = "post_move_movement"
+const RULE_NAME: String = "different_first_movement"
 
 
-@export var new_movement: AbstractMovement
+@export var movement_component: MovementComponent
+@export var alternate_movement: Movement
 
-
-var has_rule_been_applied: bool = false
+# the base movement which was overwritten by this rule
+var overwritten_movement: Movement
 
 
 static func _handle_change(board_data: BoardObject, value: Variant):
 	var pieces: Array = value.keys()
-	for piece: PieceObject in pieces:
-		var post_move_movement: AbstractMovement = value.get(piece)
-		piece.type.base_movement = post_move_movement
+	for indv_piece: PieceObject in pieces:
+		var post_move_movement: Movement = value.get(indv_piece)
+		indv_piece.movement_component.base_movement = post_move_movement
+		indv_piece.movement_component.reset_movement()
 
 
-static func _handle_merge(accum_value: Dictionary, merging_value:Dictionary):
-	accum_value.merge(merging_value,true)
-
-
-func _init():
-	var change_handler_function: Callable = Callable(PostMoveMovement,"_handle_change")
+func _ready():
+	var change_handler_function: Callable = Callable(AlternateFirstMovement,"_handle_change")
 	BoardChange.add_change_handler(RULE_NAME,change_handler_function)
-	#var merge_handler_function: Callable = Callable(PostMoveMovement,"_handle_merge")
-	#BoardChange.add_merge_handler(RULE_NAME,merge_handler_function)
+	overwritten_movement = movement_component.base_movement
+	movement_component.base_movement = alternate_movement
 
 
-func evaluate_rule_application(current_change: BoardChange, piece: PieceObject):
-	var _piece_filter: Callable = func(accum, array): return accum + [array.get(BoardObject.PIECE_DATA_INDEX)]
-	var _validity_filter: Callable = func(item): return is_instance_valid(item)
-
-	var changed_board_rep:Dictionary = current_change.changed_data.get(BoardChange.MOVE_RULE_NAME)
-	var moved_pieces = changed_board_rep.values().reduce(_piece_filter,[]).filter(_validity_filter)
-	if not has_rule_been_applied and not piece.has_moved and piece in moved_pieces:
-		var change_info: Dictionary[PieceObject, AbstractMovement] = {piece: new_movement.duplicate_deep()}
-		current_change.add_change(RULE_NAME, change_info)
-		has_rule_been_applied = true
+func evaluate_rule(board:BoardObject):
+	var piece: PieceObject = owner
+	if piece == board.current_changes.changed_data.move.occupant and not piece.is_in_group("hasMoved"):
+		var change_info: Dictionary[PieceObject, Movement] = {piece: overwritten_movement.duplicate_deep()}
+		board.current_changes.add_change(RULE_NAME, change_info)

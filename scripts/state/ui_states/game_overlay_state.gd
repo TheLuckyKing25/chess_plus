@@ -23,7 +23,7 @@ func enter():
 
 	instantiated_scene.connect_to_pause_button(Callable(self,"on_pause_pressed"))
 	instantiated_scene.new_placement_selected.connect(Callable(self,"on_new_placement_selected"))
-	Match.board.promotion_verified.connect(Callable(self,"on_promotion_verified"))
+	#Match.board.promotion_verified.connect(Callable(self,"on_promotion_verified"))
 
 	instantiated_scene.horizontal_slider.value_changed.connect(Callable(self, "on_camera_horizontal_offset_changed"))
 	instantiated_scene.forward_slider.value_changed.connect(Callable(self, "on_camera_forward_offset_changed"))

@@ -2,7 +2,9 @@
 class_name InteractableGameObject
 extends Node3D
 
+
 signal clicked(piece: InteractableGameObject)
+
 
 @export var collision_component: CollisionComponent
 @export var mesh_component: MeshComponent

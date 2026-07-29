@@ -1,5 +1,5 @@
 @tool
-class_name JumpingMovement extends AbstractMovement
+class_name JumpingMovement extends Movement
 
 
 @export_range(-16,16,1,"suffix:Ranks") var rank_origin_offset:int
@@ -14,7 +14,7 @@ var offset_vector: Vector2i:
 @export var is_castling := false
 
 
-@export var next_movement: AbstractMovement
+@export var next_movement: Movement
 
 
 var is_branching: bool:

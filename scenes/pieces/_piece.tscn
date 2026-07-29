@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://d02ckgyhn67qc" path="res://scripts/objects/components/mesh_component.gd" id="5_al1la"]
 [ext_resource type="Script" uid="uid://8qstcr0i3igm" path="res://scripts/objects/components/player_ownership_component.gd" id="7_4efup"]
 [ext_resource type="Script" uid="uid://ciik3a6crturk" path="res://scripts/objects/components/movement_component.gd" id="8_ik1ys"]
+[ext_resource type="Script" uid="uid://bwcs17a4lnqvk" path="res://scripts/objects/components/rules_component.gd" id="8_xwtee"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s58gp"]
 radius = 0.33789063
@@ -22,10 +23,11 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
-[node name="Piece" type="Node3D" unique_id=210537964 node_paths=PackedStringArray("player_ownership", "movement_component", "collision_component", "mesh_component", "state") groups=["Piece"]]
+[node name="Piece" type="Node3D" unique_id=210537964 node_paths=PackedStringArray("player_ownership", "movement_component", "rules_component", "collision_component", "mesh_component", "state") groups=["Piece"]]
 script = ExtResource("1_huli3")
 player_ownership = NodePath("PlayerOwnershipComponent")
 movement_component = NodePath("MovementComponent")
+rules_component = NodePath("RulesComponent")
 collision_component = NodePath("CollisionComponent")
 mesh_component = NodePath("MeshComponent")
 state = NodePath("PieceStateComponent")
@@ -61,4 +63,6 @@ metadata/_custom_type_script = "uid://ciik3a6crturk"
 script = ExtResource("7_4efup")
 metadata/_custom_type_script = "uid://8qstcr0i3igm"
 
-[node name="RulesComponent" type="Node" parent="." unique_id=1195637196]
+[node name="RulesComponent" type="Node" parent="." unique_id=1399148645]
+script = ExtResource("8_xwtee")
+metadata/_custom_type_script = "uid://bwcs17a4lnqvk"

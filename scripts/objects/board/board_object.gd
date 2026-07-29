@@ -80,7 +80,9 @@ func _ready() -> void:
 	_resize_base(tile_grid.rank_count,tile_grid.file_count)
 	_on_player_to_move_changed(player_component.player_to_move)
 
-	Match.board = self
+	player_component.player_dictionary.white.promotion_rank = tile_grid.rank_count - 1
+	player_component.player_dictionary.black.promotion_rank = 0
+
 #
 	#if NetworkManager.is_online:
 		#NetworkManager.opponent_disconnected.connect(_on_opponent_disconnected)
@@ -263,8 +265,9 @@ func process_move(from: TileObject, to: TileObject) -> void:
 		current_changes.add_change(BoardChange.CAPTURED_RULE_NAME,[to.occupant])
 	current_changes.add_change(BoardChange.PLAYER_TO_MOVE_RULE_NAME, player_component.opponent(player_component.player_to_move))
 
-	#_evaluate_piece_rules(new_change)
-	rules_component.evaluate_rules()
+	get_tree().get_nodes_in_group("isRuled").map(
+		func(node:Node): node.rules_component.evaluate_rules(self)
+	)
 
 	DebugPrinter.print_pretty(current_changes.changed_data)
 	BoardChange.apply_change(current_changes,self)
@@ -625,14 +628,14 @@ func _evaluate_piece_rules(current_changes: BoardChange) -> void:
 #
 ### Shows the valid tiles the selected piece can move to
 ##func show_selected_piece_movement() -> void:
-	##var moveset:Movement = PieceObject.selected.data.movement.get_duplicate()
+	##var moveset:OLD_MOVEMENT_CLASS = PieceObject.selected.data.movement.get_duplicate()
 	##moveset = TileModifier.apply_modifiers_to_moveset(self, selected_tile, PieceObject.selected, moveset)
 	##resolve_branching_movement(PieceObject.selected, moveset, selected_tile )
 #
 #
 ## SAME LOGIC USED IN MoveList RESOURCE.
 ## IF THE LOGIC IS CHANGED HERE, MAKE SURE TO CHANGE THAT AS WELL
-#func resolve_branching_movement(active_piece:PieceObject, moveset: Movement, origin_tile: TileObject) -> void:
+#func resolve_branching_movement(active_piece:PieceObject, moveset: OLD_MOVEMENT_CLASS, origin_tile: TileObject) -> void:
 #
 	#moveset = moveset.duplicate_deep()
 #

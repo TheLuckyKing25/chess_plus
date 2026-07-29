@@ -51,6 +51,7 @@ func _on_null_function(): pass
 func _on_threatened(): pass
 func _on_movement(): pass
 
+
 static func remove_object_from_state_dict(object: InteractableGameObject):
 	for key in _state_dict.keys():
 		var list: Array = _state_dict.get(key)

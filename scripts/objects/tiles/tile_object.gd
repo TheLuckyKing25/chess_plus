@@ -133,14 +133,6 @@ var algebraic_notation: String:
 	get(): return char(97 + rank) + str((1 + file))
 #endregion
 
-
-func assign_new_data(new_data:TileObject):
-	#_translate_tile(new_data) # move tile to proper location in 3D space
-	#_set_base_tile_color(new_data) # set tile color
-	#name = "Tile_" + new_data.algebraic_notation
-	# show modifiers
-	pass
-
 # ===============================================================================
 # ============================== [END OF REFACTOR] ==============================
 # ===============================================================================
@@ -212,33 +204,6 @@ func assign_new_data(new_data:TileObject):
 						#Match.board.submit_move(TileObject.selected.data.index, data.index, Move.Outcome.CAPTURING | Move.Outcome.EN_PASSANT, PieceObject.en_passant.data.index, TileObject.en_passant.data.index)
 
 
-#static func new_tile(index: int) -> TileObject:
-	#var new_TILE_DATA_INDEX:TileObject = TileObject.new()
-	#new_TILE_DATA_INDEX.index = index
-#
-	#var new_tile:TileObject = TILE_SCENE.instantiate()
-	#new_tile.data = new_TILE_DATA_INDEX
-	#Match.add_tile(new_tile)
-	#return new_tile
-
-
-#region Enums
-# starts at 32 to prevent overlap with already existing notification constants
-enum {
-	NOTIFICATION_CLEAR_CHECK_STATE = 32,
-	NOTIFICATION_CLEAR_OTHER_STATES = 33,
-}
-
-#endregion
-
-func _notification(what: int) -> void:
-	#if what == NOTIFICATION_CLEAR_CHECK_STATE:
-		#clear_check_flag()
-	#if what == NOTIFICATION_CLEAR_OTHER_STATES:
-		#state.current = ObjectStateComponent.Type.NONE
-	pass
-
-
 func _on_tile_modifier_order_changed():
 	for child in %FlowContainer.get_children():
 		%FlowContainer.remove_child(child)
@@ -251,7 +216,3 @@ func _on_tile_modifier_order_changed():
 		#new_modifier.set_icon(modifier.icon)
 		#%FlowContainer.add_child(new_modifier)
 	pass
-
-
-func get_next_tile(direction: Constants.Direction):
-	return neighbors[direction]

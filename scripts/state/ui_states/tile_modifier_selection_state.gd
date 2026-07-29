@@ -45,7 +45,6 @@ func on_back_pressed():
 func on_continue_pressed():
 	Match.current_game_state = Match.GameState.GAMEPLAY
 	Match.game_state_changed.emit(Match.current_game_state)
-	get_tree().notify_group("Tile",TileObject.NOTIFICATION_CLEAR_OTHER_STATES)
 	get_tree().call_group("Tile","remove_from_group","Selected")
 
 	if NetworkManager.is_online:

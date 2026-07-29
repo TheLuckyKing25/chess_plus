@@ -33,6 +33,7 @@ const DIRECTION_VECTOR: Dictionary[Direction, Vector2i] = {
 
 enum TypePiece{PAWN, BISHOP, KING, QUEEN, KNIGHT, ROOK}
 
+
 const PIECE_SCENE_UID_DICT: Dictionary[TypePiece,String] = {
 	TypePiece.PAWN: "uid://cjvj8f6rpuk0k",
 	TypePiece.BISHOP: "uid://b7fydri8mw0oj",
@@ -55,6 +56,7 @@ const file_path: Dictionary = {
 
 const TURN_TRANSITION_DELAY_SECONDS:float = 0.25
 const TURN_TRANSITION_TIME_SECONDS:float = 0.5
+
 
 # generated upon ready
 var piece_config: Dictionary = {}

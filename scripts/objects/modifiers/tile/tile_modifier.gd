@@ -103,7 +103,7 @@ func modify_moves(piece, tile, moves):
 	return moves
 
 
-#func modify_movement(movement: Movement):
+#func modify_movement(movement: OLD_MOVEMENT_CLASS):
 	#return
 
 

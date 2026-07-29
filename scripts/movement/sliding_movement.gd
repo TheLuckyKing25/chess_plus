@@ -1,5 +1,5 @@
 @tool
-class_name SlidingMovement extends AbstractMovement
+class_name SlidingMovement extends Movement
 
 ## Use the longest side of the board as the move distance
 @export var use_max_distance: bool = false:
@@ -35,7 +35,7 @@ var _getting_distance: bool = false
 @export var is_castling := false
 
 
-@export var next_movement: AbstractMovement
+@export var next_movement: Movement
 
 
 var is_branching: bool:

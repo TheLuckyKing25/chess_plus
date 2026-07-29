@@ -42,11 +42,10 @@ func _ready():
 
 func evaluate_rule(board:BoardObject):
 	var current_changes: BoardChange = board.current_changes
-	var was_pawn_moved: bool = current_changes.changed_data.move.occupant.name == &"Pawn"
+	var was_pawn_moved: bool = current_changes.changed_data.move.occupant.name.contains("Pawn")
 	var was_piece_captured:bool = current_changes.changed_data.has(BoardChange.CAPTURED_RULE_NAME)
 	if not was_piece_captured and not was_pawn_moved:
 		half_turn_count += 1
 	else:
 		half_turn_count = 0
-
 	board.current_changes.add_change(RULE_NAME, half_turn_count)

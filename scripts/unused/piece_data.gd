@@ -22,7 +22,7 @@
 #
 ## movement that accounts for the player the piece belongs to.
 ## used to reset current_movement
-#var _adjusted_movement: AbstractMovement:
+#var _adjusted_movement: Movement:
 	#set(value):
 		#_adjusted_movement = value
 		#_apply_facing_direction_to_movement()
@@ -31,7 +31,7 @@
 #
 #
 ## movement used by modifiers
-#var current_movement: AbstractMovement
+#var current_movement: Movement
 #
 #
 #@export var player: PlayerData:
