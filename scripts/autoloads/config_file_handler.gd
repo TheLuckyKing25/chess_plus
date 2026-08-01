@@ -1,10 +1,10 @@
 extends Node
 
-var config = ConfigFile.new()
-const SETTINGS_FILE_PATH = "user://settings.ini"
+var config:ConfigFile = ConfigFile.new()
+const SETTINGS_FILE_PATH: String = "user://settings.ini"
 
 
-func _ready():
+func _ready() -> void:
 	if !FileAccess.file_exists(SETTINGS_FILE_PATH):
 		config.set_value("KeyBindings", "Interact", "mouse_1")
 
@@ -19,22 +19,26 @@ func _ready():
 	else:
 		config.load(SETTINGS_FILE_PATH)
 
-func save_video_settings(key: String, value):
+
+func save_video_settings(key: String, value: Variant) -> void:
 	config.set_value("video", key, value)
 	config.save(SETTINGS_FILE_PATH)
 
-func load_video_settings():
-	var video_settings = {}
-	for key in config.get_section_keys("video"):
+
+func load_video_settings() -> Dictionary[String,Variant]:
+	var video_settings: Dictionary[String,Variant] = {}
+	for key:String in config.get_section_keys("video"):
 		video_settings[key] = config.get_value("video", key)
 	return video_settings
 
-func save_audio_settings(key: String, value):
+
+func save_audio_settings(key: String, value: Variant) -> void:
 	config.set_value("audio", key, value)
 	config.save(SETTINGS_FILE_PATH)
 
-func load_audio_settings():
-	var audio_settings = {}
-	for key in config.get_section_keys("audio"):
+
+func load_audio_settings() -> Dictionary[String,Variant]:
+	var audio_settings:Dictionary[String,Variant] = {}
+	for key:String in config.get_section_keys("audio"):
 		audio_settings[key] = config.get_value("audio", key)
 	return audio_settings

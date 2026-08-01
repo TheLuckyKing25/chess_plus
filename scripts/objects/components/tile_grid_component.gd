@@ -188,7 +188,7 @@ func move_occupant(from: InteractableGameObject, to: InteractableGameObject):
 
 	var moving_occupant: InteractableGameObject = from.occupant
 	to.occupant = moving_occupant
-	moving_occupant.add_to_group("Moved")
+	moving_occupant.add_to_group("hasMoved")
 	from.occupant = null
 	get_parent().audio_piece_move.play()
 

@@ -2,14 +2,16 @@ class_name MovementComponent
 extends Node
 
 
-@export var base_movement: Movement
+signal base_movement_changed
+
+
+@export var base_movement: Movement:
+	set(value):
+		base_movement_changed.emit()
+		base_movement = value
 
 
 var movement: Movement
-
-
-func _ready():
-	pass
 
 
 func reset_movement():

@@ -16,6 +16,7 @@ static func _handle_change(board_data: BoardObject, value: Variant):
 	var pieces: Array = value.keys()
 	for indv_piece: PieceObject in pieces:
 		var post_move_movement: Movement = value.get(indv_piece)
+		post_move_movement.set_facing_direction(indv_piece.player_ownership.player.facing_direction)
 		indv_piece.movement_component.base_movement = post_move_movement
 		indv_piece.movement_component.reset_movement()
 

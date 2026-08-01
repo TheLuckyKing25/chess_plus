@@ -46,14 +46,14 @@ static var _state_dict: Dictionary[StringName,Array] = {
 var current: StringName = STATE_NONE
 
 
-func _on_null_function(): pass
-@abstract func _on_selected()
-func _on_threatened(): pass
-func _on_movement(): pass
+func _on_null_function() -> void: pass
+@abstract func _on_selected() -> void
+func _on_threatened() -> void: pass
+func _on_movement() -> void: pass
 
 
-static func remove_object_from_state_dict(object: InteractableGameObject):
-	for key in _state_dict.keys():
+static func remove_object_from_state_dict(object: InteractableGameObject) -> void:
+	for key:StringName in _state_dict.keys():
 		var list: Array = _state_dict.get(key)
 		if object in list:
 			list.erase(object)
@@ -61,16 +61,18 @@ static func remove_object_from_state_dict(object: InteractableGameObject):
 
 static func get_objects_on_states(...state_names:Array) -> Array[InteractableGameObject]:
 	var joint_array: Array[InteractableGameObject] = []
+	var validation_func: Callable = func(item:InteractableGameObject) -> bool: return is_instance_valid(item)
 	for state_name:StringName in state_names:
-		joint_array.append_array(_state_dict.get(state_name).filter(func(item): return is_instance_valid(item)))
+		var objects_on_states: Array[InteractableGameObject] = _state_dict.get(state_name)
+		joint_array.append_array(objects_on_states.filter(validation_func))
 	return joint_array
 
 
-static func clear_intermediate_states():
+static func clear_intermediate_states() -> void:
 	var object_array: Array[InteractableGameObject]
 	object_array = get_objects_on_states(STATE_THREATENED,STATE_CASTLING,STATE_SELECTED,STATE_MOVEMENT)
 
-	for object in object_array:
+	for object:InteractableGameObject in object_array:
 		object.state.set_state(STATE_NONE)
 
 
@@ -78,29 +80,29 @@ func _ready() -> void:
 	_on_state_changed(STATE_NONE)
 
 
-func set_state(new_state: StringName):
+func set_state(new_state: StringName) -> void:
 	_on_state_changed(new_state)
 	state_changed.emit(current)
 
 
-func _on_state_changed(new_state: StringName):
-	_state_function_lookup.get(new_state).call()
+func _on_state_changed(new_state: StringName) -> void:
+	_state_function_lookup[new_state].call()
 
-	_state_dict.get(current).erase(get_parent())
-	_state_dict.get(new_state).append(get_parent())
+	_state_dict[current].erase(get_parent())
+	_state_dict[new_state].append(get_parent())
 
 	current = new_state
 
 
-func _apply_state_color(color: Color, enable_emission: bool = false):
+func _apply_state_color(color: Color, enable_emission: bool = false) -> void:
 	mesh_component.set_outline_color(color)
 	mesh_component.outline_material.emission_enabled = enable_emission
 	mesh_component.outline_material.emission = color
 
 
-static func update_state_dict():
-	for key in _state_dict.keys():
+static func update_state_dict() -> void:
+	for key:StringName in _state_dict.keys():
 		var values: Array = _state_dict.get(key)
-		var validity_checker_func: Callable = func(item) -> bool: return is_instance_valid(item)
+		var validity_checker_func: Callable = func(item:InteractableGameObject) -> bool: return is_instance_valid(item)
 		var new_values: Array = values.filter(validity_checker_func)
 		_state_dict.set(key,new_values)

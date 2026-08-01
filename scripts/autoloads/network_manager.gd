@@ -11,30 +11,31 @@ var my_player: int = -1
 
 
 func get_local_ip() -> String:
-	for address in IP.get_local_addresses():
+	for address:String in IP.get_local_addresses():
 		if address.begins_with("192.168.") or address.begins_with("10."):
 			return address
 		if address.begins_with("172."):
-			var second_octet = address.split(".")[1].to_int()
+			var second_octet:int = address.split(".")[1].to_int()
 			if second_octet >= 16 and second_octet <= 31:
 				return address
 	return "127.0.0.1"
 
+
 func code_to_port(code: String) -> int:
-	var port = 0
+	var port:int = 0
 	if code.length() < 4:
 		return -1
 
-	for i in range(4):
-		var char_value = code.unicode_at(i) - 65
+	for i:int in range(4):
+		var char_value:int = code.unicode_at(i) - 65
 		port += char_value * int(pow(26, i))
 
 	return port
 
 func port_to_code(port: int) -> String:
-	var code = ""
-	var n = port
-	for i in range(4):
+	var code:String = ""
+	var n:int = port
+	for i:int in range(4):
 		code += char(65 + (n % 26))
 		n /= 26
 	return code
@@ -43,9 +44,9 @@ func host_game() -> Dictionary:
 	is_online = true
 	my_player = 0
 
-	var port = randi_range(1024, 65535)
-	var peer = ENetMultiplayerPeer.new()
-	var err = peer.create_server(port, MAX_PLAYERS)
+	var port:int = randi_range(1024, 65535)
+	var peer:ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+	var err:Error = peer.create_server(port, MAX_PLAYERS)
 	if err != OK:
 		push_error("NetworkManager: Failed to create server — error %s" % err)
 		is_online = false
@@ -55,7 +56,7 @@ func host_game() -> Dictionary:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] Hosting on port %d, waiting for opponent..." % port)
-	var result = { "ip": get_local_ip(), "code": port_to_code(port) }
+	var result:Dictionary = { "ip": get_local_ip(), "code": port_to_code(port) }
 	print_rich("[b][color=pale_green]NetworkManager[/color]:[/b] emitting game_hosted: ", result)
 	game_hosted.emit(result["ip"], result["code"])
 	return result
@@ -65,9 +66,9 @@ func join_game(ip: String, code: String) -> void:
 	is_online = true
 	my_player = 1
 
-	var port = code_to_port(code)
-	var peer = ENetMultiplayerPeer.new()
-	var err = peer.create_client(ip, port)
+	var port:int = code_to_port(code)
+	var peer:ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+	var err:Error = peer.create_client(ip, port)
 	if err != OK:
 		push_error("NetworkManager: Failed to connect to %s — error %s" % [ip, err])
 		is_online = false

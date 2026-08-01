@@ -11,7 +11,7 @@ signal clicked(piece: InteractableGameObject)
 @export var state: ObjectStateComponent
 
 
-@abstract func select_object()
+@abstract func select_object() -> void
 
 
 func _ready() -> void:
@@ -21,7 +21,7 @@ func _ready() -> void:
 	state.current = ObjectStateComponent.STATE_NONE
 
 
-func _on_clicked(object: InteractableGameObject):
+func _on_clicked(object: InteractableGameObject) -> void:
 	clicked.emit(self)
 	if not clicked.has_connections():
 		select_object()
