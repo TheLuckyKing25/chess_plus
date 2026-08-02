@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="GuidebookPage" format=3 uid="uid://1a17inthvx0a"]
+
+[ext_resource type="Script" uid="uid://bp3gkpv40iax2" path="res://features/ui/guidebook/guidebook/guidebook_page.gd" id="1_s1427"]
+
+
+[resource]
+script = ExtResource("1_s1427")
+category = "Tile Modifiers"
+name = "Button"
+description = ""
+metadata/_custom_type_script = "uid://bp3gkpv40iax2"

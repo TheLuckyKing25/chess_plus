@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GuidebookPage" format=3 uid="uid://b6l5y375bmwyp"]
+
+[ext_resource type="Texture2D" uid="uid://bml5th0brus6r" path="res://features/objects/pieces/queen/icon_queen_light.tres.tres" id="1_eqwrj"]
+[ext_resource type="Script" uid="uid://bp3gkpv40iax2" path="res://features/ui/guidebook/guidebook/guidebook_page.gd" id="1_ywp6k"]
+
+
+[resource]
+script = ExtResource("1_ywp6k")
+category = "Pieces"
+name = "Queen"
+icon = ExtResource("1_eqwrj")
+description = ""
+metadata/_custom_type_script = "uid://bp3gkpv40iax2"

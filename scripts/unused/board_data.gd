@@ -294,22 +294,22 @@ extends Resource
 
 
 
-var tile_array: Array[TileObject] = []
-var piece_array: Array[PieceObject] = []
-
-var legal_moves: MoveList
-
-
-var FEN_board_state: FEN
-
-
-#func _get_from_vector(vector: Vector2i) -> Dictionary:
-	#return board_representation.get(vector)
-
-
-func find_tile_using_vector(vector: Vector2i) -> TileObject:
-	for tile in tile_array:
-		if tile.data.position_vector == vector:
-			return tile
-
-	return null # tile not found
+#var tile_array: Array[TileObject] = []
+#var piece_array: Array[PieceObject] = []
+#
+#var legal_moves: MoveList
+#
+#
+#var FEN_board_state: FEN
+#
+#
+##func _get_from_vector(vector: Vector2i) -> Dictionary:
+	##return board_representation.get(vector)
+#
+#
+#func find_tile_using_vector(vector: Vector2i) -> TileObject:
+	#for tile in tile_array:
+		#if tile.data.position_vector == vector:
+			#return tile
+#
+	#return null # tile not found

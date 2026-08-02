@@ -1,0 +1,90 @@
+[gd_resource type="Resource" script_class="BranchingMovement" format=3 uid="uid://q64kt75k3ajt"]
+
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/abstract_movement.gd" id="1_ixvtn"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://features/board/movement/sliding_movement.gd" id="2_uqia2"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://features/board/movement/branching_movement.gd" id="3_4jjm7"]
+
+[sub_resource type="Resource" id="Resource_t64op"]
+resource_local_to_scene = true
+resource_name = "North"
+script = ExtResource("2_uqia2")
+distance = 1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_5uann"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_jhcpl"]
+resource_local_to_scene = true
+resource_name = "East"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 2
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_ya8pu"]
+resource_local_to_scene = true
+resource_name = "Southeast"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 3
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_hrn47"]
+resource_local_to_scene = true
+resource_name = "South"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 4
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_6pmx1"]
+resource_local_to_scene = true
+resource_name = "Southwest"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 5
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_2de1q"]
+resource_local_to_scene = true
+resource_name = "West"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 6
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_pargd"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("2_uqia2")
+distance = 1
+direction = 7
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("3_4jjm7")
+branches = Array[ExtResource("1_ixvtn")]([SubResource("Resource_t64op"), SubResource("Resource_5uann"), SubResource("Resource_jhcpl"), SubResource("Resource_ya8pu"), SubResource("Resource_hrn47"), SubResource("Resource_6pmx1"), SubResource("Resource_2de1q"), SubResource("Resource_pargd")])
+metadata/_custom_type_script = "uid://by81w35mptra5"

@@ -21,14 +21,14 @@ config/icon="res://icon.svg"
 
 [audio]
 
-buses/default_bus_layout="res://resources/default_bus_layout.tres"
+buses/default_bus_layout="res://features/audio/default_bus_layout.tres"
 
 [autoload]
 
 ConfigFileHandler="*res://scripts/autoloads/config_file_handler.gd"
-NetworkManager="*res://scripts/autoloads/network_manager.gd"
+NetworkManager="*res://features/network/network_manager.gd"
 Match="*res://scripts/autoloads/match.gd"
-NetworkSync="*res://scripts/autoloads/network_sync.gd"
+NetworkSync="*res://features/network/network_sync.gd"
 Constants="*res://scripts/autoloads/constants.gd"
 DebugPrinter="*res://scripts/autoloads/debug_printer.gd"
 GameData="*res://scripts/autoloads/game_data.gd"
@@ -46,12 +46,13 @@ window/stretch/mode="canvas_items"
 
 [editor]
 
-script/templates_search_path="res://scripts/templates"
+script/templates_search_path="res://templates"
 
 [file_customization]
 
 folder_colors={
 "res://assets/": "purple",
+"res://features/": "green",
 "res://resources/": "orange",
 "res://scenes/": "gray",
 "res://scripts/": "blue"

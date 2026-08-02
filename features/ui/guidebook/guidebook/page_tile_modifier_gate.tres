@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="GuidebookPage" format=3 uid="uid://vlrybgt7cw3t"]
+
+[ext_resource type="Script" uid="uid://bp3gkpv40iax2" path="res://features/ui/guidebook/guidebook/guidebook_page.gd" id="1_vb5jq"]
+
+
+[resource]
+script = ExtResource("1_vb5jq")
+category = "Tile Modifiers"
+name = "Gate"
+description = ""
+metadata/_custom_type_script = "uid://bp3gkpv40iax2"

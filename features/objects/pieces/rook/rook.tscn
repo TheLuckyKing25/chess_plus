@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bpaf3sb1uhi38"]
+
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/_piece.tscn" id="1_ftdwv"]
+[ext_resource type="ArrayMesh" uid="uid://047i1asw03nw" path="res://features/objects/pieces/rook/mesh_rook.obj" id="2_4acbm"]
+[ext_resource type="Resource" uid="uid://b2815bqhui6ul" path="res://features/objects/pieces/rook/movement_rook.tres" id="3_w2nln"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eq3wc"]
+resource_local_to_scene = true
+resource_name = "Outline"
+transparency = 1
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kk7r"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+next_pass = SubResource("StandardMaterial3D_eq3wc")
+roughness_texture_channel = 4
+clearcoat_enabled = true
+clearcoat_roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t57xl"]
+resource_local_to_scene = true
+resource_name = "piece_color"
+render_priority = 1
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+emission = Color(1, 1, 1, 1)
+stencil_flags = 2
+stencil_outline_thickness = 0.1
+
+[node name="Rook" unique_id=210537964 instance=ExtResource("1_ftdwv")]
+
+[node name="MeshComponent" parent="." index="3" unique_id=650561997]
+material_override = SubResource("StandardMaterial3D_2kk7r")
+material_overlay = SubResource("StandardMaterial3D_t57xl")
+mesh = ExtResource("2_4acbm")
+
+[node name="MovementComponent" parent="." index="4" unique_id=1074763618]
+base_movement = ExtResource("3_w2nln")
