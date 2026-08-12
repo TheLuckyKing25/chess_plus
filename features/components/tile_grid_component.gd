@@ -69,7 +69,7 @@ func _set_tile_data() -> void:
 		var position_vector: Vector2i = Vector2i(index/file_count, index%file_count)
 		tile.set_position_data(index,position_vector)
 		vector_position_tile_dict.set(position_vector,tile)
-		tile.name = "Tile " + tile.algebraic_notation
+		tile.name = "Tile_" + tile.algebraic_notation
 		tile.position = (Vector3(
 			position_vector.y -(float(file_count)/2)+0.5,
 			0.1,
@@ -128,7 +128,11 @@ func _instantiate_pieces() -> void:
 				print_stack()
 				continue
 
-		new_piece = load(piece_uid).instantiate()
+		var loaded_piece = load(piece_uid)
+
+		assert(is_instance_valid(loaded_piece), "Invalid Piece UID: " + piece_uid)
+
+		new_piece = loaded_piece.instantiate()
 
 		var piece_player = new_piece.player_ownership
 		var player_dict: Dictionary = get_parent().player_component.player_dictionary
@@ -168,7 +172,7 @@ func _on_piece_type_changed(old_piece: PieceObject, new_piece: PieceObject):
 func _transfer_signal_connections(old_piece: PieceObject, new_piece: PieceObject):
 	var signal_list = old_piece.get_signal_list()
 	for given_signal in signal_list:
-		#DebugPrinter.print_pretty(old_piece.get_signal_connection_list(given_signal.name))
+		#Debug.Printer.print_pretty(old_piece.get_signal_connection_list(given_signal.name))
 		if has_signal(given_signal.name) and not has_connections(given_signal.name):
 			continue
 		for connection in old_piece.get_signal_connection_list(given_signal.name):
@@ -188,7 +192,7 @@ func move_occupant(from: InteractableGameObject, to: InteractableGameObject):
 
 	var moving_occupant: InteractableGameObject = from.occupant
 	to.occupant = moving_occupant
-	moving_occupant.add_to_group("hasMoved")
+	moving_occupant.add_to_group(Constants.GROUPS.HAS_MOVED)
 	from.occupant = null
 	get_parent().audio_piece_move.play()
 

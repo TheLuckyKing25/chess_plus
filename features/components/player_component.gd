@@ -5,7 +5,7 @@ extends Node
 signal player_to_move_changed(new_player: Player)
 
 
-var player_dictionary: Dictionary = {}
+static var player_dictionary: Dictionary = {}
 
 
 var player_turn: int = 0
@@ -17,14 +17,18 @@ var player_turn: int = 0
 		player_to_move = value
 
 
+var num_of_players: int
+
+
 func _ready() -> void:
 	var children: Array = get_children()
+	num_of_players = children.size()
 	for child:Player in children:
 		player_dictionary.set(child.player_name.to_lower(),child)
-	DebugPrinter.print_pretty(player_dictionary)
+	Debug.Printer.print_pretty(player_dictionary)
 
 
-func opponent(player: Player):
+static func opponent(player: Player):
 	var filter: Callable = func(value): return value != player
 	return player_dictionary.values().filter(filter)[0]
 

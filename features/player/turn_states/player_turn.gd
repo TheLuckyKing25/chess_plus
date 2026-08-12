@@ -7,7 +7,7 @@ extends State
 
 
 func enter():
-	DebugPrinter.print_state_enter(name)
+	Debug.Printer.print_state_enter(name)
 	board.turn_changed.connect(Callable(self,"on_turn_changed"))
 
 	if Match.is_timed:
@@ -21,7 +21,7 @@ func exit():
 		player.timer.stop_timer()
 		player.timer.increase_by_increment()
 
-	DebugPrinter.print_state_exit(name)
+	Debug.Printer.print_state_exit(name)
 
 
 func update(_delta: float):

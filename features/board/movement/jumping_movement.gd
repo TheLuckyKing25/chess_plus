@@ -11,7 +11,6 @@ var offset_vector: Vector2i:
 
 @export var is_move := false
 @export var is_threaten := false
-@export var is_castling := false
 
 
 @export var next_movement: Movement
@@ -29,7 +28,7 @@ func set_facing_direction(facing_direction:int):
 		next_movement.set_facing_direction(facing_direction)
 
 
-func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,StringName]:
+func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_object:InteractableGameObject) -> Dictionary[TileObject,StringName]:
 	var tiles: Dictionary[TileObject,StringName] = {}
 
 	# find next_tile
@@ -47,12 +46,12 @@ func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[
 		# apply modifiers of next_tile
 
 	if is_move:
-		if next_tile.occupant == null:
+		if not next_tile.is_in_group(Constants.GROUPS.IS_OCCUPIED):
 			next_tile_state = ObjectStateComponent.STATE_MOVEMENT
 			tiles.set(next_tile,next_tile_state)
 
 	if is_threaten:
-		if is_instance_valid(next_tile.occupant) and not next_tile in _board.valid_selections:
+		if _is_in_any_group(next_tile, moving_object.threatenable_groups) and not next_tile in _board.valid_selections:
 			next_tile_state = ObjectStateComponent.STATE_THREATENED
 			tiles.set(next_tile,next_tile_state)
 
@@ -62,6 +61,14 @@ func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[
 	# exit next_tile
 
 	if next_movement != null:
-		tiles.merge(next_movement.apply_movement(next_tile, _board))
+		tiles.merge(next_movement.generate_movement_map(next_tile, _board, moving_object))
 
 	return tiles
+
+
+func _is_in_any_group(tile: TileObject, ...group_stringnames:Array) -> bool:
+	var tile_groups: Array[StringName] = tile.get_groups()
+	var filter_func:Callable = (
+			func(tile_group: StringName) -> bool: return tile_group in group_stringnames
+		)
+	return tile_groups.any(filter_func)

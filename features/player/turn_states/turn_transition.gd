@@ -23,23 +23,23 @@ func _reset_tween():
 
 
 func enter():
-	DebugPrinter.print_state_enter(name)
+	Debug.Printer.print_state_enter(name)
 
 	if not GameData.match_settings.skip_transition_animation:
-		await get_tree().create_timer(Constants.TURN_TRANSITION_DELAY_SECONDS).timeout
+		await get_tree().create_timer(Constants.TURN_TRANSITION.DELAY_SECONDS).timeout
 		_reset_tween()
 		transition_tween.set_parallel(true)
 		transition_tween.tween_property(
 				previous_state.player.camera_component,
 				"yaw",
 				camera_ending_yaw,
-				Constants.TURN_TRANSITION_TIME_SECONDS
+				Constants.TURN_TRANSITION.DURATION_SECONDS
 			)
 		transition_tween.tween_property(
 				previous_state.board.board_base.material_override,
 				"albedo_color",
 				next_state.player.color,
-				 Constants.TURN_TRANSITION_TIME_SECONDS)
+				Constants.TURN_TRANSITION.DURATION_SECONDS)
 		await transition_tween.finished
 
 	transitioned.emit(self,next_state.name)
@@ -49,4 +49,4 @@ func exit():
 	next_state.player.camera_component.camera.make_current()
 	previous_state.player.camera_component.yaw = initial_rotation_degree
 
-	DebugPrinter.print_state_exit(name)
+	Debug.Printer.print_state_exit(name)

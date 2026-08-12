@@ -98,11 +98,3 @@ func _apply_state_color(color: Color, enable_emission: bool = false) -> void:
 	mesh_component.set_outline_color(color)
 	mesh_component.outline_material.emission_enabled = enable_emission
 	mesh_component.outline_material.emission = color
-
-
-static func update_state_dict() -> void:
-	for key:StringName in _state_dict.keys():
-		var values: Array = _state_dict.get(key)
-		var validity_checker_func: Callable = func(item:InteractableGameObject) -> bool: return is_instance_valid(item)
-		var new_values: Array = values.filter(validity_checker_func)
-		_state_dict.set(key,new_values)

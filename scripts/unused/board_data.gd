@@ -86,7 +86,7 @@ extends Resource
 	#for property in property_list:
 		#property_dict.set(property.name,get(property.name))
 #
-	#DebugPrinter.print_pretty(property_dict, false)
+	#Debug.Printer.print_pretty(property_dict, false)
 #
 #
 ##region Getter/Setters
@@ -250,7 +250,7 @@ extends Resource
 #func _find_movement_of_piece(piece:PieceData) -> Dictionary[TileDataChess,ObjectStateComponent.Type]:
 	#var movement: Dictionary[TileDataChess,ObjectStateComponent.Type] = {}
 	#var starting_tile: TileDataChess = board_representation.get(piece.position_vector).get(TILE_DATA_INDEX)
-	#movement = piece.current_movement.apply_movement(starting_tile, self)
+	#movement = piece.current_movement.generate_movement_map(starting_tile, self)
 	#piece.reset_current_movement()
 	#return movement
 #
@@ -264,7 +264,7 @@ extends Resource
 	#}
 #
 	#new_change.add_change(BoardChange.MOVE_RULE_NAME, move)
-	#new_change.add_change(BoardChange.PLAYER_TO_MOVE_RULE_NAME, GameData.opponent(player_to_move))
+	#new_change.add_change(BoardChange.NEXT_PLAYER_RULE_NAME, GameData.opponent(player_to_move))
 	#if is_instance_valid(to.occupant):
 		#new_change.add_change(BoardChange.CAPTURED_RULE_NAME, [to.occupant])
 #
@@ -273,7 +273,7 @@ extends Resource
 	#_evaluate_game_rules(new_change)
 #
 	#BoardChange.apply_change(new_change,self)
-	#DebugPrinter.print_pretty(board_history[-1].changed_data,false)
+	#Debug.Printer.print_pretty(board_history[-1].changed_data,false)
 #
 #
 #func _evaluate_piece_rules(current_changes: BoardChange):

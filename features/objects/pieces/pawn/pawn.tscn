@@ -1,13 +1,16 @@
 [gd_scene format=3 uid="uid://cjvj8f6rpuk0k"]
 
-[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/_piece.tscn" id="1_xuc54"]
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/abstract_piece.tscn" id="1_xuc54"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://features/objects/pieces/pawn/mesh_pawn.obj" id="2_728v7"]
-[ext_resource type="Resource" uid="uid://bhrm536aemt0f" path="res://features/objects/pieces/pawn/movement_pawn.tres" id="3_d2hm4"]
-[ext_resource type="Script" uid="uid://dtvtcm6bu70t7" path="res://scripts/rules/piece rules/post_move_movement.gd" id="4_11mmc"]
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/abstract_movement.gd" id="3_d2hm4"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://features/board/movement/sliding_movement.gd" id="4_4i6t8"]
+[ext_resource type="Script" uid="uid://dtvtcm6bu70t7" path="res://features/rules/piece/alternate_first_movement.gd" id="4_11mmc"]
 [ext_resource type="Resource" uid="uid://v6scgji0vbgg" path="res://features/objects/pieces/pawn/movement_pawn_double_step.tres" id="5_4i6t8"]
-[ext_resource type="Script" uid="uid://c7yfx2bq0evvj" path="res://scripts/rules/piece rules/promotion.gd" id="6_5dlnm"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://features/board/movement/branching_movement.gd" id="5_5dlnm"]
+[ext_resource type="Script" uid="uid://c7yfx2bq0evvj" path="res://features/rules/piece/promotion.gd" id="6_5dlnm"]
+[ext_resource type="Script" uid="uid://v77w2mjylf8b" path="res://features/rules/piece/en_passant.gd" id="9_11mmc"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dolup"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_11mmc"]
 resource_local_to_scene = true
 resource_name = "Outline"
 transparency = 1
@@ -17,15 +20,15 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sawut"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4i6t8"]
 resource_local_to_scene = true
 resource_name = "piece_color"
-next_pass = SubResource("StandardMaterial3D_dolup")
+next_pass = SubResource("StandardMaterial3D_11mmc")
 roughness_texture_channel = 4
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rdkgm"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5dlnm"]
 resource_local_to_scene = true
 resource_name = "piece_color"
 render_priority = 1
@@ -35,15 +38,48 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
+[sub_resource type="Resource" id="Resource_dolup"]
+resource_local_to_scene = true
+resource_name = "North"
+script = ExtResource("4_4i6t8")
+distance = 1
+is_move = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_sawut"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("4_4i6t8")
+distance = 1
+direction = 1
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_rdkgm"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("4_4i6t8")
+distance = 1
+direction = 7
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_dcdkl"]
+resource_local_to_scene = true
+resource_name = "Pawn"
+script = ExtResource("5_5dlnm")
+branches = Array[ExtResource("3_d2hm4")]([SubResource("Resource_dolup"), SubResource("Resource_sawut"), SubResource("Resource_rdkgm")])
+metadata/_custom_type_script = "uid://by81w35mptra5"
+
 [node name="Pawn" unique_id=210537964 instance=ExtResource("1_xuc54")]
 
 [node name="MeshComponent" parent="." index="3" unique_id=650561997]
-material_override = SubResource("StandardMaterial3D_sawut")
-material_overlay = SubResource("StandardMaterial3D_rdkgm")
+material_override = SubResource("StandardMaterial3D_4i6t8")
+material_overlay = SubResource("StandardMaterial3D_5dlnm")
 mesh = ExtResource("2_728v7")
 
 [node name="MovementComponent" parent="." index="4" unique_id=1074763618]
-base_movement = ExtResource("3_d2hm4")
+base_movement = SubResource("Resource_dcdkl")
 
 [node name="AlternateFirstMovement" type="Node" parent="RulesComponent" parent_id_path=PackedInt32Array(1399148645) index="0" unique_id=2079241152 node_paths=PackedStringArray("movement_component")]
 script = ExtResource("4_11mmc")
@@ -56,4 +92,6 @@ script = ExtResource("6_5dlnm")
 promotion_options = Array[int]([3, 1, 4, 5])
 metadata/_custom_type_script = "uid://c7yfx2bq0evvj"
 
-[node name="EnPassant" type="Node" parent="RulesComponent" parent_id_path=PackedInt32Array(1399148645) index="2" unique_id=1881029923]
+[node name="EnPassant" type="Node" parent="RulesComponent" parent_id_path=PackedInt32Array(1399148645) index="2" unique_id=1235487410]
+script = ExtResource("9_11mmc")
+metadata/_custom_type_script = "uid://v77w2mjylf8b"

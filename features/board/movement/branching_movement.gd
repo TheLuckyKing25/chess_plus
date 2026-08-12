@@ -12,7 +12,7 @@ func set_facing_direction(facing_direction: int) -> void:
 		branch.set_facing_direction(facing_direction)
 
 
-func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[TileObject,StringName]:
+func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_object:InteractableGameObject) -> Dictionary[TileObject,StringName]:
 	var tiles: Dictionary[TileObject,StringName] = {}
 
 	# apply modifiers
@@ -20,5 +20,5 @@ func apply_movement(current_tile:TileObject, _board: BoardObject) -> Dictionary[
 	if branches.is_empty():
 		return {}
 	for branch in branches:
-		tiles.merge(branch.apply_movement(current_tile, _board))
+		tiles.merge(branch.generate_movement_map(current_tile, _board, moving_object))
 	return tiles

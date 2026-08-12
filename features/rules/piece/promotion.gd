@@ -21,11 +21,13 @@ func _ready():
 
 func evaluate_rule(board: BoardObject):
 	var piece: PieceObject = owner
-
 	var changed_data: Dictionary = board.current_changes.changed_data
+
 	var is_piece_moving: bool = piece == changed_data.move.occupant
 	var is_on_promotion_rank: bool = piece.player_ownership.player.promotion_rank == changed_data.move.to.rank
-	if is_on_promotion_rank and is_piece_moving:
+	var is_rule_applicable: bool = is_on_promotion_rank and is_piece_moving
+
+	if is_rule_applicable:
 		# TEMPORARY: FIRST PROMOTION OPTION IS CHOSEN
 		var first_promotion_option: Constants.TypePiece = promotion_options.front()
 		var change_info: Dictionary[PieceObject, Constants.TypePiece] = {piece: first_promotion_option}

@@ -11,12 +11,12 @@ signal occupant_clicked(clicked_occupant: InteractableGameObject)
 	get = _occupant_getter
 
 
-var is_occupied: bool:
-	get: return is_instance_valid(occupant)
-
-
 func _occupant_setter(value: InteractableGameObject) -> void:
 	_on_occupant_changed(value)
+	if is_instance_valid(value):
+		get_parent().add_to_group(Constants.GROUPS.IS_OCCUPIED)
+	else:
+		get_parent().remove_from_group(Constants.GROUPS.IS_OCCUPIED)
 	occupant = value
 
 
@@ -26,9 +26,9 @@ func _occupant_getter() -> InteractableGameObject:
 
 func _on_occupant_changed(new_occupant: InteractableGameObject) -> void:
 	occupant_changed.emit(new_occupant)
-	if is_instance_valid(occupant): _disconnect_occupant_signals(occupant)
+	if is_instance_valid(occupant): disconnect_occupant_signals(occupant)
 	if is_instance_valid(new_occupant):
-		_connect_occupant_signals(new_occupant)
+		connect_occupant_signals(new_occupant)
 		if is_instance_valid(new_occupant.get_parent()):
 			new_occupant.reparent(self,false)
 		else:
@@ -44,11 +44,11 @@ func _on_occupant_clicked(object:InteractableGameObject) -> void:
 	occupant_clicked.emit(object)
 
 
-func _disconnect_occupant_signals(occupant: InteractableGameObject) -> void:
-	if occupant.has_signal("clicked") and occupant.is_connected("clicked",_on_occupant_clicked):
-		occupant.clicked.disconnect(_on_occupant_clicked)
+func disconnect_occupant_signals(connected_occupant: InteractableGameObject) -> void:
+	if connected_occupant.has_signal("clicked") and connected_occupant.is_connected("clicked",_on_occupant_clicked):
+		connected_occupant.clicked.disconnect(_on_occupant_clicked)
 
 
-func _connect_occupant_signals(occupant: InteractableGameObject) -> void:
-	if occupant.has_signal("clicked") and not occupant.clicked.is_connected(_on_occupant_clicked):
-		occupant.clicked.connect(_on_occupant_clicked)
+func connect_occupant_signals(unconnected_occupant: InteractableGameObject) -> void:
+	if unconnected_occupant.has_signal("clicked") and not unconnected_occupant.clicked.is_connected(_on_occupant_clicked):
+		unconnected_occupant.clicked.connect(_on_occupant_clicked)

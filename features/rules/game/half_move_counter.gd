@@ -17,7 +17,7 @@ var half_turn_count: int = 0
 
 
 #func reload_list():
-	#DebugPrinter.print_pretty(get_property_list())
+	#Debug.Printer.print_pretty(get_property_list())
 	#notify_property_list_changed()
 #
 #func _validate_property(property: Dictionary) -> void:
@@ -41,10 +41,11 @@ func _ready():
 
 
 func evaluate_rule(board:BoardObject):
-	var current_changes: BoardChange = board.current_changes
-	var was_pawn_moved: bool = current_changes.changed_data.move.occupant.name.contains("Pawn")
-	var was_piece_captured:bool = current_changes.changed_data.has(BoardChange.CAPTURED_RULE_NAME)
-	if not was_piece_captured and not was_pawn_moved:
+	var current_changes: Dictionary = board.current_changes.changed_data
+	var was_pawn_moved: bool = current_changes.move.occupant.name.contains("Pawn")
+	var was_piece_captured:bool = current_changes.has(BoardChange.CAPTURED_RULE_NAME)
+	var is_rule_applicable:bool = not (was_piece_captured or was_pawn_moved)
+	if is_rule_applicable:
 		half_turn_count += 1
 	else:
 		half_turn_count = 0

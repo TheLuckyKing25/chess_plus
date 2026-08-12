@@ -30,6 +30,10 @@ func _ready():
 
 func evaluate_rule(board:BoardObject):
 	var piece: PieceObject = owner
-	if piece == board.current_changes.changed_data.move.occupant and not piece.is_in_group("hasMoved"):
+	var is_rule_applicable: bool = (
+			piece == board.current_changes.changed_data.move.occupant
+			and not piece.is_in_group("hasMoved")
+		)
+	if is_rule_applicable:
 		var change_info: Dictionary[PieceObject, Movement] = {piece: overwritten_movement.duplicate_deep()}
 		board.current_changes.add_change(RULE_NAME, change_info)

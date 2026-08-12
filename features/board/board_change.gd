@@ -2,21 +2,21 @@
 class_name BoardChange
 extends Resource
 
-const MOVE_RULE_NAME:StringName = "move"
-const PLAYER_TO_MOVE_RULE_NAME:StringName = "player_to_move"
-const CAPTURED_RULE_NAME:StringName = "captured"
+const MOVE_RULE_NAME: StringName = &"move"
+const NEXT_PLAYER_RULE_NAME: StringName = &"next_player"
+const CAPTURED_RULE_NAME: StringName = &"captured"
+
+
 # not constant, allowing for additional functions to be
 # added depending on the rules selected at the start of the match
 static var _change_handler_function_lookup: Dictionary[String, Callable] = {
 	MOVE_RULE_NAME: _handle_move_change,
-	PLAYER_TO_MOVE_RULE_NAME: _handle_player_to_move_change,
+	NEXT_PLAYER_RULE_NAME: _handle_next_player_change,
 	CAPTURED_RULE_NAME: _handle_capture_change,
 }
 
+var changed_data: Dictionary[StringName, Variant] = {}
 
-var changed_data: Dictionary[String, Variant] = {
-	# variable_name: data_changed,
-}
 
 #
 #static func merge_changes(changes: Array[BoardChange]) -> BoardChange:
@@ -44,7 +44,7 @@ var changed_data: Dictionary[String, Variant] = {
 
 
 static func apply_change(change: BoardChange, board: BoardObject) -> void:
-	for key in change.changed_data.keys():
+	for key:String in change.changed_data.keys():
 		if _change_handler_function_lookup.has(key):
 			var change_function = _change_handler_function_lookup.get(key)
 			change_function.call(board, change.changed_data.get(key))
@@ -68,7 +68,7 @@ static func _handle_move_change(board: BoardObject, value: Variant) -> void:
 	board.tile_grid.move_occupant(value.from, value.to)
 
 
-static func _handle_player_to_move_change(board: BoardObject, value: Variant) -> void:
+static func _handle_next_player_change(board: BoardObject, value: Variant) -> void:
 	board.player_component.player_to_move = value
 
 
@@ -77,7 +77,6 @@ static func _handle_capture_change(board: BoardObject, value: Variant) -> void:
 		board.tile_grid.capture(object)
 
 #endregion
-
 
 # adds a change to the dictionary
 func add_change(variable_name: String, new_data:Variant) -> void:

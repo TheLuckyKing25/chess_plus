@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bqqc457mnn1wj" path="res://features/components/camera_component.gd" id="2_g07m3"]
 [ext_resource type="Script" uid="uid://dk4hgujlft1oj" path="res://scripts/time_control.gd" id="3_t4822"]
 
-[node name="Player" type="Node" unique_id=408447826 node_paths=PackedStringArray("camera_component", "timer")]
+[node name="Player" type="Node" unique_id=408447826 node_paths=PackedStringArray("camera_component", "timer") groups=["Player"]]
 script = ExtResource("1_g07m3")
 camera_component = NodePath("CameraComponent")
 timer = NodePath("TimeControl")

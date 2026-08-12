@@ -7,7 +7,7 @@ var current_state: State
 var states: Dictionary = {}
 
 func enter() -> void:
-	DebugPrinter.print_state_enter(name)
+	Debug.Printer.print_state_enter(name)
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child
@@ -23,7 +23,7 @@ func exit() -> void:
 		if child is State:
 			states[child.name.to_lower()] = child
 			child.transitioned.disconnect(Callable(self,"on_child_transition"))
-	DebugPrinter.print_state_exit(name)
+	Debug.Printer.print_state_exit(name)
 
 func update(_delta: float) -> void:
 	if current_state:

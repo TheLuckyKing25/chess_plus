@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://b7fydri8mw0oj"]
 
-[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/_piece.tscn" id="1_5amo7"]
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/abstract_piece.tscn" id="1_5amo7"]
 [ext_resource type="ArrayMesh" uid="uid://bh6148leh6x14" path="res://features/objects/pieces/bishop/mesh_bishop.obj" id="1_q8jfx"]
-[ext_resource type="Resource" uid="uid://dx2645h4rpx8y" path="res://features/objects/pieces/bishop/movement_bishop.tres" id="3_q8jfx"]
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/abstract_movement.gd" id="3_lat8i"]
+[ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://features/board/movement/sliding_movement.gd" id="4_g3tmm"]
+[ext_resource type="Script" uid="uid://by81w35mptra5" path="res://features/board/movement/branching_movement.gd" id="5_28pwv"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lat8i"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_753kw"]
 resource_local_to_scene = true
 resource_name = "Outline"
 transparency = 1
@@ -14,15 +16,15 @@ albedo_color = Color(0, 0, 0, 1)
 grow = true
 grow_amount = 0.1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g3tmm"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gkbji"]
 resource_local_to_scene = true
 resource_name = "piece_color"
-next_pass = SubResource("StandardMaterial3D_lat8i")
+next_pass = SubResource("StandardMaterial3D_753kw")
 roughness_texture_channel = 4
 clearcoat_enabled = true
 clearcoat_roughness = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_28pwv"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2v24i"]
 resource_local_to_scene = true
 resource_name = "piece_color"
 render_priority = 1
@@ -32,12 +34,58 @@ emission = Color(1, 1, 1, 1)
 stencil_flags = 2
 stencil_outline_thickness = 0.1
 
+[sub_resource type="Resource" id="Resource_5nsgx"]
+resource_local_to_scene = true
+resource_name = "Northeast"
+script = ExtResource("4_g3tmm")
+use_max_distance = true
+direction = 1
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_punj0"]
+resource_local_to_scene = true
+resource_name = "Southeast"
+script = ExtResource("4_g3tmm")
+use_max_distance = true
+direction = 3
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_4an7q"]
+resource_local_to_scene = true
+resource_name = "Southwest"
+script = ExtResource("4_g3tmm")
+use_max_distance = true
+direction = 5
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_fu4tn"]
+resource_local_to_scene = true
+resource_name = "Northwest"
+script = ExtResource("4_g3tmm")
+use_max_distance = true
+direction = 7
+is_move = true
+is_threaten = true
+metadata/_custom_type_script = "uid://cw6dchast1cm6"
+
+[sub_resource type="Resource" id="Resource_xfje1"]
+resource_local_to_scene = true
+script = ExtResource("5_28pwv")
+branches = Array[ExtResource("3_lat8i")]([SubResource("Resource_5nsgx"), SubResource("Resource_punj0"), SubResource("Resource_4an7q"), SubResource("Resource_fu4tn")])
+metadata/_custom_type_script = "uid://by81w35mptra5"
+
 [node name="Bishop" unique_id=210537964 instance=ExtResource("1_5amo7")]
 
 [node name="MeshComponent" parent="." index="3" unique_id=650561997]
-material_override = SubResource("StandardMaterial3D_g3tmm")
-material_overlay = SubResource("StandardMaterial3D_28pwv")
+material_override = SubResource("StandardMaterial3D_gkbji")
+material_overlay = SubResource("StandardMaterial3D_2v24i")
 mesh = ExtResource("1_q8jfx")
 
 [node name="MovementComponent" parent="." index="4" unique_id=1074763618]
-base_movement = ExtResource("3_q8jfx")
+base_movement = SubResource("Resource_xfje1")

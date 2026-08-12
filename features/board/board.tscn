@@ -10,7 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://bmes5xsco1bk5" path="res://features/player/player.tscn" id="7_mvl7x"]
 [ext_resource type="Script" uid="uid://crbpah1rpqph3" path="res://features/components/player_component.gd" id="8_lwi7b"]
 [ext_resource type="Script" uid="uid://bwcs17a4lnqvk" path="res://features/components/rules_component.gd" id="10_q5j4u"]
-[ext_resource type="Script" uid="uid://jj5qpdmh61rs" path="res://scripts/rules/game rules/half_move_counter.gd" id="11_pnb36"]
+[ext_resource type="Script" uid="uid://jj5qpdmh61rs" path="res://features/rules/game/half_move_counter.gd" id="11_pnb36"]
+[ext_resource type="Script" uid="uid://b1v3s3dm0fc1d" path="res://features/board/turn_counter.gd" id="12_2am5q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxh2q"]
 
@@ -85,7 +86,7 @@ player_to_move = NodePath("White")
 metadata/_custom_type_script = "uid://crbpah1rpqph3"
 
 [node name="White" parent="PlayerComponent" unique_id=2026006641 instance=ExtResource("7_mvl7x")]
-player_name = "White"
+player_name = &"White"
 color = Color(0.8, 0.8, 0.8, 1)
 parity = 1
 
@@ -97,7 +98,7 @@ pitch = -50.0
 current = false
 
 [node name="Black" parent="PlayerComponent" unique_id=1155921524 instance=ExtResource("7_mvl7x")]
-player_name = "Black"
+player_name = &"Black"
 color = Color(0.2, 0.2, 0.2, 1)
 parity = -1
 
@@ -106,9 +107,17 @@ distance_from_subject = 10.0
 yaw = 180.0
 pitch = -50.0
 
-[node name="RulesComponent" type="Node" parent="." unique_id=129077014]
+[node name="RulesComponent" type="Node" parent="." unique_id=129077014 node_paths=PackedStringArray("active_rules")]
 script = ExtResource("10_q5j4u")
+active_rules = {
+&"HalfMoveCounter": NodePath("HalfMoveCounter"),
+&"TurnCounter": NodePath("TurnCounter")
+}
 metadata/_custom_type_script = "uid://bwcs17a4lnqvk"
+
+[node name="TurnCounter" type="Node" parent="RulesComponent" unique_id=2133481391]
+script = ExtResource("12_2am5q")
+metadata/_custom_type_script = "uid://b1v3s3dm0fc1d"
 
 [node name="HalfMoveCounter" type="Node" parent="RulesComponent" unique_id=597423483]
 script = ExtResource("11_pnb36")

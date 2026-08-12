@@ -1,7 +1,7 @@
 extends UIState
 
 func enter():
-	DebugPrinter.print_state_enter(name)
+	Debug.Printer.print_state_enter(name)
 	if not instantiated_scene:
 		instantiated_scene = scene.instantiate()
 
@@ -26,7 +26,7 @@ func exit():
 			)
 
 	remove_child(instantiated_scene)
-	DebugPrinter.print_state_exit(name)
+	Debug.Printer.print_state_exit(name)
 
 
 func on_new_match_pressed():

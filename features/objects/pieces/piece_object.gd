@@ -10,26 +10,20 @@ signal piece_type_changed(old_piece: PieceObject, new_piece: PieceObject)
 @export var rules_component: RulesComponent
 
 
-static var en_passant: PieceObject = null
-
-
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
 
+var threatenable_groups: Array[StringName] = []
+
+
 var rank: int
-
-
 var file: int
-
-
 var index: int
-
-
 var position_vector: Vector2i:
 	set(value):
 		rank = value.x
 		file = value.y
-	get():
+	get:
 		return Vector2i(rank,file)
 
 
@@ -61,8 +55,3 @@ func select_object():
 func change_piece_type(scene_uid: StringName):
 	var new_piece: PieceObject = load(scene_uid).instantiate()
 	piece_type_changed.emit(self,new_piece)
-
-
-#func evaluate_rules(current_changes: BoardChange) -> void:
-	#for rule:PieceRule in type.rules:
-		#rule.evaluate_rule_application(current_changes, self)

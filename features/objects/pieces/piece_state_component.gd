@@ -1,4 +1,3 @@
-# keeps track of the states that each PieceObject is in
 class_name PieceStateComponent
 extends ObjectStateComponent
 
