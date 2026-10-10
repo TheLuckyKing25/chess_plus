@@ -64,6 +64,7 @@ func on_new_placement_selected(placement: FEN) -> void:
 	Match.board.data.piece_array.resize(Match.board.data.rank_count * Match.board.data.file_count)
 	Match.board.load_FEN(placement)
 
+
 func on_camera_horizontal_offset_changed(value:float):
 	#Player.current.change_camera_horizontal_offset(value)
 	printerr("FUNC NOT UPDATED")

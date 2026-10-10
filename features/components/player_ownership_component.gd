@@ -5,11 +5,10 @@ extends Node
 signal player_changed(new_player:Player)
 
 
-@export var player: Player:
-	set = _player_setter
+@export var player: Player
 
 
-func _player_setter(new_player:Player):
+func set_player(new_player:Player):
 	player_changed.emit(new_player)
 	if is_instance_valid(player):
 		get_parent().remove_from_group(player.group_name)

@@ -6,7 +6,7 @@ extends Node
 var match_settings: MatchConfig = MatchConfig.new()
 
 
-var max_board_length: int = maxi(match_settings.board_size.rank,match_settings.board_size.file)
+var max_board_length: int = maxi(match_settings.board_size.get("rank"),match_settings.board_size.get("file"))
 
 
 #var active_board_state: BoardObject

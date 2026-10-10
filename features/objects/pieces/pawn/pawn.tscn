@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cjvj8f6rpuk0k"]
 
-[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/abstract_piece.tscn" id="1_xuc54"]
+[ext_resource type="PackedScene" uid="uid://dnismskxjehm6" path="res://features/objects/pieces/null_piece.tscn" id="1_xuc54"]
 [ext_resource type="ArrayMesh" uid="uid://bhpxj4ybm00m3" path="res://features/objects/pieces/pawn/mesh_pawn.obj" id="2_728v7"]
-[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/abstract_movement.gd" id="3_d2hm4"]
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/movement.gd" id="3_11mmc"]
 [ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://features/board/movement/sliding_movement.gd" id="4_4i6t8"]
 [ext_resource type="Script" uid="uid://dtvtcm6bu70t7" path="res://features/rules/piece/alternate_first_movement.gd" id="4_11mmc"]
 [ext_resource type="Resource" uid="uid://v6scgji0vbgg" path="res://features/objects/pieces/pawn/movement_pawn_double_step.tres" id="5_4i6t8"]
@@ -66,9 +66,9 @@ metadata/_custom_type_script = "uid://cw6dchast1cm6"
 
 [sub_resource type="Resource" id="Resource_dcdkl"]
 resource_local_to_scene = true
-resource_name = "Pawn"
+resource_name = "pawn_base_movement"
 script = ExtResource("5_5dlnm")
-branches = Array[ExtResource("3_d2hm4")]([SubResource("Resource_dolup"), SubResource("Resource_sawut"), SubResource("Resource_rdkgm")])
+branches = Array[ExtResource("3_11mmc")]([SubResource("Resource_dolup"), SubResource("Resource_sawut"), SubResource("Resource_rdkgm")])
 metadata/_custom_type_script = "uid://by81w35mptra5"
 
 [node name="Pawn" unique_id=210537964 instance=ExtResource("1_xuc54")]
@@ -94,4 +94,6 @@ metadata/_custom_type_script = "uid://c7yfx2bq0evvj"
 
 [node name="EnPassant" type="Node" parent="RulesComponent" parent_id_path=PackedInt32Array(1399148645) index="2" unique_id=1235487410]
 script = ExtResource("9_11mmc")
+provoke_en_passant = true
+perform_en_passant_capture = true
 metadata/_custom_type_script = "uid://v77w2mjylf8b"

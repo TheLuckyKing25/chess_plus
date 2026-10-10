@@ -1,6 +1,7 @@
 class_name CollisionComponent
 extends Area3D
 
+
 signal object_clicked(object:InteractableGameObject)
 
 

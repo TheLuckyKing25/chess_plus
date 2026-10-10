@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="BranchingMovement" format=3 uid="uid://q64kt75k3ajt"]
 
-[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/abstract_movement.gd" id="1_ixvtn"]
+[ext_resource type="Script" uid="uid://bpd61xebv0eby" path="res://features/board/movement/movement.gd" id="1_ixvtn"]
 [ext_resource type="Script" uid="uid://cw6dchast1cm6" path="res://features/board/movement/sliding_movement.gd" id="2_uqia2"]
 [ext_resource type="Script" uid="uid://by81w35mptra5" path="res://features/board/movement/branching_movement.gd" id="3_4jjm7"]
 

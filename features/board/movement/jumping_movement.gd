@@ -28,16 +28,21 @@ func set_facing_direction(facing_direction:int):
 		next_movement.set_facing_direction(facing_direction)
 
 
-func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_object:InteractableGameObject) -> Dictionary[TileObject,StringName]:
+func generate_movement_map(
+		previous_tile:TileObject,
+		_board: BoardObject,
+		moving_object:InteractableGameObject
+	) -> Dictionary[TileObject,StringName]:
+
 	var tiles: Dictionary[TileObject,StringName] = {}
 
 	# find next_tile
-	var new_position:Vector2i = current_tile.position_vector + offset_vector
+	var next_position:Vector2i = previous_tile.position_vector + offset_vector
 
-	if _board.tile_grid.get_tile_at_position(new_position) == null:
+	if _board.tile_grid.get_tile_at_position(next_position) == null:
 		return {}
 
-	var next_tile:TileObject = _board.tile_grid.get_tile_at_position(new_position)
+	var next_tile:TileObject = _board.tile_grid.get_tile_at_position(next_position)
 	var next_tile_state: StringName = ObjectStateComponent.STATE_NONE
 	if not is_instance_valid(next_tile):
 		return {}
@@ -45,15 +50,15 @@ func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_
 	# enter next_tile
 		# apply modifiers of next_tile
 
-	if is_move:
-		if not next_tile.is_in_group(Constants.GROUPS.IS_OCCUPIED):
-			next_tile_state = ObjectStateComponent.STATE_MOVEMENT
-			tiles.set(next_tile,next_tile_state)
+	if is_move and not next_tile.is_in_group(Constants.Groups.IS_OCCUPIED):
+		next_tile_state = ObjectStateComponent.STATE_MOVEMENT
+		tiles.set(next_tile,next_tile_state)
 
-	if is_threaten:
-		if _is_in_any_group(next_tile, moving_object.threatenable_groups) and not next_tile in _board.valid_selections:
-			next_tile_state = ObjectStateComponent.STATE_THREATENED
-			tiles.set(next_tile,next_tile_state)
+
+	if is_threaten and super._is_in_any_group(next_tile, moving_object.threatenable_groups) and not next_tile in _board.valid_selections:
+		next_tile_state = ObjectStateComponent.STATE_THREATENED
+		tiles.set(next_tile,next_tile_state)
+
 
 	if next_tile_state == ObjectStateComponent.STATE_NONE:
 		return {}
@@ -64,11 +69,3 @@ func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_
 		tiles.merge(next_movement.generate_movement_map(next_tile, _board, moving_object))
 
 	return tiles
-
-
-func _is_in_any_group(tile: TileObject, ...group_stringnames:Array) -> bool:
-	var tile_groups: Array[StringName] = tile.get_groups()
-	var filter_func:Callable = (
-			func(tile_group: StringName) -> bool: return tile_group in group_stringnames
-		)
-	return tile_groups.any(filter_func)

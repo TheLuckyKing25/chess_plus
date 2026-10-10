@@ -1,5 +1,7 @@
 class_name RulesComponent
 extends Node
+
+
 @export var active_rules: Dictionary[StringName,Rule] = {
 	# RuleName: Rule,
 }
@@ -14,14 +16,14 @@ func _ready() -> void:
 	_verify_ruled_state()
 
 
-func evaluate_rules(board: BoardObject):
+func evaluate_rules(board: BoardObject, current_changes:BoardChange):
 	for rule:Rule in active_rules.values():
-		rule.evaluate_rule(board)
+		rule.evaluate_rule(board, current_changes)
 	_verify_ruled_state()
 
 
 func _verify_ruled_state():
 	if get_child_count() > 0:
-		owner.add_to_group(Constants.GROUPS.IS_RULED)
+		owner.add_to_group(Constants.Groups.IS_RULED)
 	else:
-		owner.remove_from_group(Constants.GROUPS.IS_RULED)
+		owner.remove_from_group(Constants.Groups.IS_RULED)

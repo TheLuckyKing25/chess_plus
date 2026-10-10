@@ -75,8 +75,8 @@ func get_opponent_of(player: Player) -> Player:
 		return null
 
 
-func get_board_index(rank:int,file:int) -> int:
-	return (file) + ((rank) * board.data.file_count)
+func get_board_index(rank_index:int, file_index:int) -> int:
+	return (file_index) + ((rank_index) * board.data.file_count)
 
 
 func get_board_position(index: int) -> Vector2i:

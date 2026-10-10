@@ -64,8 +64,11 @@ func set_max_distance(max_distance:int) -> void:
 		next_movement.set_max_distance(max_distance)
 
 
-## direction_units is a positive integer between 1 and 7, including 1 and 7.
 func rotate_movement(direction_units: int) -> void:
+	# direction_units is a positive integer between 1 and 7, including 1 and 7.
+	assert(direction_units >= 1 and direction_units <= 7)
+
+	@warning_ignore("int_as_enum_without_cast")
 	direction += direction_units as Constants.Direction
 	if next_movement:
 		next_movement.rotate_movement(direction_units)
@@ -91,11 +94,11 @@ func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_
 		if next_tile == null:
 			return {}
 
-		if is_move and not next_tile.is_in_group(Constants.GROUPS.IS_OCCUPIED):
+		if is_move and not next_tile.is_in_group(Constants.Groups.IS_OCCUPIED):
 			next_tile_state = ObjectStateComponent.STATE_MOVEMENT
 			tiles.set(next_tile,next_tile_state)
 
-		if is_threaten and _is_in_any_group(next_tile, moving_object.threatenable_groups) and not next_tile in _board.valid_selections:
+		if is_threaten and super._is_in_any_group(next_tile, moving_object.threatenable_groups) and not next_tile in _board.valid_selections:
 			next_tile_state = ObjectStateComponent.STATE_THREATENED
 			tiles.set(next_tile,next_tile_state)
 			return tiles
@@ -106,11 +109,3 @@ func generate_movement_map(current_tile:TileObject, _board: BoardObject, moving_
 		distance -= 1
 		tiles.merge(generate_movement_map(next_tile, _board, moving_object))
 	return tiles
-
-
-func _is_in_any_group(tile: TileObject, group_stringnames:Array) -> bool:
-	var tile_groups: Array[StringName] = tile.get_groups()
-	var filter_func:Callable = (
-			func(tile_group: StringName) -> bool: return tile_group in group_stringnames
-		)
-	return tile_groups.any(filter_func)

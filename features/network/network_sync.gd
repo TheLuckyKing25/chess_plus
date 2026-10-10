@@ -63,6 +63,7 @@ func tile_modifiers(modifier_data: Dictionary) -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func timer_start(host_timestamp: float) -> void:
+	@warning_ignore("unused_variable")
 	var latency_sec: float = Time.get_unix_time_from_system() - host_timestamp
 	#Player.current.timer.start_timer()
 	#Player.current.timer.reduce_by(latency_sec)

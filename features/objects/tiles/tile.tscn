@@ -87,6 +87,7 @@ shape = SubResource("BoxShape3D_iixfe")
 
 [node name="Tile_Modifiers" type="Sprite3D" parent="." unique_id=1144003348]
 transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.055, 0)
+visible = false
 axis = 1
 texture = SubResource("ViewportTexture_esqu7")
 region_enabled = true
@@ -112,8 +113,26 @@ unique_name_in_owner = true
 self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/h_separation = 31
 theme_override_constants/v_separation = 31
 alignment = 1
 last_wrap_alignment = 2
+
+[node name="ColorRect" type="ColorRect" parent="Tile_Modifiers/Modifier_Grid/CenterContainer/FlowContainer" unique_id=108976701]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="Tile_Modifiers/Modifier_Grid/CenterContainer/FlowContainer" unique_id=1416708611]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+color = Color(1, 0, 1, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="Tile_Modifiers/Modifier_Grid/CenterContainer/FlowContainer" unique_id=2140133652]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+color = Color(2.5027991e-06, 0.713118, 0.705157, 1)
+
+[node name="ModifierComponent" type="Node" parent="." unique_id=1750641511]

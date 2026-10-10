@@ -2,7 +2,10 @@
 class_name HalfMoveCounter
 extends Rule
 
-const RULE_NAME: StringName = "half_move_counter"
+const RULE_NAME: StringName = &"half_move_counter"
+
+const COUNTER_INCREMENTED_LABEL: StringName = &"halfMoveCounterIncremented"
+const COUNTER_RESET_LABEL: StringName = &"halfMoveCounterReset"
 
 @export_range(0,1000) var turns_until_draw: int = 50
 
@@ -17,7 +20,6 @@ var half_turn_count: int = 0
 
 
 #func reload_list():
-	#Debug.Printer.print_pretty(get_property_list())
 	#notify_property_list_changed()
 #
 #func _validate_property(property: Dictionary) -> void:
@@ -37,16 +39,21 @@ static func _handle_change(board_data: BoardObject, value: Variant):
 
 func _ready():
 	var change_function:Callable = Callable(HalfMoveCounter,"_handle_change")
-	BoardChange.add_change_handler(RULE_NAME, change_function)
+	BoardChange.BoardChangeStruct.add_key(RULE_NAME,0)
+	BoardChange.make_change_handlers.add_handler(RULE_NAME, change_function)
+	BoardChange.BoardChangeStruct.add_flag(COUNTER_INCREMENTED_LABEL)
+	BoardChange.BoardChangeStruct.add_flag(COUNTER_RESET_LABEL)
 
 
-func evaluate_rule(board:BoardObject):
-	var current_changes: Dictionary = board.current_changes.changed_data
-	var was_pawn_moved: bool = current_changes.move.occupant.name.contains("Pawn")
-	var was_piece_captured:bool = current_changes.has(BoardChange.CAPTURED_RULE_NAME)
+
+func evaluate_rule(board:BoardObject, current_changes:BoardChange):
+	var was_pawn_moved: bool = current_changes.change_data.move_info.info.moving_piece.name.contains("Pawn")
+	var was_piece_captured:bool = current_changes.change_data.has(BoardChange.CAPTURES_LABEL)
 	var is_rule_applicable:bool = not (was_piece_captured or was_pawn_moved)
 	if is_rule_applicable:
+		current_changes.board_info.set_flag(COUNTER_INCREMENTED_LABEL, true)
 		half_turn_count += 1
 	else:
+		current_changes.board_info.set_flag(COUNTER_RESET_LABEL, true)
 		half_turn_count = 0
-	board.current_changes.add_change(RULE_NAME, half_turn_count)
+	current_changes.board_info.add_info(RULE_NAME, half_turn_count)

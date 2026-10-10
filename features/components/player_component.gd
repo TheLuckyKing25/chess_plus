@@ -25,7 +25,6 @@ func _ready() -> void:
 	num_of_players = children.size()
 	for child:Player in children:
 		player_dictionary.set(child.player_name.to_lower(),child)
-	Debug.Printer.print_pretty(player_dictionary)
 
 
 static func opponent(player: Player):

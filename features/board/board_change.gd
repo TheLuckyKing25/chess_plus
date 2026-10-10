@@ -2,88 +2,206 @@
 class_name BoardChange
 extends Resource
 
-const MOVE_RULE_NAME: StringName = &"move"
-const NEXT_PLAYER_RULE_NAME: StringName = &"next_player"
-const CAPTURED_RULE_NAME: StringName = &"captured"
+const NEW_BOARD_INFO_LABEL: StringName = &"new_board_info"
+const NEXT_PLAYER_LABEL: StringName = &"next_player"
+
+const MOVE_INFO_LABEL: StringName = &"move_info"
+const MOVING_PIECE_LABEL: StringName = &"moving_piece"
+const STARTING_TILE_LABEL: StringName = &"starting_tile"
+const TARGET_TILE_LABEL: StringName = &"target_tile"
+const CAPTURES_LABEL: StringName = &"captures"
 
 
-# not constant, allowing for additional functions to be
-# added depending on the rules selected at the start of the match
-static var _change_handler_function_lookup: Dictionary[String, Callable] = {
-	MOVE_RULE_NAME: _handle_move_change,
-	NEXT_PLAYER_RULE_NAME: _handle_next_player_change,
-	CAPTURED_RULE_NAME: _handle_capture_change,
+static var make_change_handlers: ChangeHandlerList = ChangeHandlerList.new(MoveObject._make_change, SwitchPlayer._make_change, Capture._make_change)
+
+
+static var reverse_change_handlers: ChangeHandlerList = ChangeHandlerList.new()
+
+
+var change_data: Dictionary[StringName, Variant] = {
+	NEW_BOARD_INFO_LABEL: BoardChangeStruct.new(),
+	MOVE_INFO_LABEL: MoveStruct.new()
 }
 
-var changed_data: Dictionary[StringName, Variant] = {}
+
+var board_info: BoardChangeStruct:
+	get: return change_data.get(NEW_BOARD_INFO_LABEL)
 
 
-#
-#static func merge_changes(changes: Array[BoardChange]) -> BoardChange:
-	#var merged_change: BoardChange = BoardChange.new()
-	#for board_change: BoardChange in changes:
-		#for key in board_change.changed_data.keys():
-			#if not _merge_handler_function_lookup.has(key):
-				#continue
-#
-			#var merging_value: Variant = board_change.changed_data.get(key)
-			#var default_value: Variant = (
-					#Array() if typeof(merging_value) == TYPE_ARRAY
-					#else Dictionary() if typeof(merging_value) == TYPE_DICTIONARY
-					#else null
-				#)
-			#var accum_value = merged_change.changed_data.get_or_add(key,default_value)
-#
-			#var merge_function = _merge_handler_function_lookup.get(key)
-			#var merged_data = merge_function.call(accum_value, merging_value)
-#
-			#if merged_data == null:
-				#continue
-			#merged_change.changed_data.set(key,merged_data)
-	#return merged_change
+var move_info: MoveStruct:
+	get: return change_data.get(MOVE_INFO_LABEL)
 
 
 static func apply_change(change: BoardChange, board: BoardObject) -> void:
-	for key:String in change.changed_data.keys():
-		if _change_handler_function_lookup.has(key):
-			var change_function = _change_handler_function_lookup.get(key)
-			change_function.call(board, change.changed_data.get(key))
-
-	ObjectStateComponent.clear_intermediate_states()
-
-	if is_instance_valid(board):
-		board.turn_changed.emit()
-
-	board.board_history.append(change)
+	for change_func:Callable in make_change_handlers.handler_list:
+		change_func.call(board, change)
+	change.change_data.get(MOVE_INFO_LABEL).reset_flags()
+	change.change_data.get(NEW_BOARD_INFO_LABEL).reset_flags()
+	board.valid_destinations = BoardSearch.search(board)
 
 
-#region Change Handlers
-static func add_change_handler(name: String, function: Callable) -> void:
-	if name in _change_handler_function_lookup.keys() and _change_handler_function_lookup.get(name) == function:
-		return
-	_change_handler_function_lookup.set(name,function)
+static func print_change(change: BoardChange) -> void:
+	var formatted_change: Dictionary = {}
+	formatted_change = change.change_data.duplicate()
+	formatted_change.set(NEW_BOARD_INFO_LABEL,formatted_change.get(NEW_BOARD_INFO_LABEL).info)
+	formatted_change.set(MOVE_INFO_LABEL,formatted_change.get(MOVE_INFO_LABEL).info)
+
+	Debug.Printer.print_pretty_json("BoardChanges", formatted_change, 1)
 
 
-static func _handle_move_change(board: BoardObject, value: Variant) -> void:
-	board.tile_grid.move_occupant(value.from, value.to)
 
 
-static func _handle_next_player_change(board: BoardObject, value: Variant) -> void:
-	board.player_component.player_to_move = value
+class ChangeHandlerList:
+	var handler_list: Array[Callable] = []
+
+	func _init(...handlers:Array) -> void:
+		handler_list.append_array(handlers)
 
 
-static func _handle_capture_change(board: BoardObject, value: Variant) -> void:
-	for object in value:
-		board.tile_grid.capture(object)
+	func add_handler(name: String, function: Callable) -> void:
+		if function in handler_list: return
+		handler_list.append(function)
 
-#endregion
 
-# adds a change to the dictionary
-func add_change(variable_name: String, new_data:Variant) -> void:
-	var current_data: Variant = changed_data.get(variable_name)
-	if changed_data.has(variable_name) and new_data is Dictionary and current_data is Dictionary:
-		current_data.merge(new_data)
-	elif changed_data.has(variable_name) and new_data is Array and current_data is Array:
-		current_data.append(new_data)
-	else:
-		changed_data.set(variable_name,new_data)
+class Capture:
+	const CAPTURED_PIECE_LABEL: StringName = &"captured_piece"
+	const OCCUPYING_TILE_LABEL: StringName = &"occupying_tile"
+
+	const struct: Dictionary = {
+		CAPTURED_PIECE_LABEL: null,
+		OCCUPYING_TILE_LABEL: null,
+	}
+
+	static func new_struct() -> Dictionary:
+		return struct.duplicate(true)
+
+	static func _make_change(board: BoardObject, change_data: BoardChange) -> void:
+		var captures_array: Array = change_data.move_info.info.get(BoardChange.CAPTURES_LABEL)
+		for info in captures_array:
+			var captured_piece: PieceObject = info.get(CAPTURED_PIECE_LABEL)
+			board.tile_grid.capture(captured_piece)
+
+
+class MoveObject:
+	static func _make_change(board: BoardObject, change_data: BoardChange) -> void:
+		var starting_tile: TileObject = change_data.move_info.info.get(BoardChange.STARTING_TILE_LABEL)
+		var target_tile: TileObject = change_data.move_info.info.get(BoardChange.TARGET_TILE_LABEL)
+		board.tile_grid.move_occupant(starting_tile, target_tile)
+
+
+class SwitchPlayer:
+	static func _make_change(board: BoardObject, change_data: BoardChange) -> void:
+		board.player_component.player_to_move = change_data.board_info.info.next_player
+
+
+class BoardChangeStruct:
+	static var struct: Dictionary = {
+		NEXT_PLAYER_LABEL: null
+	}
+
+
+	static var flags: Dictionary[StringName,bool] = {}
+
+
+	static func add_flag(name: StringName) -> void:
+		if name in flags.keys():
+			return
+		flags.set(name, false)
+
+
+	static func add_key(name: StringName, default_value: Variant) -> void:
+		if name in struct.keys():
+			return
+		struct.set(name,null)
+
+
+	var info: Dictionary
+
+
+	func _init():
+		info = struct.duplicate(true)
+		add_info(&"flags",flags.duplicate(true))
+
+
+	func add_info(variable_name: String, new_data:Variant) -> void:
+		var current_data: Variant = info.get(variable_name)
+
+		var new_data_type:int = typeof(new_data)
+		var current_data_type:int = typeof(current_data)
+		var do_types_match: bool = new_data_type == current_data_type
+		var are_both_dictionaries: bool = do_types_match and new_data_type == TYPE_DICTIONARY
+		var are_both_arrays: bool = do_types_match and new_data_type == TYPE_ARRAY
+
+		if info.has(variable_name) and are_both_dictionaries:
+			current_data.merge(new_data)
+		elif info.has(variable_name) and are_both_arrays:
+			current_data.append_array(new_data)
+		else:
+			info.set(variable_name,new_data)
+
+
+	func set_flag(flag_name: String, value: bool):
+		info.flags.set(flag_name, value)
+
+
+	func reset_flags():
+		for key in info.flags:
+			info.flags.set(key, false)
+
+
+class MoveStruct:
+	static var struct: Dictionary = {
+		MOVING_PIECE_LABEL: null,
+		STARTING_TILE_LABEL: null,
+		TARGET_TILE_LABEL: null,
+		CAPTURES_LABEL: []
+	}
+
+
+	static var flags: Dictionary[StringName,bool] = {}
+
+
+	static func add_flag(name: StringName) -> void:
+		if name in flags.keys():
+			return
+		flags.set(name, false)
+
+
+	static func add_key(name: StringName, default_value: Variant) -> void:
+		if name in struct.keys():
+			return
+		struct.set(name,null)
+
+
+	var info: Dictionary
+
+
+	func _init():
+		info = struct.duplicate(true)
+		add_info(&"flags",flags.duplicate(true))
+
+
+	func add_info(variable_name: String, new_data:Variant) -> void:
+		var current_data: Variant = info.get(variable_name)
+
+		var new_data_type:int = typeof(new_data)
+		var current_data_type:int = typeof(current_data)
+		var do_types_match: bool = new_data_type == current_data_type
+		var are_both_dictionaries: bool = do_types_match and new_data_type == TYPE_DICTIONARY
+		var are_both_arrays: bool = do_types_match and new_data_type == TYPE_ARRAY
+
+		if info.has(variable_name) and are_both_dictionaries:
+			current_data.merge(new_data)
+		elif info.has(variable_name) and are_both_arrays:
+			current_data.append_array(new_data)
+		else:
+			info.set(variable_name,new_data)
+
+
+	func set_flag(flag_name: String, value: bool):
+		info.flags.set(flag_name, value)
+
+
+	func reset_flags():
+		for key in info.flags:
+			info.flags.set(key, false)

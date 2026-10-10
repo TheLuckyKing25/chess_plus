@@ -1,4 +1,3 @@
-# Constants Autoload
 # contains values that need to be accessed in multiple locations
 extends Node
 
@@ -51,7 +50,6 @@ const PIECE_SCENE_UID_DICT: Dictionary[TypePiece,String] = {
 	TypePiece.ROOK: "uid://bpaf3sb1uhi38",
 }
 
-
 @abstract
 class TURN_TRANSITION:
 	const DELAY_SECONDS:float = 0.25
@@ -59,13 +57,11 @@ class TURN_TRANSITION:
 
 
 @abstract
-class GROUPS:
+class Groups:
 	const PIECE:StringName = &"Piece"
 	const TILE:StringName = &"Tile"
 
 	const IS_OCCUPIED:StringName = &"isOccupied"
 	const IS_RULED:StringName = &"isRuled"
 	const HAS_MOVED:StringName = &"hasMoved"
-
-
-	static var threatenable_groups: Array[StringName] = [IS_OCCUPIED]
+	const IS_CAPTURED:StringName = &"isCaptured"

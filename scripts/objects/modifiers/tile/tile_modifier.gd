@@ -2,6 +2,7 @@ class_name TileModifier
 extends Resource
 
 
+@warning_ignore("unused_signal")
 signal modifier_activated(radius:int)
 
 
@@ -40,11 +41,13 @@ enum ModifierType {
 @export var color: Color
 
 
+@warning_ignore("enum_variable_without_default")
 @export var flag: ModifierType
 
 @export var components: Dictionary
 
 ## When a modifier is applied.
+@warning_ignore("enum_variable_without_default")
 var modifier_application_time: TurnState
 
 var dropdown_ui: Control

@@ -4,6 +4,7 @@ class_name State
 extends Node
 
 ## Emitted when state transitions to another state
+@warning_ignore("unused_signal")
 signal transitioned
 
 ## When this state is entered

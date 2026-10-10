@@ -53,8 +53,8 @@ func _instantiate_tiles() -> void:
 	while current_number_of_tiles < total_number_of_tiles:
 		var tile: TileObject = TILE_SCENE.instantiate()
 		tile.clicked.connect(tile_clicked_func)
-		#tile.clicked.connect(_on_tile_clicked)
 		tile_list.append(tile)
+		Debug.Printer.print_initiallization_status_log(tile.name, 2)
 		current_number_of_tiles += 1
 
 	while current_number_of_tiles > total_number_of_tiles:
@@ -63,18 +63,18 @@ func _instantiate_tiles() -> void:
 
 
 func _set_tile_data() -> void:
+	const TILE_OFFSET: float = 0.5
 	for tile in tile_list:
 		add_child(tile)
 		var index: int = tile_list.find(tile)
 		var position_vector: Vector2i = Vector2i(index/file_count, index%file_count)
-		tile.set_position_data(index,position_vector)
+		tile.set_position_data(position_vector)
 		vector_position_tile_dict.set(position_vector,tile)
 		tile.name = "Tile_" + tile.algebraic_notation
-		tile.position = (Vector3(
-			position_vector.y -(float(file_count)/2)+0.5,
-			0.1,
-			(float(rank_count)/2)-position_vector.x-0.5
-		))
+
+		var file_position: float = position_vector.y -(float(file_count)/2) + TILE_OFFSET
+		var rank_position: float = (float(rank_count)/2)-position_vector.x - TILE_OFFSET
+		tile.position = Vector3(file_position, 0.1, rank_position)
 
 
 func _assign_tile_neighbors() -> void:
@@ -86,14 +86,14 @@ func _assign_tile_neighbors() -> void:
 					+ Constants.DIRECTION_VECTOR.get(direction_int)
 				)
 
-			if _is_out_of_bounds(neighbor_position):
+			if is_out_of_bounds(neighbor_position):
 				tile.neighbors.set(direction_int, null)
 				continue
 
 			tile.neighbors.set(direction_int, vector_position_tile_dict.get(neighbor_position))
 
 
-func _is_out_of_bounds(postition: Vector2i) -> bool:
+func is_out_of_bounds(postition: Vector2i) -> bool:
 	return (
 			postition.x > rank_count-1
 			or postition.y > file_count-1
@@ -134,51 +134,46 @@ func _instantiate_pieces() -> void:
 
 		new_piece = loaded_piece.instantiate()
 
-		var piece_player = new_piece.player_ownership
 		var player_dict: Dictionary = get_parent().player_component.player_dictionary
 		match character:
 			"p","r","b","n","q","k":
-				piece_player.player = player_dict.black
+				new_piece.player_ownership.set_player(player_dict.black)
 			"P","R","B","N","Q","K":
-				piece_player.player = player_dict.white
+				new_piece.player_ownership.set_player(player_dict.white)
 
 		var position_vector: Vector2i = Vector2i(tile_index/file_count, tile_index%file_count)
 		var tile = tile_list.get(tile_index)
 		piece_list.append(new_piece)
-		tile.occupant = new_piece
+		place_occupant_on_tile(new_piece,tile)
 		new_piece.position_vector = position_vector
 
 		new_piece.piece_type_changed.connect(_on_piece_type_changed)
 		tile_count += 1
+		Debug.Printer.print_initiallization_status_log(new_piece.name, 1)
 
 
 func _on_piece_type_changed(old_piece: PieceObject, new_piece: PieceObject):
-	_transfer_signal_connections(old_piece,new_piece)
+	_transfer_signal_connections(old_piece, new_piece)
 
 	var player: Player = old_piece.player_ownership.player
-	new_piece.player_ownership.player = player
+	new_piece.player_ownership.set_player(player)
 	piece_list.set(piece_list.find(old_piece),new_piece)
 
-	var tile = old_piece.get_parent().owner # TEMPORARY: MIGHT NOT WORK WITH STACKED OCCUPANCY
-	tile.occupant = new_piece
-
-	var position_vector: Vector2i = old_piece.position_vector
-	new_piece.position_vector = position_vector
-	new_piece.position = old_piece.position
+	var tile:TileObject = old_piece.get_parent().owner # TEMPORARY: MIGHT NOT WORK WITH STACKED OCCUPANCY
 	old_piece.reparent(%Captured)
 	old_piece.hide()
+	place_occupant_on_tile(new_piece, tile)
 
 
-func _transfer_signal_connections(old_piece: PieceObject, new_piece: PieceObject):
-	var signal_list = old_piece.get_signal_list()
+func _transfer_signal_connections(prev_piece: PieceObject, new_piece: PieceObject):
+	var signal_list = prev_piece.get_signal_list()
 	for given_signal in signal_list:
-		#Debug.Printer.print_pretty(old_piece.get_signal_connection_list(given_signal.name))
 		if has_signal(given_signal.name) and not has_connections(given_signal.name):
-			continue
-		for connection in old_piece.get_signal_connection_list(given_signal.name):
-			var old_signal: Signal = Signal(old_piece,given_signal.name)
+			continue # skips signal if signal has no connections
+		for connection in prev_piece.get_signal_connection_list(given_signal.name):
+			var prev_signal: Signal = Signal(prev_piece,given_signal.name)
 			var new_signal: Signal = Signal(new_piece,given_signal.name)
-			old_signal.disconnect(connection.callable)
+			prev_signal.disconnect(connection.callable)
 			new_signal.connect(connection.callable)
 
 
@@ -186,25 +181,53 @@ func _can_object_be_occupied(object: InteractableGameObject) -> bool:
 	return is_instance_valid(object) and is_instance_valid(object.occupant_component)
 
 
-func move_occupant(from: InteractableGameObject, to: InteractableGameObject):
-	if not _can_object_be_occupied(from) and _can_object_be_occupied(to):
+func place_occupant_on_tile(occupant: InteractableGameObject, target_tile: TileObject):
+	if not is_instance_valid(occupant):
 		return
 
-	var moving_occupant: InteractableGameObject = from.occupant
-	to.occupant = moving_occupant
-	moving_occupant.add_to_group(Constants.GROUPS.HAS_MOVED)
-	from.occupant = null
+	target_tile.occupant_component.connect_occupant_signals(occupant)
+	if is_instance_valid(occupant.get_parent()):
+		occupant.reparent(target_tile.occupant_component,false)
+	else:
+		target_tile.occupant_component.add_child(occupant)
+	var tile_position:Vector3 = target_tile.position
+	occupant.position = Vector3(tile_position.x,0.2,tile_position.z)
+	var occupant_property_list: Array = occupant.get_property_list()
+	var occupant_property_names: Array = occupant_property_list.map(func(item:Dictionary) -> String: return item.get("name"))
+	if occupant_property_names.has("position_vector"):
+		occupant.position_vector = target_tile.position_vector
+	target_tile.occupant = occupant
+
+
+func move_occupant(starting_tile: TileObject, target_tile: TileObject):
+	if not _can_object_be_occupied(starting_tile) and _can_object_be_occupied(target_tile):
+		return
+
+	var moving_occupant: InteractableGameObject = starting_tile.occupant_component.occupant
+	moving_occupant.add_to_group(Constants.Groups.HAS_MOVED)
+
+	starting_tile.occupant_component.disconnect_occupant_signals(moving_occupant)
+	place_occupant_on_tile(moving_occupant,target_tile)
+	starting_tile.occupant = null
 	get_parent().audio_piece_move.play()
 
 
-func capture(object:InteractableGameObject):
-	if is_instance_valid(object):
-		ObjectStateComponent.remove_object_from_state_dict(object)
-		object.visible = false
-		object.get_parent().remove_child(object)
-		%Captured.add_child(object)
-		object.position += Vector3(0,-5,0)
-		get_parent().audio_piece_capture.play()
+func capture(captured_object:InteractableGameObject):
+	if not is_instance_valid(captured_object): return
+	var tile: TileObject = find_tile_occupied_by(captured_object)
+
+	# For cases where the moved piece captures another piece
+	# without landing on the captured piece's tile.
+	# EX. en passant
+	if is_instance_valid(tile):
+		tile.occupant = null if tile.occupant == captured_object else tile.occupant
+
+	captured_object.add_to_group(Constants.Groups.IS_CAPTURED)
+	ObjectStateComponent.remove_object_from_state_dict(captured_object)
+	captured_object.visible = false
+	captured_object.get_parent().remove_child(captured_object)
+	captured_object.reparent(%Captured)
+	captured_object.position += Vector3(0,-5,0)
 
 
 func update_lists():
@@ -216,3 +239,10 @@ func update_lists():
 		if not _can_object_be_occupied(object) or not is_instance_valid(object.occupant):
 			continue
 		piece_list.append(object.occupant)
+
+
+func find_tile_occupied_by(piece:PieceObject) -> TileObject:
+	for tile:TileObject in tile_list:
+		if tile.occupant == piece:
+			return tile
+	return null

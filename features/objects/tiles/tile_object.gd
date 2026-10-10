@@ -2,40 +2,28 @@ class_name TileObject
 extends InteractableGameObject
 
 
-#region Signals
 signal modifier_order_changed()
-#endregion
 
 
-#region Enums
-
-#endregion
-
-
-#region Constants
-const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435, 1)
+const BASE_COLOR: Color = Color(0.75, 0.5775, 0.435)
 const LIGHT_COLOR: Color = BASE_COLOR * 4/3
-const DARK_COLOR: Color = BASE_COLOR * 2/3 + Color(0,0,0,1)
-#endregion
+const DARK_COLOR: Color = BASE_COLOR * 2/3
 
 
-#region Static Variables
 static var selection_mode: Constants.SelectionMode = Constants.SelectionMode.SINGLE
 
+
 static var en_passant: TileObject = null
-#endregion
 
 
-#region Exported Variables
 @export var occupant_component: OccupantComponent
+
 
 var occupant: InteractableGameObject:
 	set(value): occupant_component.occupant = value
 	get: return occupant_component.occupant
-#endregion
 
 
-#region Public Variables
 var neighbors: Dictionary[Constants.Direction, TileObject] = {
 	Constants.Direction.NORTH: null,
 	Constants.Direction.NORTHEAST: null,
@@ -47,34 +35,25 @@ var neighbors: Dictionary[Constants.Direction, TileObject] = {
 	Constants.Direction.NORTHWEST: null,
 }
 
-var rank: int
+
+var rank_index: int
 
 
-var file: int
-
-
-var index: int
+var file_index: int
 
 
 @export var position_vector: Vector2i:
 	set(value):
-		rank = value.x
-		file = value.y
-	get():
-		return Vector2i(rank,file)
-#endregion
+		rank_index = value.x
+		file_index = value.y
+	get:
+		return Vector2i(rank_index,file_index)
 
 
-func set_position_data(index:int, vector: Vector2i) -> void:
-	self.index = index
-	rank = vector.x
-	file = vector.y
-	_set_base_tile_color() # set tile color
-
-
-#region Private Variables
-var _original_position_in_space: Vector3
-#endregion
+func set_position_data(vector: Vector2i) -> void:
+	rank_index = vector.x
+	file_index = vector.y
+	_set_base_tile_color()
 
 
 func _ready() -> void:
@@ -85,18 +64,17 @@ func _ready() -> void:
 
 #region Object Generation
 func _translate_tile():
-	var board_rank_count = GameData.match_settings.board_size.rank
+	var board_rank_count = GameData.match_settings.board_size.rank_index
 	var board_file_count = GameData.match_settings.board_size.file
 	position = (Vector3(
-		file-(float(board_file_count)/2)+0.5,
+		file_index-(float(board_file_count)/2)+0.5,
 		0.1,
-		(float(board_rank_count)/2)-rank-0.5
+		(float(board_rank_count)/2)-rank_index-0.5
 	))
-	_original_position_in_space = position
 
 
 func _set_base_tile_color() -> void:
-	match (file + rank) % 2:
+	match (file_index + rank_index) % 2:
 		0: mesh_component.set_main_color(LIGHT_COLOR)
 		1: mesh_component.set_main_color(DARK_COLOR)
 		_: mesh_component.set_main_color(Color(0,0,0))
@@ -119,7 +97,6 @@ func _multiple_tile_select() -> void:
 
 func _single_tile_select() -> void:
 	state.set_state(ObjectStateComponent.STATE_SELECTED)
-
 #endregion
 
 
@@ -130,7 +107,7 @@ var modifier_order: Array[TileModifier] = []:
 
 #region Position
 var algebraic_notation: String:
-	get(): return char(97 + rank) + str((1 + file))
+	get(): return char(97 + rank_index) + str((1 + file_index))
 #endregion
 
 # ===============================================================================
@@ -209,6 +186,7 @@ func _on_tile_modifier_order_changed():
 		%FlowContainer.remove_child(child)
 		child.queue_free()
 
+	@warning_ignore("unused_variable")
 	var modifier_panel:PackedScene = load("uid://dmyh3g5g0c8ou")
 	#for modifier in data.modifier_order:
 		#var new_modifier = modifier_panel.instantiate()

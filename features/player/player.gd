@@ -19,6 +19,13 @@ extends Node
 @export var timer: TimeControl
 
 
+var data_dict: Dictionary[StringName,Variant] = {
+	"name": player_name,
+	"color": color,
+	"parity": parity
+}
+
+
 ## determines which direction to face the piece object
 var facing_direction: Constants.Direction
 

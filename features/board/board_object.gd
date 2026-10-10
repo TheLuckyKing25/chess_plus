@@ -3,8 +3,11 @@ extends Node3D
 
 
 signal turn_changed()
+@warning_ignore("unused_signal")
 signal promotion_verified(piece: PieceObject)
+@warning_ignore("unused_signal")
 signal player_to_move_changed(new_player_data: Player)
+@warning_ignore("unused_signal")
 signal board_representation_changed()
 
 
@@ -18,27 +21,13 @@ signal board_representation_changed()
 @export var audio_piece_move:AudioStreamPlayer
 
 
-var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+var fen:FEN = FEN.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
 
 var board_history: Array[BoardChange] = []
 
 
 var current_changes: BoardChange
-
-
-var castling_rights: Dictionary = {
-	"white": {
-		"kingside": true,
-		"queenside": true,
-	},
-	"black": {
-		"kingside": true,
-		"queenside": true,
-	},
-}
-
-var fullmove_counter: int = 0
 
 
 var selected_tile: TileObject:
@@ -67,8 +56,13 @@ func _ready() -> void:
 	_resize_base(tile_grid.rank_count,tile_grid.file_count)
 	_on_player_to_move_changed(player_component.player_to_move)
 
-	player_component.player_dictionary.white.promotion_rank = tile_grid.rank_count - 1
-	player_component.player_dictionary.black.promotion_rank = 0
+	var player_dict: Dictionary = player_component.player_dictionary
+	player_dict.white.promotion_rank = tile_grid.rank_count - 1
+	player_dict.black.promotion_rank = 0
+
+	push_error("TODO: ADD CHECK DETECTION")
+	push_error("TODO: ADD CASTLING")
+	push_error("TODO: ADD CHECKMATE")
 
 	#
 	#if NetworkManager.is_online:
@@ -84,9 +78,15 @@ func _ready() -> void:
 func _on_object_clicked(object: InteractableGameObject) -> void:
 	if object in valid_selections:
 		object.select_object()
-		_toggle_destination_states(object)
+		_toggle_move_state_visibility(object)
 	elif is_instance_valid(selected_tile) and object in valid_destinations.get(selected_tile.occupant).keys():
-		process_move(selected_tile, object)
+		current_changes = construct_move(selected_tile, object)
+		make_move(current_changes)
+		ObjectStateComponent.clear_intermediate_states()
+		board_history.append(current_changes)
+		current_changes = null
+		tile_grid.update_lists()
+		turn_changed.emit()
 
 
 func _resize_base(ranks: int,files:int) -> void:
@@ -94,7 +94,7 @@ func _resize_base(ranks: int,files:int) -> void:
 	board_base.mesh.size = Vector3(files+1,BASE_WIDTH,ranks+1)
 
 
-func _toggle_destination_states(tile: TileObject) -> void:
+func _toggle_move_state_visibility(tile: TileObject) -> void:
 	var destinations: Dictionary[TileObject,StringName] = valid_destinations.get(tile.occupant)
 	for tile_index:TileObject in destinations.keys():
 		tile_index.state.set_state(destinations.get(tile_index))
@@ -108,18 +108,14 @@ func print_properties() -> void:
 	for property in property_list:
 		property_dict.set(property.name,get(property.name))
 
-	Debug.Printer.print_pretty(property_dict, false)
+	Debug.Printer.print_pretty_json("", property_dict)
 
 
 func _on_player_to_move_changed(new_player:Player) -> void:
 	valid_selections.clear()
-	valid_destinations.clear()
 	_find_all_valid_selections(new_player)
-	_find_all_valid_destinations()
+	valid_destinations = BoardSearch.search(self)
 
-func recalculate_valid_destinations():
-	valid_destinations.clear()
-	_find_all_valid_destinations()
 
 func _find_all_valid_selections(new_player:Player) -> void:
 	var piece_filter:Callable = func(piece: PieceObject) -> bool: return piece.player_ownership.player == new_player
@@ -131,54 +127,36 @@ func _find_all_valid_selections(new_player:Player) -> void:
 	valid_selections.append_array(selectable_tile_object)
 
 
-func _find_all_valid_destinations() -> void:
-	var destinations: Dictionary[PieceObject,Dictionary] = {}
+func construct_move(starting_tile: TileObject, target_tile: TileObject) -> BoardChange:
+	var constructed_change:BoardChange = BoardChange.new()
+	var opponent = PlayerComponent.opponent(player_component.player_to_move)
+	var move_info = constructed_change.move_info
+	var board_info = constructed_change.board_info
 
-	var selectable_pieces: Array = valid_selections.filter(
-			func(item:Object) -> bool: return (item is PieceObject)
-		)
-	for piece:PieceObject in selectable_pieces:
-		var valid_destinations_of_piece: Dictionary[TileObject,StringName] = _find_movement_of_piece(piece)
-		destinations.set(piece, valid_destinations_of_piece)
+	move_info.add_info(BoardChange.MOVING_PIECE_LABEL, starting_tile.occupant)
+	move_info.add_info(BoardChange.STARTING_TILE_LABEL, starting_tile)
+	move_info.add_info(BoardChange.TARGET_TILE_LABEL, target_tile)
 
-	# filter out moves
+	board_info.add_info(BoardChange.NEXT_PLAYER_LABEL, opponent)
 
-	valid_destinations = destinations
-
-
-func _find_movement_of_piece(piece:PieceObject) -> Dictionary[TileObject,StringName]:
-	var movement: Dictionary[TileObject,StringName] = {}
-	var starting_tile: TileObject = tile_grid.get_tile_at_position(piece.position_vector)
-	movement = piece.movement_component.movement.generate_movement_map(starting_tile, self, piece)
-	piece.movement_component.reset_movement()
-	return movement
-
-
-func process_move(from: TileObject, to: TileObject) -> void:
-	current_changes = BoardChange.new()
-
-	var move: Dictionary = {
-		"moving_player": player_component.player_to_move,
-		"occupant": from.occupant,
-		"from": from,
-		"to": to,
-	}
-
-	current_changes.add_change(BoardChange.MOVE_RULE_NAME, move)
-	current_changes.add_change(BoardChange.NEXT_PLAYER_RULE_NAME, PlayerComponent.opponent(player_component.player_to_move))
-
-	get_tree().get_nodes_in_group(Constants.GROUPS.IS_RULED).map(
-		func(node:Node): node.rules_component.evaluate_rules(self)
+	get_tree().get_nodes_in_group(Constants.Groups.IS_RULED).map(
+		func(node:Node): node.rules_component.evaluate_rules(self, constructed_change)
 	)
 
-	if is_instance_valid(to.occupant):
-		current_changes.add_change(BoardChange.CAPTURED_RULE_NAME,[to.occupant])
+	if is_instance_valid(target_tile.occupant):
+		var capture_dict: Dictionary = BoardChange.Capture.new_struct()
+		capture_dict.set(BoardChange.Capture.CAPTURED_PIECE_LABEL, target_tile.occupant)
+		capture_dict.set(BoardChange.Capture.OCCUPYING_TILE_LABEL, target_tile)
+		move_info.add_info(BoardChange.CAPTURES_LABEL,[capture_dict])
 
-	Debug.Printer.print_pretty(current_changes.changed_data)
-	BoardChange.apply_change(current_changes,self)
-	current_changes = null
-	tile_grid.update_lists()
+	# check win conditions
 
+	BoardChange.print_change(constructed_change)
+	return constructed_change
+
+
+func make_move(board_change: BoardChange):
+	BoardChange.apply_change(board_change, self)
 
 # ===============================================================================
 # ============================== [END OF REFACTOR] ==============================
@@ -242,14 +220,6 @@ func process_move(from: TileObject, to: TileObject) -> void:
 #func _on_piece_clicked(piece:PieceObject) -> void:
 	#if piece in valid_selections:
 		#piece.state.set_state(ObjectStateComponent.STATE_SELECTED)
-
-
-#func _on_tile_clicked(tile:TileObject)-> void:
-	#if tile in valid_selections:
-		#tile.state.set_state(ObjectStateComponent.STATE_SELECTED)
-		#_toggle_destination_states(tile)
-	#elif is_instance_valid(selected_tile) and tile in valid_destinations.get(selected_tile.occupant).keys():
-		#process_change(selected_tile, tile)
 
 #func _ready(ranks:int = 8, files:int = 8) -> void:
 	#GameData.players.white.promotion_rank = rank_count - 1
