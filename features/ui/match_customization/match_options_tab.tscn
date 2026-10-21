@@ -1,0 +1,212 @@
+[gd_scene format=3 uid="uid://dpgq786sda7gm"]
+
+[node name="Match Options" type="Panel" unique_id=15741518]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1546499997]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="BoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1978885848]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="LeftContainer" type="VBoxContainer" parent="MarginContainer/BoxContainer" unique_id=488221023]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/LeftContainer" unique_id=1086264935]
+layout_mode = 2
+theme_override_constants/outline_size = 10
+text = "Board Dimensions"
+horizontal_alignment = 1
+
+[node name="Board Number" type="HBoxContainer" parent="MarginContainer/BoxContainer/LeftContainer" unique_id=1029189405]
+layout_mode = 2
+alignment = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/LeftContainer/Board Number" unique_id=1138657710]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Board Count (WIP)"
+
+[node name="BoardNumberSpinBox" type="SpinBox" parent="MarginContainer/BoxContainer/LeftContainer/Board Number" unique_id=332942353]
+layout_mode = 2
+tooltip_text = "Board Count Description Placeholder"
+min_value = 1.0
+max_value = 3.0
+value = 1.0
+rounded = true
+alignment = 1
+editable = false
+
+[node name="Board Rank Number" type="HBoxContainer" parent="MarginContainer/BoxContainer/LeftContainer" unique_id=1610146363]
+layout_mode = 2
+alignment = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/LeftContainer/Board Rank Number" unique_id=219723489]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Ranks (Rows)"
+
+[node name="RowNumberSpinBox" type="SpinBox" parent="MarginContainer/BoxContainer/LeftContainer/Board Rank Number" unique_id=554386756]
+layout_mode = 2
+tooltip_text = "Rank Count Description Placeholder"
+mouse_default_cursor_shape = 2
+min_value = 4.0
+max_value = 16.0
+value = 8.0
+rounded = true
+alignment = 1
+
+[node name="Board File Number" type="HBoxContainer" parent="MarginContainer/BoxContainer/LeftContainer" unique_id=355908940]
+layout_mode = 2
+alignment = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/LeftContainer/Board File Number" unique_id=1319219470]
+layout_mode = 2
+text = "Files (Columns)"
+
+[node name="ColumnNumberSpinBox" type="SpinBox" parent="MarginContainer/BoxContainer/LeftContainer/Board File Number" unique_id=1610709094]
+layout_mode = 2
+tooltip_text = "File Count Description Placeholder"
+mouse_default_cursor_shape = 2
+min_value = 4.0
+max_value = 16.0
+value = 8.0
+rounded = true
+alignment = 1
+
+[node name="PlayerStartSelection" type="VBoxContainer" parent="MarginContainer/BoxContainer/LeftContainer" unique_id=1062767221]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="SelectPlayer" type="Label" parent="MarginContainer/BoxContainer/LeftContainer/PlayerStartSelection" unique_id=687383671]
+layout_mode = 2
+theme_override_constants/outline_size = 10
+text = "Starting Side (WIP)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="selector" type="HBoxContainer" parent="MarginContainer/BoxContainer/LeftContainer/PlayerStartSelection" unique_id=25804168]
+layout_mode = 2
+alignment = 1
+
+[node name="White" type="Label" parent="MarginContainer/BoxContainer/LeftContainer/PlayerStartSelection/selector" unique_id=1205773049]
+layout_mode = 2
+text = "White"
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/BoxContainer/LeftContainer/PlayerStartSelection/selector" unique_id=357673496]
+layout_mode = 2
+disabled = true
+
+[node name="Black" type="Label" parent="MarginContainer/BoxContainer/LeftContainer/PlayerStartSelection/selector" unique_id=768155302]
+layout_mode = 2
+text = "Black"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/BoxContainer" unique_id=13785740]
+layout_mode = 2
+
+[node name="MiddleContainer" type="VBoxContainer" parent="MarginContainer/BoxContainer" unique_id=1093209418]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Rules" type="Label" parent="MarginContainer/BoxContainer/MiddleContainer" unique_id=847082887]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+text = "Rules"
+horizontal_alignment = 1
+
+[node name="Castling" type="CheckBox" parent="MarginContainer/BoxContainer/MiddleContainer" unique_id=1849984390]
+layout_mode = 2
+disabled = true
+button_pressed = true
+text = "Castling (WIP)"
+
+[node name="En Passant" type="CheckBox" parent="MarginContainer/BoxContainer/MiddleContainer" unique_id=358297713]
+layout_mode = 2
+disabled = true
+button_pressed = true
+text = "En Passant (WIP)
+"
+
+[node name="Promotion" type="CheckBox" parent="MarginContainer/BoxContainer/MiddleContainer" unique_id=1795619734]
+layout_mode = 2
+disabled = true
+button_pressed = true
+text = "Promotion (WIP)
+"
+
+[node name="TimeControl" type="VBoxContainer" parent="MarginContainer/BoxContainer/MiddleContainer" unique_id=866589632]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl" unique_id=660011825]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Time Control"
+
+[node name="MinutesPerPlayer" type="HBoxContainer" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl" unique_id=1152437120]
+visible = false
+layout_mode = 2
+
+[node name="SpinBox" type="SpinBox" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl/MinutesPerPlayer" unique_id=1156398534]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 120.0
+value = 120.0
+rounded = true
+allow_greater = true
+alignment = 1
+suffix = "minutes"
+custom_arrow_step = 1.0
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl/MinutesPerPlayer" unique_id=11349352]
+layout_mode = 2
+text = "Per player"
+
+[node name="IncrementPerMove" type="HBoxContainer" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl" unique_id=1967965802]
+visible = false
+layout_mode = 2
+
+[node name="SpinBox" type="SpinBox" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl/IncrementPerMove" unique_id=1234025956]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+rounded = true
+allow_greater = true
+alignment = 1
+prefix = "+"
+suffix = "seconds"
+custom_arrow_step = 1.0
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/MiddleContainer/TimeControl/IncrementPerMove" unique_id=2087172046]
+layout_mode = 2
+text = "Increment per move"
+
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/BoxContainer" unique_id=299738612]
+layout_mode = 2
+
+[node name="RightContainer" type="VBoxContainer" parent="MarginContainer/BoxContainer" unique_id=221369476]
+layout_mode = 2
+size_flags_horizontal = 3

@@ -26,12 +26,13 @@ func _on_state_changed(new_state: StringName):
 	if new_state == current:
 		new_state = STATE_NONE
 
-	super(new_state)
+	super._on_state_changed(new_state)
 
-	if state_color.has(new_state):
-		_apply_state_color(state_color.get(new_state))
-	else:
-		printerr("Attempting to set ",get_parent().name," to an invalid state of ",new_state)
+	if not state_color.has(new_state):
+		printerr("Attempting to set {0} to an invalid state of {1}".format([get_parent().name,new_state]))
+		return
+
+	_apply_state_color(state_color.get(new_state))
 
 
 func _on_selected():
@@ -40,5 +41,5 @@ func _on_selected():
 		joint_array = get_tiles_on_states(STATE_THREATENED,STATE_SELECTED,STATE_MOVEMENT)
 		for selected_tile:TileObject in joint_array:
 			selected_tile.state.set_state(STATE_NONE)
-			if is_instance_valid(selected_tile.occupant):
-				selected_tile.occupant.state.set_state(ObjectStateComponent.STATE_NONE)
+			if not is_instance_valid(selected_tile.occupant): continue
+			selected_tile.occupant.state.set_state(ObjectStateComponent.STATE_NONE)

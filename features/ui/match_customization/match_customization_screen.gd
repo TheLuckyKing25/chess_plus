@@ -1,4 +1,4 @@
-extends Control
+extends UIBaseClass
 
 signal time_control_selected(time_sec:int, increment_sec:int)
 signal back_button_pressed()
@@ -8,6 +8,12 @@ signal start_button_pressed()
 signal host_button_pressed()
 
 
+@export var back_button: SceneTransitionButton
+@export var continue_button: SceneTransitionButton
+@export var host_button: SceneTransitionButton
+@export var start_button: SceneTransitionButton
+
+
 var row_num: int = 8
 var column_num: int = 8
 
@@ -15,6 +21,13 @@ var column_num: int = 8
 	#if NetworkManager.is_online and NetworkManager.my_player == 1:
 		#queue_free()
 		#return
+
+#func _ready() -> void:
+	#back_button.pressed.connect(back_button._instantiate_scene.bind(%HudRoot))
+	#continue_button.pressed.connect(continue_button._instantiate_scene.bind(%HudRoot))
+	#host_button.pressed.connect(host_button._instantiate_scene.bind(%HudRoot))
+	#start_button.pressed.connect(start_button._instantiate_scene.bind(%HudRoot))
+
 
 func connect_to_scene_buttons(
 		back_pressed: Callable,
@@ -27,6 +40,7 @@ func connect_to_scene_buttons(
 	%StartButton.pressed.connect(start_pressed)
 	%HostButton.pressed.connect(host_pressed)
 
+
 func disconnect_from_scene_buttons(
 		back_pressed: Callable,
 		continue_pressed: Callable,
@@ -38,8 +52,10 @@ func disconnect_from_scene_buttons(
 	%StartButton.pressed.disconnect(start_pressed)
 	%HostButton.pressed.disconnect(host_pressed)
 
+
 func _on_host_game_button_pressed() -> void:
 	host_button_pressed.emit()
+
 
 func _on_opponent_connected() -> void:
 	board_verified.emit(row_num, column_num, FEN.new(%BoardStateFEN.text))
@@ -47,8 +63,10 @@ func _on_opponent_connected() -> void:
 		time_control_selected.emit(%TimeControl/MinutesPerPlayer/SpinBox.value * 60, %TimeControl/IncrementPerMove/SpinBox.value)
 	start_button_pressed.emit()
 
+
 func _on_back_button_pressed() -> void:
 	back_button_pressed.emit()
+
 
 func _on_continue_button_pressed() -> void:
 	board_verified.emit(row_num,column_num,FEN.new(%BoardStateFEN.text))
@@ -87,11 +105,13 @@ func _on_board_state_fen_text_changed() -> void:
 			return
 	board_verified.emit(row_num, column_num, FEN.new(%BoardStateFEN.text))
 
+
 func _on_start_button_pressed():
 	board_verified.emit(row_num,column_num,FEN.new(%BoardStateFEN.text))
 	if %TimeControl/CheckBox.button_pressed:
 		time_control_selected.emit(%TimeControl/MinutesPerPlayer/SpinBox.value * 60, %TimeControl/IncrementPerMove/SpinBox.value)
 	start_button_pressed.emit()
+
 
 func _on_check_box_toggled(toggled_on: bool) -> void:
 	%TimeControl/MinutesPerPlayer.visible = toggled_on

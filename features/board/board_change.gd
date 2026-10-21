@@ -79,7 +79,18 @@ class Capture:
 		var captures_array: Array = change_data.move_info.info.get(BoardChange.CAPTURES_LABEL)
 		for info in captures_array:
 			var captured_piece: PieceObject = info.get(CAPTURED_PIECE_LABEL)
-			board.tile_grid.capture(captured_piece)
+
+			if not is_instance_valid(captured_piece): continue
+			var tile: TileObject = board.tile_grid.find_tile_occupied_by(captured_piece)
+
+			# For cases where the moved piece captures another piece
+			# without landing on the captured piece's tile.
+			# EX. en passant
+			if is_instance_valid(tile):
+				tile.occupant = null if tile.occupant == captured_piece else tile.occupant
+
+			captured_piece.add_to_group(Constants.Groups.IS_CAPTURED)
+			board.tile_grid.remove_object_from_board(captured_piece)
 
 
 class MoveObject:

@@ -1,4 +1,4 @@
-extends Control
+extends UIBaseClass
 
 @onready var join_button = %JoinButton
 

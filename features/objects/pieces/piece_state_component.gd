@@ -14,9 +14,8 @@ const state_color: Dictionary [StringName,Color] = {
 
 static func get_pieces_on_states(...state_names:Array) -> Array[PieceObject]:
 	var unfiltered_array: Array = get_objects_on_states.callv(state_names)
-	var filtered_array: Array = unfiltered_array.filter(
-			func(item) -> bool: return item is PieceObject
-		)
+	var piece_filter: Callable = func(item) -> bool: return item is PieceObject
+	var filtered_array: Array = unfiltered_array.filter(piece_filter)
 	return filtered_array
 
 
@@ -24,12 +23,11 @@ func _on_state_changed(new_state: StringName):
 	if new_state == current:
 		new_state = STATE_NONE
 
-	super(new_state)
-
-	if state_color.has(new_state):
-		_apply_state_color(state_color.get(new_state))
-	else:
-		printerr("Attempting to set ",get_parent().name," to an invalid state of ",new_state)
+	super._on_state_changed(new_state)
+	if not state_color.has(new_state):
+		printerr("Attempting to set {0} to an invalid state of {1}".format([get_parent().name,new_state]))
+		return
+	_apply_state_color(state_color.get(new_state))
 
 
 func _on_selected():

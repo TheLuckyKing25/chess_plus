@@ -2,8 +2,22 @@
 
 [ext_resource type="Theme" uid="uid://bkyyhibmxbrq8" path="res://resources/themes/theme_bright/base_theme.tres" id="1_0sh77"]
 [ext_resource type="Script" uid="uid://pjpfeiofeqj8" path="res://features/ui/settings/settings_menu.gd" id="2_cags2"]
+[ext_resource type="PackedScene" uid="uid://hxi7n0sd7hac" path="res://features/ui/settings/volume_slider.tscn" id="3_dli7i"]
 
-[node name="Settings" type="Control"]
+[sub_resource type="Gradient" id="Gradient_14wlv"]
+offsets = PackedFloat32Array(0, 0.00680274, 1)
+colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_viyhn"]
+gradient = SubResource("Gradient_14wlv")
+fill_from = Vector2(1, 0.803419)
+fill_to = Vector2(1, 0.269231)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dli7i"]
+texture = SubResource("GradientTexture2D_viyhn")
+region_rect = Rect2(0, 18, 64, 32)
+
+[node name="Settings" type="Control" unique_id=560417785 node_paths=PackedStringArray("fullscreen_checkbox", "master_slider", "music_slider", "ui_slider", "game_slider")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,9 +26,23 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_0sh77")
 script = ExtResource("2_cags2")
+fullscreen_checkbox = NodePath("SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/FullscreenSetting/Fullscreen")
+master_slider = NodePath("SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting/Master")
+music_slider = NodePath("SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting/Music")
+ui_slider = NodePath("SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting/UI")
+game_slider = NodePath("SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting/Game")
 metadata/_edit_horizontal_guides_ = [79.0]
 
-[node name="Label" type="Label" parent="."]
+[node name="Background" type="Panel" parent="." unique_id=251517202]
+z_index = -1
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_dli7i")
+
+[node name="Label" type="Label" parent="." unique_id=712360012]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -30,7 +58,7 @@ theme_override_font_sizes/font_size = 30
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="SettingMenu" type="PanelContainer" parent="."]
+[node name="SettingMenu" type="PanelContainer" parent="." unique_id=1273064931]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -45,7 +73,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="SettingMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="SettingMenu" unique_id=948768862]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 5
@@ -53,26 +81,26 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/MarginContainer" unique_id=217397203]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="TabContainer" type="TabContainer" parent="SettingMenu/MarginContainer/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="SettingMenu/MarginContainer/VBoxContainer" unique_id=62304704]
 z_index = 1
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 theme = ExtResource("1_0sh77")
 tab_alignment = 1
-current_tab = 1
+current_tab = 2
 clip_tabs = false
 
-[node name="Graphics" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer"]
+[node name="Graphics" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer" unique_id=187535858]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="GraphicsPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Graphics"]
+[node name="GraphicsPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Graphics" unique_id=1619836059]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -80,7 +108,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Graphics/GraphicsPanel"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Graphics/GraphicsPanel" unique_id=733043869]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 40
@@ -88,11 +116,12 @@ text = "COMING SOON"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Display" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer"]
+[node name="Display" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer" unique_id=97211639]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="DisplayPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display"]
+[node name="DisplayPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display" unique_id=821761865]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,30 +129,30 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel" unique_id=1289935407]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer" unique_id=1333483392]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="ResolutionSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer"]
+[node name="ResolutionSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer" unique_id=1132381941]
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/ResolutionSetting"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/ResolutionSetting" unique_id=1599781098]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Resolution:"
 horizontal_alignment = 1
 
-[node name="Resolution" type="OptionButton" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/ResolutionSetting"]
+[node name="Resolution" type="OptionButton" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/ResolutionSetting" unique_id=837867652]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -137,30 +166,29 @@ popup/item_0/id = 0
 popup/item_1/text = "1440 x 900"
 popup/item_1/id = 1
 
-[node name="FullscreenSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer"]
+[node name="FullscreenSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer" unique_id=521143546]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 theme = ExtResource("1_0sh77")
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/FullscreenSetting"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/FullscreenSetting" unique_id=388356270]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Fullscreen:"
 
-[node name="Fullscreen" type="CheckBox" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/FullscreenSetting"]
+[node name="Fullscreen" type="CheckBox" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/FullscreenSetting" unique_id=1071736750]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 
-[node name="Audio" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer"]
-visible = false
+[node name="Audio" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer" unique_id=773240675]
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="AudioPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio"]
+[node name="AudioPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio" unique_id=1262005262]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -168,137 +196,88 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel" unique_id=1121846402]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer" unique_id=1774935722]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MasterVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer"]
+[node name="MasterVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer" unique_id=129443876]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting" unique_id=575912333]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Master Volume:"
 horizontal_alignment = 2
 
-[node name="Master" type="HSlider" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+[node name="Master" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting" unique_id=512055979 instance=ExtResource("3_dli7i")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+config_setting_name = &"master_volume"
 
-[node name="Percent" type="ProgressBar" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting/Master"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-mouse_default_cursor_shape = 2
-
-[node name="MusicVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer"]
+[node name="MusicVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer" unique_id=51830839]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting" unique_id=2049419531]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Music Volume:"
 horizontal_alignment = 2
 
-[node name="Music" type="HSlider" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+[node name="Music" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting" unique_id=1262958688 instance=ExtResource("3_dli7i")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+audio_bus = 1
+config_setting_name = &"music_volume"
 
-[node name="Percent" type="ProgressBar" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting/Music"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-mouse_default_cursor_shape = 2
-
-[node name="UIVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer"]
+[node name="UIVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer" unique_id=1763966225]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting" unique_id=796559979]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "UI Volume:"
 horizontal_alignment = 2
 
-[node name="UI" type="HSlider" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+[node name="UI" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting" unique_id=2078115605 instance=ExtResource("3_dli7i")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+audio_bus = 2
+config_setting_name = &"ui_volume"
 
-[node name="Percent" type="ProgressBar" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting/UI"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-mouse_default_cursor_shape = 2
-
-[node name="GameVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer"]
+[node name="GameVolumeSetting" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer" unique_id=178602354]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting" unique_id=1051100843]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Game Sounds:"
 horizontal_alignment = 2
 
-[node name="Game" type="HSlider" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+[node name="Game" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting" unique_id=144985950 instance=ExtResource("3_dli7i")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+audio_bus = 3
+config_setting_name = &"game_volume"
 
-[node name="Percent" type="ProgressBar" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting/Game"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-mouse_default_cursor_shape = 2
-
-[node name="Controls" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer"]
+[node name="Controls" type="Control" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer" unique_id=419788788]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="ControlsPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Controls"]
+[node name="ControlsPanel" type="PanelContainer" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Controls" unique_id=359579490]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -306,7 +285,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Controls/ControlsPanel"]
+[node name="Label" type="Label" parent="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Controls/ControlsPanel" unique_id=589298059]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 40
@@ -314,11 +293,11 @@ text = "COMING SOON"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingMenu/MarginContainer/VBoxContainer" unique_id=1373707025]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="Apply" type="Button" parent="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Apply" type="Button" parent="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1172038255]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -327,7 +306,7 @@ disabled = true
 text = "Apply
 "
 
-[node name="Back" type="Button" parent="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Back" type="Button" parent="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer" unique_id=496128400]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -336,7 +315,7 @@ theme_type_variation = &"SettingButtons"
 text = "Back
 "
 
-[node name="Default" type="Button" parent="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Default" type="Button" parent="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1526217467]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -347,13 +326,9 @@ text = "Default"
 [connection signal="item_selected" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/ResolutionSetting/Resolution" to="." method="_on_option_button_item_selected"]
 [connection signal="toggled" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Display/DisplayPanel/MarginContainer/VBoxContainer/FullscreenSetting/Fullscreen" to="." method="_on_check_box_toggled"]
 [connection signal="drag_ended" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting/Master" to="." method="_on_setting_changed"]
-[connection signal="value_changed" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MasterVolumeSetting/Master" to="." method="_on_master_value_changed"]
 [connection signal="drag_ended" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting/Music" to="." method="_on_setting_changed"]
-[connection signal="value_changed" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/MusicVolumeSetting/Music" to="." method="_on_music_value_changed"]
 [connection signal="drag_ended" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting/UI" to="." method="_on_setting_changed"]
-[connection signal="value_changed" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/UIVolumeSetting/UI" to="." method="_on_ui_value_changed"]
 [connection signal="drag_ended" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting/Game" to="." method="_on_setting_changed"]
-[connection signal="value_changed" from="SettingMenu/MarginContainer/VBoxContainer/TabContainer/Audio/AudioPanel/MarginContainer/VBoxContainer/GameVolumeSetting/Game" to="." method="_on_game_value_changed"]
 [connection signal="pressed" from="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer/Apply" to="." method="_on_apply_pressed"]
 [connection signal="pressed" from="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer/Back" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="SettingMenu/MarginContainer/VBoxContainer/HBoxContainer/Default" to="." method="_on_default_pressed"]

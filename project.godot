@@ -25,7 +25,6 @@ buses/default_bus_layout="res://features/audio/default_bus_layout.tres"
 
 [autoload]
 
-ConfigFileHandler="*res://scripts/autoloads/config_file_handler.gd"
 NetworkManager="*res://features/network/network_manager.gd"
 Match="*res://scripts/autoloads/match.gd"
 NetworkSync="*res://features/network/network_sync.gd"

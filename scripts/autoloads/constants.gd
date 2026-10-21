@@ -51,6 +51,14 @@ const PIECE_SCENE_UID_DICT: Dictionary[TypePiece,String] = {
 }
 
 @abstract
+class AUDIO_SERVER_LABELS:
+	const MASTER: StringName = &"Master"
+	const MUSIC: StringName = &"Music"
+	const UI: StringName = &"UI"
+	const GAME: StringName = &"Game"
+
+
+@abstract
 class TURN_TRANSITION:
 	const DELAY_SECONDS:float = 0.25
 	const DURATION_SECONDS:float = 0.5

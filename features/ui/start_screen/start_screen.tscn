@@ -1,8 +1,13 @@
 [gd_scene format=3 uid="uid://2aw5r4ibxl8k"]
 
+[ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://features/ui/match_customization/match_selection_screen.tscn" id="2_gtrpr"]
 [ext_resource type="Script" uid="uid://bmf1w4vumak7x" path="res://features/ui/start_screen/start_screen.gd" id="2_nwdcb"]
 [ext_resource type="Theme" uid="uid://6luwubm4shti" path="res://resources/themes/theme_bright/main_menu_theme.tres" id="2_viyhn"]
+[ext_resource type="PackedScene" uid="uid://cvr8wyhalupas" path="res://features/ui/join_menu/join_menu.tscn" id="3_7gfjj"]
+[ext_resource type="PackedScene" uid="uid://c0md30urlwow5" path="res://features/ui/guidebook/guidebook_screen.tscn" id="4_gfsvw"]
 [ext_resource type="FontFile" uid="uid://btdvbprakodnv" path="res://assets/font/GlitchGoblin/GlitchGoblin.ttf" id="4_xqiyt"]
+[ext_resource type="PackedScene" uid="uid://0fccgu7f77gg" path="res://features/ui/settings/settings_menu.tscn" id="5_gxowx"]
+[ext_resource type="Script" uid="uid://b100sef241abt" path="res://features/ui/scene_transition_button.gd" id="8_gfsvw"]
 
 [sub_resource type="Gradient" id="Gradient_hlv2s"]
 offsets = PackedFloat32Array(0, 0.00680274, 1)
@@ -17,7 +22,7 @@ fill_to = Vector2(1, 0.269231)
 texture = SubResource("GradientTexture2D_viyhn")
 region_rect = Rect2(0, 18, 64, 32)
 
-[node name="StartScreen" type="Control"]
+[node name="StartScreen" type="Control" unique_id=1301186147 node_paths=PackedStringArray("new_match_button", "join_match_button", "rulebook_button", "settings_button", "exit_button")]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -26,8 +31,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_nwdcb")
+new_match_button = NodePath("MainMenu/VBoxContainer/NewMatchButton")
+join_match_button = NodePath("MainMenu/VBoxContainer/JoinMatchButton")
+rulebook_button = NodePath("MainMenu/VBoxContainer/RulebookButton")
+settings_button = NodePath("MainMenu/VBoxContainer/SettingsButton")
+exit_button = NodePath("MainMenu/VBoxContainer/ExitButton")
 
-[node name="Background" type="Panel" parent="."]
+[node name="Background" type="Panel" parent="." unique_id=511938398]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -37,7 +47,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_iv2fv")
 
-[node name="MainMenu" type="BoxContainer" parent="."]
+[node name="MainMenu" type="BoxContainer" parent="." unique_id=1195741554]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,7 +58,7 @@ theme = ExtResource("2_viyhn")
 alignment = 1
 vertical = true
 
-[node name="TitleLabel" type="Label" parent="MainMenu"]
+[node name="TitleLabel" type="Label" parent="MainMenu" unique_id=257126497]
 custom_minimum_size = Vector2(600, 200)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -61,55 +71,58 @@ text = "Chess+"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu" unique_id=731868301]
 custom_minimum_size = Vector2(300, 250)
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="NewMatchButton" type="Button" parent="MainMenu/VBoxContainer"]
-unique_name_in_owner = true
+[node name="NewMatchButton" type="Button" parent="MainMenu/VBoxContainer" unique_id=86683265]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Create Match"
+script = ExtResource("8_gfsvw")
+transition_to_scene = ExtResource("2_gtrpr")
+metadata/_custom_type_script = "uid://b100sef241abt"
 
-[node name="JoinMatchButton" type="Button" parent="MainMenu/VBoxContainer"]
-unique_name_in_owner = true
+[node name="JoinMatchButton" type="Button" parent="MainMenu/VBoxContainer" unique_id=1944740729]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Join Match"
+script = ExtResource("8_gfsvw")
+transition_to_scene = ExtResource("3_7gfjj")
+metadata/_custom_type_script = "uid://b100sef241abt"
 
-[node name="RulebookButton" type="Button" parent="MainMenu/VBoxContainer"]
-unique_name_in_owner = true
+[node name="RulebookButton" type="Button" parent="MainMenu/VBoxContainer" unique_id=205342181]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Guidebook"
+script = ExtResource("8_gfsvw")
+transition_to_scene = ExtResource("4_gfsvw")
+metadata/_custom_type_script = "uid://b100sef241abt"
 
-[node name="SettingsButton" type="Button" parent="MainMenu/VBoxContainer"]
-unique_name_in_owner = true
+[node name="SettingsButton" type="Button" parent="MainMenu/VBoxContainer" unique_id=170391447]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Settings"
+script = ExtResource("8_gfsvw")
+transition_to_scene = ExtResource("5_gxowx")
+metadata/_custom_type_script = "uid://b100sef241abt"
 
-[node name="ExitButton" type="Button" parent="MainMenu/VBoxContainer"]
-unique_name_in_owner = true
+[node name="ExitButton" type="Button" parent="MainMenu/VBoxContainer" unique_id=1051287738]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_default_cursor_shape = 2
 text = "Exit
 "
-
-[connection signal="pressed" from="MainMenu/VBoxContainer/NewMatchButton" to="." method="_on_new_match_button_pressed"]
-[connection signal="pressed" from="MainMenu/VBoxContainer/JoinMatchButton" to="." method="_on_join_match_button_pressed"]
-[connection signal="pressed" from="MainMenu/VBoxContainer/RulebookButton" to="." method="_on_rulebook_button_pressed"]
-[connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="MainMenu/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+script = ExtResource("8_gfsvw")
+metadata/_custom_type_script = "uid://b100sef241abt"

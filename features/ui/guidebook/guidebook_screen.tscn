@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cudncmw552xtv" path="res://features/ui/guidebook/guidebook_screen.gd" id="2_pes6k"]
 
-
 [sub_resource type="Gradient" id="Gradient_6tgmk"]
 offsets = PackedFloat32Array(0, 0.00680274, 1)
 colors = PackedColorArray(2.69532e-06, 0.497636, 0.662762, 1, 0.00700352, 0.237855, 0.303711, 1, 0.29054, 0.863409, 1, 1)
@@ -16,7 +15,7 @@ fill_to = Vector2(1, 0.269231)
 texture = SubResource("GradientTexture2D_viyhn")
 region_rect = Rect2(0, 18, 64, 32)
 
-[node name="Guidebook" type="Control"]
+[node name="Guidebook" type="Control" unique_id=755994821]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +25,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 script = ExtResource("2_pes6k")
 
-[node name="Background" type="Panel" parent="."]
+[node name="Background" type="Panel" parent="." unique_id=831227013]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -36,7 +35,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_vpd1n")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1337934222]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,23 +47,23 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1040000375]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1138514061]
 layout_mode = 2
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
 text = "Guidebook"
 horizontal_alignment = 1
 
-[node name="BackgroundPanel" type="Panel" parent="MarginContainer/VBoxContainer"]
+[node name="BackgroundPanel" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=1422359155]
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel" unique_id=744656969]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,40 +75,40 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer" unique_id=80372516]
 layout_mode = 2
 
-[node name="List" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer"]
+[node name="List" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer" unique_id=1458011238]
 z_index = 1
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List" unique_id=467779304]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer" unique_id=417647018]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer" unique_id=1864116490]
 layout_mode = 2
 theme_override_constants/outline_size = 10
 text = "Contents"
 horizontal_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer" unique_id=405456477]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Search (WIP)"
 placeholder_text = "Search"
 emoji_menu_enabled = false
 
-[node name="ContentTree" type="Tree" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer"]
+[node name="ContentTree" type="Tree" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer/List/MarginContainer/VBoxContainer" unique_id=770299512]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -119,42 +118,42 @@ theme_override_font_sizes/font_size = 12
 hide_root = true
 auto_tooltip = false
 
-[node name="Description" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer"]
+[node name="Description" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer" unique_id=1965412736]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Images" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer"]
+[node name="Images" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackgroundPanel/MarginContainer/HBoxContainer" unique_id=997176238]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="BackBackgroundPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+[node name="BackBackgroundPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=293979791]
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
 size_flags_horizontal = 2
 theme_type_variation = &"BackgroundPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel" unique_id=1300424076]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="Panel" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer"]
+[node name="Panel" type="PanelContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer" unique_id=9003514]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer/Panel" unique_id=1454495665]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer"]
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/BackBackgroundPanel/MarginContainer/Panel/MarginContainer" unique_id=1392184684]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2

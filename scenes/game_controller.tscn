@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://2aw5r4ibxl8k" path="res://features/ui/start_screen/start_screen.tscn" id="3_wksuf"]
 [ext_resource type="Script" uid="uid://da7na1h6kx0q0" path="res://scripts/state/state_machine_state.gd" id="4_25rj4"]
 [ext_resource type="PackedScene" uid="uid://b7j70dbu10fa4" path="res://features/board/board.tscn" id="4_fpu5w"]
+[ext_resource type="Script" uid="uid://bxvpqks2pehvp" path="res://scenes/ui_controller.gd" id="4_py7vm"]
 [ext_resource type="Script" uid="uid://dtw67qk6xuwgn" path="res://features/ui/match_customization/match_customization_state.gd" id="4_wf0ff"]
 [ext_resource type="PackedScene" uid="uid://bmtcaraovyhdt" path="res://features/ui/match_customization/match_selection_screen.tscn" id="5_vi7lc"]
 [ext_resource type="Script" uid="uid://dsliyrikprudw" path="res://features/ui/tile_modifier_selection/tile_modifier_selection_state.gd" id="6_kea5x"]
@@ -134,7 +135,18 @@ shadow_opacity = 0.7
 spot_range = 24.0741
 spot_angle = 72.1925
 
-[node name="ControllerUI" type="Control" parent="." unique_id=27231277 node_paths=PackedStringArray("initial_state")]
+[node name="Control" type="Control" parent="." unique_id=1150385371]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_py7vm")
+starting_scene = ExtResource("3_wksuf")
+
+[node name="ControllerUI" type="Control" parent="." unique_id=27231277]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -142,7 +154,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_twqac")
-initial_state = NodePath("StartMenuState")
 
 [node name="StartMenuState" type="Node" parent="ControllerUI" unique_id=1840033118]
 script = ExtResource("2_25rj4")

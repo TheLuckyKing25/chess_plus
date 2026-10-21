@@ -212,22 +212,13 @@ func move_occupant(starting_tile: TileObject, target_tile: TileObject):
 	get_parent().audio_piece_move.play()
 
 
-func capture(captured_object:InteractableGameObject):
-	if not is_instance_valid(captured_object): return
-	var tile: TileObject = find_tile_occupied_by(captured_object)
-
-	# For cases where the moved piece captures another piece
-	# without landing on the captured piece's tile.
-	# EX. en passant
-	if is_instance_valid(tile):
-		tile.occupant = null if tile.occupant == captured_object else tile.occupant
-
-	captured_object.add_to_group(Constants.Groups.IS_CAPTURED)
-	ObjectStateComponent.remove_object_from_state_dict(captured_object)
-	captured_object.visible = false
-	captured_object.get_parent().remove_child(captured_object)
-	captured_object.reparent(%Captured)
-	captured_object.position += Vector3(0,-5,0)
+func remove_object_from_board(object: InteractableGameObject):
+	if not is_instance_valid(object): return
+	ObjectStateComponent.remove_object_from_state_dict(object)
+	object.visible = false
+	#object.get_parent().remove_child(object)
+	object.reparent(%Captured)
+	object.position += Vector3(0,-5,0)
 
 
 func update_lists():

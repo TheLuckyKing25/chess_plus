@@ -1,4 +1,4 @@
-extends Control
+extends UIBaseClass
 
 @onready var back_button: Button = %BackButton
 

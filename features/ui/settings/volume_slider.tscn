@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://hxi7n0sd7hac"]
+
+[ext_resource type="Script" uid="uid://c13b5c5whmy3u" path="res://features/ui/settings/volume_slider.gd" id="1_h7yxq"]
+
+[node name="VolumeSlider" type="HSlider" unique_id=512055979 node_paths=PackedStringArray("percent_object")]
+custom_minimum_size = Vector2(200, 0)
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("1_h7yxq")
+percent_object = NodePath("Percent")
+
+[node name="Percent" type="ProgressBar" parent="." unique_id=1920849128]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+mouse_default_cursor_shape = 2

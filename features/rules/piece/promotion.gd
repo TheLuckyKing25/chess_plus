@@ -27,8 +27,6 @@ static func _make_change(board: BoardObject, change_data:BoardChange):
 	promoting_piece.change_piece_type(promoting_to)
 
 
-# TODO: Have this class instantiate the requested promotion piece and include
-# that instantiated piece in the Change Data instead of just the name
 static func _reverse_change(board: BoardObject, change_data:BoardChange):
 	if not change_data.move_info.info.flags.get(FLAG_IS_PROMOTING_LABEL): return
 
